@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<TableData>
+  <Rows>
+    <Row_1>
+      <field_0 name="Id" binary="false" value="0"/>
+      <field_1 name="Name" binary="false">Default</field_1>
+    </Row_1>
+    <Row_2>
+      <field_0 name="Id" binary="false" value="1"/>
+      <field_1 name="Name" binary="false">SQLOLEDBProvider</field_1>
+    </Row_2>
+    <Row_3>
+      <field_0 name="Id" binary="false" value="2"/>
+      <field_1 name="Name" binary="false">LocalDSN</field_1>
+    </Row_3>
+    <Row_4>
+      <field_0 name="Id" binary="false" value="3"/>
+      <field_1 name="Name" binary="false">SQLOBDC</field_1>
+    </Row_4>
+    <Row_5>
+      <field_0 name="Id" binary="false" value="4"/>
+      <field_1 name="Name" binary="false">MySQL</field_1>
+    </Row_5>
+  </Rows>
+</TableData>
