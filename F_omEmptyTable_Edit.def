@@ -1,0 +1,587 @@
+Version =20
+VersionRequired =20
+PublishOption =1
+Checksum =184112382
+Begin Form
+    RecordSelectors = NotDefault
+    AutoCenter = NotDefault
+    NavigationButtons = NotDefault
+    DividingLines = NotDefault
+    AllowDesignChanges = NotDefault
+    DefaultView =0
+    ScrollBars =0
+    PictureAlignment =2
+    DatasheetGridlinesBehavior =3
+    Cycle =1
+    GridY =10
+    Width =7268
+    DatasheetFontHeight =11
+    ItemSuffix =101
+    Right =14925
+    Bottom =12510
+    DatasheetGridlinesColor =14806254
+    RecSrcDt = Begin
+        0x24ae3b6eae73e440
+    End
+    GUID = Begin
+        0xf161ca40b896744da397a373f1ea04a3
+    End
+    NameMap = Begin
+        0x0acc0e55000000003b32dde8baf46040813110384013b62600000000fc233409 ,
+        0xaf73e44000000000000000006f006d0045006d00700074007900540061006200 ,
+        0x6c006500730000000000000051eef3d14985a6459c8564add7c1123007000000 ,
+        0x3b32dde8baf46040813110384013b6264e0061006d006500000000000000b38f ,
+        0x23e347c2154e98ebf1c506f5ee3f070000003b32dde8baf46040813110384013 ,
+        0xb62653006f0072007400000000000000cf64b95cfad3904aa86e9d557b0aeee2 ,
+        0x070000003b32dde8baf46040813110384013b62643006f006400650000000000 ,
+        0x0000d730322a9ba6ff43bedeb638a65334f0070000003b32dde8baf460408131 ,
+        0x10384013b6264400650073006300720069007000740069006f006e0000000000 ,
+        0x000084eb19f2c8bc3141ba23797fcf808751070000003b32dde8baf460408131 ,
+        0x10384013b626410063007400690076006500000000000000070387d5c3b8e942 ,
+        0x9617f8dbcca38a01070000003b32dde8baf46040813110384013b6264d006500 ,
+        0x6d006f00000000000000000000000000000000000000000000000c0000000500 ,
+        0x00000000000000000000000000000000
+    End
+    RecordSource ="omEmptyTables"
+    BeforeInsert ="[Event Procedure]"
+    BeforeUpdate ="[Event Procedure]"
+    DatasheetFontName ="Calibri"
+    PrtMip = Begin
+        0x6801000068010000680100006801000000000000201c0000e010000001000000 ,
+        0x010000006801000000000000a10700000100000001000000
+    End
+    PrtDevMode = Begin
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x010403069c007c03032f0000010009009a0b3408640001000f00580202000100 ,
+        0x5802030001004134000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000010000000000000001000000 ,
+        0x0200000001000000000000000000000000000000000000000000000050524956 ,
+        0xe230000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000180000000000102710271027 ,
+        0x00001027000000000000000088007c0300000000000000000100000000000000 ,
+        0x0000000000000000030000000000000000001000503403002888040000000000 ,
+        0x000000000000010000000000000000000000000000000000e7b14b4c03000000 ,
+        0x05000a00ff000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0100000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000088000000534d544a0000000010007800 ,
+        0x500044004600430072006500610074006f00720000005265736f6c7574696f6e ,
+        0x00363030647069005061676553697a650041340050616765526567696f6e0000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x000000000000000000000000000000000000000000000000
+    End
+    PrtDevNames = Begin
+        0x080013001e000100000000000000000000000000000000000000000000007064 ,
+        0x66636d6f6e000000000000000000
+    End
+    FilterOnLoad =0
+    ShowPageMargins =0
+    DisplayOnSharePointSite =1
+    DatasheetAlternateBackColor =15921906
+    DatasheetGridlinesColor12 =0
+    FitToScreen =1
+    DatasheetBackThemeColorIndex =1
+    BorderThemeColorIndex =3
+    ThemeFontIndex =1
+    ForeThemeColorIndex =0
+    AlternateBackThemeColorIndex =1
+    AlternateBackShade =95.0
+    PrtDevModeW = Begin
+        0x00001900062f190000ff00007f000000000000000000770d520300007f000000 ,
+        0x5b030000c000770d08987e0000aa48764c1c8cb5feffffff14987e0048000000 ,
+        0x01040306dc007c03032f0000010009009a0b3408640001000f00580202000100 ,
+        0x58020300010041003400000000000000000000000a000000010000001015770d ,
+        0x0815770d1f000000aabe1f00feffffffc4c27e000c00000000000000c000770d ,
+        0x8ed2000052030000000000000000000000000000010000000000000001000000 ,
+        0x0200000001000000000000000000000000000000000000000000000050524956 ,
+        0xe230000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000180000000000102710271027 ,
+        0x00001027000000000000000088007c0300000000000000000100000000000000 ,
+        0x0000000000000000030000000000000000001000503403002888040000000000 ,
+        0x000000000000010000000000000000000000000000000000e7b14b4c03000000 ,
+        0x05000a00ff000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0100000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000088000000534d544a0000000010007800 ,
+        0x500044004600430072006500610074006f00720000005265736f6c7574696f6e ,
+        0x00363030647069005061676553697a650041340050616765526567696f6e0000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x000000000000000000000000000000000000000000000000
+    End
+    PrtDevNamesW = Begin
+        0x04000f001a000100000000000000000000000000000000000000000000000000 ,
+        0x000000000000000000000000000000000000000070006400660063006d006f00 ,
+        0x6e00000000000000000000000000000000000000
+    End
+    Begin
+        Begin Label
+            BackStyle =0
+            FontSize =11
+            FontName ="Calibri"
+            ThemeFontIndex =1
+            BackThemeColorIndex =1
+            BorderThemeColorIndex =0
+            BorderTint =50.0
+            ForeThemeColorIndex =0
+            ForeTint =50.0
+            GridlineThemeColorIndex =1
+            GridlineShade =65.0
+        End
+        Begin CheckBox
+            BorderLineStyle =0
+            LabelX =230
+            LabelY =-30
+            BorderThemeColorIndex =1
+            BorderShade =65.0
+            GridlineThemeColorIndex =1
+            GridlineShade =65.0
+        End
+        Begin TextBox
+            AddColon = NotDefault
+            FELineBreak = NotDefault
+            BorderLineStyle =0
+            Width =1701
+            LabelX =-1701
+            FontSize =11
+            FontName ="Calibri"
+            AsianLineBreak =1
+            BackThemeColorIndex =1
+            BorderThemeColorIndex =1
+            BorderShade =65.0
+            ThemeFontIndex =1
+            ForeThemeColorIndex =0
+            ForeTint =75.0
+            GridlineThemeColorIndex =1
+            GridlineShade =65.0
+        End
+        Begin ComboBox
+            AddColon = NotDefault
+            BorderLineStyle =0
+            Width =1701
+            LabelX =-1701
+            FontSize =11
+            FontName ="Calibri"
+            AllowValueListEdits =1
+            InheritValueList =1
+            ThemeFontIndex =1
+            BackThemeColorIndex =1
+            BorderThemeColorIndex =1
+            BorderShade =65.0
+            ForeThemeColorIndex =2
+            ForeShade =50.0
+            GridlineThemeColorIndex =1
+            GridlineShade =65.0
+        End
+        Begin EmptyCell
+            Height =240
+            GridlineColor =12632256
+            GridlineThemeColorIndex =1
+            GridlineShade =65.0
+        End
+        Begin Section
+            Height =3045
+            Name ="Detail"
+            GUID = Begin
+                0xf52b31957f29f44b9b96325ad5494c09
+            End
+            AlternateBackColor =15921906
+            AlternateBackThemeColorIndex =1
+            AlternateBackShade =95.0
+            BackThemeColorIndex =1
+            Begin
+                Begin TextBox
+                    OverlapFlags =85
+                    TextAlign =1
+                    IMESentenceMode =3
+                    Left =1620
+                    Top =600
+                    Width =5610
+                    Height =315
+                    TabIndex =1
+                    BorderColor =10921638
+                    ForeColor =4210752
+                    Name ="Name"
+                    ControlSource ="Name"
+                    StatusBarText ="Gemeente"
+                    GUID = Begin
+                        0xa84ae046b50f60419adecbe43f1b8341
+                    End
+                    GroupTable =1
+                    BottomPadding =150
+                    GridlineColor =10921638
+
+                    LayoutCachedLeft =1620
+                    LayoutCachedTop =600
+                    LayoutCachedWidth =7230
+                    LayoutCachedHeight =915
+                    RowStart =1
+                    RowEnd =1
+                    ColumnStart =1
+                    ColumnEnd =1
+                    LayoutGroup =1
+                    GroupTable =1
+                    Begin
+                        Begin Label
+                            OverlapFlags =85
+                            TextAlign =1
+                            Left =120
+                            Top =600
+                            Width =1440
+                            Height =315
+                            BorderColor =8355711
+                            ForeColor =8355711
+                            Name ="Label51"
+                            Caption ="Name"
+                            GUID = Begin
+                                0x677aa2ea3d469c4ebda6b722ed4d1220
+                            End
+                            GroupTable =1
+                            BottomPadding =150
+                            GridlineColor =10921638
+                            LayoutCachedLeft =120
+                            LayoutCachedTop =600
+                            LayoutCachedWidth =1560
+                            LayoutCachedHeight =915
+                            RowStart =1
+                            RowEnd =1
+                            LayoutGroup =1
+                            GroupTable =1
+                        End
+                    End
+                End
+                Begin TextBox
+                    OverlapFlags =85
+                    TextAlign =1
+                    IMESentenceMode =3
+                    Left =1620
+                    Top =1590
+                    Width =5610
+                    Height =315
+                    TabIndex =3
+                    BorderColor =10921638
+                    ForeColor =4210752
+                    Name ="Sort"
+                    ControlSource ="Sort"
+                    GUID = Begin
+                        0xf12bd02018cfa44faf5ccdf0c439d1a7
+                    End
+                    GroupTable =1
+                    BottomPadding =150
+                    GridlineColor =10921638
+
+                    LayoutCachedLeft =1620
+                    LayoutCachedTop =1590
+                    LayoutCachedWidth =7230
+                    LayoutCachedHeight =1905
+                    RowStart =3
+                    RowEnd =3
+                    ColumnStart =1
+                    ColumnEnd =1
+                    LayoutGroup =1
+                    GroupTable =1
+                    Begin
+                        Begin Label
+                            OverlapFlags =85
+                            TextAlign =1
+                            Left =120
+                            Top =1590
+                            Width =1440
+                            Height =315
+                            BorderColor =8355711
+                            ForeColor =8355711
+                            Name ="Label65"
+                            Caption ="Sort"
+                            GUID = Begin
+                                0x156649d72fcfa447a3b40bcc646f2a9f
+                            End
+                            GroupTable =1
+                            BottomPadding =150
+                            GridlineColor =10921638
+                            LayoutCachedLeft =120
+                            LayoutCachedTop =1590
+                            LayoutCachedWidth =1560
+                            LayoutCachedHeight =1905
+                            RowStart =3
+                            RowEnd =3
+                            LayoutGroup =1
+                            GroupTable =1
+                        End
+                    End
+                End
+                Begin TextBox
+                    OverlapFlags =85
+                    TextAlign =1
+                    IMESentenceMode =3
+                    Left =1620
+                    Top =105
+                    Width =5610
+                    Height =315
+                    BorderColor =10921638
+                    ForeColor =4210752
+                    Name ="Code"
+                    ControlSource ="Code"
+                    GUID = Begin
+                        0x90f3aa6f60abe1448732d08dc0cc7c4c
+                    End
+                    GroupTable =1
+                    BottomPadding =150
+                    GridlineColor =10921638
+
+                    LayoutCachedLeft =1620
+                    LayoutCachedTop =105
+                    LayoutCachedWidth =7230
+                    LayoutCachedHeight =420
+                    ColumnStart =1
+                    ColumnEnd =1
+                    LayoutGroup =1
+                    GroupTable =1
+                    Begin
+                        Begin Label
+                            OverlapFlags =85
+                            TextAlign =1
+                            Left =120
+                            Top =105
+                            Width =1440
+                            Height =315
+                            BorderColor =8355711
+                            ForeColor =8355711
+                            Name ="Label72"
+                            Caption ="Code"
+                            GUID = Begin
+                                0x2970a3667b56264eac9a7c607ee5e6b0
+                            End
+                            GroupTable =1
+                            BottomPadding =150
+                            GridlineColor =10921638
+                            LayoutCachedLeft =120
+                            LayoutCachedTop =105
+                            LayoutCachedWidth =1560
+                            LayoutCachedHeight =420
+                            LayoutGroup =1
+                            GroupTable =1
+                        End
+                    End
+                End
+                Begin TextBox
+                    OverlapFlags =85
+                    TextAlign =1
+                    IMESentenceMode =3
+                    Left =1620
+                    Top =1095
+                    Width =5610
+                    Height =315
+                    TabIndex =2
+                    BorderColor =10921638
+                    ForeColor =4210752
+                    Name ="Description"
+                    ControlSource ="Description"
+                    GUID = Begin
+                        0x64ad0f8514e5374eaf67d8ec4a6ffcf8
+                    End
+                    GroupTable =1
+                    BottomPadding =150
+                    GridlineColor =10921638
+
+                    LayoutCachedLeft =1620
+                    LayoutCachedTop =1095
+                    LayoutCachedWidth =7230
+                    LayoutCachedHeight =1410
+                    RowStart =2
+                    RowEnd =2
+                    ColumnStart =1
+                    ColumnEnd =1
+                    LayoutGroup =1
+                    GroupTable =1
+                    Begin
+                        Begin Label
+                            OverlapFlags =85
+                            TextAlign =1
+                            Left =120
+                            Top =1095
+                            Width =1440
+                            Height =315
+                            BorderColor =8355711
+                            ForeColor =8355711
+                            Name ="Label79"
+                            Caption ="Description"
+                            GUID = Begin
+                                0x98ac857057a42d419b047fd9f0d32be7
+                            End
+                            GroupTable =1
+                            BottomPadding =150
+                            GridlineColor =10921638
+                            LayoutCachedLeft =120
+                            LayoutCachedTop =1095
+                            LayoutCachedWidth =1560
+                            LayoutCachedHeight =1410
+                            RowStart =2
+                            RowEnd =2
+                            LayoutGroup =1
+                            GroupTable =1
+                        End
+                    End
+                End
+                Begin CheckBox
+                    OverlapFlags =85
+                    Left =1620
+                    Top =2085
+                    Width =5610
+                    Height =315
+                    TabIndex =4
+                    BorderColor =10921638
+                    Name ="Active"
+                    ControlSource ="Active"
+                    GUID = Begin
+                        0x20b7f74f3645c448b6e9a88171eb85b0
+                    End
+                    GroupTable =1
+                    BottomPadding =150
+                    GridlineColor =10921638
+
+                    LayoutCachedLeft =1620
+                    LayoutCachedTop =2085
+                    LayoutCachedWidth =7230
+                    LayoutCachedHeight =2400
+                    RowStart =4
+                    RowEnd =4
+                    ColumnStart =1
+                    ColumnEnd =1
+                    LayoutGroup =1
+                    GroupTable =1
+                    Begin
+                        Begin Label
+                            OverlapFlags =85
+                            TextAlign =1
+                            Left =120
+                            Top =2085
+                            Width =1440
+                            Height =315
+                            BorderColor =8355711
+                            ForeColor =8355711
+                            Name ="Label86"
+                            Caption ="Active"
+                            GUID = Begin
+                                0xd6b738511a7acf49965095ae9a8aec84
+                            End
+                            GroupTable =1
+                            BottomPadding =150
+                            GridlineColor =10921638
+                            LayoutCachedLeft =120
+                            LayoutCachedTop =2085
+                            LayoutCachedWidth =1560
+                            LayoutCachedHeight =2400
+                            RowStart =4
+                            RowEnd =4
+                            LayoutGroup =1
+                            GroupTable =1
+                        End
+                    End
+                End
+                Begin TextBox
+                    OverlapFlags =85
+                    TextAlign =1
+                    IMESentenceMode =3
+                    Left =1620
+                    Top =2580
+                    Width =5610
+                    Height =315
+                    TabIndex =5
+                    BorderColor =10921638
+                    ForeColor =4210752
+                    Name ="Memo"
+                    ControlSource ="Memo"
+                    GUID = Begin
+                        0x03e19c526293a8419f4615d4dbb219f4
+                    End
+                    GroupTable =1
+                    BottomPadding =150
+                    GridlineColor =10921638
+
+                    LayoutCachedLeft =1620
+                    LayoutCachedTop =2580
+                    LayoutCachedWidth =7230
+                    LayoutCachedHeight =2895
+                    RowStart =5
+                    RowEnd =5
+                    ColumnStart =1
+                    ColumnEnd =1
+                    LayoutGroup =1
+                    GroupTable =1
+                    Begin
+                        Begin Label
+                            OverlapFlags =85
+                            TextAlign =1
+                            Left =120
+                            Top =2580
+                            Width =1440
+                            Height =315
+                            BorderColor =8355711
+                            ForeColor =8355711
+                            Name ="Label94"
+                            Caption ="Memo"
+                            GUID = Begin
+                                0x494395a1c8c6d4498691be18310d89de
+                            End
+                            GroupTable =1
+                            BottomPadding =150
+                            GridlineColor =10921638
+                            LayoutCachedLeft =120
+                            LayoutCachedTop =2580
+                            LayoutCachedWidth =1560
+                            LayoutCachedHeight =2895
+                            RowStart =5
+                            RowEnd =5
+                            LayoutGroup =1
+                            GroupTable =1
+                        End
+                    End
+                End
+            End
+        End
+    End
+End
+CodeBehindForm
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Private Sub Form_BeforeInsert(Cancel As Integer)
+    omFormFunctions.UpdateCreateTracking Me
+End Sub
+
+Private Sub Form_BeforeUpdate(Cancel As Integer)
+    omFormFunctions.UpdateModifyTracking Me
+End Sub
