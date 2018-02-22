@@ -1,0 +1,67 @@
+Option Compare Database
+Option Explicit
+
+Public Sub IfNullOrEmpty(ctrl As Control, Optional UseDefaultValue As Boolean = True)
+    If omStringFunctions.IsNullOrEmpty(ctrl) Then
+        If UseDefaultValue And NotIsNullOrEmpty(ctrl.DefaultValue) Then
+            SetDefaultValue ctrl
+        Else
+            ctrl = ctrl.OldValue
+        End If
+    End If
+End Sub
+Public Sub SetDefaultValue(ctrl As Control)
+    ctrl = IIf(omStringFunctions.IsNullOrEmpty(ctrl), ctrl.DefaultValue, ctrl)
+End Sub
+
+Public Function IsFormOpen(FormName As String) As Boolean
+
+On Error GoTo IsFormOpen_Error
+
+    IsFormOpen = (Forms(FormName).Name = FormName)
+    Exit Function
+IsFormOpen_Error:
+    IsFormOpen = False
+    
+End Function
+
+Public Function GetOpenForm(FormName As String) As Form
+            
+    If IsFormOpen(FormName) Then
+        Set GetOpenForm = Forms(FormName)
+    End If
+End Function
+
+Public Function NotInList(ctrl As Control, ObjectName As String, idFieldName As String, valueFieldName As String, NewData As String, Optional OpenEdit As Boolean = False, Optional ParentFieldName As String = "", Optional ParentData As Variant = Null) As Integer
+Dim rs As New ADODB.Recordset
+Dim Id As Long
+
+    If MsgBox("Nieuw item: " & NewData & " toevoegen?", vbYesNo) = vbYes Then
+        rs.Open omStringFunctions.GetEnglishPlural(ObjectName), CurrentProject.Connection, adOpenForwardOnly, adLockOptimistic
+        rs.AddNew
+        rs(valueFieldName) = NewData
+        If NotIsNullOrEmpty(ParentFieldName) Then
+            rs(ParentFieldName) = ParentData
+        End If
+        rs.Update
+        Id = rs(idFieldName)
+        rs.Close
+        Set rs = Nothing
+        If OpenEdit Then
+            DoCmd.OpenForm ObjectName & "_Edit", , , "Id=" & Id, acFormEdit, acDialog
+        End If
+    End If
+    If Id = 0 Then
+        NotInList = acDataErrContinue
+    Else
+        ctrl.value = Id
+        NotInList = acDataErrAdded
+    End If
+
+End Function
+
+Public Sub Edit(ctrl As Control, ObjectName As String, Optional idFieldName As String = "Id")
+    If NotIsNullOrEmpty(ctrl.value) Then
+        DoCmd.OpenForm ObjectName & "_Edit", , , idFieldName & "=" & ctrl.value, acFormEdit, acDialog
+    End If
+End Sub

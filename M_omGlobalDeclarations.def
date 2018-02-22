@@ -1,0 +1,14 @@
+Option Compare Database
+Option Explicit
+' Code written by Raoul Jacobs
+' E. jara@opmaat.be
+' Date Created : 201112
+
+Public Const UseWindowsAuthenication As Boolean = True
+
+Public gDefaults As New omDefaults
+Public gSysDefaults As New omDefaults
+'Public gUser As New omUser
+'Public gFso As New Scripting.FileSystemObject => Obsolete Declared in omFileFunctions
+Public gDictionary As New Scripting.Dictionary
+Public Const gDevelopmentMode = False

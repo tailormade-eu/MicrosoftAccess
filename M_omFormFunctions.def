@@ -1,0 +1,73 @@
+Option Compare Database
+Option Explicit
+
+Public Sub UpdateEnableByTag(Form As Form, tag As String, state As Boolean)
+Dim ctrl As Control
+
+    For Each ctrl In Form.Controls
+        If ctrl.tag = tag Then
+            ctrl.Enabled = state
+        End If
+    Next
+End Sub
+Public Function OpenForm(Name As String, Optional view As AcFormView = AcFormView.acFormDS) As Variant
+    Name = Replace(Name, "cmd", "")
+    If InStr(1, Name, "listsearch") <> 0 Then
+        Name = Replace(Name, "listsearch", "_List_Search")
+    ElseIf InStr(1, Name, "list") <> 0 Then
+        Name = Replace(Name, "list", "_List")
+        view = acNormal
+    End If
+    DoCmd.OpenForm Name, view
+End Function
+
+Public Sub CloseForms(Optional keepOpen As String = "flow")
+Dim frm As Form
+    For Each frm In Forms
+        If frm.Name <> keepOpen Then
+            DoCmd.Close acForm, frm.Name, acSaveNo
+        End If
+    Next
+End Sub
+
+Public Sub OpenEditScreen(parentForm As Form, FormName As String, Optional keyName As String = "Id", Optional WindowMode As AcWindowMode = acDialog, Optional Requery As Boolean = True)
+Dim Id As String
+
+    If parentForm.CurrentRecord <> -1 Then
+        If parentForm.Recordset.Fields(keyName).Type = dbGUID Then
+            Id = StringFromGUID(parentForm.Recordset.Fields(keyName).value)
+        Else
+            Id = parentForm.Recordset.Fields(keyName).value
+        End If
+        DoCmd.OpenForm FormName, datamode:=acFormEdit, WindowMode:=WindowMode, whereCondition:=keyName & " =" & Id
+        If Requery Then
+            parentForm.Requery
+        End If
+    End If
+End Sub
+
+Public Sub UpdateModifyTracking(frm As Form)
+    frm.ModifyDate = Now
+    On Error Resume Next
+    If gUser.Id = -1 Or gUser.Id = 0 Then
+        frm.ModifyUserName = gUser.Name
+        frm.ModifyUserId = gUser.Name
+    Else
+        frm.ModifyUserName = gUser.Name
+        frm.ModifyUserId = gUser.Id
+    End If
+End Sub
+Public Sub UpdateCreateTracking(frm As Form, Optional UpdateModify = True)
+    frm.CreateDate = Now
+    On Error Resume Next
+    If gUser.Id = -1 Or gUser.Id = 0 Then
+        frm.CreateUserName = gUser.Name
+        frm.CreateUserId = gUser.Name
+    Else
+        frm.CreateUserName = gUser.Name
+        frm.CreateUserId = gUser.Id
+    End If
+    If UpdateModify Then
+        UpdateModifyTracking frm
+    End If
+End Sub

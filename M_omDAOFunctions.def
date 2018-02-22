@@ -1,0 +1,13 @@
+Option Compare Database
+Option Explicit
+
+Public Sub SetQueryDefProperty(queryName As String, propertyName As String, value As String, Optional propertyType As DAO.DataTypeEnum = dbText)
+Dim prp As DAO.Property
+    On Error Resume Next
+    Set prp = CurrentDb.QueryDefs(queryName).CreateProperty(propertyName, propertyType, value)
+    CurrentDb.QueryDefs(queryName).Properties.Append prp
+    If Err = 3367 Then
+        CurrentDb.QueryDefs(queryName).Properties(propertyName).value = value
+    End If
+    On Error GoTo 0
+End Sub

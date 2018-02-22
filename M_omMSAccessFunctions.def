@@ -1,0 +1,59 @@
+Option Compare Database
+Option Explicit
+
+Public Function FormExists(FormName As String) As Boolean
+    FormExists = False
+    On Error Resume Next
+    FormExists = (CurrentProject.AllForms(FormName).Name = FormName)
+End Function
+
+Public Function ReportExists(reportname As String) As Boolean
+    ReportExists = False
+    On Error Resume Next
+    ReportExists = (CurrentProject.AllReports(reportname).Name = reportname)
+End Function
+Public Function TableExists(tableName As String) As Boolean
+    TableExists = False
+    On Error Resume Next
+    TableExists = (CurrentDb.TableDefs(tableName).Name = tableName)
+End Function
+Public Function QueryExists(queryName As String) As Boolean
+    QueryExists = False
+    On Error Resume Next
+    QueryExists = (CurrentDb.QueryDefs(queryName).Name = queryName)
+End Function
+'Public Function QueryExists(queryName As String) As Boolean
+'  QueryExists = NotIsNullOrEmpty(GetQuerySQL(queryName))
+'End Function
+
+Public Sub DeleteQuery(queryName As String)
+  If QueryExists(queryName) Then
+    CurrentDb.QueryDefs.Delete queryName
+  End If
+End Sub
+Public Sub CreatePassthroughQuery(queryName As String, SQL As String)
+Dim qd As QueryDef
+
+  DeleteQuery queryName
+  Set qd = CurrentDb.CreateQueryDef(queryName)
+  qd.Connect = omSSMAAConnector.ServerCon(ODBCConnection:=True)
+  qd.SQL = SQL
+  CurrentDb.QueryDefs.Refresh
+End Sub
+
+Public Function GetQuerySQL(queryName As String) As String
+  On Error Resume Next
+  GetQuerySQL = CurrentDb.QueryDefs(queryName).SQL
+End Function
+
+Public Sub HideNavigationPane()
+    On Error Resume Next
+    DoCmd.NavigateTo "acNavigationCategoryObjectType"           'Select Navigation Pane
+    DoCmd.RunCommand acCmdWindowHide
+End Sub
+
+Public Sub MinimizeNavigationPane()
+    On Error Resume Next
+    DoCmd.NavigateTo "acNavigationCategoryObjectType"           'Select Navigation Pane
+    DoCmd.Minimize
+End Sub

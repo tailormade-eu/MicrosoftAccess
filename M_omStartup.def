@@ -1,0 +1,19 @@
+Option Compare Database
+Option Explicit
+' Code written by Raoul Jacobs
+' E. jara@opmaat.be
+' Date Craeted : 201112
+
+Public Function Main() As Variant
+Dim FormName As String
+
+    'Stop
+    FormName = "Flow"
+    If NotIsNullOrEmpty(Command()) Then
+        If omStringFunctions.ParseValue(Trim(Command()), "OpenScreen") = "magazijn" Then
+            FormName = "StockCheck_List"
+        End If
+    End If
+    MinimizeNavigationPane
+    DoCmd.OpenForm FormName
+End Function
