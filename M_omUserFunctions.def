@@ -1,0 +1,12 @@
+Option Compare Database
+Option Explicit
+
+Public gUser As New omUser
+
+Public Function GetWindowsUserName() As String
+    GetWindowsUserName = Environ$("UserName")
+End Function
+Public Function LoginWithWindowsUser()
+    Set gUser = New omUser
+    gUser.LoginByNameOnly GetWindowsUserName
+End Function

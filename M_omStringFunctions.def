@@ -1,0 +1,247 @@
+Option Compare Database
+Option Explicit
+' Last Updated by Raoul Jacobs on 20130617_1305
+'Public Function Nz(Value As Variant, Optional valueifnull = "")
+'    Nz = IIf(IsNull(Value), valueifnull, Value)
+'End Function
+Public Function CleanString(value As Variant) As String
+    CleanString = Trim(Nz(value, ""))
+End Function
+
+Public Function IsNullOrEmpty(value As Variant) As Boolean
+    IsNullOrEmpty = (Len(CleanString(value)) = 0)
+End Function
+
+Public Function IsNullOrEmptyOrZero(value As Variant) As Boolean
+    IsNullOrEmptyOrZero = IsNullOrEmpty(value)
+    If Not IsNullOrEmptyOrZero Then
+        IsNullOrEmptyOrZero = (value = 0)
+    End If
+End Function
+Public Function NotIsNullOrEmptyOrZero(value As Variant) As Boolean
+    NotIsNullOrEmptyOrZero = Not IsNullOrEmptyOrZero(value)
+End Function
+Public Function NotIsNullOrEmpty(value As Variant) As Boolean
+    NotIsNullOrEmpty = Not IsNullOrEmpty(value)
+End Function
+
+Public Function ParseValue(arguments As Variant, valueName As String, Optional assignChar = "=", Optional splitchar = ",", Optional notFoundValue As Variant = Null) As Variant
+Dim lPos As Long
+Dim lPosTerminator
+Dim lPosEqual As Long
+
+    ParseValue = notFoundValue
+    lPos = InStr(1, Nz(arguments, ""), valueName & assignChar)
+    If lPos <> 0 Then
+        lPosEqual = InStr(lPos, arguments, assignChar)
+        If lPosEqual <> 0 Then
+            lPosTerminator = InStr(lPosEqual, arguments, splitchar)
+            ParseValue = Mid(arguments, lPosEqual + 1, IIf(lPosTerminator = 0, Len(arguments), lPosTerminator - 1) - lPosEqual)
+        End If
+    End If
+End Function
+
+
+Public Function StringSplit(value As String, splitchar As String, Optional removeEmptyValues As Boolean = True) As String()
+Dim startPos As Long
+Dim endPos As Long
+Dim result() As String
+Dim length As Long
+Dim tempValue As String
+    If Len(value) > 0 Then
+        StringArrayClear result
+        startPos = 1
+        While startPos <> 0
+            endPos = InStr(startPos, value, splitchar)
+            length = IIf(endPos = 0, Len(value) + 1, endPos) - startPos
+            If (removeEmptyValues = False) Or (removeEmptyValues And length > 0) Then
+                tempValue = Mid(value, startPos, length)
+                StringArrayAdd result, tempValue
+            End If
+            startPos = IIf(endPos <> 0, endPos + 1, 0)
+        Wend
+    End If
+    StringSplit = result
+End Function
+
+Public Function StringSplitGetByIndex(value As String, splitchar As String, index As Long) As Variant
+    StringSplitGetByIndex = Split(value, splitchar)(index)
+End Function
+Public Function IsIdNullOrZero(value As Variant) As Boolean
+    IsIdNullOrZero = (Nz(value, 0) = 0)
+End Function
+Public Function NotIsIdNullOrZero(value As Variant) As Boolean
+    NotIsIdNullOrZero = Not IsIdNullOrZero(value)
+End Function
+Public Function IsIdNullOrEmptyOrZero(value As Variant) As Boolean
+    If IsNullOrEmpty(value) Then
+        value = 0
+    End If
+    IsIdNullOrEmptyOrZero = (Nz(value, 0) = 0)
+End Function
+
+
+Public Function NotIsIdNullOrEmptyOrZero(value As Variant) As Boolean
+    NotIsIdNullOrEmptyOrZero = Not IsIdNullOrEmptyOrZero(value)
+End Function
+
+Public Function AreIdsEqual(id1 As Variant, id2 As Variant) As Boolean
+    If omStringFunctions.IsIdNullOrZero(id1) And omStringFunctions.IsIdNullOrZero(id2) Then AreIdsEqual = True
+    AreIdsEqual = Nz((id1 = id2), False)
+End Function
+Public Function AreStringsEqual(string1 As Variant, string2 As Variant) As Boolean
+    If omStringFunctions.IsNullOrEmpty(string1) And omStringFunctions.IsNullOrEmpty(string2) Then AreStringsEqual = True
+    AreStringsEqual = Nz((string1 = string2), False)
+End Function
+
+Public Function StringFormat(source As String, replace0 As String, Optional replace1 As Variant = Null, Optional replace2 As Variant = Null, Optional replace3 As Variant = Null, Optional replace4 As Variant = Null, Optional replace5 As Variant = Null, Optional replace6 As Variant = Null, Optional replace7 As Variant = Null, Optional replace8 As Variant = Null, Optional replace9 As Variant = Null, Optional replace10 As Variant = Null, Optional replace11 As Variant = Null, Optional replace12 As Variant = Null) As String
+    StringFormat = Replace(source, "{0}", replace0)
+    StringFormat = Replace(StringFormat, "{1}", Nz(replace1, ""))
+    StringFormat = Replace(StringFormat, "{2}", Nz(replace2, ""))
+    StringFormat = Replace(StringFormat, "{3}", Nz(replace3, ""))
+    StringFormat = Replace(StringFormat, "{4}", Nz(replace4, ""))
+    StringFormat = Replace(StringFormat, "{5}", Nz(replace5, ""))
+    StringFormat = Replace(StringFormat, "{6}", Nz(replace6, ""))
+    StringFormat = Replace(StringFormat, "{7}", Nz(replace7, ""))
+    StringFormat = Replace(StringFormat, "{8}", Nz(replace8, ""))
+    StringFormat = Replace(StringFormat, "{9}", Nz(replace9, ""))
+    StringFormat = Replace(StringFormat, "{10}", Nz(replace10, ""))
+    StringFormat = Replace(StringFormat, "{11}", Nz(replace11, ""))
+    StringFormat = Replace(StringFormat, "{12}", Nz(replace12, ""))
+End Function
+Public Function RemoveChars(source As Variant, findPattern As String, replaceString As String)
+Dim returnString As String
+Dim i As Long
+ 
+    returnString = Nz(source, "")
+    For i = 1 To Len(findPattern)
+        returnString = Replace(returnString, Mid(findPattern, i, 1), replaceString)
+    Next i
+    RemoveChars = returnString
+    
+End Function
+Public Function KeepChars(source As Variant, findPattern As String, replaceString As String)
+Dim returnString As String
+Dim i As Long
+ 
+    source = Nz(source, "")
+    For i = 1 To Len(source)
+        If InStr(1, findPattern, Mid(source, i, 1)) > 0 Then
+            returnString = returnString & Mid(source, i, 1)
+        Else
+            returnString = returnString & replaceString
+        End If
+    Next i
+    KeepChars = returnString
+End Function
+
+
+Public Function ContainsString(source As Variant, containString As String, Optional useDelimiter As String = "") As Long
+    ContainsString = InStr(1, useDelimiter & source & useDelimiter, useDelimiter & containString & useDelimiter)
+    
+End Function
+
+Public Function GetEnglishPlural(value As String) As String
+
+    If Right(value, 1) = "y" Then
+        GetEnglishPlural = Left(value, Len(value) - 1) & "ies"
+    ElseIf Right(value, 1) = "s" Then
+        GetEnglishPlural = value & "es"
+    Else
+        GetEnglishPlural = value & "s"
+    End If
+End Function
+
+Public Function ReplaceCharPattern(source As Variant, findPattern As String, Replacement As String) As Variant
+Dim returnString As String
+Dim i As Long
+    
+    If IsNullOrEmpty(source) Then
+        ReplaceCharPattern = Null
+    Else
+        returnString = source
+        For i = 1 To Len(findPattern)
+            returnString = replaceString(returnString, Mid(findPattern, i, 1), Replacement)
+        Next i
+        ReplaceCharPattern = returnString
+    End If
+End Function
+Public Function CleanCommunication(value As Variant) As Variant
+    If IsNullOrEmpty(value) Then
+        CleanCommunication = Null
+    Else
+        CleanCommunication = replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(value, " ", ""), "+", ""), ".", ""), ",", ""), "-", ""), "@", ""), ";", ""), "*", ""), "/", ""), "(", ""), ")", "")
+    End If
+End Function
+
+
+Function Proper(var As Variant) As Variant
+' Purpose: Convert the case of var so that the first letter of each word capitalized.
+   Dim strV As String, intChar As Integer, i As Integer
+   Dim fWasSpace As Integer    'Flag: was previous char a space?
+
+   If IsNull(var) Then Exit Function
+   strV = var
+   fWasSpace = True              'Initialize to capitalize first letter.
+   For i = 1 To Len(strV)
+      intChar = Asc(Mid$(strV, i, 1))
+      Select Case intChar
+      Case 65 To 90              ' A to Z
+         If Not fWasSpace Then Mid$(strV, i, 1) = Chr$(intChar Or &H20)
+      Case 97 To 122             ' a to z
+         If fWasSpace Then Mid$(strV, i, 1) = Chr$(intChar And &HDF)
+      End Select
+      fWasSpace = (intChar = 32)
+   Next
+   Proper = strV
+End Function
+
+
+Public Function replaceString(ByVal value As String, oldString As String, newString As String) As String
+    While InStr(1, value, oldString) > 0
+        value = Replace(value, oldString, newString)
+    Wend
+    replaceString = value
+End Function
+Public Function GetvbCrLf() As String
+    GetvbCrLf = vbCrLf
+End Function
+
+Public Function GetDelimitedValue(value As String, Optional Position As Long = 0, Optional delimiter As String = ";", Optional EmbraceChar As String)
+Dim strings() As String
+
+    strings = omStringFunctions.StringSplit(value, delimiter & EmbraceChar, False)
+    GetDelimitedValue = Replace(strings(Position), EmbraceChar, "")
+End Function
+Public Function GetScrambleNumbers(length As Long) As String
+Dim strTemp As String
+Dim i As Long
+    Randomize
+    For i = 1 To length
+        strTemp = strTemp & CInt(Rnd(1) * 9)
+    Next i
+    GetScrambleNumbers = strTemp
+End Function
+
+Public Function IsStringInPattern(value As String, pattern As String) As Boolean
+    IsStringInPattern = (InStr(1, pattern, value) > 0)
+End Function
+
+Public Function CleanStringUsingPattern(ByVal value As Variant, Optional findPattern As String = vbCrLf & vbTab, Optional replaceString As String = " ", Optional replaceDoubleBlanks As Boolean = True, Optional trimResult As Boolean = True) As String
+    If IsNull(value) Then
+        CleanStringUsingPattern = ""
+        Exit Function
+    End If
+    
+    value = ReplaceCharPattern(value, findPattern, replaceString)
+    If replaceDoubleBlanks Then
+        While InStr(1, value, "  ") > 0
+            value = Replace(value, "  ", " ")
+        Wend
+    End If
+    If trimResult Then
+        CleanStringUsingPattern = CleanString(value)
+    Else
+        CleanStringUsingPattern = value
+    End If
+End Function

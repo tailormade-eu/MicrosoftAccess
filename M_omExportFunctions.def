@@ -1,0 +1,14 @@
+Option Compare Database
+Option Explicit
+
+
+Public Function ExportQuery(queryName As String) As String
+Dim fileName As String
+
+    fileName = gFso.BuildPath(GetDesktopFolder, queryName & ".xlsx")
+    If gFso.FileExists(fileName) Then
+        gFso.DeleteFile fileName, True
+    End If
+    DoCmd.TransferSpreadsheet acExport, acSpreadsheetTypeExcel12Xml, queryName, fileName, True
+    ExportQuery = fileName
+End Function
