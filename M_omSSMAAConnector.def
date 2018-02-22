@@ -22,8 +22,8 @@ Dim m_ServerCon As String
 
 ' vm sqlserver : OPMAAT-D800VM\SQLEXPRESS
 
-Public Function LocalCon() As ADODB.Connection
-  Set LocalCon = CurrentProject.Connection
+Public Function LocalCon() As ADODB.connection
+  Set LocalCon = CurrentProject.connection
 End Function
 
 Public Function ServerCon(Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default, Optional ODBCConnection As Boolean = False) As String
@@ -246,7 +246,7 @@ Dim typeFilter As String
 Dim t As String
 
     rs.Open "SELECT * FROM MSysObjects", LocalCon, adOpenForwardOnly, adLockReadOnly
-    rsTable.Open storageTable, CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    rsTable.Open storageTable, CurrentProject.connection, adOpenDynamic, adLockOptimistic
     While Not rs.EOF
         
         typeFilter = "4" '",1,4,"
@@ -438,12 +438,12 @@ Dim fileName As String
         fileName = Replace(fileName, "_client", "")
     End If
     fileName = fileName & "_Data"
-    gSysDefaults.Mode = LocalMode
-    gSysDefaults.Development = gDevelopmentMode
+    gSystemDefaults.Mode = LocalMode
+    gSystemDefaults.Development = gDevelopmentMode
     If linkLocal Then
         dataPath = CurrentProject.path
     Else
-        dataPath = Nz(gSysDefaults.Load("DataPath"), "")
+        dataPath = Nz(gSystemDefaults.Load("DataPath"), "")
     End If
     
     DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, fileName & ".mdb")
