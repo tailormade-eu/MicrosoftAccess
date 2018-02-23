@@ -159,7 +159,7 @@ Dim F As Scripting.File
             rs("Name") = F.Name
             rs("Filename") = F.path
             rs("Extension") = omFileFunctions.GetExtension(F.Name)
-            rs.Update
+            rs.update
         End If
     Next
     rs.Close
