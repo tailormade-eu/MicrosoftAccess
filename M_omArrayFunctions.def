@@ -45,16 +45,16 @@ Public Function StringArrayCount(stringArray() As String) As Long
 End Function
 Public Function StringArrayFind(stringArray() As String, value As String, includeContains As Boolean) As Long
 Dim i As Long
-Dim length As Long
+Dim Length As Long
 Dim containsArray() As String
 
-    length = StringArrayLength(stringArray)
-    If length = 0 Then
+    Length = StringArrayLength(stringArray)
+    If Length = 0 Then
         Exit Function
     End If
     StringArrayFind = -1
     If includeContains Then
-        While i < length
+        While i < Length
             If InStr(1, stringArray(i), value) > 0 Then
                 StringArrayFind = i
                 Exit Function
@@ -62,7 +62,7 @@ Dim containsArray() As String
             i = i + 1
         Wend
     Else
-        While i < length
+        While i < Length
             If stringArray(i) = value Then
                 StringArrayFind = i
                 Exit Function

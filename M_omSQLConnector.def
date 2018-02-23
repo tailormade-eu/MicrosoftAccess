@@ -6,7 +6,7 @@ Option Compare Database
 Option Explicit
 
 Private Connection As New ADODB.Connection
-Public ConnectionString As String
+Private p_ConnectionString As String
 Public ODBCConnectionString As String
 Public Sub ExecuteCommandTextNonQuery(commandText As String, Optional parameter1 As Variant = Null, Optional parameter2 As Variant = Null, Optional parameter3 As Variant = Null, Optional parameter4 As Variant = Null, Optional parameter5 As Variant = Null, Optional parameter6 As Variant = Null, Optional parameter7 As Variant = Null, Optional parameter8 As Variant = Null, Optional parameter9 As Variant = Null, Optional parameter10 As Variant = Null, Optional parameter11 As Variant = Null, Optional parameter12 As Variant = Null, Optional parameter13 As Variant = Null, Optional parameter14 As Variant = Null, Optional parameter15 As Variant = Null, Optional parameter16 As Variant = Null, Optional parameter17 As Variant = Null, Optional parameter18 As Variant = Null, Optional parameter19 As Variant = Null)
 Dim cmd As New ADODB.Command
@@ -15,47 +15,47 @@ Dim i As Long
     cmd.CommandType = adCmdText
     cmd.commandText = commandText
     cmd.ActiveConnection = Connection
-    cmd.Parameters.Refresh
-    For i = 1 To cmd.Parameters.Count - 1
+    cmd.parameters.Refresh
+    For i = 1 To cmd.parameters.Count - 1
         Select Case i
             Case 1
-                cmd.Parameters(i) = parameter1
+                cmd.parameters(i) = parameter1
             Case 2
-                cmd.Parameters(i) = parameter2
+                cmd.parameters(i) = parameter2
             Case 3
-                cmd.Parameters(i) = parameter3
+                cmd.parameters(i) = parameter3
             Case 4
-                cmd.Parameters(i) = parameter4
+                cmd.parameters(i) = parameter4
             Case 5
-                cmd.Parameters(i) = parameter5
+                cmd.parameters(i) = parameter5
             Case 6
-                cmd.Parameters(i) = parameter6
+                cmd.parameters(i) = parameter6
             Case 7
-                cmd.Parameters(i) = parameter7
+                cmd.parameters(i) = parameter7
             Case 8
-                cmd.Parameters(i) = parameter8
+                cmd.parameters(i) = parameter8
             Case 9
-                cmd.Parameters(i) = parameter9
+                cmd.parameters(i) = parameter9
             Case 10
-                cmd.Parameters(i) = parameter10
+                cmd.parameters(i) = parameter10
             Case 11
-                cmd.Parameters(i) = parameter11
+                cmd.parameters(i) = parameter11
             Case 12
-                cmd.Parameters(i) = parameter12
+                cmd.parameters(i) = parameter12
             Case 13
-                cmd.Parameters(i) = parameter13
+                cmd.parameters(i) = parameter13
             Case 14
-                cmd.Parameters(i) = parameter14
+                cmd.parameters(i) = parameter14
             Case 15
-                cmd.Parameters(i) = parameter15
+                cmd.parameters(i) = parameter15
             Case 16
-                cmd.Parameters(i) = parameter16
+                cmd.parameters(i) = parameter16
             Case 17
-                cmd.Parameters(i) = parameter17
+                cmd.parameters(i) = parameter17
             Case 18
-                cmd.Parameters(i) = parameter18
+                cmd.parameters(i) = parameter18
             Case 19
-                cmd.Parameters(i) = parameter19
+                cmd.parameters(i) = parameter19
         End Select
     Next
     cmd.Execute
@@ -68,47 +68,47 @@ Dim i As Long
     cmd.CommandType = adCmdStoredProc
     cmd.commandText = storedProcedureName
     cmd.ActiveConnection = Connection
-    cmd.Parameters.Refresh
-    For i = 1 To cmd.Parameters.Count - 1
+    cmd.parameters.Refresh
+    For i = 1 To cmd.parameters.Count - 1
         Select Case i
             Case 1
-                cmd.Parameters(i) = parameter1
+                cmd.parameters(i) = parameter1
             Case 2
-                cmd.Parameters(i) = parameter2
+                cmd.parameters(i) = parameter2
             Case 3
-                cmd.Parameters(i) = parameter3
+                cmd.parameters(i) = parameter3
             Case 4
-                cmd.Parameters(i) = parameter4
+                cmd.parameters(i) = parameter4
             Case 5
-                cmd.Parameters(i) = parameter5
+                cmd.parameters(i) = parameter5
             Case 6
-                cmd.Parameters(i) = parameter6
+                cmd.parameters(i) = parameter6
             Case 7
-                cmd.Parameters(i) = parameter7
+                cmd.parameters(i) = parameter7
             Case 8
-                cmd.Parameters(i) = parameter8
+                cmd.parameters(i) = parameter8
             Case 9
-                cmd.Parameters(i) = parameter9
+                cmd.parameters(i) = parameter9
             Case 10
-                cmd.Parameters(i) = parameter10
+                cmd.parameters(i) = parameter10
             Case 11
-                cmd.Parameters(i) = parameter11
+                cmd.parameters(i) = parameter11
             Case 12
-                cmd.Parameters(i) = parameter12
+                cmd.parameters(i) = parameter12
             Case 13
-                cmd.Parameters(i) = parameter13
+                cmd.parameters(i) = parameter13
             Case 14
-                cmd.Parameters(i) = parameter14
+                cmd.parameters(i) = parameter14
             Case 15
-                cmd.Parameters(i) = parameter15
+                cmd.parameters(i) = parameter15
             Case 16
-                cmd.Parameters(i) = parameter16
+                cmd.parameters(i) = parameter16
             Case 17
-                cmd.Parameters(i) = parameter17
+                cmd.parameters(i) = parameter17
             Case 18
-                cmd.Parameters(i) = parameter18
+                cmd.parameters(i) = parameter18
             Case 19
-                cmd.Parameters(i) = parameter19
+                cmd.parameters(i) = parameter19
         End Select
     Next
     cmd.Execute
@@ -138,14 +138,15 @@ End Property
 Private Sub Class_Initialize()
 
 
-    Me.ConnectionString = "Provider=SQLNCLI" & cSQLNCLI & ";Persist Security Info=True;Data Source=" & DFirst("SQLServer", "SSMAA_ODBC_Tables") & ";Initial Catalog=" & DFirst("SQLDatabase", "SSMAA_ODBC_Tables") & ";Data Provider=SQLOLEDB.1"
+    p_ConnectionString = "Provider=SQLNCLI" & cSQLNCLI & ";Persist Security Info=True;Data Source=" & DFirst("SQLServer", "SSMAA_ODBC_Tables") & ";Initial Catalog=" & DFirst("SQLDatabase", "SSMAA_ODBC_Tables") & ";Data Provider=SQLOLEDB.1"
     If Len(Nz(DFirst("SQLLogin", "SSMAA_ODBC_Tables"), "")) > 0 Then
-        Me.ConnectionString = Me.ConnectionString & ";User ID=" & DFirst("SQLLogin", "SSMAA_ODBC_Tables") & ";Password=" & DFirst("SQLPassword", "SSMAA_ODBC_Tables")
+        p_ConnectionString = p_ConnectionString & ";User ID=" & DFirst("SQLLogin", "SSMAA_ODBC_Tables") & ";Password=" & DFirst("SQLPassword", "SSMAA_ODBC_Tables")
     Else
-        Me.ConnectionString = Me.ConnectionString & ";Trusted_Connection=yes"
+        p_ConnectionString = p_ConnectionString & ";Trusted_Connection=yes"
     End If
     ODBCConnectionString = CurrentDb.TableDefs(DFirst("ODBCTable", "SSMAA_ODBC_Tables")).Connect
-    Connection.ConnectionString = Me.ConnectionString
+    Connection.ConnectionString = p_ConnectionString
+    On Error Resume Next
     Connection.Open
 End Sub
 
@@ -153,3 +154,17 @@ Private Sub Class_Terminate()
     Connection.Close
     Set Connection = Nothing
 End Sub
+
+
+Public Property Get ConnectionString() As Variant
+    ConnectionString = p_ConnectionString
+End Property
+
+Public Property Let ConnectionString(ByVal vNewValue As Variant)
+    If Connection.state = 1 Then
+        Connection.Close
+        p_ConnectionString = IIf(Left(vNewValue, 5) = "odbc;", Mid(vNewValue, 6), vNewValue)
+        Connection.ConnectionString = p_ConnectionString
+        Connection.Open
+    End If
+End Property
