@@ -2,28 +2,14 @@ Option Compare Database
 Option Explicit
 Global cSQLNCLI As Integer
 Global cSQLNCLIFound As Boolean
-'Global gomCS As New omConnectionString
 
 Dim omCSTest As New omConnectionString
 Dim omCSLastUsed As New omConnectionString
 Dim m_ServerCon_ODBC As String
 Dim m_ServerCon As String
 
-' Module Name   SSMAAConnector
-'
-' Author        Raoul Jacobs
-' Company       opmaat bvba
-' Email         jara@opmaat.be
-' Modify Date   2006-07-25
-'
-' Description
-'   the function Link will relink all tables which are defined in the table SSMAA_ODBC_Tables
-'   the function CreateTable will create the tabel SSMAA_ODBC_Tables
-
-' vm sqlserver : OPMAAT-D800VM\SQLEXPRESS
-
-Public Function LocalCon() As ADODB.connection
-  Set LocalCon = CurrentProject.connection
+Public Function LocalCon() As ADODB.Connection
+  Set LocalCon = CurrentProject.Connection
 End Function
 
 Public Function ServerCon(Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default, Optional ODBCConnection As Boolean = False) As String
@@ -89,7 +75,7 @@ Dim strDatabaseName As String
         'Debug.Print Now
         DoEvents
         rsODBC("Attach") = 0
-        rsODBC.Update
+        rsODBC.update
         rsODBC.MoveNext
     Wend
     rsODBC.Close
@@ -106,27 +92,27 @@ Dim cmd As New ADODB.Command
     Set omCSLastUsed = New omConnectionString
     cmd.commandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Group],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
     cmd.ActiveConnection = LocalCon
-    cmd.Parameters.Append cmd.CreateParameter("p1", adVarWChar, adParamInput, 512)
-    cmd.Parameters.Append cmd.CreateParameter("p2", adLongVarWChar, adParamInput, 256)
-    cmd.Parameters.Append cmd.CreateParameter("p3", adLongVarWChar, adParamInput, 256)
-    cmd.Parameters.Append cmd.CreateParameter("p4", adLongVarWChar, adParamInput, 256)
-    cmd.Parameters.Append cmd.CreateParameter("p5", adLongVarWChar, adParamInput, 256)
-    cmd.Parameters.Append cmd.CreateParameter("p6", adLongVarWChar, adParamInput, 256)
-    cmd.Parameters.Append cmd.CreateParameter("p7", adLongVarWChar, adParamInput, 256)
-    cmd.Parameters.Append cmd.CreateParameter("p8", adLongVarWChar, adParamInput, 256)
-    cmd.Parameters.Append cmd.CreateParameter("p9", adLongVarWChar, adParamInput, 256)
+    cmd.parameters.Append cmd.CreateParameter("p1", adVarWChar, adParamInput, 512)
+    cmd.parameters.Append cmd.CreateParameter("p2", adLongVarWChar, adParamInput, 256)
+    cmd.parameters.Append cmd.CreateParameter("p3", adLongVarWChar, adParamInput, 256)
+    cmd.parameters.Append cmd.CreateParameter("p4", adLongVarWChar, adParamInput, 256)
+    cmd.parameters.Append cmd.CreateParameter("p5", adLongVarWChar, adParamInput, 256)
+    cmd.parameters.Append cmd.CreateParameter("p6", adLongVarWChar, adParamInput, 256)
+    cmd.parameters.Append cmd.CreateParameter("p7", adLongVarWChar, adParamInput, 256)
+    cmd.parameters.Append cmd.CreateParameter("p8", adLongVarWChar, adParamInput, 256)
+    cmd.parameters.Append cmd.CreateParameter("p9", adLongVarWChar, adParamInput, 256)
     
     rs.Open "SELECT [Group], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword From SSMAA_ODBC_Tables " & IIf(Group <> "", " WHERE [Group]=" & Chr(34) & Group & Chr(34), "") & " GROUP BY [Group], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword", LocalCon, adOpenForwardOnly, adLockReadOnly
     While Not rs.EOF
-        cmd.Parameters(0) = omCSLastUsed.GetConnectionString(Nz(rs("sqlDatabase"), ""), Nz(rs("SQLServer"), ""), False, Nz(rs("ConnectionTypeId"), ConnectionType), Nz(rs("DSN"), ""), Nz(rs("SQLLogin"), ""), Nz(rs("SQLPassword"), ""), Nz(rs("Group"), ""), Nz(rs("SQLServerPort"), ""))
-        cmd.Parameters(1) = Nz(rs("Group"), "")
-        cmd.Parameters(2) = Nz(rs("DSN"), "")
-        cmd.Parameters(3) = Nz(rs("SQLServer"), "")
-        cmd.Parameters(4) = Nz(rs("SQLServerPort"), "")
-        cmd.Parameters(5) = Nz(rs("SQLDatabase"), "")
-        cmd.Parameters(6) = Nz(rs("ConnectionTypeId"), "")
-        cmd.Parameters(7) = Nz(rs("SQLLogin"), "")
-        cmd.Parameters(8) = Nz(rs("SQLPassword"), "")
+        cmd.parameters(0) = omCSLastUsed.GetConnectionString(Nz(rs("sqlDatabase"), ""), Nz(rs("SQLServer"), ""), False, Nz(rs("ConnectionTypeId"), ConnectionType), Nz(rs("DSN"), ""), Nz(rs("SQLLogin"), ""), Nz(rs("SQLPassword"), ""), Nz(rs("Group"), ""), Nz(rs("SQLServerPort"), ""))
+        cmd.parameters(1) = Nz(rs("Group"), "")
+        cmd.parameters(2) = Nz(rs("DSN"), "")
+        cmd.parameters(3) = Nz(rs("SQLServer"), "")
+        cmd.parameters(4) = Nz(rs("SQLServerPort"), "")
+        cmd.parameters(5) = Nz(rs("SQLDatabase"), "")
+        cmd.parameters(6) = Nz(rs("ConnectionTypeId"), "")
+        cmd.parameters(7) = Nz(rs("SQLLogin"), "")
+        cmd.parameters(8) = Nz(rs("SQLPassword"), "")
         cmd.Execute
         rs.MoveNext
     Wend
@@ -134,7 +120,7 @@ Dim cmd As New ADODB.Command
     Set rs = Nothing
     Set cmd = Nothing
 End Sub
-Sub AttachedTable(ConnectionString As String, SourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False)
+Sub AttachedTable(ConnectionString As String, sourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False)
 Dim tbl As DAO.TableDef
               
     On Error Resume Next
@@ -142,7 +128,7 @@ Dim tbl As DAO.TableDef
     Set tbl = CurrentDb.CreateTableDef(DestinationTable)
     'Set the properties to create the link
     tbl.Connect = ConnectionString
-    tbl.SourceTableName = SourceTable
+    tbl.SourceTableName = sourceTable
     If SavePassword And (tbl.Attributes And dbAttachSavePWD) = 0 Then
         tbl.Attributes = tbl.Attributes + dbAttachSavePWD
     End If
@@ -246,7 +232,7 @@ Dim typeFilter As String
 Dim t As String
 
     rs.Open "SELECT * FROM MSysObjects", LocalCon, adOpenForwardOnly, adLockReadOnly
-    rsTable.Open storageTable, CurrentProject.connection, adOpenDynamic, adLockOptimistic
+    rsTable.Open storageTable, CurrentProject.Connection, adOpenDynamic, adLockOptimistic
     While Not rs.EOF
         
         typeFilter = "4" '",1,4,"
@@ -278,7 +264,7 @@ Dim t As String
                         rsTable("SQLTable") = StringSplitGetByIndex(t, ".", 1)
                     End If
                 End If
-                rsTable.Update
+                rsTable.update
             End If
         End If
         rs.MoveNext
@@ -396,7 +382,7 @@ Dim strWhere As String
     On Error Resume Next
     'Debug.Print Now
     strWhere = IIf(Group <> "", "[Group] = " & Chr(34) & Group & Chr(34), "")
-    strWhere = omSQLFunctions.WhereAnd(strWhere, IIf(AttachOnly, "[Attach]= True", ""))
+    strWhere = omSQLFunctions.WhereAnd(strWhere, IIf(AttachOnly, "[Attach] = True", ""))
     rsODBC.Open omSQLFunctions.BuildSQL("SELECT * FROM SSMAA_ODBC_Tables", WhereClause:=strWhere), LocalCon, adOpenForwardOnly
     Do Until rsODBC.EOF
       DoCmd.DeleteObject acTable, rsODBC("ODBCTable")
@@ -424,7 +410,10 @@ Dim rs As New ADODB.Recordset
 
 End Sub
 
-
+Public Sub SetSQLConnectorConnectionString(tableName As String)
+    GetSQLNCLIVersion
+    gSQLConnector.ConnectionString = omSSMAAConnector.GetConnectionStringByProperty(tableName)
+End Sub
 
 Public Sub LinkMSAccess(Optional linkLocal As Boolean = False)
 Dim tblCon As New omTableConnector
