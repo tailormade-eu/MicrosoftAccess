@@ -39,7 +39,7 @@ Dim Id As String
         Else
             Id = parentForm.Recordset.Fields(keyName).value
         End If
-        DoCmd.OpenForm FormName, datamode:=acFormEdit, WindowMode:=WindowMode, whereCondition:=keyName & " =" & Id
+        DoCmd.OpenForm FormName, datamode:=acFormEdit, WindowMode:=WindowMode, WhereCondition:=keyName & " =" & Id
         If Requery Then
             parentForm.Requery
         End If

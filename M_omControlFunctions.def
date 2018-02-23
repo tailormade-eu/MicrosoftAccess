@@ -43,7 +43,7 @@ Dim Id As Long
         If NotIsNullOrEmpty(ParentFieldName) Then
             rs(ParentFieldName) = ParentData
         End If
-        rs.Update
+        rs.update
         Id = rs(idFieldName)
         rs.Close
         Set rs = Nothing

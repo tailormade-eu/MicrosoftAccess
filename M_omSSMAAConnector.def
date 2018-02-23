@@ -120,7 +120,7 @@ Dim cmd As New ADODB.Command
     Set rs = Nothing
     Set cmd = Nothing
 End Sub
-Sub AttachedTable(ConnectionString As String, sourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False)
+Sub AttachedTable(ConnectionString As String, SourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False)
 Dim tbl As DAO.TableDef
               
     On Error Resume Next
@@ -128,7 +128,7 @@ Dim tbl As DAO.TableDef
     Set tbl = CurrentDb.CreateTableDef(DestinationTable)
     'Set the properties to create the link
     tbl.Connect = ConnectionString
-    tbl.SourceTableName = sourceTable
+    tbl.SourceTableName = SourceTable
     If SavePassword And (tbl.Attributes And dbAttachSavePWD) = 0 Then
         tbl.Attributes = tbl.Attributes + dbAttachSavePWD
     End If
