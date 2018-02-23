@@ -31,12 +31,12 @@ Public Sub DeleteQuery(queryName As String)
     CurrentDb.QueryDefs.Delete queryName
   End If
 End Sub
-Public Sub CreatePassthroughQuery(queryName As String, SQL As String)
+Public Sub CreatePassthroughQuery(queryName As String, SQL As String, connection As String)
 Dim qd As QueryDef
 
   DeleteQuery queryName
   Set qd = CurrentDb.CreateQueryDef(queryName)
-  qd.Connect = omSSMAAConnector.ServerCon(ODBCConnection:=True)
+  qd.Connect = connection
   qd.SQL = SQL
   CurrentDb.QueryDefs.Refresh
 End Sub
@@ -47,11 +47,13 @@ Public Function GetQuerySQL(queryName As String) As String
 End Function
 
 Public Sub HideNavigationPane()
+    On Error Resume Next
     DoCmd.NavigateTo "acNavigationCategoryObjectType"           'Select Navigation Pane
     DoCmd.RunCommand acCmdWindowHide
 End Sub
 
 Public Sub MinimizeNavigationPane()
+    On Error Resume Next
     DoCmd.NavigateTo "acNavigationCategoryObjectType"           'Select Navigation Pane
     DoCmd.Minimize
 End Sub
