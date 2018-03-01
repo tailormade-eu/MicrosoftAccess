@@ -1,4 +1,4 @@
 Option Compare Database
 Option Explicit
 
-Global gSQLConnector As omSQLConnector
+Global gSQLConnector As New omSQLConnector
