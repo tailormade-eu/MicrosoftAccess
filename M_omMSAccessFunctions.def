@@ -31,12 +31,12 @@ Public Sub DeleteQuery(queryName As String)
     CurrentDb.QueryDefs.Delete queryName
   End If
 End Sub
-Public Sub CreatePassthroughQuery(queryName As String, SQL As String, connection As String)
+Public Sub CreatePassthroughQuery(queryName As String, SQL As String, Connection As String)
 Dim qd As QueryDef
 
   DeleteQuery queryName
   Set qd = CurrentDb.CreateQueryDef(queryName)
-  qd.Connect = connection
+  qd.Connect = Connection
   qd.SQL = SQL
   CurrentDb.QueryDefs.Refresh
 End Sub
@@ -56,4 +56,13 @@ Public Sub MinimizeNavigationPane()
     On Error Resume Next
     DoCmd.NavigateTo "acNavigationCategoryObjectType"           'Select Navigation Pane
     DoCmd.Minimize
+End Sub
+
+Public Sub ExportAllTables()
+Dim accObj As AccessObject
+    
+    For Each accObj In CurrentData.AllTables
+        On Error Resume Next
+        ExportQuery accObj.Name
+    Next
 End Sub
