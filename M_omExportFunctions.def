@@ -2,10 +2,14 @@ Option Compare Database
 Option Explicit
 
 
-Public Function ExportQuery(queryName As String) As String
+Public Function ExportQuery(queryName As String, Optional exportPath As String = "") As String
 Dim fileName As String
 
-    fileName = gFso.BuildPath(GetDesktopFolder, queryName & ".xlsx")
+    If IsNullOrEmpty(exportPath) Then
+        exportPath = gFso.BuildPath(GetDesktopFolder, "ExportQuery")
+    End If
+    omFileFunctions.CreateFolderPath (exportPath)
+    fileName = gFso.BuildPath(exportPath, queryName & ".xlsx")
     If gFso.FileExists(fileName) Then
         gFso.DeleteFile fileName, True
     End If
