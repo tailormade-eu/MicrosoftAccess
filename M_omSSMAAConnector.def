@@ -69,8 +69,9 @@ Dim strDatabaseName As String
             strSQLTable = Replace(strSQLTable, "[SQLTable]", rsODBC("SQLTable"))
             
             'strDatabaseName = omCSLastUsed.GetConnectionString(rsODBC("SQLDatabase"), rsODBC("SQLServer"), True, ConnectionType, rsODBC("DSN"), rsODBC("SQLLogin"), rsODBC("SQLPassword"), Group)
+            strDatabaseName = rsODBC("ConnectionString")
             If ConnectionType <> SQLOLEDBProvider Then
-                strDatabaseName = "ODBC;" & rsODBC("ConnectionString")
+                strDatabaseName = "ODBC;" & strDatabaseName
             End If
             AttachedTable strDatabaseName, strSQLTable, rsODBC("ODBCTable"), SavePassword:=SavePassword
         End If
@@ -192,7 +193,7 @@ Dim strFilter As String
             End If
         End If
         GetConnectionStringByProperty = Nz(rs("ConnectionString"), "")
-        If IsNullOrEmpty(GetConnectionStringByProperty) Then
+        If IsNullOrEmpty(GetConnectionStringByProperty) Or Nz(rs("ConnectionTypeId"), 0) <> ConnectionType Then
             GetConnectionStringByProperty = omCSLastUsed.GetConnectionString(rs("SQLDatabase"), rs("SQLServer"), ODBCConnection, ConnectionType, rs("DSN"), rs("SQLLogin"), rs("SQLPassword"))
         End If
         If ODBCConnection And Left(GetConnectionStringByProperty, 5) <> "ODBC;" Then
@@ -413,7 +414,7 @@ Dim rs As New ADODB.Recordset
 End Sub
 
 Public Sub SetSQLConnectorConnectionString(tableName As String)
-    gSQLConnector.ConnectionString = omSSMAAConnector.GetConnectionStringByProperty(tableName)
+    gSQLConnector.ConnectionString = omSSMAAConnector.GetConnectionStringByProperty(tableName, ConnectionType:=SQLOLEDBProvider)
 End Sub
 
 Public Sub LinkMSAccess(Optional linkLocal As Boolean = False)
