@@ -145,9 +145,9 @@ Private Sub Class_Initialize()
     '    p_ConnectionString = p_ConnectionString & ";Trusted_Connection=yes"
     'End If
     'ODBCConnectionString = CurrentDb.TableDefs(DFirst("ODBCTable", "SSMAA_ODBC_Tables")).Connect
-    p_ConnectionString = CurrentProject.Connection.ConnectionString
-    Connection.ConnectionString = p_ConnectionString
-    On Error Resume Next
+    p_ConnectionString = CurrentProject.connection.ConnectionString
+    connection.ConnectionString = p_ConnectionString
+    'On Error Resume Next
     connection.Open
 End Sub
 
