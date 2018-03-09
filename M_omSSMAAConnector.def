@@ -8,8 +8,8 @@ Dim omCSLastUsed As New omConnectionString
 Dim m_ServerCon_ODBC As String
 Dim m_ServerCon As String
 
-Public Function LocalCon() As ADODB.Connection
-  Set LocalCon = CurrentProject.Connection
+Public Function LocalCon() As ADODB.connection
+  Set LocalCon = CurrentProject.connection
 End Function
 
 Public Function ServerCon(Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default, Optional ODBCConnection As Boolean = False) As String
@@ -69,7 +69,9 @@ Dim strDatabaseName As String
             strSQLTable = Replace(strSQLTable, "[SQLTable]", rsODBC("SQLTable"))
             
             'strDatabaseName = omCSLastUsed.GetConnectionString(rsODBC("SQLDatabase"), rsODBC("SQLServer"), True, ConnectionType, rsODBC("DSN"), rsODBC("SQLLogin"), rsODBC("SQLPassword"), Group)
-            strDatabaseName = "ODBC;" & rsODBC("ConnectionString")
+            If ConnectionType <> SQLOLEDBProvider Then
+                strDatabaseName = "ODBC;" & rsODBC("ConnectionString")
+            End If
             AttachedTable strDatabaseName, strSQLTable, rsODBC("ODBCTable"), SavePassword:=SavePassword
         End If
         'Debug.Print Now
@@ -232,7 +234,7 @@ Dim typeFilter As String
 Dim t As String
 
     rs.Open "SELECT * FROM MSysObjects", LocalCon, adOpenForwardOnly, adLockReadOnly
-    rsTable.Open storageTable, CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    rsTable.Open storageTable, CurrentProject.connection, adOpenDynamic, adLockOptimistic
     While Not rs.EOF
         
         typeFilter = "4" '",1,4,"
@@ -411,7 +413,6 @@ Dim rs As New ADODB.Recordset
 End Sub
 
 Public Sub SetSQLConnectorConnectionString(tableName As String)
-    GetSQLNCLIVersion
     gSQLConnector.ConnectionString = omSSMAAConnector.GetConnectionStringByProperty(tableName)
 End Sub
 

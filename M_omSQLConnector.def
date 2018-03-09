@@ -5,59 +5,57 @@ Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
 
-Private Connection As New ADODB.Connection
+Private connection As New ADODB.connection
 Private p_ConnectionString As String
 Public ODBCConnectionString As String
 Public Sub ExecuteCommandTextNonQuery(commandText As String, Optional parameter1 As Variant = Null, Optional parameter2 As Variant = Null, Optional parameter3 As Variant = Null, Optional parameter4 As Variant = Null, Optional parameter5 As Variant = Null, Optional parameter6 As Variant = Null, Optional parameter7 As Variant = Null, Optional parameter8 As Variant = Null, Optional parameter9 As Variant = Null, Optional parameter10 As Variant = Null, Optional parameter11 As Variant = Null, Optional parameter12 As Variant = Null, Optional parameter13 As Variant = Null, Optional parameter14 As Variant = Null, Optional parameter15 As Variant = Null, Optional parameter16 As Variant = Null, Optional parameter17 As Variant = Null, Optional parameter18 As Variant = Null, Optional parameter19 As Variant = Null)
 Dim cmd As New ADODB.Command
 Dim i As Long
-Dim offSet As Long
 
-    offSet = -1
     cmd.CommandType = adCmdText
     cmd.commandText = commandText
-    cmd.ActiveConnection = Connection
-    cmd.Parameters.Refresh
-    For i = 1 To cmd.Parameters.Count
+    cmd.ActiveConnection = connection
+    cmd.parameters.Refresh
+    For i = 1 To cmd.parameters.Count - 1
         Select Case i
             Case 1
-                cmd.Parameters(i + offSet) = parameter1
+                cmd.parameters(i) = parameter1
             Case 2
-                cmd.Parameters(i + offSet) = parameter2
+                cmd.parameters(i) = parameter2
             Case 3
-                cmd.Parameters(i + offSet) = parameter3
+                cmd.parameters(i) = parameter3
             Case 4
-                cmd.Parameters(i + offSet) = parameter4
+                cmd.parameters(i) = parameter4
             Case 5
-                cmd.Parameters(i + offSet) = parameter5
+                cmd.parameters(i) = parameter5
             Case 6
-                cmd.Parameters(i + offSet) = parameter6
+                cmd.parameters(i) = parameter6
             Case 7
-                cmd.Parameters(i + offSet) = parameter7
+                cmd.parameters(i) = parameter7
             Case 8
-                cmd.Parameters(i + offSet) = parameter8
+                cmd.parameters(i) = parameter8
             Case 9
-                cmd.Parameters(i + offSet) = parameter9
+                cmd.parameters(i) = parameter9
             Case 10
-                cmd.Parameters(i + offSet) = parameter10
+                cmd.parameters(i) = parameter10
             Case 11
-                cmd.Parameters(i + offSet) = parameter11
+                cmd.parameters(i) = parameter11
             Case 12
-                cmd.Parameters(i + offSet) = parameter12
+                cmd.parameters(i) = parameter12
             Case 13
-                cmd.Parameters(i + offSet) = parameter13
+                cmd.parameters(i) = parameter13
             Case 14
-                cmd.Parameters(i + offSet) = parameter14
+                cmd.parameters(i) = parameter14
             Case 15
-                cmd.Parameters(i + offSet) = parameter15
+                cmd.parameters(i) = parameter15
             Case 16
-                cmd.Parameters(i + offSet) = parameter16
+                cmd.parameters(i) = parameter16
             Case 17
-                cmd.Parameters(i + offSet) = parameter17
+                cmd.parameters(i) = parameter17
             Case 18
-                cmd.Parameters(i + offSet) = parameter18
+                cmd.parameters(i) = parameter18
             Case 19
-                cmd.Parameters(i + offSet) = parameter19
+                cmd.parameters(i) = parameter19
         End Select
     Next
     cmd.Execute
@@ -66,53 +64,51 @@ End Sub
 Public Sub ExecuteStoredProcedureNonQuery(storedProcedureName As String, Optional parameter1 As Variant = Null, Optional parameter2 As Variant = Null, Optional parameter3 As Variant = Null, Optional parameter4 As Variant = Null, Optional parameter5 As Variant = Null, Optional parameter6 As Variant = Null, Optional parameter7 As Variant = Null, Optional parameter8 As Variant = Null, Optional parameter9 As Variant = Null, Optional parameter10 As Variant = Null, Optional parameter11 As Variant = Null, Optional parameter12 As Variant = Null, Optional parameter13 As Variant = Null, Optional parameter14 As Variant = Null, Optional parameter15 As Variant = Null, Optional parameter16 As Variant = Null, Optional parameter17 As Variant = Null, Optional parameter18 As Variant = Null, Optional parameter19 As Variant = Null)
 Dim cmd As New ADODB.Command
 Dim i As Long
-Dim offSet As Long
 
-    offSet = 0
     cmd.CommandType = adCmdStoredProc
     cmd.commandText = storedProcedureName
-    cmd.ActiveConnection = Connection
-    cmd.Parameters.Refresh
-    For i = 1 To cmd.Parameters.Count
+    cmd.ActiveConnection = connection
+    cmd.parameters.Refresh
+    For i = 1 To cmd.parameters.Count - 1
         Select Case i
             Case 1
-                cmd.Parameters(i + offSet) = parameter1
+                cmd.parameters(i) = parameter1
             Case 2
-                cmd.Parameters(i + offSet) = parameter2
+                cmd.parameters(i) = parameter2
             Case 3
-                cmd.Parameters(i + offSet) = parameter3
+                cmd.parameters(i) = parameter3
             Case 4
-                cmd.Parameters(i + offSet) = parameter4
+                cmd.parameters(i) = parameter4
             Case 5
-                cmd.Parameters(i + offSet) = parameter5
+                cmd.parameters(i) = parameter5
             Case 6
-                cmd.Parameters(i + offSet) = parameter6
+                cmd.parameters(i) = parameter6
             Case 7
-                cmd.Parameters(i + offSet) = parameter7
+                cmd.parameters(i) = parameter7
             Case 8
-                cmd.Parameters(i + offSet) = parameter8
+                cmd.parameters(i) = parameter8
             Case 9
-                cmd.Parameters(i + offSet) = parameter9
+                cmd.parameters(i) = parameter9
             Case 10
-                cmd.Parameters(i + offSet) = parameter10
+                cmd.parameters(i) = parameter10
             Case 11
-                cmd.Parameters(i + offSet) = parameter11
+                cmd.parameters(i) = parameter11
             Case 12
-                cmd.Parameters(i + offSet) = parameter12
+                cmd.parameters(i) = parameter12
             Case 13
-                cmd.Parameters(i + offSet) = parameter13
+                cmd.parameters(i) = parameter13
             Case 14
-                cmd.Parameters(i + offSet) = parameter14
+                cmd.parameters(i) = parameter14
             Case 15
-                cmd.Parameters(i + offSet) = parameter15
+                cmd.parameters(i) = parameter15
             Case 16
-                cmd.Parameters(i + offSet) = parameter16
+                cmd.parameters(i) = parameter16
             Case 17
-                cmd.Parameters(i + offSet) = parameter17
+                cmd.parameters(i) = parameter17
             Case 18
-                cmd.Parameters(i + offSet) = parameter18
+                cmd.parameters(i) = parameter18
             Case 19
-                cmd.Parameters(i + offSet) = parameter19
+                cmd.parameters(i) = parameter19
         End Select
     Next
     cmd.Execute
@@ -129,14 +125,14 @@ End Sub
 
 Public Sub Execute(commandText As String)
     On Error GoTo Execute_Error
-    Connection.Execute commandText
+    connection.Execute commandText
     Exit Sub
 Execute_Error:
     MsgBox Error
     Resume Next
 End Sub
-Public Property Get ActiveConnection() As ADODB.Connection
-    Set ActiveConnection = Connection
+Public Property Get ActiveConnection() As ADODB.connection
+    Set ActiveConnection = connection
 End Property
 
 Private Sub Class_Initialize()
@@ -152,12 +148,12 @@ Private Sub Class_Initialize()
     p_ConnectionString = CurrentProject.Connection.ConnectionString
     Connection.ConnectionString = p_ConnectionString
     On Error Resume Next
-    Connection.Open
+    connection.Open
 End Sub
 
 Private Sub Class_Terminate()
-    Connection.Close
-    Set Connection = Nothing
+    connection.Close
+    Set connection = Nothing
 End Sub
 
 
@@ -166,10 +162,11 @@ Public Property Get ConnectionString() As Variant
 End Property
 
 Public Property Let ConnectionString(ByVal vNewValue As Variant)
-    If Connection.state = 1 Then
-        Connection.Close
-        p_ConnectionString = IIf(Left(vNewValue, 5) = "odbc;", Mid(vNewValue, 6), vNewValue)
-        Connection.ConnectionString = p_ConnectionString
-        Connection.Open
+    If connection.state = 1 Then
+        connection.Close
     End If
+    p_ConnectionString = IIf(Left(vNewValue, 5) = "odbc;", Mid(vNewValue, 6), vNewValue)
+    connection.ConnectionString = p_ConnectionString
+    connection.Open
+
 End Property
