@@ -1,5 +1,12 @@
 Option Compare Database
 Option Explicit
+
+Public Enum StringPaddingMode
+    PadLeft = 1
+    PadRight = 2
+End Enum
+
+
 ' Last Updated by Raoul Jacobs on 20130617_1305
 'Public Function Nz(Value As Variant, Optional valueifnull = "")
 '    Nz = IIf(IsNull(Value), valueifnull, Value)
@@ -46,16 +53,16 @@ Public Function StringSplit(value As String, splitchar As String, Optional remov
 Dim startPos As Long
 Dim endPos As Long
 Dim result() As String
-Dim Length As Long
+Dim length As Long
 Dim tempValue As String
     If Len(value) > 0 Then
         StringArrayClear result
         startPos = 1
         While startPos <> 0
             endPos = InStr(startPos, value, splitchar)
-            Length = IIf(endPos = 0, Len(value) + 1, endPos) - startPos
-            If (removeEmptyValues = False) Or (removeEmptyValues And Length > 0) Then
-                tempValue = Mid(value, startPos, Length)
+            length = IIf(endPos = 0, Len(value) + 1, endPos) - startPos
+            If (removeEmptyValues = False) Or (removeEmptyValues And length > 0) Then
+                tempValue = Mid(value, startPos, length)
                 StringArrayAdd result, tempValue
             End If
             startPos = IIf(endPos <> 0, endPos + 1, 0)
@@ -207,17 +214,17 @@ Public Function GetvbCrLf() As String
     GetvbCrLf = vbCrLf
 End Function
 
-Public Function GetDelimitedValue(value As String, Optional position As Long = 0, Optional delimiter As String = ";", Optional EmbraceChar As String)
+Public Function GetDelimitedValue(value As String, Optional Position As Long = 0, Optional delimiter As String = ";", Optional EmbraceChar As String)
 Dim strings() As String
 
     strings = omStringFunctions.StringSplit(value, delimiter & EmbraceChar, False)
-    GetDelimitedValue = Replace(strings(position), EmbraceChar, "")
+    GetDelimitedValue = Replace(strings(Position), EmbraceChar, "")
 End Function
-Public Function GetScrambleNumbers(Length As Long) As String
+Public Function GetScrambleNumbers(length As Long) As String
 Dim strTemp As String
 Dim i As Long
     Randomize
-    For i = 1 To Length
+    For i = 1 To length
         strTemp = strTemp & CInt(Rnd(1) * 9)
     Next i
     GetScrambleNumbers = strTemp
@@ -244,4 +251,24 @@ Public Function CleanStringUsingPattern(ByVal value As Variant, Optional findPat
     Else
         CleanStringUsingPattern = value
     End If
+End Function
+Public Function StringPadLeft(s As String, totalLength As Long, paddingChar As String) As String
+    StringPadLeft = StringPad(s, totalLength, paddingChar, PadLeft)
+End Function
+Public Function StringPadRight(s As String, totalLength As Long, paddingChar As String) As String
+    StringPadRight = StringPad(s, totalLength, paddingChar, PadRight)
+End Function
+
+Public Function StringPad(s As String, totalLength As Long, paddingChar As String, paddingMode As StringPaddingMode) As String
+Dim result As String
+
+    result = strings.String(totalLength, paddingChar)
+    If paddingMode = StringPaddingMode.PadLeft Then
+        result = result & Nz(s, "")
+        result = Right(result, totalLength)
+    Else
+        result = Nz(s, "") & result
+        result = Left(result, totalLength)
+    End If
+    StringPad = result
 End Function
