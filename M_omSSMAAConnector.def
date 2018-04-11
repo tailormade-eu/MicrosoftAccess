@@ -73,7 +73,7 @@ Dim strDatabaseName As String
             If ConnectionType <> SQLOLEDBProvider Then
                 strDatabaseName = "ODBC;" & strDatabaseName
             End If
-            AttachedTable strDatabaseName, strSQLTable, rsODBC("ODBCTable"), SavePassword:=SavePassword
+            AttachTable strDatabaseName, strSQLTable, rsODBC("ODBCTable"), SavePassword:=SavePassword, primaryKey:=Nz(rsODBC("PrimaryKey"), "")
         End If
         'Debug.Print Now
         DoEvents
@@ -123,7 +123,7 @@ Dim cmd As New ADODB.Command
     Set rs = Nothing
     Set cmd = Nothing
 End Sub
-Sub AttachedTable(ConnectionString As String, SourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False)
+Sub AttachTable(ConnectionString As String, SourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False, Optional primaryKey As String = "")
 Dim tbl As DAO.TableDef
               
     On Error Resume Next
@@ -138,6 +138,11 @@ Dim tbl As DAO.TableDef
     'Add the new table to the database.
     CurrentDb.TableDefs.Append tbl
     Set tbl = Nothing
+    
+    If NotIsNullOrEmpty(primaryKey) Then
+        CurrentDb.TableDefs.Refresh
+        CurrentDb.Execute "CREATE UNIQUE INDEX PK_" & DestinationTable & " ON " & DestinationTable & " (" & primaryKey & ") WITH PRIMARY"
+    End If
 End Sub
 
 Public Sub CreateTable()
