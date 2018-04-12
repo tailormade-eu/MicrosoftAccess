@@ -33,8 +33,10 @@ Public Sub OpenUrl(url As String)
     Shell "explorer.exe " & Chr(34) & url & Chr(34), vbMaximizedFocus
 End Sub
 
-Public Sub OpenFolder(path As String)
-        
+Public Sub OpenFolder(path As String, Optional createPath As Boolean = False)
+        If createPath Then
+            CreateFolderPath path
+        End If
         If gFso.FolderExists(path) Then
             Shell "explorer.exe " & path, vbMaximizedFocus
         End If
@@ -159,7 +161,7 @@ Dim F As Scripting.File
             rs("Name") = F.Name
             rs("Filename") = F.path
             rs("Extension") = omFileFunctions.GetExtension(F.Name)
-            rs.update
+            rs.Update
         End If
     Next
     rs.Close
