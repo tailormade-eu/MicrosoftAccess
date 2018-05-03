@@ -167,10 +167,10 @@ Public Function GetConnectionString(databaseName As String, serverName As String
         Me.Server = serverName
         Me.IsODBC = ODBCConnection
         Me.CurrentConnectionType = ConnectionType
-        Me.DSN = DSN
-        Me.UID = login
-        Me.PWD = Password
-        Me.port = portNr
+        Me.DSN = Nz(DSN, "")
+        Me.UID = Nz(login, "")
+        Me.PWD = Nz(Password, "")
+        Me.port = Nz(portNr, "")
         GetConnectionString = Me.GetCurrentConnectionStringForType(Me.IsODBC, Me.CurrentConnectionType)
     End If
 End Function
