@@ -72,7 +72,7 @@ Public Enum OlDefaultFolders
 End Enum
 
 'Public Sub Mail(EmailAddresses As String, Subject As String, Body As String, replyAddress As String, Importance As Outlook.OlImportance, ReadReceipt As Boolean, attachments() As String, Popup As Boolean, Optional BCCAddresses As String = "", Optional CCAddresses As String = "", Optional font As String = "Arial", Optional fontSize As String = "14.5px", Optional keepSignature As Boolean = True)
-Public Sub Mail(EmailAddresses As String, Subject As String, Body As String, replyAddress As String, Importance As Long, ReadReceipt As Boolean, attachments() As String, Popup As Boolean, Optional BCCAddresses As String = "", Optional CCAddresses As String = "", Optional font As String = "Arial", Optional fontSize As String = "14.5px", Optional keepSignature As Boolean = True, Optional useReplyAddressAsOnBehalf As Boolean = False)
+Public Sub Mail(EmailAddresses As String, Subject As String, Body As String, replyAddress As String, Importance As OlImportance, ReadReceipt As Boolean, attachments() As String, Popup As Boolean, Optional BCCAddresses As String = "", Optional CCAddresses As String = "", Optional font As String = "Arial", Optional fontSize As String = "14.5px", Optional keepSignature As Boolean = True, Optional useReplyAddressAsOnBehalf As Boolean = False)
 'Dim objOutlookMsg As Outlook.MailItem
 'Dim objOutlookRecip As Outlook.Recipient
 'Dim objOutlookRecipBCC As Outlook.Recipient
