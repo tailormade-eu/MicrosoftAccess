@@ -1,12 +1,12 @@
 Option Compare Database
 Option Explicit
 
-Public Sub ExportToPDF(reportname As String, fileName As String, Optional whereCondition As String, Optional openPreview As Boolean = True)
+Public Sub ExportToPDF(reportname As String, filename As String, Optional whereCondition As String, Optional openPreview As Boolean = True)
     If openPreview Then
         DoCmd.OpenReport reportname, acViewPreview, whereCondition:=whereCondition, WindowMode:=acHidden
     End If
-    DoCmd.OutputTo acOutputReport, reportname, acFormatPDF, fileName
-    If openPreview Then
+    DoCmd.OutputTo acOutputReport, reportname, acFormatPDF, filename
+    If Not openPreview Then
         DoCmd.Close acReport, reportname, acSaveNo
     End If
 End Sub
