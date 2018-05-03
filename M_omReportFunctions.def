@@ -1,11 +1,16 @@
 Option Compare Database
 Option Explicit
 
-Public Sub ExportToPDF(reportname As String, filename As String, Optional whereCondition As String, Optional openPreview As Boolean = True, Optional outputQuality As AcExportQuality = AcExportQuality.acExportQualityPrint)
-    DoCmd.OpenReport reportname, acViewPreview, whereCondition:=whereCondition, WindowMode:=IIf(openPreview, acWindowNormal, acHidden)
+Public Sub ExportToPDF(reportname As String, filename As String, Optional whereCondition As String, Optional windowMode As AcWindowMode = acWindowNormal, Optional outputQuality As AcExportQuality = AcExportQuality.acExportQualityPrint)
+    
+    DoCmd.OpenReport reportname, acViewPreview, whereCondition:=whereCondition, windowMode:=IIf(windowMode = acDialog, acHidden, windowMode)
     DoCmd.OutputTo acOutputReport, reportname, acFormatPDF, filename, outputQuality:=outputQuality
-    If Not openPreview Then
+    
+    If windowMode = acHidden Or windowMode = acDialog Then
         DoCmd.Close acReport, reportname, acSaveNo
+        If windowMode = acDialog Then
+            DoCmd.OpenReport reportname, acViewPreview, whereCondition:=whereCondition, windowMode:=windowMode
+        End If
     End If
 End Sub
 
