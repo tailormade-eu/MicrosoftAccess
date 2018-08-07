@@ -4,8 +4,12 @@ Option Explicit
 ' E. jara@opmaat.be
 ' Date Craeted : 201112
 
-Public Function Main() As Variant
+Public Function Main(Optional linkLocal As Boolean = False) As Integer
 Dim FormName As String
+
+    MainUserAuthentication
+    'omUserFunctions.UserLock
+    omMSAccessFunctions.MinimizeNavigationPane
 
     'Stop
     FormName = "Flow"
@@ -14,6 +18,11 @@ Dim FormName As String
             FormName = "StockCheck_List"
         End If
     End If
-    MinimizeNavigationPane
     DoCmd.OpenForm FormName
 End Function
+
+Public Sub MainUserAuthentication()
+    If UseWindowsAuthenication And Nz(gUser.Id, -1) = -1 Then
+        omUserFunctions.LoginWithWindowsUser True
+    End If
+End Sub

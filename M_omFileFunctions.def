@@ -10,7 +10,9 @@ Public Function BuildPathFileExists(path As String, fileName As String) As Strin
         BuildPathFileExists = ""
     End If
 End Function
-
+Public Function FolderExists(path As String) As Boolean
+    FolderExists = gFso.FolderExists(path)
+End Function
 Public Function FileExists(path As String, fileName As String) As String
     FileExists = gFso.BuildPath(path, fileName)
     If (Not gFso.FileExists(FileExists)) Then
@@ -137,13 +139,16 @@ Public Function MakeFilenameSafe(fileName As String) As String
     MakeFilenameSafe = Replace(Replace(Replace(Replace(Replace(Trim(fileName), "/", "_"), ",", " "), Chr(34), " "), "'", " "), ":", "_")
 End Function
 
-Public Sub CreateFolderPath(strPath As String)
+Public Sub CreateFolderPath(strPath As String, Optional OpenFolderInExplorer As Boolean = False)
 
     If Not gFso.FolderExists(strPath) Then
         If Not gFso.FolderExists(gFso.GetParentFolderName(strPath)) Then
             CreateFolderPath (gFso.GetParentFolderName(strPath))
         End If
         gFso.createFolder strPath
+    End If
+    If OpenFolderInExplorer Then
+        omFileFunctions.OpenFolder strPath
     End If
 End Sub
 

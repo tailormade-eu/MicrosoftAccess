@@ -6,7 +6,20 @@ Public gUser As New omUser
 Public Function GetWindowsUserName() As String
     GetWindowsUserName = Environ$("UserName")
 End Function
-Public Function LoginWithWindowsUser()
-    Set gUser = New omUser
-    gUser.LoginByNameOnly GetWindowsUserName
+Public Function GetWindowsComputerName() As String
+    GetWindowsComputerName = Environ$("computername")
 End Function
+
+Public Function LoginWithWindowsUser(Optional addWindowsLogon As Boolean = False)
+    Set gUser = New omUser
+    gUser.LoginByNameOnly GetWindowsUserName, addWindowsLogon:=True
+End Function
+Public Function UseWindowsUser()
+    Set gUser = New omUser
+    gUser.Name = GetWindowsUserName
+End Function
+Public Sub UserLock()
+    If FormExists("UserLock") Then
+        DoCmd.OpenForm "UserLock", , , , acFormReadOnly, acHidden
+    End If
+End Sub
