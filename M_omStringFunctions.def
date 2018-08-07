@@ -272,3 +272,15 @@ Dim result As String
     End If
     StringPad = result
 End Function
+
+Public Function ContainsCharFromPattern(s as string, pattern as string) as boolean
+dim c as string
+dim i as long
+		for i = 1 to len(pattern)
+			c=mid(pattern,i,1)
+			if instr(1,s,c)>0 then
+				ContainsCharFromPattern=true
+				Exit Function
+			end if
+		next i
+End Function

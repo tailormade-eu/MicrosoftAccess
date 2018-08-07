@@ -14,14 +14,27 @@ Public Code As Variant
 Public Name As Variant
 Public Active As Boolean
 
-Public Sub LoginByNameOnly(LoginName, Optional windowsLogon As Boolean = True)
+Public Sub LoginByNameOnly(LoginName, Optional windowsLogon As Boolean = True, Optional addWindowsLogon As Boolean = False)
 Dim rs As ADODB.Recordset
 
-    cmdLoginByNameOnly.parameters(0) = LoginName
+    cmdLoginByNameOnly.Parameters(0) = LoginName
     Set rs = cmdLoginByNameOnly.Execute
     SetFields rs
-    If Me.Id = 0 And windowsLogon Then
-        Me.Id = -1
+    If Nz(Me.Id, 0) = 0 Then
+        If addWindowsLogon Then
+            Set rs = New ADODB.Recordset
+            rs.Open "Users", CurrentProject.connection, adOpenForwardOnly, adLockOptimistic
+            rs.AddNew
+            rs("Login") = LoginName
+            rs("Active") = True
+            rs.Update
+            Me.Id = rs("Id")
+            rs.Close
+            Set rs = Nothing
+        ElseIf windowsLogon Then
+            Me.Id = -1
+            
+        End If
         Me.Code = LoginName
         Me.Name = LoginName
         Me.Active = True
@@ -30,8 +43,8 @@ End Sub
 Public Sub LoginById(UserId As Long, Password As String)
 Dim rs As ADODB.Recordset
 
-    cmdLoginById.parameters(0) = UserId
-    cmdLoginById.parameters(1) = Password
+    cmdLoginById.Parameters(0) = UserId
+    cmdLoginById.Parameters(1) = Password
     Set rs = cmdLoginById.Execute
     SetFields rs
 End Sub
@@ -39,22 +52,22 @@ End Sub
 Public Sub LoginByName(LoginName As String, Password As String)
 Dim rs As ADODB.Recordset
 
-    cmdLoginByName.parameters(0) = LoginName
-    cmdLoginByName.parameters(1) = Password
+    cmdLoginByName.Parameters(0) = LoginName
+    cmdLoginByName.Parameters(1) = Password
     Set rs = cmdLoginByName.Execute
     SetFields rs
 End Sub
 Private Sub Class_Initialize()
     ClearFields
     cmdLoginByName.commandText = "SELECT * FROM Users WHERE Login=? AND Password=?"
-    cmdLoginByName.ActiveConnection = CurrentProject.Connection
-    cmdLoginByName.parameters.Refresh
+    cmdLoginByName.ActiveConnection = CurrentProject.connection
+    cmdLoginByName.Parameters.Refresh
     cmdLoginById.commandText = "SELECT * FROM Users WHERE Id=? AND Password=?"
-    cmdLoginById.ActiveConnection = CurrentProject.Connection
-    cmdLoginById.parameters.Refresh
+    cmdLoginById.ActiveConnection = CurrentProject.connection
+    cmdLoginById.Parameters.Refresh
     cmdLoginByNameOnly.commandText = "SELECT * FROM Users WHERE Login=?"
-    cmdLoginByNameOnly.ActiveConnection = CurrentProject.Connection
-    cmdLoginByNameOnly.parameters.Refresh
+    cmdLoginByNameOnly.ActiveConnection = CurrentProject.connection
+    cmdLoginByNameOnly.Parameters.Refresh
 End Sub
 
 Private Sub Class_Terminate()
@@ -69,7 +82,9 @@ Private Sub SetFields(rs As ADODB.Recordset)
         Me.Id = rs("Id")
         Me.Code = rs("Code")
         Me.Name = rs("Name")
-        Me.Name = Nz(rs("FirstName"), "") & " " & Nz(rs("LastName"), "")
+        If omStringFunctions.IsNullOrEmpty(Me.Name) Then
+            Me.Name = Nz(rs("FirstName"), "") & " " & Nz(rs("LastName"), "")
+        End If
         If omStringFunctions.IsNullOrEmpty(Me.Name) Then
             Me.Name = rs("Login")
         End If

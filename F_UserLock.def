@@ -1,0 +1,81 @@
+Version =20
+VersionRequired =20
+PublishOption =1
+Checksum =1638202151
+Begin Form
+    DividingLines = NotDefault
+    AllowDesignChanges = NotDefault
+    DefaultView =0
+    PictureAlignment =2
+    DatasheetGridlinesBehavior =3
+    GridY =10
+    Width =6994
+    DatasheetFontHeight =11
+    Right =17400
+    Bottom =11993
+    DatasheetGridlinesColor =14806254
+    OnUnload ="[Event Procedure]"
+    RecSrcDt = Begin
+        0x3395a6b8680ee540
+    End
+    GUID = Begin
+        0xb675905af7cf3541aaa03f8a1421c1bf
+    End
+    NameMap = Begin
+        0x0acc0e5500000000000000000000000000000000000000000c00000005000000 ,
+        0x0000000000000000000000000000
+    End
+    DatasheetFontName ="Calibri"
+    OnLoad ="[Event Procedure]"
+    AllowDatasheetView =0
+    FilterOnLoad =0
+    ShowPageMargins =0
+    DisplayOnSharePointSite =1
+    DatasheetAlternateBackColor =15921906
+    DatasheetGridlinesColor12 =0
+    FitToScreen =1
+    DatasheetBackThemeColorIndex =1
+    BorderThemeColorIndex =3
+    ThemeFontIndex =1
+    ForeThemeColorIndex =0
+    AlternateBackThemeColorIndex =1
+    AlternateBackShade =95.0
+    Begin
+        Begin Section
+            Height =5952
+            Name ="Detail"
+            GUID = Begin
+                0xabf09d1c28d4344b93785a7170990401
+            End
+            AutoHeight =1
+            AlternateBackColor =15921906
+            AlternateBackThemeColorIndex =1
+            AlternateBackShade =95.0
+            BackThemeColorIndex =1
+        End
+    End
+End
+CodeBehindForm
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+Dim fileName As String
+
+
+Private Sub Form_Load()
+Dim ts As TextStream
+    fileName = gFso.BuildPath(CurrentProject.path, "program in use by " & gUser.Name & " - DO NOT DELETE THIS FILE")
+    
+    Set ts = gFso.CreateTextFile(fileName)
+    ts.Close
+    Set ts = Nothing
+End Sub
+
+Private Sub Form_Unload(Cancel As Integer)
+    If gFso.FileExists(fileName) Then
+        gFso.DeleteFile fileName
+    End If
+End Sub

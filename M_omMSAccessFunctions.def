@@ -63,6 +63,6 @@ Dim accObj As AccessObject
     
     For Each accObj In CurrentData.AllTables
         On Error Resume Next
-        ExportQuery accObj.Name
+        omExportFunctions.ExportQuery accObj.Name
     Next
 End Sub

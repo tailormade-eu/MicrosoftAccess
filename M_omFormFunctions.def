@@ -10,6 +10,16 @@ Dim ctrl As Control
         End If
     Next
 End Sub
+
+Public Sub UpdateVisibleByTag(Form As Form, tag As String, state As Boolean)
+Dim ctrl As Control
+
+    For Each ctrl In Form.Controls
+        If ctrl.tag = tag Then
+            ctrl.Visible = state
+        End If
+    Next
+End Sub
 Public Function OpenForm(Name As String, Optional view As AcFormView = AcFormView.acFormDS) As Variant
     Name = Replace(Name, "cmd", "")
     If InStr(1, Name, "listsearch") <> 0 Then
@@ -49,6 +59,7 @@ End Sub
 Public Sub UpdateModifyTracking(frm As Form)
     frm.ModifyDate = Now
     On Error Resume Next
+    MainUserAuthentication
     If gUser.Id = -1 Or gUser.Id = 0 Then
         frm.ModifyUserName = gUser.Name
         frm.ModifyUserId = gUser.Name
@@ -60,6 +71,7 @@ End Sub
 Public Sub UpdateCreateTracking(frm As Form, Optional UpdateModify = True)
     frm.CreateDate = Now
     On Error Resume Next
+    MainUserAuthentication
     If gUser.Id = -1 Or gUser.Id = 0 Then
         frm.CreateUserName = gUser.Name
         frm.CreateUserId = gUser.Name
