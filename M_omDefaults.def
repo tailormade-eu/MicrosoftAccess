@@ -28,10 +28,10 @@ Public Function Load(defaultName As String) As Variant
 Dim rs As ADODB.Recordset
 
     If Me.Name <> defaultName Then
-        cmdGetValue.parameters(0) = defaultName & IIf(Development, "_dev", "")
+        cmdGetValue.Parameters(0) = defaultName & IIf(Development, "_dev", "")
         Set rs = cmdGetValue.Execute
         If rs.EOF And Development Then
-            cmdGetValue.parameters(0) = defaultName
+            cmdGetValue.Parameters(0) = defaultName
             Set rs = cmdGetValue.Execute
         End If
         If Not rs.EOF Then
@@ -48,9 +48,9 @@ Dim rs As ADODB.Recordset
     Load = Me.value
 End Function
 Public Function Save(defaultName As String, value As Variant)
-    cmdSetValue.parameters(0) = value
-    cmdSetValue.parameters(2) = defaultName
-    cmdSetValue.parameters(1) = Now
+    cmdSetValue.Parameters(0) = value
+    cmdSetValue.Parameters(2) = defaultName
+    cmdSetValue.Parameters(1) = Now
     cmdSetValue.Execute
 End Function
 Private Sub Class_Initialize()
@@ -64,12 +64,12 @@ Dim tableName As String
     If TableExists(tableName) Then
         cmdGetValue.commandText = "SELECT [Value],[ModifyDate] FROM " & tableName & " WHERE [Name]=?"
         cmdGetValue.ActiveConnection = CurrentProject.Connection
-        cmdGetValue.parameters.Refresh ' Does Not Work if there is a mistake in the SQL statement EG not existing Table
+        cmdGetValue.Parameters.Refresh ' Does Not Work if there is a mistake in the SQL statement EG not existing Table
         'cmdGetValue.Parameters.Append cmdGetValue.CreateParameter("Name", adVarWChar, adParamInput, 256)
         
         cmdSetValue.commandText = "UPDATE [" & IIf(gMode = LocalMode, "omSysDefaults", "omDefaults") & "] SET [Value]=?,[ModifyDate]=? WHERE [Name]=?"
         cmdSetValue.ActiveConnection = CurrentProject.Connection
-        cmdSetValue.parameters.Refresh
+        cmdSetValue.Parameters.Refresh
         'cmdSetValue.Parameters.Append cmdGetValue.CreateParameter("Value", adVarChar, adParamInput, 256)
         'cmdSetValue.Parameters.Append cmdGetValue.CreateParameter("ModifyDate", adDate, adParamInput)
         'cmdSetValue.Parameters.Append cmdGetValue.CreateParameter("Name", adVarChar, adParamInput, 256)
