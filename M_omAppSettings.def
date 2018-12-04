@@ -1,0 +1,58 @@
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+' Code written by Raoul Jacobs
+' E. jara@opmaat.be
+' Date Craeted : 200703
+'
+' this Class is used to get the value from the default table for any defined variable in this table
+
+Dim cmdGetValue As New ADODB.Command
+Public Name As String
+Public value As Variant
+
+Public Function Load(SettingsName As String) As Variant
+Dim rs As ADODB.Recordset
+
+    If Me.Name <> SettingsName Then
+        cmdGetValue.Parameters(0) = SettingsName
+        Set rs = cmdGetValue.Execute
+        If Not rs.EOF Then
+            Me.value = rs(0)
+        Else
+            Me.Name = ""
+            Me.value = ""
+        End If
+        rs.Close
+    End If
+    Set rs = Nothing
+    Load = Me.value
+End Function
+Public Sub Save(SettingsName As String, NewValue As String)
+Dim rs As New ADODB.Recordset
+
+    rs.Open "SELECT * FROM appSettings WHERE Name=" & Chr(34) & SettingsName & Chr(34), CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    If rs.EOF Then
+        rs.AddNew
+        rs("Name") = SettingsName
+    End If
+    rs("Value") = NewValue
+    rs.Update
+    rs.Close
+    Set rs = Nothing
+    Name = SettingsName
+    value = NewValue
+End Sub
+
+Private Sub Class_Initialize()
+    cmdGetValue.CommandText = "SELECT Value FROM appSettings WHERE Name=?"
+    cmdGetValue.ActiveConnection = CurrentProject.Connection
+    cmdGetValue.Parameters.Refresh
+End Sub
+
+Private Sub Class_Terminate()
+    Set cmdGetValue = Nothing
+End Sub
