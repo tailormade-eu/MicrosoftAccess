@@ -72,7 +72,7 @@ Public Enum OlDefaultFolders
 End Enum
 
 'Public Sub Mail(EmailAddresses As String, Subject As String, Body As String, replyAddress As String, Importance As Outlook.OlImportance, ReadReceipt As Boolean, attachments() As String, Popup As Boolean, Optional BCCAddresses As String = "", Optional CCAddresses As String = "", Optional font As String = "Arial", Optional fontSize As String = "14.5px", Optional keepSignature As Boolean = True)
-Public Sub Mail(EmailAddresses As String, Subject As String, Body As String, replyAddress As String, Importance As OlImportance, ReadReceipt As Boolean, attachments() As String, Popup As Boolean, Optional BCCAddresses As String = "", Optional CCAddresses As String = "", Optional font As String = "Arial", Optional fontSize As String = "14.5px", Optional keepSignature As Boolean = True, Optional useReplyAddressAsOnBehalf As Boolean = False)
+Public Sub Mail(EmailAddresses As String, subject As String, body As String, replyAddress As String, Importance As OlImportance, ReadReceipt As Boolean, attachments() As String, Popup As Boolean, Optional bccAddresses As String = "", Optional ccAddresses As String = "", Optional font As String = "Arial", Optional fontSize As String = "14.5px", Optional keepSignature As Boolean = True, Optional useReplyAddressAsOnBehalf As Boolean = False)
 'Dim objOutlookMsg As Outlook.MailItem
 'Dim objOutlookRecip As Outlook.Recipient
 'Dim objOutlookRecipBCC As Outlook.Recipient
@@ -80,10 +80,11 @@ Public Sub Mail(EmailAddresses As String, Subject As String, Body As String, rep
 Dim objOutlookMsg As Object
 Dim objOutlookRecip As Object
 Dim objOutlookRecipBCC As Object
+Dim mailbox As Object
 
 
 Dim i As Integer
-Dim filename As String
+Dim fileName As String
 Dim bodyFilenameMissing As String
 Dim address() As String
 Dim signature As String
@@ -94,19 +95,19 @@ Dim bodyEnd As Long
     DoEvents
     With objOutlookMsg
         .Display
-        If NotIsNullOrEmpty(.Body) And keepSignature Then
+        If NotIsNullOrEmpty(.body) And keepSignature Then
             signature = .HTMLBody
         End If
         .BodyFormat = olFormatHTML
-        If NotIsNullOrEmpty(BCCAddresses) Then
-            address = StringSplit(BCCAddresses, ";")
+        If NotIsNullOrEmpty(bccAddresses) Then
+            address = StringSplit(bccAddresses, ";")
             For i = 0 To omArrayFunctions.StringArrayCount(address) - 1
                 Set objOutlookRecip = .Recipients.Add(address(i))
                 objOutlookRecip.Type = olBCC
             Next
         End If
-        If NotIsNullOrEmpty(CCAddresses) Then
-            address = StringSplit(CCAddresses, ";")
+        If NotIsNullOrEmpty(ccAddresses) Then
+            address = StringSplit(ccAddresses, ";")
             For i = 0 To omArrayFunctions.StringArrayCount(address) - 1
                 Set objOutlookRecip = .Recipients.Add(address(i))
                 objOutlookRecip.Type = olCC
@@ -119,21 +120,25 @@ Dim bodyEnd As Long
                 objOutlookRecip.Type = olTo
             Next
         End If
-        .Subject = Subject
+        .subject = subject
         If IsNullOrEmpty(signature) Then
-            .HTMLBody = StringFormat("<HTML><BODY style='font-family:{0};font-size:{1}'>{2}{3}</BODY></HTML>", font, fontSize, Body, IIf(NotIsNullOrEmpty(signature), "<BR/>" & signature, ""))
+            .HTMLBody = StringFormat("<HTML><BODY style='font-family:{0};font-size:{1}'>{2}{3}</BODY></HTML>", font, fontSize, body, IIf(NotIsNullOrEmpty(signature), "<BR/>" & signature, ""))
         Else
             bodyStart = InStr(1, signature, "<body ")
             bodyStart = InStr(bodyStart, signature, ">")
             
             bodyEnd = InStr(bodyStart, signature, "</body")
-            .HTMLBody = StringFormat("{0}{1}{2}{3}", Left(signature, bodyStart), Body, "<br/>", Mid(signature, bodyStart + 1))
+            .HTMLBody = StringFormat("{0}{1}{2}{3}", Left(signature, bodyStart), body, "<br/>", Mid(signature, bodyStart + 1))
         End If
         If NotIsNullOrEmpty(replyAddress) Then
             If useReplyAddressAsOnBehalf And DoesMailboxExist(replyAddress) Then
                 .SentOnBehalfOfName = replyAddress
             Else
                 .ReplyRecipients.Add replyAddress
+                Set mailbox = GetMailbox(replyAddress)
+                If mailbox Is Nothing Then
+                    Set .Sender = mailbox
+                End If
             End If
         End If
         .Importance = Importance
@@ -144,11 +149,11 @@ Dim bodyEnd As Long
             bodyFilenameMissing = bodyFilenameMissing & attachments(i) & vbCrLf
         Next i
         For i = 0 To omArrayFunctions.StringArrayCount(attachments) - 1
-            filename = attachments(i)
-            If gFso.FileExists(filename) Then
-                .attachments.Add filename
+            fileName = attachments(i)
+            If gFso.FileExists(fileName) Then
+                .attachments.Add fileName
             Else
-                MsgBox filename & " is missing.", vbCritical
+                MsgBox fileName & " is missing.", vbCritical
                 'gOpmaatMessaging.Save "accounts1@itecs.nl", "carole@itecs.nl", "File does not exist and did not get attached: " & filename, bodyFilenameMissing, olImportanceHigh
             End If
         Next i
@@ -200,6 +205,32 @@ Set objNS = Nothing
 Set objFolder = Nothing
 Set objRecip = Nothing
 
+End Function
+
+Public Function GetMailbox(mailaddress As String) As Object
+Dim addrEntry As Object
+Dim folder As Object
+Dim store As Object
+Dim accounts As Object
+Dim account As Object
+'Dim acc As Outlook.account
+    ' Get the store for the current folder.
+    Set folder = objOutlook.ActiveExplorer().CurrentFolder 'as Outlook.Folder;
+    Set store = folder.store
+     
+    Set accounts = objOutlook.Session.accounts
+ 
+    'Match the delivery store of each account with the
+    'store for the current folder.
+    For Each account In accounts
+     'Set acc = account
+        If (account.SmtpAddress = mailaddress) Then
+        
+            Set addrEntry = account.CurrentUser.AddressEntry
+            Exit For
+        End If
+    Next
+    Set GetMailbox = addrEntry
 End Function
 Private Sub Class_Initialize()
     Set objOutlook = CreateObject("Outlook.Application")
