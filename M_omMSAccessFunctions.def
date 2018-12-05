@@ -4,23 +4,23 @@ Option Explicit
 Public Function FormExists(FormName As String) As Boolean
     FormExists = False
     On Error Resume Next
-    FormExists = (CurrentProject.AllForms(FormName).Name = FormName)
+    FormExists = (CurrentProject.AllForms(FormName).NAME = FormName)
 End Function
 
 Public Function ReportExists(reportname As String) As Boolean
     ReportExists = False
     On Error Resume Next
-    ReportExists = (CurrentProject.AllReports(reportname).Name = reportname)
+    ReportExists = (CurrentProject.AllReports(reportname).NAME = reportname)
 End Function
 Public Function TableExists(tableName As String) As Boolean
     TableExists = False
     On Error Resume Next
-    TableExists = (CurrentDb.TableDefs(tableName).Name = tableName)
+    TableExists = (CurrentDb.TableDefs(tableName).NAME = tableName)
 End Function
 Public Function QueryExists(queryName As String) As Boolean
     QueryExists = False
     On Error Resume Next
-    QueryExists = (CurrentDb.QueryDefs(queryName).Name = queryName)
+    QueryExists = (CurrentDb.QueryDefs(queryName).NAME = queryName)
 End Function
 'Public Function QueryExists(queryName As String) As Boolean
 '  QueryExists = NotIsNullOrEmpty(GetQuerySQL(queryName))
@@ -63,6 +63,24 @@ Dim accObj As AccessObject
     
     For Each accObj In CurrentData.AllTables
         On Error Resume Next
-        omExportFunctions.ExportQuery accObj.Name
+        omExportFunctions.ExportQuery accObj.NAME
     Next
+End Sub
+
+Public Sub ConvertToLocalTables(Optional databaseType As String = ".accdb")
+Dim rs As New ADODB.Recordset
+
+    rs.Open "SELECT Name,Database,lv FROM MsysObjects WHERE [Type]=6 AND LV IS NOT NULL", CurrentProject.Connection, adOpenForwardOnly, adLockReadOnly
+    While Not rs.EOF
+        If (omStringFunctions.IsNullOrEmpty(databaseType) Or InStr(1, rs("Database"), databaseType) > 0) And InStr(1, rs("Name"), "~") = 0 Then
+            'On Error Resume Next
+            Debug.Print rs("Name"), rs("database")
+            DoCmd.SelectObject acTable, rs("Name"), True
+            DoCmd.RunCommand acCmdConvertLinkedTableToLocal
+        End If
+        rs.MoveNext
+        DoEvents
+    Wend
+    rs.Close
+    Set rs = Nothing
 End Sub

@@ -22,11 +22,15 @@ Dim FormName As String
 End Function
 
 Public Sub MainUserAuthentication()
-    If UseWindowsAuthentication And Nz(gUser.Id, -1) = -1 Then
+    If UseWindowsAuthentication And Nz(gUser.ID, -1) = -1 Then
         omUserFunctions.LoginWithWindowsUser True
     End If
 End Sub
 
-Public Function LinkDatabase() As Variant
+Public Function LinkAccessDatabase() As Variant
     omSSMAAConnector.LinkMSAccess False
+End Function
+
+Public Function LinkSSMADatabase() As Variant
+    omSSMAAConnector.LinkUsingSSMA SavePassword:=True, alwaysUpdate:=True
 End Function

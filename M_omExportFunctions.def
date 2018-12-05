@@ -6,7 +6,7 @@ Public Function ExportQuery(queryName As String, Optional exportPath As String =
 Dim fileName As String
 
     If IsNullOrEmpty(exportPath) Then
-        exportPath = gFso.BuildPath(GetDesktopFolder, "ExportQuery")
+        exportPath = gFso.BuildPath(omFileFunctions.GetDesktopFolder(), "ExportQuery")
     End If
     omFileFunctions.CreateFolderPath (exportPath)
     fileName = gFso.BuildPath(exportPath, queryName & ".xlsx")
