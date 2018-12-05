@@ -26,3 +26,7 @@ Public Sub MainUserAuthentication()
         omUserFunctions.LoginWithWindowsUser True
     End If
 End Sub
+
+Public Function LinkDatabase() As Variant
+    omSSMAAConnector.LinkMSAccess False
+End Function
