@@ -22,11 +22,14 @@ Dim FormName As String
 End Function
 
 Public Sub MainUserAuthentication()
-    If UseWindowsAuthentication And Nz(gUser.ID, -1) = -1 Then
-        omUserFunctions.LoginWithWindowsUser True
+    If Not gUser.LoggedIn Then
+        If UseWindowsAuthentication Then
+            omUserFunctions.LoginWithWindowsUser True
+        ElseIf UseLogin Then
+            DoCmd.OpenForm "Login", WindowMode:=acDialog
+        End If
     End If
 End Sub
-
 Public Function LinkAccessDatabase() As Variant
     omSSMAAConnector.LinkMSAccess False
 End Function
