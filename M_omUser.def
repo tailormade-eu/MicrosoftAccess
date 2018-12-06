@@ -8,11 +8,13 @@ Option Explicit
 Private cmdLoginByName As New ADODB.Command
 Private cmdLoginById As New ADODB.Command
 Private cmdLoginByNameOnly As New ADODB.Command
+Private cmdUpdatePassword As New ADODB.Command
 
 Public Id As Variant
 Public Code As Variant
 Public Name As Variant
 Public Active As Boolean
+Public UserRole As New omUserRole
 
 Public Sub LoginByNameOnly(LoginName, Optional windowsLogon As Boolean = True, Optional addWindowsLogon As Boolean = False)
 Dim rs As ADODB.Recordset
@@ -33,29 +35,35 @@ Dim rs As ADODB.Recordset
             Set rs = Nothing
         ElseIf windowsLogon Then
             Me.Id = -1
-            
         End If
         Me.Code = LoginName
         Me.Name = LoginName
         Me.Active = True
     End If
 End Sub
-Public Sub LoginById(UserId As Long, Password As String)
+Public Function LoginById(UserId As Long, Password As String) As Boolean
 Dim rs As ADODB.Recordset
 
     cmdLoginById.Parameters(0) = UserId
     cmdLoginById.Parameters(1) = Password
     Set rs = cmdLoginById.Execute
     SetFields rs
-End Sub
+    LoginById = Me.LoggedIn
+End Function
 
-Public Sub LoginByName(LoginName As String, Password As String)
+Public Function LoginByName(LoginName As String, Password As String) As Boolean
 Dim rs As ADODB.Recordset
 
     cmdLoginByName.Parameters(0) = LoginName
     cmdLoginByName.Parameters(1) = Password
     Set rs = cmdLoginByName.Execute
     SetFields rs
+    LoginByName = Me.LoggedIn
+End Function
+Public Sub UpdatePassword(Password As String)
+    cmdUpdatePassword.Parameters(0) = Password
+    cmdUpdatePassword.Parameters(1) = Me.Id
+    cmdUpdatePassword.Execute
 End Sub
 Private Sub Class_Initialize()
     ClearFields
@@ -68,12 +76,16 @@ Private Sub Class_Initialize()
     cmdLoginByNameOnly.commandText = "SELECT * FROM Users WHERE Login=?"
     cmdLoginByNameOnly.ActiveConnection = CurrentProject.connection
     cmdLoginByNameOnly.Parameters.Refresh
+    cmdUpdatePassword.commandText = "UPDATE Users SET [Password]=? WHERE Id=?"
+    cmdUpdatePassword.ActiveConnection = CurrentProject.connection
+    cmdUpdatePassword.Parameters.Refresh
 End Sub
 
 Private Sub Class_Terminate()
     Set cmdLoginByName = Nothing
     Set cmdLoginById = Nothing
     Set cmdLoginByNameOnly = Nothing
+    Set cmdUpdatePassword = Nothing
 End Sub
 
 Private Sub SetFields(rs As ADODB.Recordset)
@@ -89,6 +101,7 @@ Private Sub SetFields(rs As ADODB.Recordset)
             Me.Name = rs("Login")
         End If
         Me.Active = Nz(rs("Active"), False)
+        Me.UserRole.LoadById rs("UserRoleId")
     Else
         ClearFields
     End If
@@ -101,3 +114,6 @@ Private Sub ClearFields()
     Me.Name = Null
     Me.Active = False
 End Sub
+Public Function LoggedIn() As Boolean
+    LoggedIn = omStringFunctions.NotIsNullOrEmptyOrZero(Me.Id) Or Nz(Me.Id, 0) = -1
+End Function
