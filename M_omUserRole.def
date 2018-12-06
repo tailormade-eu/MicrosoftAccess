@@ -1,0 +1,49 @@
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Private cmdLoadId As New ADODB.Command
+
+Public Id As Variant
+Public Code As Variant
+Public Name As Variant
+
+Public Sub LoadById(Id As Long)
+Dim rs As ADODB.Recordset
+
+    cmdLoadId.Parameters(0) = Id
+    Set rs = cmdLoadId.Execute
+    SetFields rs
+End Sub
+
+Private Sub Class_Initialize()
+    ClearFields
+    cmdLoadId.commandText = "SELECT * FROM UserRoles WHERE Id=?"
+    cmdLoadId.ActiveConnection = CurrentProject.connection
+    cmdLoadId.Parameters.Refresh
+End Sub
+
+Private Sub Class_Terminate()
+    Set cmdLoadId = Nothing
+End Sub
+
+Private Sub SetFields(rs As ADODB.Recordset)
+    On Error Resume Next
+    If Not rs.EOF Then
+        Me.Id = rs("Id")
+        Me.Code = rs("Code")
+        Me.Name = rs("Name")
+    Else
+        ClearFields
+    End If
+    rs.Close
+    Set rs = Nothing
+End Sub
+Private Sub ClearFields()
+    Me.Id = Null
+    Me.Code = Null
+    Me.Name = Null
+End Sub

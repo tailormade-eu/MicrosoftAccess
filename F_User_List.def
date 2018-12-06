@@ -1,0 +1,440 @@
+Version =21
+VersionRequired =20
+PublishOption =1
+Checksum =2018890968
+Begin Form
+    RecordSelectors = NotDefault
+    AutoCenter = NotDefault
+    NavigationButtons = NotDefault
+    DividingLines = NotDefault
+    AllowDesignChanges = NotDefault
+    DefaultView =0
+    ScrollBars =0
+    PictureAlignment =2
+    DatasheetGridlinesBehavior =3
+    GridY =10
+    Width =18035
+    DatasheetFontHeight =11
+    ItemSuffix =20
+    Right =25268
+    Bottom =11963
+    DatasheetGridlinesColor =15132391
+    RecSrcDt = Begin
+        0x914bba996d32e540
+    End
+    GUID = Begin
+        0x51928984cb41fd4eaf6a424847910f53
+    End
+    NameMap = Begin
+        0x0acc0e5500000000000000000000000000000000000000000100000000000000 ,
+        0x00000000000000000000000055007300650072005f004c006900730074005f00 ,
+        0x5300650061007200630068000000000000000000000000000000000000000000 ,
+        0x00000c000000050000000000000000000000000000000000
+    End
+    DatasheetFontName ="Calibri"
+    PrtMip = Begin
+        0x6801000068010000680100006801000000000000201c0000e010000001000000 ,
+        0x010000006801000000000000a10700000100000001000000
+    End
+    PrtDevMode = Begin
+        0x000000000000000060853c0ed8933c0e584a3c0e0000000060853c0e5b000000 ,
+        0x010403069c007c0343ff800701000900ea0a6f08640001000f002c0102000100 ,
+        0x2c01020001004c6574746572003c1661000000003837ce01357c9a5200000000 ,
+        0x1c37ce0169bb0000000000000000000000000000010000000000000001000000 ,
+        0x0200000001000000000000000000000000000000000000000000000050524956 ,
+        0xe230000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000180000000000102710271027 ,
+        0x00001027000000000000000088007c0300000000000000000100000000000000 ,
+        0x0000000000000000030000000000000000001000503403002888040000000000 ,
+        0x000000000000010000000000000000000000000000000000e7b14b4c03000000 ,
+        0x05000a00ff000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0100000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000088000000534d544a0000000010007800 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x000000000000000000000000000000000000000000000000
+    End
+    PrtDevNames = Begin
+        0x080013001e000100000000000000000000000000000000000000000000007064 ,
+        0x66636d6f6e000000000000000000000000000000000000000000000000000000 ,
+        0x000000000000
+    End
+    AllowDatasheetView =0
+    FilterOnLoad =0
+    ShowPageMargins =0
+    DisplayOnSharePointSite =1
+    DatasheetAlternateBackColor =15921906
+    DatasheetGridlinesColor12 =0
+    FitToScreen =1
+    DatasheetBackThemeColorIndex =1
+    BorderThemeColorIndex =3
+    ThemeFontIndex =1
+    ForeThemeColorIndex =0
+    AlternateBackThemeColorIndex =1
+    AlternateBackShade =95.0
+    PrtDevModeW = Begin
+        0x000000000008b3010008b301000099128493cf010000000001000000d998abae ,
+        0xc00099126093cf0167bb8e00120a4800b8bdcf017f000000590300000a000000 ,
+        0x01040306dc007c0343ff800701000900ea0a6f08640001000f002c0102000100 ,
+        0x2c01020001004c0065007400740065007200000074f7d3000c0000001f000000 ,
+        0x00000000b8bdcf007f000000700299127f00000070029912500300008cfdffff ,
+        0x8cfdffffac970000000000000000000000000000010000000000000001000000 ,
+        0x0200000001000000000000000000000000000000000000000000000050524956 ,
+        0xe230000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000180000000000102710271027 ,
+        0x00001027000000000000000088007c0300000000000000000100000000000000 ,
+        0x0000000000000000030000000000000000001000503403002888040000000000 ,
+        0x000000000000010000000000000000000000000000000000e7b14b4c03000000 ,
+        0x05000a00ff000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0100000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000088000000534d544a0000000010007800 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x000000000000000000000000000000000000000000000000
+    End
+    PrtDevNamesW = Begin
+        0x04000f001a000100000000000000000000000000000000000000000000000000 ,
+        0x000000000000000000000000000000000000000070006400660063006d006f00 ,
+        0x6e00000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x00000000
+    End
+    Begin
+        Begin Label
+            BackStyle =0
+            FontSize =11
+            FontName ="Calibri"
+            ThemeFontIndex =1
+            BackThemeColorIndex =1
+            BorderThemeColorIndex =0
+            BorderTint =50.0
+            ForeThemeColorIndex =0
+            ForeTint =50.0
+            GridlineThemeColorIndex =1
+            GridlineShade =65.0
+        End
+        Begin CommandButton
+            Width =1701
+            Height =283
+            FontSize =11
+            FontWeight =400
+            FontName ="Calibri"
+            ForeThemeColorIndex =0
+            ForeTint =75.0
+            GridlineThemeColorIndex =1
+            GridlineShade =65.0
+            BackThemeColorIndex =4
+            BackTint =60.0
+            BorderLineStyle =0
+            BorderColor =16777215
+            BorderThemeColorIndex =4
+            BorderTint =60.0
+            ThemeFontIndex =1
+        End
+        Begin CheckBox
+            BorderLineStyle =0
+            LabelX =230
+            LabelY =-30
+            BorderThemeColorIndex =1
+            BorderShade =65.0
+            GridlineThemeColorIndex =1
+            GridlineShade =65.0
+        End
+        Begin TextBox
+            AddColon = NotDefault
+            FELineBreak = NotDefault
+            BorderLineStyle =0
+            Width =1701
+            LabelX =-1701
+            FontSize =11
+            FontName ="Calibri"
+            AsianLineBreak =1
+            BackThemeColorIndex =1
+            BorderThemeColorIndex =1
+            BorderShade =65.0
+            ThemeFontIndex =1
+            ForeThemeColorIndex =0
+            ForeTint =75.0
+            GridlineThemeColorIndex =1
+            GridlineShade =65.0
+        End
+        Begin ComboBox
+            AddColon = NotDefault
+            BorderLineStyle =0
+            Width =1701
+            LabelX =-1701
+            FontSize =11
+            FontName ="Calibri"
+            AllowValueListEdits =1
+            InheritValueList =1
+            ThemeFontIndex =1
+            BackThemeColorIndex =1
+            BorderThemeColorIndex =1
+            BorderShade =65.0
+            ForeThemeColorIndex =2
+            ForeShade =50.0
+            GridlineThemeColorIndex =1
+            GridlineShade =65.0
+        End
+        Begin Subform
+            BorderLineStyle =0
+            Width =1701
+            Height =1701
+            BorderThemeColorIndex =1
+            GridlineThemeColorIndex =1
+            GridlineShade =65.0
+            BorderShade =65.0
+            ShowPageHeaderAndPageFooter =1
+        End
+        Begin FormHeader
+            CanGrow = NotDefault
+            Height =1153
+            BackColor =15064278
+            Name ="FormHeader"
+            GUID = Begin
+                0xe8f778ebff15244f83396b49aa3a42b5
+            End
+            AlternateBackThemeColorIndex =1
+            AlternateBackShade =95.0
+            BackThemeColorIndex =2
+            BackTint =20.0
+            Begin
+                Begin CommandButton
+                    OverlapFlags =85
+                    Left =4785
+                    Top =403
+                    Width =291
+                    Height =298
+                    ForeColor =4210752
+                    Name ="cmdClearSearch"
+                    Caption ="Command8"
+                    OnClick ="[Event Procedure]"
+                    GUID = Begin
+                        0xca7f81b3a5e15c4a8aaa08b269df7094
+                    End
+                    GridlineColor =10921638
+                    ImageData = Begin
+                        0x2800000010000000100000000100200000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x000000000030ff501020e0ff0028ff3000000000000000000000000000000000 ,
+                        0x0020f05000000000000000000000000000000000000000000000000000000000 ,
+                        0x2048ff100028ffff1028f0ff4050d0ff0000000000000000000000000020e0c0 ,
+                        0x0010b0ff00000000000000000000000000000000000000000000000000000000 ,
+                        0x000000002048fff01030ffff0028ffff1038ff10000000000020ff800018c0ff ,
+                        0x0020f090000000000000000000000000000000000000000070707000707070ff ,
+                        0x404040ff101020ff3050ffff2040ffff2040ff801038ff500028f0ff4058f0ff ,
+                        0x00000000000000000000000000000000000000000000000070687000707070ff ,
+                        0x505050ff100810ff5068ff304060fff03050ffff2040ffff3050ffff2040ff10 ,
+                        0x00000000000000000000000000000000000000000000000000000000707070ff ,
+                        0x707070ff404040ff000000005070ff404068ffff4060ffff3058ff4000000000 ,
+                        0x00000000000000000000000000000000000000000000000000000000707070ff ,
+                        0x909890ff504850ff5070e0605078ffff5078ffff5070ffe04068fff04060ff20 ,
+                        0x00000000000000000000000000000000000000000000000090989060909090ff ,
+                        0xd0c8c0ff5068a0ff5078ffff5078ffff5078ff605078ff005078ffe05070fff0 ,
+                        0x5068ff400000000000000000000000000000000090909050808880fff0f0f0ff ,
+                        0x8098f0ff5078ffff5078ffff5068b0600000000000000000000000005078ff70 ,
+                        0x5078ffc0000000000000000000000000a098a040707070fff0e8f0fffff8ffff ,
+                        0x8098ffff6080ffff707890ff404840ff50505030000000000000000000000000 ,
+                        0x000000000000000000000000a098a050707070ffc0c8c0fffffffffff0f8f0ff ,
+                        0xf0f0f0ffd0d8d0ffb0a8b0ff606060ff404840ff505050400000000000000000 ,
+                        0x0000000000000000d0d8d000c0b8c0ffc0c0c0ffd0c8d0ffc0c0c0ffb0b8b0ff ,
+                        0xb0b0b0ffb0b0b0ffa0a0a0ff808080ff606060ff404840ff3030300000000000 ,
+                        0x00000000000000000000000090909000fff8ff00ffffff000000000000000000 ,
+                        0x0000000000000000000000000000000050585000404840100000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000
+                    End
+
+                    LayoutCachedLeft =4785
+                    LayoutCachedTop =403
+                    LayoutCachedWidth =5076
+                    LayoutCachedHeight =701
+                    BackColor =14461583
+                    BorderColor =14461583
+                    WebImagePaddingLeft =4
+                    WebImagePaddingTop =4
+                    WebImagePaddingRight =3
+                    WebImagePaddingBottom =3
+                End
+                Begin TextBox
+                    OverlapFlags =85
+                    AccessKey =83
+                    IMESentenceMode =3
+                    Left =1032
+                    Top =390
+                    Width =3681
+                    Height =315
+                    TabIndex =1
+                    BorderColor =10921638
+                    ForeColor =4210752
+                    Name ="txtSearch"
+                    AfterUpdate ="[Event Procedure]"
+                    GUID = Begin
+                        0x5856f935af6d484ebe43ffd8cf78f5cd
+                    End
+                    UnicodeAccessKey =83
+                    GridlineColor =10921638
+
+                    LayoutCachedLeft =1032
+                    LayoutCachedTop =390
+                    LayoutCachedWidth =4713
+                    LayoutCachedHeight =705
+                    Begin
+                        Begin Label
+                            OverlapFlags =85
+                            Left =225
+                            Top =390
+                            Width =690
+                            Height =315
+                            BorderColor =8355711
+                            ForeColor =8355711
+                            Name ="lblSearch"
+                            Caption ="&Search"
+                            GUID = Begin
+                                0x1d5a3896b3befa4c92010627b3ea4d58
+                            End
+                            GridlineColor =10921638
+                            LayoutCachedLeft =225
+                            LayoutCachedTop =390
+                            LayoutCachedWidth =915
+                            LayoutCachedHeight =705
+                        End
+                    End
+                End
+                Begin CommandButton
+                    OverlapFlags =85
+                    AccessKey =78
+                    Left =7653
+                    Top =396
+                    TabIndex =2
+                    ForeColor =4210752
+                    Name ="cmdNew"
+                    Caption ="&New"
+                    OnClick ="[Event Procedure]"
+                    GUID = Begin
+                        0x5a7e366ed56bf142b331d49ea899b5e9
+                    End
+                    UnicodeAccessKey =78
+                    GridlineColor =10921638
+
+                    LayoutCachedLeft =7653
+                    LayoutCachedTop =396
+                    LayoutCachedWidth =9354
+                    LayoutCachedHeight =679
+                    BackColor =14461583
+                    BorderColor =14461583
+                    WebImagePaddingLeft =4
+                    WebImagePaddingTop =4
+                    WebImagePaddingRight =3
+                    WebImagePaddingBottom =3
+                End
+            End
+        End
+        Begin Section
+            CanGrow = NotDefault
+            Height =6300
+            Name ="Detail"
+            GUID = Begin
+                0x1478843f4e81c6458213a36c9bca57a7
+            End
+            AlternateBackColor =15921906
+            AlternateBackThemeColorIndex =1
+            AlternateBackShade =95.0
+            BackThemeColorIndex =1
+            Begin
+                Begin Subform
+                    OverlapFlags =85
+                    Width =18030
+                    Height =6300
+                    BorderColor =10921638
+                    Name ="subSearch"
+                    SourceObject ="Form.User_List_Search"
+                    GUID = Begin
+                        0x0c38266850522e4c893b4d84bfe32d3f
+                    End
+                    GridlineColor =10921638
+                    HorizontalAnchor =2
+                    VerticalAnchor =2
+
+                    LayoutCachedWidth =18030
+                    LayoutCachedHeight =6300
+                End
+            End
+        End
+        Begin FormFooter
+            Height =0
+            Name ="FormFooter"
+            GUID = Begin
+                0xd2139921a991b14f85f0900baceb3e46
+            End
+            AlternateBackThemeColorIndex =1
+            AlternateBackShade =95.0
+            BackThemeColorIndex =1
+        End
+    End
+End
+CodeBehindForm
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Private Sub cmdNew_Click()
+    DoCmd.OpenForm "User_Edit", datamode:=acFormAdd, WindowMode:=acDialog
+    Form_Search
+End Sub
+
+Private Sub txtSearch_AfterUpdate()
+    Form_Search
+End Sub
+
+
+Private Sub Form_Search()
+    Me.subSearch.Requery
+End Sub
+
+Private Sub cmdClearSearch_Click()
+    Me.txtSearch = Null
+    Form_Search
+End Sub
