@@ -40,7 +40,7 @@ Dim frm As Form
     Next
 End Sub
 
-Public Sub OpenEditScreen(parentForm As Form, FormName As String, Optional keyName As String = "Id", Optional WindowMode As AcWindowMode = acDialog, Optional Requery As Boolean = True)
+Public Sub OpenEditScreen(parentForm As Form, FormName As String, Optional keyName As String = "Id", Optional windowMode As AcWindowMode = acDialog, Optional Requery As Boolean = True)
 Dim Id As String
 
     If parentForm.CurrentRecord <> -1 Then
@@ -49,7 +49,7 @@ Dim Id As String
         Else
             Id = parentForm.Recordset.Fields(keyName).value
         End If
-        DoCmd.OpenForm FormName, datamode:=acFormEdit, WindowMode:=WindowMode, WhereCondition:=keyName & " =" & Id
+        DoCmd.OpenForm FormName, datamode:=acFormEdit, windowMode:=windowMode, whereCondition:=keyName & " =" & Id
         If Requery Then
             parentForm.Requery
         End If
@@ -59,25 +59,25 @@ End Sub
 Public Sub UpdateModifyTracking(frm As Form)
     frm.ModifyDate = Now
     On Error Resume Next
-    MainUserAuthentication
-    If gUser.Id = -1 Or gUser.Id = 0 Then
-        frm.ModifyUserName = gUser.Name
-        frm.ModifyUserId = gUser.Name
-    Else
+    omUserFunctions.AuthenticateUser
+    If gUser.LoggedIn Then
         frm.ModifyUserName = gUser.Name
         frm.ModifyUserId = gUser.Id
+    Else
+        frm.ModifyUserName = gUser.Name
+        frm.ModifyUserId = gUser.Name
     End If
 End Sub
 Public Sub UpdateCreateTracking(frm As Form, Optional UpdateModify = True)
     frm.CreateDate = Now
     On Error Resume Next
-    MainUserAuthentication
-    If gUser.Id = -1 Or gUser.Id = 0 Then
-        frm.CreateUserName = gUser.Name
-        frm.CreateUserId = gUser.Name
+    omUserFunctions.AuthenticateUser
+    If gUser.LoggedIn Then
+        frm.ModifyUserName = gUser.Name
+        frm.ModifyUserId = gUser.Id
     Else
-        frm.CreateUserName = gUser.Name
-        frm.CreateUserId = gUser.Id
+        frm.ModifyUserName = gUser.Name
+        frm.ModifyUserId = gUser.Name
     End If
     If UpdateModify Then
         UpdateModifyTracking frm

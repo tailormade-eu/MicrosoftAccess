@@ -7,7 +7,7 @@ Option Explicit
 Public Function Main(Optional linkLocal As Boolean = False) As Integer
 Dim FormName As String
 
-    MainUserAuthentication
+    omUserFunctions.AuthenticateUser
     'omUserFunctions.UserLock
     omMSAccessFunctions.MinimizeNavigationPane
 
@@ -21,15 +21,6 @@ Dim FormName As String
     DoCmd.OpenForm FormName
 End Function
 
-Public Sub MainUserAuthentication()
-    If Not gUser.LoggedIn Then
-        If UseWindowsAuthentication Then
-            omUserFunctions.LoginWithWindowsUser True
-        ElseIf UseLogin Then
-            DoCmd.OpenForm "Login", WindowMode:=acDialog
-        End If
-    End If
-End Sub
 Public Function LinkAccessDatabase() As Variant
     omSSMAAConnector.LinkMSAccess False
 End Function
