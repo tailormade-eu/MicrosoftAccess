@@ -1,8 +1,6 @@
 Option Compare Database
 Option Explicit
 
-Public Const UseWindowsAuthentication As Boolean = False
-Public Const UseLogin As Boolean = True
 Public Const gDevelopmentMode = False
 
 Public gDictionary As New Scripting.Dictionary
