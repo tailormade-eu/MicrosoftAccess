@@ -5,7 +5,7 @@ Public Sub UpdateEnableByTag(Form As Form, tag As String, state As Boolean, Opti
 Dim ctrl As Control
 
     For Each ctrl In Form.Controls
-        If InStr(1, delimiter & ctrl.tag & delimiter, delimiter & tag & delimiter) > 0 Then
+        If omStringFunctions.NotIsNullOrEmpty(ctrl.tag) And InStr(1, delimiter & ctrl.tag & delimiter, delimiter & tag & delimiter) > 0 Then
             ctrl.Enabled = state
         End If
     Next
@@ -15,7 +15,7 @@ Public Sub UpdateVisibleByTag(Form As Form, tag As String, state As Boolean, Opt
 Dim ctrl As Control
 
     For Each ctrl In Form.Controls
-        If InStr(1, delimiter & ctrl.tag & delimiter, delimiter & tag & delimiter) > 0 Then
+        If omStringFunctions.NotIsNullOrEmpty(ctrl.tag) And InStr(1, delimiter & ctrl.tag & delimiter, delimiter & tag & delimiter) > 0 Then
             ctrl.Visible = state
         End If
     Next
