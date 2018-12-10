@@ -2,17 +2,19 @@ Option Compare Database
 Option Explicit
 
 
-Public Function ExportQuery(queryName As String, Optional exportPath As String = "") As String
-Dim fileName As String
+Public Function ExportQuery(queryName As String, Optional exportPath As String = "", Optional filename As String = "") As String
+Dim filename As String
 
-    If IsNullOrEmpty(exportPath) Then
-        exportPath = gFso.BuildPath(omFileFunctions.GetDesktopFolder(), "ExportQuery")
+    If IsNullOrEmpty(filename) Then
+        If IsNullOrEmpty(exportPath) Then
+            exportPath = gFso.BuildPath(omFileFunctions.GetDesktopFolder(), "ExportQuery")
+        End If
+        omFileFunctions.CreateFolderPath (exportPath)
+        filename = gFso.BuildPath(exportPath, queryName & ".xlsx")
     End If
-    omFileFunctions.CreateFolderPath (exportPath)
-    fileName = gFso.BuildPath(exportPath, queryName & ".xlsx")
-    If gFso.FileExists(fileName) Then
-        gFso.DeleteFile fileName, True
+    If gFso.FileExists(filename) Then
+        gFso.DeleteFile filename, True
     End If
-    DoCmd.TransferSpreadsheet acExport, acSpreadsheetTypeExcel12Xml, queryName, fileName, True
-    ExportQuery = fileName
+    DoCmd.TransferSpreadsheet acExport, acSpreadsheetTypeExcel12Xml, queryName, filename, True
+    ExportQuery = filename
 End Function
