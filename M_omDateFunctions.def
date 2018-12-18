@@ -299,7 +299,7 @@ Dim weekday As Long
     GetTimeBetween = calculatedTime
 End Function
 Public Function GetTimeBetweenTimeRangesFlat(StartDate As Date, EndDate As Date, excludeWeekends As Boolean, range1StartDate As Date, range1EndDate As Date, Optional range2StartDate As Date = "0:0", Optional range2EndDate As Date = "0:0", Optional range3StartDate As Date = "0:0", Optional range3EndDate As Date = "0:0", Optional range4StartDate As Date = "0:0", Optional range4EndDate As Date = "0:0")
-Dim arr(0) As Object
+Dim arr() As Object
 Dim tr As omTimeRange
 
     omDateFunctions.AddTimeRangeToArray arr, range1StartDate, range1EndDate, True, True
@@ -329,6 +329,8 @@ Dim weekday As Long
 Dim tr As Variant
 Dim calcStartSeconds As Long
 Dim calcEndSeconds As Long
+Dim trStartInSeconds As Long
+Dim trEndInSeconds As Long
 
     currentdate = DateOnly(StartDate)
     While currentdate <= DateOnly(EndDate)
@@ -344,8 +346,10 @@ Dim calcEndSeconds As Long
             End If
             For Each tr In timeRanges
                 If TypeName(tr) = "omTimeRange" Then
-                    If calcStartSeconds < tr.GetEndTimeInSeconds() And calcEndSeconds > tr.GetStartTimeInSeconds() Then
-                        calculatedTime = calculatedTime + (IIf(calcEndSeconds > tr.GetEndTimeInSeconds(), tr.GetEndTimeInSeconds(), calcEndSeconds) - IIf(calcStartSeconds > tr.GetStartTimeInSeconds(), calcStartSeconds, tr.GetStartTimeInSeconds()))
+                    trStartInSeconds = tr.GetStartTimeInSeconds()
+                    trEndInSeconds = tr.GetEndTimeInSeconds()
+                    If calcStartSeconds < trEndInSeconds And calcEndSeconds > trStartInSeconds Then
+                        calculatedTime = calculatedTime + (IIf(calcEndSeconds > trEndInSeconds, trEndInSeconds, calcEndSeconds) - IIf(calcStartSeconds > trStartInSeconds, calcStartSeconds, trStartInSeconds))
                     End If
                 End If
             Next
@@ -357,7 +361,7 @@ Dim calcEndSeconds As Long
 End Function
 
 Public Sub GetTimeBetweenTimeRanges_Test()
-Dim arr(1) As omTimeRange
+Dim arr(1) As Object 'omTimeRange
 Dim tr As omTimeRange
     Set tr = New omTimeRange
     tr.StartTime = "9:00"
