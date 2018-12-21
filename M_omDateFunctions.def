@@ -277,14 +277,12 @@ End Function
 Public Function GetTimeBetween(StartDate As Date, EndDate As Date, excludeWeekends As Boolean)
 Dim currentdate As Date
 Dim calculatedTime As Date
-Dim weekday As Long
 
     calculatedTime = EndDate - StartDate
     If excludeWeekends Then
         currentdate = DateOnly(StartDate)
         While currentdate < EndDate
-            weekday = DatePart("w", currentdate, vbMonday, vbFirstFourDays)
-            If weekday > 5 Then
+            If weekday(currentdate, vbMonday) > 5 Then
                 If DateOnly(StartDate) = currentdate Then
                     calculatedTime = calculatedTime - (currentdate + 1 - StartDate)
                 ElseIf DateOnly(EndDate) = currentdate Then
@@ -309,7 +307,7 @@ Dim tr As omTimeRange
     GetTimeBetweenTimeRangesFlat = GetTimeBetweenTimeRanges(StartDate, EndDate, excludeWeekends, arr)
     
 End Function
-Public Sub AddTimeRangeToArray(arr() As Object, StartDate As Date, EndDate As Date, Optional AllowZeros As Boolean = False, Optional clear As Boolean = False)
+Public Sub AddTimeRangeToArray(arr() As Object, StartDate As Date, EndDate As Date, Optional AllowZeros As Boolean = False, Optional Clear As Boolean = False)
 Dim tr As omTimeRange
     If (StartDate <> 0 And EndDate <> 0) Or AllowZeros Then
         Set tr = New omTimeRange
@@ -325,7 +323,6 @@ End Sub
 Public Function GetTimeBetweenTimeRanges(StartDate As Date, EndDate As Date, excludeWeekends As Boolean, timeRanges() As Object)
 Dim currentdate As Date
 Dim calculatedTime As Long
-Dim weekday As Long
 Dim tr As Variant
 Dim calcStartSeconds As Long
 Dim calcEndSeconds As Long
@@ -334,8 +331,7 @@ Dim trEndInSeconds As Long
 
     currentdate = DateOnly(StartDate)
     While currentdate <= DateOnly(EndDate)
-        weekday = DatePart("w", currentdate, vbMonday, vbFirstFourDays)
-        If weekday <= 5 Or Not excludeWeekends Then
+        If weekday(currentdate, vbMonday) <= 5 Or Not excludeWeekends Then
             calcStartSeconds = GetTimeInSeconds("0:0")
             calcEndSeconds = GetTimeInSeconds("0:0", True)
             If DateOnly(StartDate) = currentdate Then
@@ -381,4 +377,8 @@ Public Function GetTimeInSeconds(t As Date, Optional ZeroIsDay As Boolean = Fals
     Else
         GetTimeInSeconds = DateDiff("s", "0:0", t)
     End If
+End Function
+
+Public Function IsWeekDay(dt As Date) As Boolean
+    IsWeekDay = (weekday(dt, vbMonday) <= 5)
 End Function
