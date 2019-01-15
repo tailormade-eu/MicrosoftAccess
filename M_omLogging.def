@@ -1,0 +1,79 @@
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Public Enabled As Boolean
+Public StartDate As Date
+Public EndDate As Date
+Public PreviousDate As Date
+Public PreviousDescription As String
+Public CurrentDescription As String
+Private dtCurrent As Date
+Dim ts As TextStream
+
+Private Sub Class_Initialize()
+    Me.Reset
+    Set ts = gFso.CreateTextFile(gFso.BuildPath(CurrentProject.Path, "log_" & omDateFunctions.GetTimeStamp() & ".txt"))
+End Sub
+
+Public Property Get CurrentDate() As Date
+    CurrentDate = dtCurrent
+End Property
+
+Public Sub SetCurrentDate(Optional dt As Date = 0, Optional description As String = "")
+    If dt = 0 Then
+        dt = Now
+    End If
+    Me.CurrentDate = dt
+    Me.CurrentDescription = description
+End Sub
+
+Public Property Let CurrentDate(ByVal vNewValue As Date)
+    PreviousDate = dtCurrent
+    PreviousDescription = CurrentDescription
+    dtCurrent = vNewValue
+    If StartDate = 0 Then
+        StartDate = dtCurrent
+        PreviousDate = dtCurrent
+    End If
+    If EndDate < dtCurrent Then
+        EndDate = dtCurrent
+    End If
+End Property
+
+Public Function ToString(Optional diffOnly As String = "y", Optional updateCurrentDate As Boolean = True, Optional description As String = "") As String
+    If updateCurrentDate Then
+        SetCurrentDate description:=description
+    End If
+    If Not Enabled Then
+        Exit Function
+    End If
+    If Len(description) > 0 Then
+        ToString = "Description: " & description & vbCrLf
+    End If
+    If diffOnly = "n" Then
+        ToString = ToString & "StartDate: " & StartDate & vbCrLf
+        ToString = ToString & "PreviousDate: " & PreviousDate & vbCrLf
+        ToString = ToString & "CurrentDate: " & CurrentDate & vbCrLf
+        ToString = ToString & "EndDate: " & EndDate & vbCrLf
+    End If
+    ToString = ToString & "CurrentDate - StartDate: " & DateDiff("s", StartDate, CurrentDate) & " - " & (CDbl(CurrentDate) - CDbl(StartDate)) * 1000 & vbCrLf
+    ToString = ToString & "CurrentDate - PreviousDate: " & DateDiff("s", PreviousDate, CurrentDate) & " - " & (CDbl(CurrentDate) - CDbl(PreviousDate)) * 1000 & vbCrLf
+End Function
+Public Function WriteToStream(Optional diffOnly As String = "y", Optional updateCurrentDate As Boolean = True, Optional description As String = "") As String
+  ts.WriteLine ToString(diffOnly, updateCurrentDate, description)
+End Function
+
+Public Sub Reset()
+    StartDate = 0
+    CurrentDate = 0
+    EndDate = 0
+End Sub
+
+Private Sub Class_Terminate()
+  ts.Close
+  Set ts = Nothing
+End Sub
