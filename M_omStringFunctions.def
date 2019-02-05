@@ -23,8 +23,12 @@ Public Function IsNullOrEmptyOrZero(value As Variant) As Boolean
     IsNullOrEmptyOrZero = IsNullOrEmpty(value)
     If Not IsNullOrEmptyOrZero Then
         IsNullOrEmptyOrZero = (value = 0)
+        If Not IsNullOrEmptyOrZero And IsDate(value) Then
+            IsNullOrEmptyOrZero = (CDbl(CDate(value)) = 0)
+        End If
     End If
 End Function
+
 Public Function NotIsNullOrEmptyOrZero(value As Variant) As Boolean
     NotIsNullOrEmptyOrZero = Not IsNullOrEmptyOrZero(value)
 End Function
