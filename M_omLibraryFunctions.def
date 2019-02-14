@@ -1,0 +1,181 @@
+Option Compare Database
+Option Explicit
+
+Public Function ExportLibrary(Optional createFolder As Boolean = False, Optional startsWith As String = "om", Optional filenameWithTimestamp As Boolean = False) As String
+Dim c As VBComponent
+Dim sfx As String
+Dim ts As String
+Dim fn As String
+Dim path As String
+
+    ts = omDateFunctions.GetTimeStamp(Now)
+    path = CurrentProject.path
+    If createFolder Then
+        path = gFso.BuildPath(path, ts)
+        If Not gFso.FolderExists(path) Then
+            gFso.createFolder path
+        End If
+    End If
+    ExportLibrary = path
+    For Each c In Application.VBE.VBProjects(1).VBComponents
+        Select Case c.Type
+            Case vbext_ct_ClassModule, vbext_ct_Document
+                sfx = ".cls"
+            Case vbext_ct_MSForm
+                sfx = ".frm"
+            Case vbext_ct_StdModule
+                sfx = ".bas"
+            Case Else
+                sfx = ""
+        End Select
+        If sfx <> "" And StrComp(Left(c.Name, Len(startsWith)), startsWith, vbBinaryCompare) = 0 Then
+            fn = path & "\" & c.Name & IIf(filenameWithTimestamp, "_" & ts, "") & sfx
+            c.Export fileName:=fn
+        End If
+    Next c
+
+End Function
+
+Public Sub UpdateLibrary(Optional backupComponents As Boolean = True, Optional useUpdatesFolder As Boolean = True, Optional deleteAfterUpdate As Boolean = True)
+Dim c As VBComponent
+Dim cNew As VBComponent
+Dim sfx As String
+Dim fn As String
+Dim path As String
+Dim oName As String
+Dim OType As AcObjectType
+
+    ExportLibrary True
+    path = CurrentProject.path
+    If useUpdatesFolder Then
+        path = gFso.BuildPath(path, "Updates")
+        If Not gFso.FolderExists(path) Then
+            MsgBox "Updates Folder does not exist: " & path
+            Exit Sub
+        End If
+    End If
+    For Each c In Application.VBE.VBProjects(1).VBComponents
+        Select Case c.Type
+            Case vbext_ct_ClassModule, vbext_ct_Document
+                sfx = ".cls"
+                OType = acModule
+            Case vbext_ct_MSForm
+                sfx = ".frm"
+                OType = acForm
+            Case vbext_ct_StdModule
+                sfx = ".bas"
+                OType = acModule
+            Case Else
+                sfx = ""
+        End Select
+        If sfx <> "" And StrComp(Left(c.Name, 2), "om", vbBinaryCompare) = 0 Then
+            oName = c.Name
+            fn = path & "\" & oName & sfx
+            If gFso.FileExists(fn) Then
+                Set cNew = Application.VBE.VBProjects(1).VBComponents.import(fn)
+                'DoCmd.DeleteObject oType, oName
+                'cNew.Name = oName
+                'DoCmd.Save oType, objectname:=oName
+                If deleteAfterUpdate Then
+                    gFso.DeleteFile fn
+                End If
+            End If
+        End If
+    Next c
+
+End Sub
+
+' RemoveEqualFiles "C:\Users\JaRa\OneDrive\Shared\Kybucs\LibraryCompare\","C:\Users\JaRa\OneDrive\Shared\Kybucs\Library\"
+
+Public Sub RemoveEqualFiles(sourcePath As String, destinationPath As String, Optional moveFile As Boolean = False)
+Dim sFolder As Scripting.Folder
+Dim sf As File
+Dim DF As File
+Dim sourceFound As Boolean
+Dim i As Long
+Dim destinationFilename As String
+Dim sString As String
+Dim dString As String
+
+    For Each DF In gFso.GetFolder(destinationPath).Files
+        destinationFilename = omFileFunctions.RemoveExtension(DF.Name)
+        i = 1
+        sourceFound = False
+        Set sFolder = gFso.GetFolder(sourcePath)
+        
+        For Each sf In sFolder.Files
+            If InStr(1, sf.Name, destinationFilename) = 1 Then
+                'dString = omFileFunctions.ReadFileToString(DF.path)
+                'sString = omFileFunctions.ReadFileToString(sf.path)
+                'sString = LCase(omStringFunctions.CleanStringUsingPattern(sString))
+                'dString = LCase(omStringFunctions.CleanStringUsingPattern(dString))
+                If dString = sString Then
+                    sf.Delete
+                Else
+                    If moveFile Then
+                        sf.Move gFso.BuildPath(destinationPath, sf.Name)
+                    End If
+                End If
+                Exit For
+            End If
+        Next
+    Next
+End Sub
+
+Public Sub LoadFromText(objectType As AcObjectType, objectName As String, fileName As String)
+    'Application.LoadFromText AcObjectType.acModule, "omLibraryFunctions", "\\sql01\data\ACenter\2007\ACenter_9002_JaRa_Updates\omLibraryFunctions.bas"
+    Application.LoadFromText objectType, objectName, fileName
+End Sub
+Public Sub LoadAsAXL(objectType As AcObjectType, objectName As String, fileName As String)
+    'Application.LoadFromText AcObjectType.acModule, "omLibraryFunctions", "\\sql01\data\ACenter\2007\ACenter_9002_JaRa_Updates\omLibraryFunctions.bas"
+    MsgBox "Does not exist in version 2007"
+    'Application.LoadAsAXL objectType, objectName, fileName
+End Sub
+
+Public Sub SaveAsText(objectType As AcObjectType, objectName As String, fileName As String)
+    'Application.SaveAsText  AcObjectType.acModule, "omLibraryFunctions", "\\sql01\data\ACenter\2007\ACenter_9002_JaRa_Updates\omLibraryFunctions.bas"
+    Application.SaveAsText objectType, objectName, fileName
+End Sub
+Public Sub SaveAsAXL(objectType As AcObjectType, objectName As String, fileName As String)
+    'Application.SaveAsText  AcObjectType.acModule, "omLibraryFunctions", "\\sql01\data\ACenter\2007\ACenter_9002_JaRa_Updates\omLibraryFunctions.bas"
+    MsgBox "Does not exist in version 2007"
+    'Application.SaveAsAXL objectType, objectName, fileName
+End Sub
+
+Public Sub Dump()
+Dim path As String
+Dim o As Object
+Dim currentPath As String
+
+    path = gFso.BuildPath(CurrentProject.path, "Dump_" & omDateFunctions.GetTimeStamp)
+    omFileFunctions.CreateFolderPath path
+    currentPath = gFso.BuildPath(path, "Queries")
+    omFileFunctions.CreateFolderPath currentPath
+    For Each o In Application.CodeData.AllQueries
+        omLibraryFunctions.SaveAsText acQuery, o.Name, gFso.BuildPath(currentPath, o.Name & ".txt")
+    Next
+    
+    currentPath = gFso.BuildPath(path, "Forms")
+    omFileFunctions.CreateFolderPath currentPath
+    For Each o In Application.CodeProject.AllForms
+        omLibraryFunctions.SaveAsText acForm, o.Name, gFso.BuildPath(currentPath, o.Name & ".txt")
+    Next
+
+    currentPath = gFso.BuildPath(path, "Reports")
+    omFileFunctions.CreateFolderPath currentPath
+    For Each o In Application.CodeProject.AllReports
+        omLibraryFunctions.SaveAsText acReport, o.Name, gFso.BuildPath(currentPath, o.Name & ".txt")
+    Next
+    
+    currentPath = gFso.BuildPath(path, "Modules")
+    omFileFunctions.CreateFolderPath currentPath
+    For Each o In Application.CodeProject.AllModules
+        omLibraryFunctions.SaveAsText acModule, o.Name, gFso.BuildPath(currentPath, o.Name & ".txt")
+    Next
+    
+    currentPath = gFso.BuildPath(path, "Macros")
+    omFileFunctions.CreateFolderPath currentPath
+    For Each o In Application.CodeProject.AllMacros
+        omLibraryFunctions.SaveAsText acMacro, o.Name, gFso.BuildPath(currentPath, o.Name & ".txt")
+    Next
+End Sub
