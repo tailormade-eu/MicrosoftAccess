@@ -4,8 +4,8 @@ Option Compare Database
 Option Explicit
 Public gFso As New Scripting.FileSystemObject
 
-Public Function BuildPathFileExists(path As String, fileName As String) As String
-    BuildPathFileExists = gFso.BuildPath(path, fileName)
+Public Function BuildPathFileExists(path As String, filename As String) As String
+    BuildPathFileExists = gFso.BuildPath(path, filename)
     If (Not gFso.FileExists(BuildPathFileExists)) Then
         BuildPathFileExists = ""
     End If
@@ -13,22 +13,22 @@ End Function
 Public Function FolderExists(path As String) As Boolean
     FolderExists = gFso.FolderExists(path)
 End Function
-Public Function FileExists(path As String, fileName As String) As String
-    FileExists = gFso.BuildPath(path, fileName)
+Public Function FileExists(path As String, filename As String) As String
+    FileExists = gFso.BuildPath(path, filename)
     If (Not gFso.FileExists(FileExists)) Then
         FileExists = ""
     End If
 End Function
-Public Function OpenPathAndFile(AppPath As String, fileName As String) As String
-        OpenPathAndFile = FileExists(AppPath, fileName)
+Public Function OpenPathAndFile(AppPath As String, filename As String) As String
+        OpenPathAndFile = FileExists(AppPath, filename)
         If OpenPathAndFile <> "" Then
             Shell "explorer.exe " & OpenPathAndFile, vbMaximizedFocus
         End If
 End Function
 
-Public Sub OpenFile(fileName As String)
-        If gFso.FileExists(fileName) Then
-            Shell "explorer.exe " & fileName, vbMaximizedFocus
+Public Sub OpenFile(filename As String)
+        If gFso.FileExists(filename) Then
+            Shell "explorer.exe " & filename, vbMaximizedFocus
         End If
 End Sub
 Public Sub OpenUrl(url As String)
@@ -44,14 +44,14 @@ Public Sub OpenFolder(path As String, Optional createPath As Boolean = False)
         End If
 End Sub
 
-Public Sub CreateDatebase(fileName As String)
-    If gFso.FileExists(fileName) Then
-        gFso.DeleteFile fileName
+Public Sub CreateDatebase(filename As String)
+    If gFso.FileExists(filename) Then
+        gFso.DeleteFile filename
     End If
-    DBEngine.CreateDataBase fileName, dbLangGeneral, dbVersion30
+    DBEngine.CreateDataBase filename, dbLangGeneral, dbVersion30
 End Sub
-Public Sub DeleteFile(fileName As String, Optional force As Boolean = False)
-    gFso.DeleteFile fileName, force
+Public Sub DeleteFile(filename As String, Optional force As Boolean = False)
+    gFso.DeleteFile filename, force
 End Sub
 
 Public Sub RenameFile(strOldName As String, strNewName As String, Optional strNewExtension As String = "")
@@ -128,15 +128,15 @@ Dim lPos As Long
     End If
 End Function
 
-Public Function GetExtension(fileName As String) As String
+Public Function GetExtension(filename As String) As String
 Dim lPos As Long
-    lPos = InStrRev(fileName, ".")
+    lPos = InStrRev(filename, ".")
     If lPos > 0 Then
-        GetExtension = Right(fileName, Len(fileName) - lPos)
+        GetExtension = Right(filename, Len(filename) - lPos)
     End If
 End Function
-Public Function MakeFilenameSafe(fileName As String) As String
-    MakeFilenameSafe = Replace(Replace(Replace(Replace(Replace(Trim(fileName), "/", "_"), ",", " "), Chr(34), " "), "'", " "), ":", "_")
+Public Function MakeFilenameSafe(filename As String) As String
+    MakeFilenameSafe = Replace(Replace(Replace(Replace(Replace(Trim(filename), "/", "_"), ",", " "), Chr(34), " "), "'", " "), ":", "_")
 End Function
 
 Public Sub CreateFolderPath(strPath As String, Optional OpenFolderInExplorer As Boolean = False)
@@ -204,7 +204,15 @@ Dim ts As TextStream
     Set ts = Nothing
 End Function
 
+Public Sub PrintFile(filename As String)
+    CreateObject("Shell.Application").NameSpace(0).ParseName(filename).InvokeVerb ("Print")
+End Sub
 
-Public Sub PrintFile(fileName As String)
-    CreateObject("Shell.Application").NameSpace(0).ParseName(fileName).InvokeVerb ("Print")
+Public Sub WriteStringToFile(filename As String, S As String)
+Dim ts As TextStream
+
+    Set ts = gFso.CreateTextFile(filename, True, True)
+    ts.Write S
+    ts.Close
+    Set ts = Nothing
 End Sub

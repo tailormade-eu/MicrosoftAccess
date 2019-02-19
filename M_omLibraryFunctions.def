@@ -30,7 +30,7 @@ Dim path As String
         End Select
         If sfx <> "" And StrComp(Left(c.Name, Len(startsWith)), startsWith, vbBinaryCompare) = 0 Then
             fn = path & "\" & c.Name & IIf(filenameWithTimestamp, "_" & ts, "") & sfx
-            c.Export fileName:=fn
+            c.Export filename:=fn
         End If
     Next c
 
@@ -122,24 +122,67 @@ Dim dString As String
     Next
 End Sub
 
-Public Sub LoadFromText(objectType As AcObjectType, objectName As String, fileName As String)
+Public Sub LoadFromText(objectType As AcObjectType, objectName As String, filename As String)
     'Application.LoadFromText AcObjectType.acModule, "omLibraryFunctions", "\\sql01\data\ACenter\2007\ACenter_9002_JaRa_Updates\omLibraryFunctions.bas"
-    Application.LoadFromText objectType, objectName, fileName
+    Application.LoadFromText objectType, objectName, filename
 End Sub
-Public Sub LoadAsAXL(objectType As AcObjectType, objectName As String, fileName As String)
+Public Sub LoadAsAXL(objectType As AcObjectType, objectName As String, filename As String)
     'Application.LoadFromText AcObjectType.acModule, "omLibraryFunctions", "\\sql01\data\ACenter\2007\ACenter_9002_JaRa_Updates\omLibraryFunctions.bas"
     MsgBox "Does not exist in version 2007"
     'Application.LoadAsAXL objectType, objectName, fileName
 End Sub
 
-Public Sub SaveAsText(objectType As AcObjectType, objectName As String, fileName As String)
+Public Sub SaveAsText(objectType As AcObjectType, objectName As String, filename As String)
     'Application.SaveAsText  AcObjectType.acModule, "omLibraryFunctions", "\\sql01\data\ACenter\2007\ACenter_9002_JaRa_Updates\omLibraryFunctions.bas"
-    Application.SaveAsText objectType, objectName, fileName
+    Application.SaveAsText objectType, objectName, filename
 End Sub
-Public Sub SaveAsAXL(objectType As AcObjectType, objectName As String, fileName As String)
+Public Sub SaveAsAXL(objectType As AcObjectType, objectName As String, filename As String)
     'Application.SaveAsText  AcObjectType.acModule, "omLibraryFunctions", "\\sql01\data\ACenter\2007\ACenter_9002_JaRa_Updates\omLibraryFunctions.bas"
     MsgBox "Does not exist in version 2007"
     'Application.SaveAsAXL objectType, objectName, fileName
+End Sub
+
+Public Sub ExportFormControlProperties(formName As String, Optional writeToFile As Boolean = False, Optional controlEscaped As Boolean = False)
+Dim F As Form
+Dim c As Control
+Dim S1 As String
+Dim S2 As String
+Dim cEscapedStart As String
+Dim cEscapedEnd As String
+Dim cName As String
+
+    If controlEscaped Then
+        cEscapedStart = "Controls(" & Chr(34)
+        cEscapedEnd = Chr(34) & ")"
+    End If
+    DoCmd.OpenForm formName, acDesign, , , , acHidden
+    Set F = Forms(formName)
+    S1 = "Public Sub SetDefaultControlProperties()" & vbCrLf
+    S2 = "Public Sub SetMinimumControlProperties(minTop as long, minLeft as long, minWidth as long, minHeight as long)"
+    For Each c In F.Controls
+        S1 = S1 & "' ------ " & c.Name & vbCrLf
+        cName = cEscapedStart & c.Name & cEscapedEnd
+        S1 = S1 & "me." & cName & ").Visible=" & c.Visible & vbCrLf
+        S1 = S1 & "me." & cName & ".Top=" & c.Top & vbCrLf
+        S1 = S1 & "me." & cName & ".Left=" & c.Left & vbCrLf
+        S1 = S1 & "me." & cName & ".Width=" & c.Width & vbCrLf
+        S1 = S1 & "me." & cName & ".Height=" & c.height & vbCrLf
+        
+        S2 = S2 & "' ------ " & c.Name & vbCrLf
+        S2 = S2 & "me." & cName & ".Visible=false" & vbCrLf
+        S2 = S2 & "me." & cName & ".Top=minTop" & vbCrLf
+        S2 = S2 & "me." & cName & ".Left=minLeft" & vbCrLf
+        S2 = S2 & "me." & cName & ".Width=minWidth" & vbCrLf
+        S2 = S2 & "me." & cName & ".Height=minHeight" & vbCrLf
+    Next
+    S1 = S1 & "End Sub" & vbCrLf
+    S2 = S2 & "End Sub" & vbCrLf
+    If writeToFile Then
+        omFileFunctions.WriteStringToFile gFso.BuildPath(CurrentProject.path, "ExportFormControlProperties_" & formName & "_" & omDateFunctions.GetTimeStamp), S1 & vbCrLf & S2
+    Else
+        Debug.Print S1 & vbCrLf & S2
+    End If
+    DoCmd.Close acForm, formName, acSaveNo
 End Sub
 
 Public Sub Dump()
