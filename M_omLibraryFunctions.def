@@ -158,11 +158,11 @@ Dim cName As String
     DoCmd.OpenForm formName, acDesign, , , , acHidden
     Set F = Forms(formName)
     S1 = "Public Sub SetDefaultControlProperties()" & vbCrLf
-    S2 = "Public Sub SetMinimumControlProperties(minTop as long, minLeft as long, minWidth as long, minHeight as long)"
+    S2 = "Public Sub SetMinimumControlProperties(minTop as long, minLeft as long, minWidth as long, minHeight as long)" & vbCrLf
     For Each c In F.Controls
         S1 = S1 & "' ------ " & c.Name & vbCrLf
         cName = cEscapedStart & c.Name & cEscapedEnd
-        S1 = S1 & "me." & cName & ").Visible=" & c.Visible & vbCrLf
+        S1 = S1 & "me." & cName & ".Visible=" & c.Visible & vbCrLf
         S1 = S1 & "me." & cName & ".Top=" & c.Top & vbCrLf
         S1 = S1 & "me." & cName & ".Left=" & c.Left & vbCrLf
         S1 = S1 & "me." & cName & ".Width=" & c.Width & vbCrLf
@@ -178,7 +178,7 @@ Dim cName As String
     S1 = S1 & "End Sub" & vbCrLf
     S2 = S2 & "End Sub" & vbCrLf
     If writeToFile Then
-        omFileFunctions.WriteStringToFile gFso.BuildPath(CurrentProject.path, "ExportFormControlProperties_" & formName & "_" & omDateFunctions.GetTimeStamp), S1 & vbCrLf & S2
+        omFileFunctions.WriteStringToFile gFso.BuildPath(CurrentProject.path, "ExportFormControlProperties_" & formName & "_" & omDateFunctions.GetTimeStamp) & ".txt", S1 & vbCrLf & S2
     Else
         Debug.Print S1 & vbCrLf & S2
     End If
@@ -187,38 +187,38 @@ End Sub
 
 Public Sub Dump()
 Dim path As String
-Dim o As Object
+Dim O As Object
 Dim currentPath As String
 
     path = gFso.BuildPath(CurrentProject.path, "Dump_" & omDateFunctions.GetTimeStamp)
     omFileFunctions.CreateFolderPath path
     currentPath = gFso.BuildPath(path, "Queries")
     omFileFunctions.CreateFolderPath currentPath
-    For Each o In Application.CodeData.AllQueries
-        omLibraryFunctions.SaveAsText acQuery, o.Name, gFso.BuildPath(currentPath, o.Name & ".txt")
+    For Each O In Application.CodeData.AllQueries
+        omLibraryFunctions.SaveAsText acQuery, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
     Next
     
     currentPath = gFso.BuildPath(path, "Forms")
     omFileFunctions.CreateFolderPath currentPath
-    For Each o In Application.CodeProject.AllForms
-        omLibraryFunctions.SaveAsText acForm, o.Name, gFso.BuildPath(currentPath, o.Name & ".txt")
+    For Each O In Application.CodeProject.AllForms
+        omLibraryFunctions.SaveAsText acForm, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
     Next
 
     currentPath = gFso.BuildPath(path, "Reports")
     omFileFunctions.CreateFolderPath currentPath
-    For Each o In Application.CodeProject.AllReports
-        omLibraryFunctions.SaveAsText acReport, o.Name, gFso.BuildPath(currentPath, o.Name & ".txt")
+    For Each O In Application.CodeProject.AllReports
+        omLibraryFunctions.SaveAsText acReport, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
     Next
     
     currentPath = gFso.BuildPath(path, "Modules")
     omFileFunctions.CreateFolderPath currentPath
-    For Each o In Application.CodeProject.AllModules
-        omLibraryFunctions.SaveAsText acModule, o.Name, gFso.BuildPath(currentPath, o.Name & ".txt")
+    For Each O In Application.CodeProject.AllModules
+        omLibraryFunctions.SaveAsText acModule, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
     Next
     
     currentPath = gFso.BuildPath(path, "Macros")
     omFileFunctions.CreateFolderPath currentPath
-    For Each o In Application.CodeProject.AllMacros
-        omLibraryFunctions.SaveAsText acMacro, o.Name, gFso.BuildPath(currentPath, o.Name & ".txt")
+    For Each O In Application.CodeProject.AllMacros
+        omLibraryFunctions.SaveAsText acMacro, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
     Next
 End Sub
