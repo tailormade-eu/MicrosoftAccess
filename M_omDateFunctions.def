@@ -223,8 +223,8 @@ End Function
 Public Function DateYYYYMMDD(ByVal dt As Variant) As Long
     DateYYYYMMDD = ConvertVarDateToYYYYMMDD(CDate(dt))
 End Function
-Public Function StartDate(ByVal Period As Long) As Date
-    StartDate = GetPeriodStartDate(Period)
+Public Function startDate(ByVal Period As Long) As Date
+    startDate = GetPeriodStartDate(Period)
 End Function
 Public Function UniDate(dt As Date) As Long
     UniDate = ConvertDateToYYYYMMDD(dt)
@@ -274,19 +274,19 @@ Public Function NumberToDHMS(t As Double) As String
     NumberToDHMS = Int(t) & "d " & Format(t - Int(t), "hh:nn:ss")
 End Function
 
-Public Function GetTimeBetween(StartDate As Date, EndDate As Date, excludeWeekends As Boolean)
+Public Function GetTimeBetween(startDate As Date, endDate As Date, excludeWeekends As Boolean)
 Dim currentdate As Date
 Dim calculatedTime As Date
 
-    calculatedTime = EndDate - StartDate
+    calculatedTime = endDate - startDate
     If excludeWeekends Then
-        currentdate = DateOnly(StartDate)
-        While currentdate < EndDate
+        currentdate = DateOnly(startDate)
+        While currentdate < endDate
             If weekday(currentdate, vbMonday) > 5 Then
-                If DateOnly(StartDate) = currentdate Then
-                    calculatedTime = calculatedTime - (currentdate + 1 - StartDate)
-                ElseIf DateOnly(EndDate) = currentdate Then
-                    calculatedTime = calculatedTime - (EndDate - currentdate)
+                If DateOnly(startDate) = currentdate Then
+                    calculatedTime = calculatedTime - (currentdate + 1 - startDate)
+                ElseIf DateOnly(endDate) = currentdate Then
+                    calculatedTime = calculatedTime - (endDate - currentdate)
                 Else
                     calculatedTime = calculatedTime - 1
                 End If
@@ -296,7 +296,7 @@ Dim calculatedTime As Date
     End If
     GetTimeBetween = calculatedTime
 End Function
-Public Function GetTimeBetweenTimeRangesFlat(StartDate As Date, EndDate As Date, excludeWeekends As Boolean, range1StartDate As Date, range1EndDate As Date, Optional range2StartDate As Date = "0:0", Optional range2EndDate As Date = "0:0", Optional range3StartDate As Date = "0:0", Optional range3EndDate As Date = "0:0", Optional range4StartDate As Date = "0:0", Optional range4EndDate As Date = "0:0")
+Public Function GetTimeBetweenTimeRangesFlat(startDate As Date, endDate As Date, excludeWeekends As Boolean, range1StartDate As Date, range1EndDate As Date, Optional range2StartDate As Date = "0:0", Optional range2EndDate As Date = "0:0", Optional range3StartDate As Date = "0:0", Optional range3EndDate As Date = "0:0", Optional range4StartDate As Date = "0:0", Optional range4EndDate As Date = "0:0")
 Dim arr() As Object
 Dim tr As omTimeRange
 
@@ -304,15 +304,15 @@ Dim tr As omTimeRange
     omDateFunctions.AddTimeRangeToArray arr, range2StartDate, range2EndDate
     omDateFunctions.AddTimeRangeToArray arr, range3StartDate, range3EndDate
     omDateFunctions.AddTimeRangeToArray arr, range4StartDate, range4EndDate
-    GetTimeBetweenTimeRangesFlat = GetTimeBetweenTimeRanges(StartDate, EndDate, excludeWeekends, arr)
+    GetTimeBetweenTimeRangesFlat = GetTimeBetweenTimeRanges(startDate, endDate, excludeWeekends, arr)
     
 End Function
-Public Sub AddTimeRangeToArray(arr() As Object, StartDate As Date, EndDate As Date, Optional AllowZeros As Boolean = False, Optional Clear As Boolean = False)
+Public Sub AddTimeRangeToArray(arr() As Object, startDate As Date, endDate As Date, Optional AllowZeros As Boolean = False, Optional Clear As Boolean = False)
 Dim tr As omTimeRange
-    If (StartDate <> 0 And EndDate <> 0) Or AllowZeros Then
+    If (startDate <> 0 And endDate <> 0) Or AllowZeros Then
         Set tr = New omTimeRange
-        tr.StartTime = TimeValue(StartDate)
-        tr.EndTime = TimeValue(EndDate)
+        tr.StartTime = TimeValue(startDate)
+        tr.EndTime = TimeValue(endDate)
         omArrayFunctions.ObjectArrayAdd arr, tr
     End If
 End Sub
@@ -320,7 +320,7 @@ Public Sub AddTimeRangeToArray_Test()
 Dim arr() As Object
     AddTimeRangeToArray arr, "10:15", "10:20"
 End Sub
-Public Function GetTimeBetweenTimeRanges(StartDate As Date, EndDate As Date, excludeWeekends As Boolean, timeRanges() As Object)
+Public Function GetTimeBetweenTimeRanges(startDate As Date, endDate As Date, excludeWeekends As Boolean, timeRanges() As Object)
 Dim currentdate As Date
 Dim calculatedTime As Long
 Dim tr As Variant
@@ -329,16 +329,16 @@ Dim calcEndSeconds As Long
 Dim trStartInSeconds As Long
 Dim trEndInSeconds As Long
 
-    currentdate = DateOnly(StartDate)
-    While currentdate <= DateOnly(EndDate)
+    currentdate = DateOnly(startDate)
+    While currentdate <= DateOnly(endDate)
         If weekday(currentdate, vbMonday) <= 5 Or Not excludeWeekends Then
             calcStartSeconds = GetTimeInSeconds("0:0")
             calcEndSeconds = GetTimeInSeconds("0:0", True)
-            If DateOnly(StartDate) = currentdate Then
-                calcStartSeconds = GetTimeInSeconds(TimeValue(StartDate))
+            If DateOnly(startDate) = currentdate Then
+                calcStartSeconds = GetTimeInSeconds(TimeValue(startDate))
             End If
-            If DateOnly(EndDate) = currentdate Then
-                calcEndSeconds = GetTimeInSeconds(TimeValue(EndDate), IIf(TimeValue(EndDate) <> 0, True, False))
+            If DateOnly(endDate) = currentdate Then
+                calcEndSeconds = GetTimeInSeconds(TimeValue(endDate), IIf(TimeValue(endDate) <> 0, True, False))
             End If
             For Each tr In timeRanges
                 If TypeName(tr) = "omTimeRange" Then
@@ -420,3 +420,7 @@ Dim maxDate As Date
     Set rs = Nothing
 
 End Sub
+
+Public Function DaysBetween(startDate As Date, endDate As Date) As Long
+    DaysBetween = DateDiff("d", startDate, endDate)
+End Function
