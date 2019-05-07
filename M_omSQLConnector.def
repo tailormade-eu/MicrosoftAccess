@@ -15,47 +15,47 @@ Dim i As Long
     cmd.CommandType = adCmdText
     cmd.commandText = commandText
     cmd.ActiveConnection = connection
-    cmd.parameters.Refresh
-    For i = 1 To cmd.parameters.Count - 1
+    cmd.Parameters.Refresh
+    For i = 1 To cmd.Parameters.Count - 1
         Select Case i
             Case 1
-                cmd.parameters(i) = parameter1
+                cmd.Parameters(i) = parameter1
             Case 2
-                cmd.parameters(i) = parameter2
+                cmd.Parameters(i) = parameter2
             Case 3
-                cmd.parameters(i) = parameter3
+                cmd.Parameters(i) = parameter3
             Case 4
-                cmd.parameters(i) = parameter4
+                cmd.Parameters(i) = parameter4
             Case 5
-                cmd.parameters(i) = parameter5
+                cmd.Parameters(i) = parameter5
             Case 6
-                cmd.parameters(i) = parameter6
+                cmd.Parameters(i) = parameter6
             Case 7
-                cmd.parameters(i) = parameter7
+                cmd.Parameters(i) = parameter7
             Case 8
-                cmd.parameters(i) = parameter8
+                cmd.Parameters(i) = parameter8
             Case 9
-                cmd.parameters(i) = parameter9
+                cmd.Parameters(i) = parameter9
             Case 10
-                cmd.parameters(i) = parameter10
+                cmd.Parameters(i) = parameter10
             Case 11
-                cmd.parameters(i) = parameter11
+                cmd.Parameters(i) = parameter11
             Case 12
-                cmd.parameters(i) = parameter12
+                cmd.Parameters(i) = parameter12
             Case 13
-                cmd.parameters(i) = parameter13
+                cmd.Parameters(i) = parameter13
             Case 14
-                cmd.parameters(i) = parameter14
+                cmd.Parameters(i) = parameter14
             Case 15
-                cmd.parameters(i) = parameter15
+                cmd.Parameters(i) = parameter15
             Case 16
-                cmd.parameters(i) = parameter16
+                cmd.Parameters(i) = parameter16
             Case 17
-                cmd.parameters(i) = parameter17
+                cmd.Parameters(i) = parameter17
             Case 18
-                cmd.parameters(i) = parameter18
+                cmd.Parameters(i) = parameter18
             Case 19
-                cmd.parameters(i) = parameter19
+                cmd.Parameters(i) = parameter19
         End Select
     Next
     cmd.Execute
@@ -68,47 +68,47 @@ Dim i As Long
     cmd.CommandType = adCmdStoredProc
     cmd.commandText = storedProcedureName
     cmd.ActiveConnection = connection
-    cmd.parameters.Refresh
-    For i = 1 To cmd.parameters.Count - 1
+    cmd.Parameters.Refresh
+    For i = 1 To cmd.Parameters.Count - 1
         Select Case i
             Case 1
-                cmd.parameters(i) = parameter1
+                cmd.Parameters(i) = parameter1
             Case 2
-                cmd.parameters(i) = parameter2
+                cmd.Parameters(i) = parameter2
             Case 3
-                cmd.parameters(i) = parameter3
+                cmd.Parameters(i) = parameter3
             Case 4
-                cmd.parameters(i) = parameter4
+                cmd.Parameters(i) = parameter4
             Case 5
-                cmd.parameters(i) = parameter5
+                cmd.Parameters(i) = parameter5
             Case 6
-                cmd.parameters(i) = parameter6
+                cmd.Parameters(i) = parameter6
             Case 7
-                cmd.parameters(i) = parameter7
+                cmd.Parameters(i) = parameter7
             Case 8
-                cmd.parameters(i) = parameter8
+                cmd.Parameters(i) = parameter8
             Case 9
-                cmd.parameters(i) = parameter9
+                cmd.Parameters(i) = parameter9
             Case 10
-                cmd.parameters(i) = parameter10
+                cmd.Parameters(i) = parameter10
             Case 11
-                cmd.parameters(i) = parameter11
+                cmd.Parameters(i) = parameter11
             Case 12
-                cmd.parameters(i) = parameter12
+                cmd.Parameters(i) = parameter12
             Case 13
-                cmd.parameters(i) = parameter13
+                cmd.Parameters(i) = parameter13
             Case 14
-                cmd.parameters(i) = parameter14
+                cmd.Parameters(i) = parameter14
             Case 15
-                cmd.parameters(i) = parameter15
+                cmd.Parameters(i) = parameter15
             Case 16
-                cmd.parameters(i) = parameter16
+                cmd.Parameters(i) = parameter16
             Case 17
-                cmd.parameters(i) = parameter17
+                cmd.Parameters(i) = parameter17
             Case 18
-                cmd.parameters(i) = parameter18
+                cmd.Parameters(i) = parameter18
             Case 19
-                cmd.parameters(i) = parameter19
+                cmd.Parameters(i) = parameter19
         End Select
     Next
     cmd.Execute
@@ -166,7 +166,9 @@ Public Property Let ConnectionString(ByVal vNewValue As Variant)
         connection.Close
     End If
     p_ConnectionString = IIf(Left(vNewValue, 5) = "odbc;", Mid(vNewValue, 6), vNewValue)
-    connection.ConnectionString = p_ConnectionString
+    Set connection = Nothing
+    connection = New ADODB.connection
+    connection.ConnectionString = vNewValue
     connection.Open
 
 End Property
