@@ -55,16 +55,16 @@ Dim strJoin As String
     LeftJoin = strJoin
 End Function
 
-Public Function BuildSQL(ByVal SelectClause As String, Optional ByVal FromClause As String = "", Optional ByVal WhereClause As String = "", Optional ByVal orderClause As String = "", Optional ByVal insertClause As String = "", Optional ByVal deleteClause As String = "") As String
+Public Function BuildSQL(ByVal selectClause As String, Optional ByVal fromClause As String = "", Optional ByVal whereClause As String = "", Optional ByVal orderClause As String = "", Optional ByVal insertClause As String = "", Optional ByVal deleteClause As String = "") As String
     
-    SelectClause = NormalizeSQL(SelectClause)
-    FromClause = NormalizeSQL(FromClause)
-    WhereClause = NormalizeSQL(WhereClause)
+    selectClause = NormalizeSQL(selectClause)
+    fromClause = NormalizeSQL(fromClause)
+    whereClause = NormalizeSQL(whereClause)
     insertClause = NormalizeSQL(insertClause)
     deleteClause = NormalizeSQL(deleteClause)
     
-    If Len(SelectClause) > 0 Then
-        BuildSQL = IIf(Left(SelectClause, 6) <> "select", "SELECT ", " ") & SelectClause
+    If Len(selectClause) > 0 Then
+        BuildSQL = IIf(Left(selectClause, 6) <> "select", "SELECT ", " ") & selectClause
     End If
     If Len(deleteClause) > 0 Then
         BuildSQL = IIf(Left(deleteClause, 6) <> "delete", "DELETE ", " ") & deleteClause
@@ -72,11 +72,11 @@ Public Function BuildSQL(ByVal SelectClause As String, Optional ByVal FromClause
     If Len(insertClause) > 0 Then
         BuildSQL = "INSERT INTO " & insertClause & " " & BuildSQL
     End If
-    If Len(FromClause) > 0 Then
-        BuildSQL = BuildSQL & IIf(Left(FromClause, 4) <> "from", " FROM ", " ") & FromClause
+    If Len(fromClause) > 0 Then
+        BuildSQL = BuildSQL & IIf(Left(fromClause, 4) <> "from", " FROM ", " ") & fromClause
     End If
-    If Len(WhereClause) > 0 Then
-        BuildSQL = BuildSQL & IIf(Left(WhereClause, 5) <> "where", " WHERE ", " ") & WhereClause
+    If Len(whereClause) > 0 Then
+        BuildSQL = BuildSQL & IIf(Left(whereClause, 5) <> "where", " WHERE ", " ") & whereClause
     End If
     If Len(orderClause) > 0 Then
         BuildSQL = BuildSQL & IIf(Left(orderClause, 8) <> "order by", " ORDER BY ", " ") & orderClause
@@ -85,24 +85,24 @@ Public Function BuildSQL(ByVal SelectClause As String, Optional ByVal FromClause
 End Function
 
 
-Public Function GetSelect(SQL As String) As String
+Public Function GetSelect(sql As String) As String
 Dim posFrom As Long
 
-    posFrom = GetSQLClausePos(SQL, "FROM")
-    GetSelect = ReplaceSQLClause(Mid(SQL, 1, posFrom - 1), "SELECT", "")
+    posFrom = GetSQLClausePos(sql, "FROM")
+    GetSelect = ReplaceSQLClause(Mid(sql, 1, posFrom - 1), "SELECT", "")
 
 End Function
-Public Function GetFrom(SQL As String) As String
+Public Function GetFrom(sql As String) As String
 Dim posFrom As Long
 Dim poswhere As Long
 Dim posOrderBy As Long
 Dim posGroupBy As Long
 Dim posUse As Long
 
-    posFrom = GetSQLClausePos(SQL, "FROM")
-    poswhere = GetSQLClausePos(SQL, "WHERE")
-    posOrderBy = GetSQLClausePos(SQL, "ORDER BY", poswhere + 1)
-    posGroupBy = GetSQLClausePos(SQL, "GROUP BY", poswhere + 1)
+    posFrom = GetSQLClausePos(sql, "FROM")
+    poswhere = GetSQLClausePos(sql, "WHERE")
+    posOrderBy = GetSQLClausePos(sql, "ORDER BY", poswhere + 1)
+    posGroupBy = GetSQLClausePos(sql, "GROUP BY", poswhere + 1)
     If poswhere <> 0 Or posOrderBy <> 0 Or posGroupBy <> 0 Then
         If poswhere <> 0 Then
             posUse = poswhere
@@ -115,22 +115,25 @@ Dim posUse As Long
         End If
     End If
     If posUse = 0 Then
-        posUse = Len(SQL) + 1
+        posUse = Len(sql) + 1
     End If
-    GetFrom = ReplaceSQLClause(Mid(SQL, posFrom, posUse - (posFrom - 1)), "FROM", "")
+    GetFrom = ReplaceSQLClause(Mid(sql, posFrom, posUse - (posFrom - 1)), "FROM", "")
 
 
 End Function
 
-Public Function GetWhere(SQL As String) As String
+Public Function GetWhere(sql As String) As String
 Dim poswhere As Long
 Dim posOrderBy As Long
 Dim posGroupBy As Long
 Dim posUse As Long
 
-    poswhere = GetSQLClausePos(SQL, "WHERE")
-    posOrderBy = GetSQLClausePos(SQL, "ORDER BY", poswhere)
-    posGroupBy = GetSQLClausePos(SQL, "GROUP BY BY", poswhere)
+    poswhere = GetSQLClausePos(sql, "WHERE")
+    If poswhere = 0 Then
+        Exit Function
+    End If
+    posOrderBy = GetSQLClausePos(sql, "ORDER BY", poswhere)
+    posGroupBy = GetSQLClausePos(sql, "GROUP BY", poswhere)
     If posOrderBy <> 0 Or posGroupBy <> 0 Then
         If posOrderBy <> 0 Then
             posUse = posOrderBy
@@ -140,14 +143,14 @@ Dim posUse As Long
         End If
     End If
     If posUse = 0 Then
-        posUse = Len(SQL) + 1
+        posUse = Len(sql) + 1
     End If
-    GetWhere = ReplaceSQLClause(Mid(SQL, poswhere, posUse - (poswhere - 1)), "WHERE", "")
+    GetWhere = ReplaceSQLClause(Mid(sql, poswhere, posUse - (poswhere - 1)), "WHERE", "")
 
 
 End Function
 
-Public Function GetOrderBy(SQL As String) As String
+Public Function GetOrderBy(ByVal sql As String) As String
 Dim posOrderBy As Long
 
 
@@ -157,10 +160,10 @@ Dim posOrderBy As Long
 'GROUP BY Course.Course_ID, Course.Course_Year
 'HAVING (((Course.Course_Year) = [1]))
 'ORDER BY Course.Course_Year;
-
-    posOrderBy = GetSQLClausePos(SQL, "ORDER BY")
+    sql = NormalizeSQL(sql)
+    posOrderBy = GetSQLClausePos(sql, "ORDER BY")
     If posOrderBy <> 0 Then
-        GetOrderBy = ReplaceSQLClause(Mid(SQL, posOrderBy, Len(SQL) - (posOrderBy - 1)), "ORDER BY", "")
+        GetOrderBy = ReplaceSQLClause(Mid(sql, posOrderBy + 1, Len(sql) - (posOrderBy - 1)), "ORDER BY", "")
     End If
     
 
@@ -187,48 +190,48 @@ Public Function GetSQLServerWeekFunction()
     GetSQLServerWeekFunction = "datepart(wk,<<Value>>)"
 End Function
 
-Public Function GetSQLClausePos(ByVal SQL As String, clause As String, Optional startPos As Long = 1) As Long
+Public Function GetSQLClausePos(ByVal sql As String, clause As String, Optional startPos As Long = 1) As Long
 Dim pos As Long
 
-    SQL = NormalizeSQL(SQL)
-    pos = InStr(startPos, SQL, " " & clause & " ")
+    sql = NormalizeSQL(sql)
+    pos = InStr(startPos, sql, " " & clause & " ")
     If pos = 0 Then
-        pos = InStr(startPos, SQL, clause & " ")
+        pos = InStr(startPos, sql, clause & " ")
     End If
     
     GetSQLClausePos = pos
 End Function
 
-Public Function ReplaceSQLClause(ByVal SQL As String, clause As String, Optional replaceString As String = "", Optional startPos As Long = 0) As String
+Public Function ReplaceSQLClause(ByVal sql As String, clause As String, Optional replaceString As String = "", Optional startPos As Long = 0) As String
 Dim pos As Long
 Dim posEnd As Long
 Dim result As String
 
-    SQL = NormalizeSQL(SQL)
+    sql = NormalizeSQL(sql)
     If startPos = 0 Then
-        pos = GetSQLClausePos(SQL, clause)
+        pos = GetSQLClausePos(sql, clause)
     Else
         pos = startPos
     End If
     If pos <> 0 Then
-        posEnd = InStr(pos, SQL, " ")
+        posEnd = InStr(pos + Len(clause) - 1, sql, " ")
         If posEnd = 0 Then
-            posEnd = InStr(pos, SQL, vbCrLf)
+            posEnd = InStr(pos, sql, vbCrLf)
         End If
         If posEnd = 0 Then
-            posEnd = InStr(pos, SQL, vbCr)
+            posEnd = InStr(pos, sql, vbCr)
         End If
-        result = Mid(SQL, posEnd)
+        result = Mid(sql, posEnd)
     End If
     ReplaceSQLClause = Trim(result)
 End Function
-Public Function NormalizeSQL(ByVal SQL As String) As String
+Public Function NormalizeSQL(ByVal sql As String) As String
     
-    SQL = Replace(SQL, vbCrLf, " ")
-    SQL = Replace(SQL, vbCr, " ")
-    SQL = Replace(SQL, ";", " ")
-    SQL = Replace(SQL, "  ", " ")
-    NormalizeSQL = Trim(SQL)
+    sql = Replace(sql, vbCrLf, " ")
+    sql = Replace(sql, vbCr, " ")
+    sql = Replace(sql, ";", " ")
+    sql = Replace(sql, "  ", " ")
+    NormalizeSQL = Trim(sql)
 End Function
 
 Public Function WhereOperatorForString(str As String) As String
@@ -236,37 +239,37 @@ Public Function WhereOperatorForString(str As String) As String
     WhereOperatorForString = IIf(InStr(1, str, "*") = 0 And InStr(1, str, "?") = 0, " = ", " LIKE ")
 End Function
 
-Public Function ReplaceDatabaseInUseClause(ByVal SQL As String, sourceDatabase As String, destinationDatabase As String) As String
+Public Function ReplaceDatabaseInUseClause(ByVal sql As String, sourceDatabase As String, destinationDatabase As String) As String
 Dim startPos As Long
 Dim endPos As Long
 Dim checkPattern As String
 Dim i As Long
 
     checkPattern = " " & vbCrLf & "/;"
-    startPos = InStr(startPos + 1, SQL, "USE ")
+    startPos = InStr(startPos + 1, sql, "USE ")
     endPos = startPos
     While startPos > 0
         ' check character before USE is blank, vbcr,vbcrlf,vblf, /
         If startPos > 1 Then
-            If Not omStringFunctions.IsStringInPattern(Mid(SQL, startPos - 1, 1), checkPattern) Then
+            If Not omStringFunctions.IsStringInPattern(Mid(sql, startPos - 1, 1), checkPattern) Then
                 startPos = 0
             End If
         End If
         If startPos <> 0 Then
-            For i = startPos + 4 To Len(SQL)
+            For i = startPos + 4 To Len(sql)
                 endPos = i
-                If omStringFunctions.IsStringInPattern(Mid(SQL, i, 1), checkPattern) Then
+                If omStringFunctions.IsStringInPattern(Mid(sql, i, 1), checkPattern) Then
                     endPos = endPos - 1
                     Exit For
                 End If
             Next i
-            If Mid(SQL, startPos + 4, endPos + 1 - startPos - 4) = sourceDatabase Then
-                SQL = Left(SQL, startPos - 1) & "USE " & destinationDatabase & Mid(SQL, endPos + 1)
+            If Mid(sql, startPos + 4, endPos + 1 - startPos - 4) = sourceDatabase Then
+                sql = Left(sql, startPos - 1) & "USE " & destinationDatabase & Mid(sql, endPos + 1)
             End If
         End If
         startPos = endPos
-        startPos = InStr(startPos + 1, SQL, "USE ")
+        startPos = InStr(startPos + 1, sql, "USE ")
         endPos = startPos
     Wend
-    ReplaceDatabaseInUseClause = SQL
+    ReplaceDatabaseInUseClause = sql
 End Function
