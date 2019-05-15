@@ -11,6 +11,10 @@ Public Function ExportQuery(queryName As String, Optional exportPath As String =
         omFileFunctions.CreateFolderPath (exportPath)
         filename = gFso.BuildPath(exportPath, queryName & ".xlsx")
     End If
+    If omFileFunctions.FileLocked(filename) Then
+        MsgBox "File: " & filename & " is open"
+        Exit Function
+    End If
     If gFso.FileExists(filename) Then
         gFso.DeleteFile filename, True
     End If
