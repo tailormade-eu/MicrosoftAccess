@@ -16,45 +16,46 @@ Dim i As Long
     cmd.commandText = commandText
     cmd.ActiveConnection = connection
     cmd.Parameters.Refresh
-    For i = 1 To cmd.Parameters.Count - 1
+    ' Parameters are 0 based
+    For i = 0 To cmd.Parameters.Count - 1
         Select Case i
-            Case 1
+            Case 0
                 cmd.Parameters(i) = parameter1
-            Case 2
+            Case 1
                 cmd.Parameters(i) = parameter2
-            Case 3
+            Case 2
                 cmd.Parameters(i) = parameter3
-            Case 4
+            Case 3
                 cmd.Parameters(i) = parameter4
-            Case 5
+            Case 4
                 cmd.Parameters(i) = parameter5
-            Case 6
+            Case 5
                 cmd.Parameters(i) = parameter6
-            Case 7
+            Case 6
                 cmd.Parameters(i) = parameter7
-            Case 8
+            Case 7
                 cmd.Parameters(i) = parameter8
-            Case 9
+            Case 8
                 cmd.Parameters(i) = parameter9
-            Case 10
+            Case 9
                 cmd.Parameters(i) = parameter10
-            Case 11
+            Case 10
                 cmd.Parameters(i) = parameter11
-            Case 12
+            Case 11
                 cmd.Parameters(i) = parameter12
-            Case 13
+            Case 12
                 cmd.Parameters(i) = parameter13
-            Case 14
+            Case 13
                 cmd.Parameters(i) = parameter14
-            Case 15
+            Case 14
                 cmd.Parameters(i) = parameter15
-            Case 16
+            Case 15
                 cmd.Parameters(i) = parameter16
-            Case 17
+            Case 16
                 cmd.Parameters(i) = parameter17
-            Case 18
+            Case 17
                 cmd.Parameters(i) = parameter18
-            Case 19
+            Case 18
                 cmd.Parameters(i) = parameter19
         End Select
     Next
@@ -118,7 +119,7 @@ Public Sub ExecuteSQLPassThrough(commandText As String, queryName As String)
 Dim qryDef As QueryDef
     
     Set qryDef = CurrentDb.QueryDefs(queryName)
-    qryDef.SQL = commandText
+    qryDef.sql = commandText
     qryDef.Connect = ODBCConnectionString
     qryDef.Execute
 End Sub
