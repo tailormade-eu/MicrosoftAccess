@@ -2,10 +2,10 @@ Option Compare Database
 Option Explicit
 
 Public Function WhereAnd(whereClause1 As String, whereClause2 As String, Optional embraceWhereClause1 = False, Optional embraceWhereClause2 = False)
-    If embraceWhereClause1 Then
+    If Len(whereClause1) > 0 And embraceWhereClause1 Then
         whereClause1 = "(" & whereClause1 & ")"
     End If
-    If embraceWhereClause2 Then
+    If Len(whereClause2) > 0 And embraceWhereClause2 Then
         whereClause2 = "(" & whereClause2 & ")"
     End If
     If Len(whereClause1) = 0 Then
@@ -18,10 +18,10 @@ Public Function WhereAnd(whereClause1 As String, whereClause2 As String, Optiona
 End Function
 
 Public Function WhereOr(whereClause1 As String, whereClause2 As String, Optional embraceWhereClause1 = False, Optional embraceWhereClause2 = False)
-    If embraceWhereClause1 Then
+    If Len(whereClause1) > 0 And embraceWhereClause1 Then
         whereClause1 = "(" & whereClause1 & ")"
     End If
-    If embraceWhereClause2 Then
+    If Len(whereClause2) > 0 And embraceWhereClause2 Then
         whereClause2 = "(" & whereClause2 & ")"
     End If
     If Len(whereClause1) = 0 Then
