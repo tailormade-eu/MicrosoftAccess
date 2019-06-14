@@ -131,21 +131,26 @@ Dim i As Long
     RemoveChars = returnString
     
 End Function
-Public Function KeepChars(source As Variant, findPattern As String, replaceString As String)
+
+Public Function KeepChars(source As Variant, keepPattern As String, replaceString As String)
 Dim returnString As String
 Dim i As Long
+Dim currentChar As String
  
-    source = Nz(source, "")
+    returnString = Nz(source, "")
     For i = 1 To Len(source)
-        If InStr(1, findPattern, Mid(source, i, 1)) > 0 Then
-            returnString = returnString & Mid(source, i, 1)
-        Else
-            returnString = returnString & replaceString
+        currentChar = Mid(returnString, i, 1)
+        If InStr(1, keepPattern, currentChar) = 0 Then
+            returnString = Replace(returnString, currentChar, replaceString)
         End If
+        'If InStr(1, findPattern, Mid(source, i, 1)) > 0 Then
+        '    returnString = returnString & Mid(source, i, 1)
+        'Else
+        '    returnString = returnString & replaceString
+        'End If
     Next i
     KeepChars = returnString
 End Function
-
 
 Public Function ContainsString(source As Variant, containString As String, Optional useDelimiter As String = "") As Long
     ContainsString = InStr(1, useDelimiter & source & useDelimiter, useDelimiter & containString & useDelimiter)
@@ -185,6 +190,14 @@ Public Function CleanCommunication(value As Variant) As Variant
     End If
 End Function
 
+Public Function ReverseCommunication(value As Variant) As Variant
+    value = CleanCommunication(value)
+    If IsNullOrEmpty(value) Then
+        ReverseCommunication = Null
+    Else
+        ReverseCommunication = StrReverse(value)
+    End If
+End Function
 
 Function Proper(var As Variant) As Variant
 ' Purpose: Convert the case of var so that the first letter of each word capitalized.
@@ -277,14 +290,14 @@ Dim result As String
     StringPad = result
 End Function
 
-Public Function ContainsCharFromPattern(s as string, pattern as string) as boolean
-dim c as string
-dim i as long
-		for i = 1 to len(pattern)
-			c=mid(pattern,i,1)
-			if instr(1,s,c)>0 then
-				ContainsCharFromPattern=true
-				Exit Function
-			end if
-		next i
+Public Function ContainsCharFromPattern(s As String, pattern As String) As Boolean
+Dim c As String
+Dim i As Long
+                For i = 1 To Len(pattern)
+                        c = Mid(pattern, i, 1)
+                        If InStr(1, s, c) > 0 Then
+                                ContainsCharFromPattern = True
+                                Exit Function
+                        End If
+                Next i
 End Function
