@@ -8,8 +8,8 @@ Dim omCSLastUsed As New omConnectionString
 Dim m_ServerCon_ODBC As String
 Dim m_ServerCon As String
 
-Public Function LocalCon() As ADODB.Connection
-  Set LocalCon = CurrentProject.Connection
+Public Function LocalCon() As ADODB.connection
+  Set LocalCon = CurrentProject.connection
 End Function
 
 Public Function ServerCon(Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default, Optional ODBCConnection As Boolean = False) As String
@@ -63,7 +63,7 @@ Dim strDatabaseName As String
                 End If
             End If
         End If
-        If Not TableExists(rsODBC("ODBCTable")) Then
+        If Not omMSAccessFunctions.TableExists(rsODBC("ODBCTable")) Then
             strSQLTable = "[SQLTableOwner][SQLTable]"
             strSQLTable = Replace(strSQLTable, "[SQLTableOwner]", IIf(Len(rsODBC("SQLTableOwner")) > 0, rsODBC("SQLTableOwner") & ".", ""))
             strSQLTable = Replace(strSQLTable, "[SQLTable]", rsODBC("SQLTable"))
@@ -93,7 +93,7 @@ Dim rs As New ADODB.Recordset
 Dim cmd As New ADODB.Command
     
     Set omCSLastUsed = New omConnectionString
-    cmd.CommandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Group],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
+    cmd.commandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Group],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
     cmd.ActiveConnection = LocalCon
     cmd.Parameters.Append cmd.CreateParameter("p1", adVarWChar, adParamInput, 512)
     cmd.Parameters.Append cmd.CreateParameter("p2", adLongVarWChar, adParamInput, 256)
@@ -240,7 +240,7 @@ Dim typeFilter As String
 Dim t As String
 
     rs.Open "SELECT * FROM MSysObjects", LocalCon, adOpenForwardOnly, adLockReadOnly
-    rsTable.Open storageTable, CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    rsTable.Open storageTable, CurrentProject.connection, adOpenDynamic, adLockOptimistic
     While Not rs.EOF
         
         typeFilter = "4" '",1,4,"
@@ -329,7 +329,7 @@ Dim rs As New ADODB.Recordset
 Dim typeFilter As String
 Dim t As String
 Dim connString As String
-Dim SQL As String
+Dim sql As String
 
     Debug.Print Now
     rs.Open "SELECT * FROM MSysObjects WHERE Type=5 AND flags=112", LocalCon, adOpenForwardOnly, adLockReadOnly
@@ -339,20 +339,20 @@ Dim SQL As String
         If InStr(1, CurrentDb.QueryDefs(rs("Name")).Connect, "database=" & sourceDatabase & ";") > 0 Then
                 CurrentDb.QueryDefs(rs("Name")).Connect = Replace(CurrentDb.QueryDefs(rs("Name")).Connect, "database=" & sourceDatabase & ";", "database=" & destinationDatabase & ";")
         End If
-        SQL = CurrentDb.QueryDefs(rs("Name")).SQL
-        If InStr(1, SQL, "USE ") > 0 Then
+        sql = CurrentDb.QueryDefs(rs("Name")).sql
+        If InStr(1, sql, "USE ") > 0 Then
             Debug.Print "USE => " & rs("Name"), rs("Type"), rs("flags")
-            SQL = omSQLFunctions.ReplaceDatabaseInUseClause(SQL, sourceDatabase, destinationDatabase)
+            sql = omSQLFunctions.ReplaceDatabaseInUseClause(sql, sourceDatabase, destinationDatabase)
         End If
-        If InStr(1, SQL, "." & schema & ".") > 0 Then
+        If InStr(1, sql, "." & schema & ".") > 0 Then
             Debug.Print "." & schema & "." & rs("Name"), rs("Type"), rs("flags")
-            SQL = Replace(SQL, " " & sourceDatabase & "." & schema & ".", " " & destinationDatabase & "." & schema & ".")
-            SQL = Replace(SQL, "," & sourceDatabase & "." & schema & ".", "," & destinationDatabase & "." & schema & ".")
-            SQL = Replace(SQL, vbCrLf & sourceDatabase & "." & schema & ".", vbCrLf & destinationDatabase & "." & schema & ".")
-            SQL = Replace(SQL, vbCr & sourceDatabase & "." & schema & ".", vbCr & destinationDatabase & "." & schema & ".")
-            SQL = Replace(SQL, vbLf & sourceDatabase & "." & schema & ".", vbLf & destinationDatabase & "." & schema & ".")
+            sql = Replace(sql, " " & sourceDatabase & "." & schema & ".", " " & destinationDatabase & "." & schema & ".")
+            sql = Replace(sql, "," & sourceDatabase & "." & schema & ".", "," & destinationDatabase & "." & schema & ".")
+            sql = Replace(sql, vbCrLf & sourceDatabase & "." & schema & ".", vbCrLf & destinationDatabase & "." & schema & ".")
+            sql = Replace(sql, vbCr & sourceDatabase & "." & schema & ".", vbCr & destinationDatabase & "." & schema & ".")
+            sql = Replace(sql, vbLf & sourceDatabase & "." & schema & ".", vbLf & destinationDatabase & "." & schema & ".")
         End If
-        CurrentDb.QueryDefs(rs("Name")).SQL = SQL
+        CurrentDb.QueryDefs(rs("Name")).sql = sql
         rs.MoveNext
     Wend
     rs.Close
@@ -391,7 +391,7 @@ Dim strWhere As String
     'Debug.Print Now
     strWhere = IIf(Group <> "", "[Group] = " & Chr(34) & Group & Chr(34), "")
     strWhere = omSQLFunctions.WhereAnd(strWhere, IIf(AttachOnly, "[Attach] = True", ""))
-    rsODBC.Open omSQLFunctions.BuildSQL("SELECT * FROM SSMAA_ODBC_Tables", WhereClause:=strWhere), LocalCon, adOpenForwardOnly
+    rsODBC.Open omSQLFunctions.BuildSQL("SELECT * FROM SSMAA_ODBC_Tables", whereClause:=strWhere), LocalCon, adOpenForwardOnly
     Do Until rsODBC.EOF
       DoCmd.DeleteObject acTable, rsODBC("ODBCTable")
       rsODBC.MoveNext
@@ -426,14 +426,14 @@ Public Sub LinkMSAccess(Optional linkLocal As Boolean = False)
 Dim tblCon As New omTableConnector
 Dim DefaultPath As String
 Dim dataPath As String
-Dim fileName As String
+Dim filename As String
 
 
-    fileName = omFileFunctions.RemoveExtension(CurrentProject.NAME)
-    If InStrRev(fileName, "_client") > 0 Then
-        fileName = Replace(fileName, "_client", "")
+    filename = omFileFunctions.RemoveExtension(CurrentProject.Name)
+    If InStrRev(filename, "_client") > 0 Then
+        filename = Replace(filename, "_client", "")
     End If
-    fileName = fileName & "_Data"
+    filename = filename & "_Data"
     gSystemDefaults.Mode = LocalMode
     gSystemDefaults.Development = gDevelopmentMode
     If linkLocal Then
@@ -442,15 +442,15 @@ Dim fileName As String
         dataPath = Nz(gSystemDefaults.Load("DataPath"), "")
     End If
     
-    DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, fileName & ".mdb")
+    DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, filename & ".mdb")
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, fileName & ".accdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, filename & ".accdb")
     End If
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, fileName & ".mdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, filename & ".mdb")
     End If
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, fileName & ".accdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, filename & ".accdb")
     End If
     If Not gFso.FileExists(DefaultPath) Then
         MsgBox "No Data file was found at the location: " & DefaultPath & vbCrLf & "Application will now be closed.", vbCritical
