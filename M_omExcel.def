@@ -1,0 +1,54 @@
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Public xlApp As New Excel.Application
+Public xlWB As Excel.Workbook
+
+
+Public Sub LoadWB(filename As String)
+    Set xlWB = xlApp.Workbooks.Open(filename)
+End Sub
+Public Sub CloseWB(Optional saveChanges As Boolean = True, Optional filename As String = "")
+    If IsNullOrEmpty(filename) Then
+        xlWB.Close saveChanges
+    Else
+        xlWB.Close saveChanges, filename
+    End If
+    Set xlWB = Nothing
+End Sub
+
+Public Sub SetVisible(Optional visible As Boolean = True)
+    omExcelFunctions.SetVisible xlApp, visible
+End Sub
+Public Sub SelectColumn(columnIndex As Long)
+    omExcelFunctions.SelectColumn xlWB.ActiveSheet, columnIndex
+End Sub
+Public Sub FormatColumn(columnIndex As Long, numberFormat As String)
+    omExcelFunctions.FormatColumn xlWB.ActiveSheet, columnIndex, numberFormat
+End Sub
+Public Sub FormatCells(Optional rowIndexStart As Long = 0, Optional columnIndexStart As Long = 0, Optional rowIndexEnd As Long = 0, Optional columnIndexEnd As Long = 0, Optional numberFormat As Variant = Null, Optional horizontalAlignment As Excel.Constants = xlLeft, Optional verticalAlignment As Excel.Constants = xlTop, Optional MergeCells As Boolean = False, Optional WrapText As Boolean = False)
+    omExcelFunctions.FormatCells xlWB.ActiveSheet, rowIndexStart, columnIndexStart, rowIndexEnd, columnIndexEnd, numberFormat, horizontalAlignment, verticalAlignment, MergeCells, WrapText
+End Sub
+Public Sub WriteCell(rowIndex As Long, columnIndex As Long, Value As Variant, Optional numberFormat As Variant = Null, Optional horizontalAlignment As Excel.Constants = xlLeft, Optional verticalAlignment As Excel.Constants = xlTop)
+    omExcelFunctions.WriteCell xlWB.ActiveSheet, rowIndex, columnIndex, Value
+    Me.FormatCells rowIndexStart:=rowIndex, columnIndexStart:=columnIndex, numberFormat:=numberFormat, horizontalAlignment:=horizontalAlignment, verticalAlignment:=verticalAlignment
+End Sub
+Public Sub InsertRows(rowIndex As Long, Optional numberOfRows As Long = 1)
+Dim i As Long
+    For i = 1 To numberOfRows
+        omExcelFunctions.InsertRow xlWB.ActiveSheet, rowIndex
+    Next
+End Sub
+Public Sub AutoFit()
+    omExcelFunctions.AutoFitColumns xlWB.ActiveSheet
+    omExcelFunctions.AutoFitRows xlWB.ActiveSheet
+End Sub
+Private Sub Class_Terminate()
+    Set xlWB = Nothing
+    xlApp.Quit
+    Set xlApp = Nothing
+End Sub

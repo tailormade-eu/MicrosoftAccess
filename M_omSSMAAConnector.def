@@ -2,14 +2,32 @@ Option Compare Database
 Option Explicit
 Global cSQLNCLI As Integer
 Global cSQLNCLIFound As Boolean
+'Global gomCS As New omConnectionString
 
 Dim omCSTest As New omConnectionString
 Dim omCSLastUsed As New omConnectionString
 Dim m_ServerCon_ODBC As String
 Dim m_ServerCon As String
+Const cSSMAABAckup = "SSMAA_Backup_"
+Private Declare Function GetTickCount Lib "Kernel32" () As Long
 
-Public Function LocalCon() As ADODB.connection
-  Set LocalCon = CurrentProject.connection
+
+
+' Module Name   SSMAAConnector
+'
+' Author        Raoul Jacobs
+' Company       opmaat bvba
+' Email         jara@opmaat.be
+' Modify Date   2006-07-25
+'
+' Description
+'   the function Link will relink all tables which are defined in the table SSMAA_ODBC_Tables
+'   the function CreateTable will create the tabel SSMAA_ODBC_Tables
+
+' vm sqlserver : OPMAAT-D800VM\SQLEXPRESS
+
+Public Function LocalCon() As ADODB.Connection
+  Set LocalCon = CurrentProject.Connection
 End Function
 
 Public Function ServerCon(Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default, Optional ODBCConnection As Boolean = False) As String
@@ -35,30 +53,35 @@ Dim rsODBC As New ADODB.Recordset
 Dim strSQLTable As String
 Dim strDatabaseName As String
 
-    'If IsNullOrEmptyOrZero(GetSQLNCLIVersion()) And UseSQLNCLIOnly = True Then
+    'If IsNullOrEmptyOrZero(GetSQLNCLIVersion()) And ConnectionType = ConnectionTypes.SQLNCLI Then
     '    MsgBox "No SQL Server Native driver is installed"
     '    Exit Function
     'End If
     Debug.Print Now
     
+    UpdateSSMAAGroups
+    
     If alwaysUpdate Then
+        'DeleteLinkTables Group
         LinkDeleteTables Group
     Else
+        'DeleteLinkTables Group, True
         LinkDeleteTables Group, True
     End If
     
     UpdateSSMAConnectionString Group, ConnectionType
     rs.Open "SELECT Name, Type FROM MSysObjects WHERE Type=1 OR Type=6 OR Type=4", LocalCon, adOpenStatic, adLockReadOnly
-    rsODBC.Open "SELECT * FROM SSMAA_ODBC_Tables" & IIf(Group <> "", " WHERE [Group]=" & Chr(34) & Group & Chr(34), ""), LocalCon, adOpenForwardOnly, adLockOptimistic
+    'rsODBC.Open "SELECT * FROM SSMAA_ODBC_Tables" & IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), ""), LocalCon, adOpenForwardOnly, adLockOptimistic
+    rsODBC.Open "SELECT * FROM SSMAA_ODBC_Tables" & IIf(Group <> "", " WHERE [Group] like " & Chr(34) & "%," & Group & ",%" & Chr(34), ""), LocalCon, adOpenForwardOnly, adLockOptimistic
     While Not rsODBC.EOF
         'rs.Requery
         rs.Filter = "Name='" & rsODBC("ODBCTable") & "'"
         If Not rs.EOF Then
             If rs("Type") = 1 Then
-                DoCmd.Rename "SSMAA_" & rsODBC("ODBCTable"), acTable, rsODBC("ODBCTable")
+                DoCmd.Rename cSSMAABAckup & rsODBC("ODBCTable"), acTable, rsODBC("ODBCTable")
             ElseIf Not alwaysUpdate Then
                 omCSTest.ParseByTableName rsODBC("ODBCTable")
-                If Not (omCSTest.HasPasswordSaved Or omCSTest.HasTrustedConnection) Or (omCSTest.Server <> rsODBC("SQLServer")) Or (omCSTest.Database <> rsODBC("SQLDatabase")) Or (omCSTest.IsSQLNCLIConnection And omCSTest.SQLNCLIVersion <> GetSQLNCLIVersion) Then
+                If Not (omCSTest.HasPasswordSaved Or omCSTest.HasTrustedConnection) Or (omCSTest.server <> rsODBC("SQLServer")) Or (omCSTest.Database <> rsODBC("SQLDatabase")) Or (omCSTest.IsSQLNCLIConnection And omCSTest.SQLNCLIVersion <> GetSQLNCLIVersion) Then
                     DoCmd.DeleteObject acTable, rsODBC("ODBCTable")
                 End If
             End If
@@ -69,7 +92,9 @@ Dim strDatabaseName As String
             strSQLTable = Replace(strSQLTable, "[SQLTable]", rsODBC("SQLTable"))
             
             'strDatabaseName = omCSLastUsed.GetConnectionString(rsODBC("SQLDatabase"), rsODBC("SQLServer"), True, ConnectionType, rsODBC("DSN"), rsODBC("SQLLogin"), rsODBC("SQLPassword"), Group)
+            'strDatabaseName = "ODBC;" & rsODBC("ConnectionString")
             strDatabaseName = rsODBC("ConnectionString")
+            'AttachedTable strDatabaseName, strSQLTable, rsODBC("ODBCTable"), SavePassword:=SavePassword
             If ConnectionType <> SQLOLEDBProvider Then
                 strDatabaseName = "ODBC;" & strDatabaseName
             End If
@@ -93,7 +118,8 @@ Dim rs As New ADODB.Recordset
 Dim cmd As New ADODB.Command
     
     Set omCSLastUsed = New omConnectionString
-    cmd.commandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Group],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
+    'cmd.CommandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Groups],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
+    cmd.CommandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Group],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
     cmd.ActiveConnection = LocalCon
     cmd.Parameters.Append cmd.CreateParameter("p1", adVarWChar, adParamInput, 512)
     cmd.Parameters.Append cmd.CreateParameter("p2", adLongVarWChar, adParamInput, 256)
@@ -105,9 +131,12 @@ Dim cmd As New ADODB.Command
     cmd.Parameters.Append cmd.CreateParameter("p8", adLongVarWChar, adParamInput, 256)
     cmd.Parameters.Append cmd.CreateParameter("p9", adLongVarWChar, adParamInput, 256)
     
-    rs.Open "SELECT [Group], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword From SSMAA_ODBC_Tables " & IIf(Group <> "", " WHERE [Group]=" & Chr(34) & Group & Chr(34), "") & " GROUP BY [Group], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword", LocalCon, adOpenForwardOnly, adLockReadOnly
+    'rs.Open "SELECT [Groups], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword From SSMAA_ODBC_Tables " & IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), "") & " GROUP BY [Groups], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword", LocalCon, adOpenForwardOnly, adLockReadOnly
+    rs.Open "SELECT [Group], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword From SSMAA_ODBC_Tables " & IIf(Group <> "", " WHERE [Group] like " & Chr(34) & "%," & Group & ",%" & Chr(34), "") & " GROUP BY [Group], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword", LocalCon, adOpenForwardOnly, adLockReadOnly
     While Not rs.EOF
+        'cmd.Parameters(0) = omCSLastUsed.GetConnectionString(Nz(rs("sqlDatabase"), ""), Nz(rs("SQLServer"), ""), False, Nz(rs("ConnectionTypeId"), ConnectionType), Nz(rs("DSN"), ""), Nz(rs("SQLLogin"), ""), Nz(rs("SQLPassword"), ""), Nz(rs("Groups"), ""), Nz(rs("SQLServerPort"), ""))
         cmd.Parameters(0) = omCSLastUsed.GetConnectionString(Nz(rs("sqlDatabase"), ""), Nz(rs("SQLServer"), ""), False, Nz(rs("ConnectionTypeId"), ConnectionType), Nz(rs("DSN"), ""), Nz(rs("SQLLogin"), ""), Nz(rs("SQLPassword"), ""), Nz(rs("Group"), ""), Nz(rs("SQLServerPort"), ""))
+        'cmd.Parameters(1) = Nz(rs("Groups"), "")
         cmd.Parameters(1) = Nz(rs("Group"), "")
         cmd.Parameters(2) = Nz(rs("DSN"), "")
         cmd.Parameters(3) = Nz(rs("SQLServer"), "")
@@ -123,6 +152,8 @@ Dim cmd As New ADODB.Command
     Set rs = Nothing
     Set cmd = Nothing
 End Sub
+
+'Sub AttachedTable(ConnectionString As String, sourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False)
 Sub AttachTable(ConnectionString As String, SourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False, Optional primaryKey As String = "")
 Dim tbl As DAO.TableDef
               
@@ -138,7 +169,7 @@ Dim tbl As DAO.TableDef
     'Add the new table to the database.
     CurrentDb.TableDefs.Append tbl
     Set tbl = Nothing
-    
+
     If NotIsNullOrEmpty(primaryKey) Then
         CurrentDb.TableDefs.Refresh
         CurrentDb.Execute "CREATE UNIQUE INDEX PK_" & DestinationTable & " ON " & DestinationTable & " (" & primaryKey & ") WITH PRIMARY"
@@ -189,7 +220,8 @@ Dim strFilter As String
         strFilter = strFilter & IIf(NotIsNullOrEmpty(databaseName), " AND sqldatabase='{1}'", "")
         strFilter = strFilter & IIf(NotIsNullOrEmpty(serverName), " AND sqlserver='{2}'", "")
         strFilter = strFilter & IIf(NotIsNullOrEmpty(dsnName), " AND dsn='{3}'", "")
-        strFilter = strFilter & IIf(NotIsNullOrEmpty(groupName), " AND group='{4}'", "")
+        strFilter = strFilter & IIf(NotIsNullOrEmpty(groupName), " AND group like '%,{4},%'", "")
+        'strFilter = strFilter & IIf(NotIsNullOrEmpty(groupName), " AND groups like '%,{4},%'", "")
         If NotIsNullOrEmpty(strFilter) Then
             rs.Filter = StringFormat(Mid(strFilter, 6), tableName, databaseName, serverName, dsnName, groupName)
             If rs.EOF Then
@@ -224,6 +256,15 @@ Dim strFilter As String
             rs.Filter = StringFormat(Mid(strFilter, 6), tableName, databaseName, serverName, dsnName)
             If Not rs.EOF Then
                 GetGroupByProperty = rs("Group")
+                'GetGroupByProperty = rs("Groups")
+                If NotIsNullOrEmpty(GetGroupByProperty) Then
+                    If Left(GetGroupByProperty, 1) = "," Then
+                        GetGroupByProperty = Mid(GetGroupByProperty, 2)
+                    End If
+                    If Right(GetGroupByProperty, 1) = "," Then
+                        GetGroupByProperty = Left(GetGroupByProperty, Len(GetGroupByProperty) - 1)
+                    End If
+                End If
             End If
         End If
     Else
@@ -240,7 +281,7 @@ Dim typeFilter As String
 Dim t As String
 
     rs.Open "SELECT * FROM MSysObjects", LocalCon, adOpenForwardOnly, adLockReadOnly
-    rsTable.Open storageTable, CurrentProject.connection, adOpenDynamic, adLockOptimistic
+    rsTable.Open storageTable, CurrentProject.Connection, adOpenDynamic, adLockOptimistic
     While Not rs.EOF
         
         typeFilter = "4" '",1,4,"
@@ -263,6 +304,7 @@ Dim t As String
                     rsTable("SQLLogin") = omCSTest.UID
                     rsTable("SQLPassword") = omCSTest.PWD
                     rsTable("Group") = omCSTest.DSN
+                    'rsTable("Groups") = omCSTest.DSN
                     t = CurrentDb.TableDefs(rs("Name")).SourceTableName
                     If InStr(1, t, ".") = 0 Then
                         rsTable("SQLTableOwner") = ""
@@ -383,18 +425,21 @@ Dim descriptionString As String
     CurrentDb.QueryDefs.Refresh
 End Sub
 
+'Public Sub DeleteLinkTables(Optional Group As String = "", Optional AttachOnly As Boolean = False)
 Public Sub LinkDeleteTables(Optional Group As String = "", Optional AttachOnly As Boolean = False)
 Dim rsODBC As New ADODB.Recordset
 Dim strWhere As String
 
     On Error Resume Next
     'Debug.Print Now
-    strWhere = IIf(Group <> "", "[Group] = " & Chr(34) & Group & Chr(34), "")
+    strWhere = IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), "")
     strWhere = omSQLFunctions.WhereAnd(strWhere, IIf(AttachOnly, "[Attach] = True", ""))
-    rsODBC.Open omSQLFunctions.BuildSQL("SELECT * FROM SSMAA_ODBC_Tables", whereClause:=strWhere), LocalCon, adOpenForwardOnly
+    rsODBC.Open omSQLFunctions.BuildSQL("SELECT * FROM SSMAA_ODBC_Tables", WhereClause:=strWhere), LocalCon, adOpenForwardOnly
     Do Until rsODBC.EOF
-      DoCmd.DeleteObject acTable, rsODBC("ODBCTable")
-      rsODBC.MoveNext
+        If CurrentDb.TableDefs(rsODBC("ODBCTable")).Connect <> "" And TableExists(rsODBC("ODBCTable")) Then
+            DoCmd.DeleteObject acTable, rsODBC("ODBCTable")
+        End If
+        rsODBC.MoveNext
     Loop
     rsODBC.Close
     Set rsODBC = Nothing
@@ -402,6 +447,7 @@ Dim strWhere As String
 End Sub
 
 
+'Public Sub DeleteLinkPTs()
 Public Sub LinkDeletePTs()
 Dim rs As New ADODB.Recordset
   
@@ -420,6 +466,70 @@ End Sub
 
 Public Sub SetSQLConnectorConnectionString(tableName As String)
     gSQLConnector.ConnectionString = omSSMAAConnector.GetConnectionStringByProperty(tableName, ConnectionType:=SQLOLEDBProvider)
+End Sub
+
+
+Public Sub DeleteSSMAABackupTables()
+    DeleteTables cSSMAABAckup
+End Sub
+
+Public Sub UpdateSSMAAGroups()
+Dim rs As New ADODB.Recordset
+
+    rs.Open "SELECT Groups FROM SSMAA_ODBC_Tables", LocalCon, adOpenForwardOnly, adLockOptimistic
+    While Not rs.EOF
+        If NotIsNullOrEmpty(rs("Groups")) Then
+            rs("Groups") = Replace("," & rs("Groups") & ",", ",,", ",")
+            rs.Update
+        End If
+        rs.MoveNext
+    Wend
+    rs.Close
+    Set rs = Nothing
+End Sub
+
+Public Function IsConnectingPossible(tableName As String, Optional connectionTimout As Long = 5) As Boolean
+Dim lngStartTime As Long
+Dim conn As New ADODB.Connection
+Dim cs As String
+    
+    cs = GetConnectionStringByProperty(tableName:=tableName, ODBCConnection:=False)
+    
+    Set conn = New ADODB.Connection
+    conn.ConnectionString = cs
+    conn.ConnectionTimeout = connectionTimout
+    conn.Open Options:=adAsyncConnect
+    
+    lngStartTime = GetTickCount()
+    
+    Do While ((GetTickCount() - lngStartTime) < conn.ConnectionTimeout * 1000) And (Not conn.state = adStateOpen)
+    Loop
+    
+    If conn.state = adStateOpen Then
+        IsConnectingPossible = True
+        conn.Close
+    End If
+    
+    Set conn = Nothing
+End Function
+
+Public Sub DeleteSSMAATables(Optional Group As String = "")
+Dim rsODBC As New ADODB.Recordset
+Dim strWhere As String
+
+    On Error Resume Next
+    'Debug.Print Now
+    strWhere = IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), "")
+    rsODBC.Open omSQLFunctions.BuildSQL("SELECT * FROM SSMAA_ODBC_Tables", WhereClause:=strWhere), LocalCon, adOpenForwardOnly
+    Do Until rsODBC.EOF
+        If TableExists(rsODBC("ODBCTable")) Then
+            DoCmd.DeleteObject acTable, rsODBC("ODBCTable")
+        End If
+        rsODBC.MoveNext
+    Loop
+    rsODBC.Close
+    Set rsODBC = Nothing
+    'Debug.Print Now
 End Sub
 
 Public Sub LinkMSAccess(Optional linkLocal As Boolean = False)

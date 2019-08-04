@@ -53,6 +53,17 @@ Public Property Let CurrentDate(ByVal vNewValue As Date)
     End If
 End Property
 
+Public Function WriteToFile(Optional diffOnly As String = "y", Optional updateCurrentDate As Boolean = True, Optional Description As String = "") As String
+Dim ts As TextStream
+    If Not Enabled Then
+        Exit Function
+    End If
+    Set ts = gFso.OpenTextFile(filename, ForAppending, True)
+    ts.WriteLine ToString(diffOnly, updateCurrentDate, Description)
+    ts.Close
+    Set ts = Nothing
+End Function
+
 Public Function ToString(Optional diffOnly As String = "y", Optional updateCurrentDate As Boolean = True, Optional description As String = "") As String
     If updateCurrentDate Then
         SetCurrentDate description:=description

@@ -277,3 +277,23 @@ Dim i As Long
         omDevelopmentFunctions.FormControlRename CurrentProject.AllForms(i).Name, acCommandButton, strFind, strReplace, True, False
     Next
 End Sub
+
+Public Sub AllFormsDisableDialog()
+Dim i As Long
+
+    For i = 0 To CurrentProject.AllForms.count - 1
+        DoCmd.OpenForm CurrentProject.AllForms(i).Name, acDesign, windowmode:=acHidden
+        Forms(CurrentProject.AllForms(i).Name).Modal = False
+        DoCmd.Close acForm, CurrentProject.AllForms(i).Name, acSaveYes
+    Next
+End Sub
+
+Public Sub AllFormsDisablePopUp()
+Dim i As Long
+
+    For i = 0 To CurrentProject.AllForms.count - 1
+        DoCmd.OpenForm CurrentProject.AllForms(i).Name, acDesign, windowmode:=acHidden
+        Forms(CurrentProject.AllForms(i).Name).PopUp = False
+        DoCmd.Close acForm, CurrentProject.AllForms(i).Name, acSaveYes
+    Next
+End Sub
