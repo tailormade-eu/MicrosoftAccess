@@ -2,19 +2,19 @@ Option Compare Database
 Option Explicit
 
 Public Function ReplaceFirst(sh As Excel.Worksheet, findValue As String, replaceValue As String)
-Dim rng As Excel.range
+Dim rng As Excel.Range
 
     Set rng = omExcelFunctions.FindFirst(sh, findValue)
     If omObjectFunctions.NotIsNothing(rng) Then
-        rng.Activate
+        rng.activate
         sh.Application.ActiveCell.FormulaR1C1 = replaceValue
     End If
 End Function
 
-Public Function FindFirst(sh As Excel.Worksheet, findValue As String) As Excel.range
+Public Function FindFirst(sh As Excel.Worksheet, findValue As String) As Excel.Range
 Dim s As Object
     
-    sh.Activate
+    sh.activate
     
     sh.Application.Cells(1, 1).Select
     On Error GoTo FindFirst_NotFound
@@ -56,9 +56,50 @@ Public Sub ShowColumn(sh As Excel.Worksheet, columnIndex As Long)
         sh.Application.Columns(columnIndex).Hidden = False
     End If
 End Sub
+Public Sub SelectColumn(sh As Excel.Worksheet, columnIndex As Long)
+    If columnIndex <> 0 Then
+        sh.Application.Columns(columnIndex).Select
+    End If
+End Sub
+Public Sub FormatColumn(sh As Excel.Worksheet, columnIndex As Long, numberFormat As String)
+    If columnIndex <> 0 Then
+        sh.Columns(columnIndex).Select
+        sh.Application.Selection.numberFormat = numberFormat ' "#,##0.00" - "0.00%"
+    End If
+End Sub
+Public Sub FormatCells(sh As Excel.Worksheet, Optional rowIndexStart As Long = 0, Optional columnIndexStart As Long = 0, Optional rowIndexEnd As Long = 0, Optional columnIndexEnd As Long = 0, Optional numberFormat As Variant = Null, Optional horizontalAlignment As Excel.Constants = xlLeft, Optional verticalAlignment As Excel.Constants = xlTop, Optional MergeCells As Boolean = False, Optional WrapText As Boolean = False)
+    If rowIndexStart <> 0 And columnIndexStart <> 0 Then
+        If rowIndexEnd <> 0 And columnIndexEnd <> 0 Then
+            SelectRange sh, rowIndexStart, columnIndexStart, rowIndexEnd, columnIndexEnd
+        Else
+            SelectCell sh, rowIndexStart, columnIndexStart
+        End If
+    End If
+    With sh.Application.Selection
+        If Not IsNull(numberFormat) Then
+            .numberFormat = numberFormat ' "#,##0.00" - "0.00%"
+        End If
+        .horizontalAlignment = horizontalAlignment
+        .verticalAlignment = verticalAlignment
+        .WrapText = WrapText
+        .MergeCells = MergeCells
+    End With
+End Sub
+
+Public Sub WriteCell(sh As Excel.Worksheet, rowIndex As Long, columnIndex As Long, Value As Variant)
+    If rowIndex <> 0 And columnIndex <> 0 Then
+        sh.Cells(rowIndex, columnIndex) = Value
+    End If
+End Sub
 Public Sub SelectCell(sh As Excel.Worksheet, rowIndex As Long, columnIndex As Long)
     sh.Application.Cells(rowIndex, columnIndex).Select
 End Sub
+Public Sub SelectRange(sh As Excel.Worksheet, rowIndexStart As Long, columnIndexStart As Long, rowIndexEnd As Long, columnIndexEnd As Long)
+    With sh.Application
+        .Range(.Cells(rowIndexStart, columnIndexStart), .Cells(rowIndexEnd, columnIndexEnd)).Select
+    End With
+End Sub
+
 Public Sub GoToNextFullCell(sh As Excel.Worksheet, direction As XlDirection)
    sh.Application.Selection.End(direction).Select
 End Sub
@@ -84,9 +125,9 @@ Public Sub InsertColumn(sh As Excel.Worksheet, columnIndex As Long, Optional dir
     sh.Application.Selection.Insert Shift:=direction ', CopyOrigin:=xlFormatFromLeftOrAbove
 End Sub
 
-Public Sub InsertRow(sh As Excel.Worksheet, rowIndex As Long, Optional copyRowIndex As Long = 0, Optional moveRowIndex As Long = 0, Optional direction As XlDirection = xlDown, Optional Activate As Boolean = False)
-    If Activate Then
-        sh.Activate
+Public Sub InsertRow(sh As Excel.Worksheet, rowIndex As Long, Optional copyRowIndex As Long = 0, Optional moveRowIndex As Long = 0, Optional direction As XlDirection = xlDown, Optional activate As Boolean = False)
+    If activate Then
+        sh.activate
     End If
     If copyRowIndex <> 0 Then
         sh.Application.rows(copyRowIndex).Select
@@ -103,7 +144,7 @@ End Sub
 Public Function FindSheetByName(wb As Excel.Workbook, sheetName As String) As Excel.Worksheet
 Dim i As Long
 
-    For i = 1 To wb.Sheets.Count
+    For i = 1 To wb.Sheets.count
         If wb.Sheets(i).Name = sheetName Then
             Set FindSheetByName = wb.Sheets(i)
             Exit Function
@@ -113,7 +154,7 @@ End Function
 Public Function FindSheetByCell(wb As Excel.Workbook, Value As String, Optional rowIndex As Long = 1, Optional columnIndex As Long = 1) As Excel.Worksheet
 Dim i As Long
 
-    For i = 1 To wb.Sheets.Count
+    For i = 1 To wb.Sheets.count
         If wb.Sheets(i).Cells(rowIndex, columnIndex) = Value Then
             Set FindSheetByCell = wb.Sheets(i)
             Exit Function
@@ -124,7 +165,7 @@ End Function
 Public Function FindRowByColumn(xs As Excel.Worksheet, columnIndex As Long, Value As String, Optional startRowIndex As Long = 1, Optional endRowIndex As Long = 65536) As Long
 Dim i As Long
 
-    xs.Activate
+    xs.activate
     For i = startRowIndex To endRowIndex
          If xs.Application.Cells(i, columnIndex) = Value Then
             FindRowByColumn = i
@@ -133,7 +174,7 @@ Dim i As Long
     Next
 End Function
 Public Function FindRow(xs As Excel.Worksheet, Value As String) As Long
-Dim rng As Excel.range
+Dim rng As Excel.Range
     
     Set rng = omExcelFunctions.FindFirst(xs, Value)
     If omObjectFunctions.NotIsNothing(rng) Then
@@ -141,7 +182,7 @@ Dim rng As Excel.range
     End If
 End Function
 Public Function FindColumn(xs As Excel.Worksheet, Value As String) As Long
-Dim rng As Excel.range
+Dim rng As Excel.Range
     
     Set rng = omExcelFunctions.FindFirst(xs, Value)
     If omObjectFunctions.NotIsNothing(rng) Then
@@ -167,4 +208,13 @@ End Function
 
 Public Sub SetVisible(xa As Excel.Application, visible As Boolean)
     xa.visible = visible
+End Sub
+
+Public Sub AutoFitColumns(sh As Excel.Worksheet)
+    sh.Cells.Select
+    sh.Cells.EntireColumn.AutoFit
+End Sub
+Public Sub AutoFitRows(sh As Excel.Worksheet)
+    sh.Cells.Select
+    sh.Cells.EntireRow.AutoFit
 End Sub

@@ -12,7 +12,7 @@ Dim str As String
     Set db = CurrentDb
     Set tblDef = db.TableDefs(tableName)
     For Each idx In tblDef.Indexes
-        If idx.Primary Then
+        If idx.primary Then
             str = "ALTER TABLE " & tableName & " ADD CONSTRAINT "
             str = str & idx.Name & " PRIMARY KEY CLUSTERED (" 'NONCLUSTERED
             For Each fld In idx.Fields
@@ -50,7 +50,7 @@ Public Function TableCreateDDL(TableDef As DAO.TableDef) As String
          pkScript = GetPrimaryKeyScript(tableName)
          DDL = "create table " & tableName & "(" & vbCrLf
          With TableDef
-            For FieldIndex = 0 To .Fields.Count - 1
+            For FieldIndex = 0 To .Fields.count - 1
                 Set fldDef = .Fields(FieldIndex)
                 With fldDef
                     fldName = .Name
@@ -123,16 +123,17 @@ Sub ExportAllTableCreateDDL()
 
     Handle = FreeFile
 
-    Open "X:\Rietje-CRM\TableCreateDDL.txt" For Output Access Write As #Handle
+    Open GetDesktopFolder & "\TableCreateDDL.txt" For Output Access Write As #Handle
 
-    For lTbl = 0 To dBase.TableDefs.Count - 1
+    For lTbl = 0 To dBase.TableDefs.count - 1
          'If the table name is a temporary or system table then ignore it
         If Left(dBase.TableDefs(lTbl).Name, 1) = "~" Or _
         Left(dBase.TableDefs(lTbl).Name, 4) = "MSYS" Then
              '~ indicates a temporary table
              'MSYS indicates a system level table
         Else
-            If InStr(1, dBase.TableDefs(lTbl).Name, "PUB_") > 0 Then
+            'If InStr(1, dBase.TableDefs(lTbl).Name, "PUB_") > 0 Then
+            If dBase.TableDefs(lTbl).Connect = "" Then
                 Print #Handle, TableCreateDDL(dBase.TableDefs(lTbl))
                 Print #Handle, GetPrimaryKeyScript(dBase.TableDefs(lTbl).Name)
             End If
@@ -140,4 +141,15 @@ Sub ExportAllTableCreateDDL()
     Next lTbl
     Close Handle
     Set dBase = Nothing
+End Sub
+
+
+
+Public Sub ExecuteScript()
+Dim cmd As New ADODB.Command
+
+    cmd.CommandText = "ALTER TABLE dbo.PriceLists ADD IsVisibleInSO bit NOT NULL CONSTRAINT DF_PriceLists_Test DEFAULT 0"
+    cmd.ActiveConnection = GetConnectionStringByProperty(tableName:="PriceLists", ODBCConnection:=False)
+    cmd.Execute
+        
 End Sub

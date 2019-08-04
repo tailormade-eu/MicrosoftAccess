@@ -85,6 +85,141 @@ Dim rs As New ADODB.Recordset
     Set rs = Nothing
 End Sub
 
+Public Sub MakeLinkedTablesLocal()
+Dim i As Long
+Dim tbl As TableDef
+
+    For i = 0 To CurrentDb.TableDefs.count - 1
+        If CurrentDb.TableDefs(i).Connect <> "" And Left(CurrentDb.TableDefs(i).Name, 4) <> "MSys" And Left(CurrentDb.TableDefs(i).Name, 1) <> "~" Then
+            If Right(CurrentProject.Name, 1) = "b" Then
+                gLogging.WriteToFile Description:="MakeLinkedTables > Right(CurrentProject.Name, 1) = b"
+                DoCmd.SelectObject acTable, CurrentDb.TableDefs(i).Name, True
+                gLogging.WriteToFile Description:="MakeLinkedTables > DoCmd.SelectObject acTable"
+                DoCmd.RunCommand acCmdConvertLinkedTableToLocal
+                gLogging.WriteToFile Description:="MakeLinkedTables > DoCmd.RunCommand acCmdConvertLinkedTableToLocal"
+            Else
+                gLogging.WriteToFile Description:="MakeLinkedTables > Right(CurrentProject.Name, 1) <> b"
+                MakeLinkedTableLocal CurrentDb.TableDefs(i).Name
+                gLogging.WriteToFile Description:="MakeLinkedTables > MakeLinkedTableLocal CurrentDb.TableDefs(i).Name"
+            End If
+        End If
+    Next
+End Sub
+
+Public Sub MakeLinkedTableLocal(tableName As String, Optional structureOnly As Boolean = False)
+Dim tempTableName As String
+Dim tbl As DAO.TableDef
+Dim idx As DAO.index
+'http://www.geeksengine.com/article/duplicate-access-table.html
+'CurrentProject.Connection.Execute "SELECT * INTO T_Accounts FROM Accounts"
+'DoCmd.CopyObject , "T_Accounts", acTable, "Accounts"
+'DoCmd.TransferDatabase acExport, "Microsoft Access", CurrentDb.Name, acTable, "Accounts", "T_Accounts", StructureOnly:=True
+
+    tempTableName = "TCOPY_" & tableName
+    DeleteTable tempTableName
+    gLogging.WriteToFile Description:="MakeLinkedTable > DeleteTable tempTableName"
+    
+    CurrentProject.Connection.Execute "SELECT * INTO [" & tempTableName & "] FROM [" & tableName & "]"
+    gLogging.WriteToFile Description:="MakeLinkedTable > SELECT INTO FROM"
+    ' copy existing indexes
+    Workspaces(0).Databases(0).TableDefs.Refresh
+    Set tbl = Workspaces(0).Databases(0).TableDefs(tableName)
+    For Each idx In tbl.Indexes
+        CreateIndexUsingDAO tempTableName, idx.Name, Mid(Replace(Replace(idx.Fields, ";+", "],["), "+", "][") & "]", 2), idx.primary, idx.unique, Not idx.IgnoreNulls ' not implemented,idx.Clustered ,idx.Foreign ,idx.Required
+        gLogging.WriteToFile Description:="MakeLinkedTable > CreateIndex"
+    Next
+    DoCmd.DeleteObject acTable, tableName
+    gLogging.WriteToFile Description:="MakeLinkedTable > DoCmd.DeleteObject acTable, tableName"
+    'DoCmd.Rename tableName, acTable, tempTableName ' Does not work in ACCDR/ACCDE
+    If structureOnly Then
+        DoCmd.TransferDatabase acExport, "Microsoft Access", CurrentDb.Name, acTable, tempTableName, tableName, structureOnly:=True
+    Else
+        DoCmd.CopyObject , tableName, acTable, tempTableName
+    End If
+    
+    DoCmd.DeleteObject acTable, tempTableName
+    gLogging.WriteToFile Description:="MakeLinkedTable > DoCmd.Rename tableName, acTable, tempTableName"
+    CurrentDb.TableDefs.Refresh
+End Sub
+
+Public Sub DropIndexUsingDAO(tableName As String, indexName As String)
+    On Error Resume Next
+    Workspaces(0).Databases(0).TableDefs(tableName).Indexes.Delete indexName
+End Sub
+
+Public Sub CreateIndexUsingDAO(tableName As String, indexName As String, fieldNames As String, Optional setPrimary As Boolean = False, Optional setUnique As Boolean = False, Optional setDisallowNull As Boolean = False)
+Dim tbl As DAO.TableDef
+Dim idx As DAO.index
+Dim fld As DAO.Field
+Dim fldNames() As String
+Dim fldName As Variant
+
+    Set tbl = Workspaces(0).Databases(0).TableDefs(tableName)
+    Set idx = tbl.CreateIndex(indexName)
+    idx.primary = setPrimary
+    idx.unique = setUnique
+    fldNames = omStringFunctions.StringSplit(fieldNames, ",")
+    For Each fldName In fldNames
+        idx.Fields.Append idx.CreateField(Replace(Replace(fldName, "[", ""), "]", ""))
+    Next
+    DropIndexUsingDAO tableName, indexName
+    Workspaces(0).Databases(0).TableDefs(tableName).Indexes.Append idx
+    Workspaces(0).Databases(0).TableDefs(tableName).Indexes.Refresh
+End Sub
+
+Public Sub DropIndexUsingSQL(tableName As String, indexName As String)
+    On Error Resume Next
+    CurrentProject.Connection.Execute StringFormat("DROP INDEX [{0}] ON [{1}]", indexName, tableName)
+End Sub
+
+Public Sub CreateIndexUsingSQL(tableName As String, indexName As String, fieldNames As String, Optional setPrimary As Boolean = False, Optional setUnique As Boolean = False, Optional setDisallowNull As Boolean = False)
+Dim sql As String
+    
+    sql = StringFormat("CREATE" & IIf(setPrimary Or setUnique, " UNIQUE", "") & " INDEX [{0}] ON {1} ({2})", indexName, tableName, fieldNames)
+    If setPrimary Then
+        sql = sql & " WITH PRIMARY"
+    ElseIf setDisallowNull Then
+        sql = sql & " WITH DISALLOW NULL"
+    End If
+    DropIndexUsingSQL tableName, indexName
+    gLogging.WriteToFile Description:="CreateIndexUsingSQL > DropIndexUsingSQL tableName, indexName"
+    CurrentProject.Connection.Execute sql
+    gLogging.WriteToFile Description:="CreateIndexUsingSQL > CurrentProject.Connection.Execute sql"
+End Sub
+
+Public Sub DeleteTables(tablePrefix As String)
+Dim i As Long
+
+    For i = CurrentDb.TableDefs.count - 1 To 0 Step -1
+        If Left(CurrentDb.TableDefs(i).Name, Len(tablePrefix)) = tablePrefix Then
+            DoCmd.DeleteObject acTable, CurrentDb.TableDefs(i).Name
+        End If
+    Next i
+End Sub
+
+Public Sub SetAccessProperty(propertyName As String, Value As Variant, Optional propertyType As DAO.DataTypeEnum = dbText)
+Dim prp As DAO.Property
+    On Error Resume Next
+    Set prp = CurrentDb.CreateProperty(propertyName, propertyType, Value)
+    CurrentDb.Properties.Append prp
+    If Err = 3367 Then
+        CurrentDb.Properties(propertyName) = Value
+    End If
+    On Error GoTo 0
+End Sub
+
+Public Sub DeleteTable(tableName As String)
+    If TableExists(tableName) Then
+        DoCmd.DeleteObject acTable, tableName
+    End If
+End Sub
+
+Public Function IsTableLocal(tableName As String) As Boolean
+    If TableExists(tableName) Then
+        IsTableLocal = (CurrentDb.TableDefs(tableName).Connect = "")
+    End If
+End Function
+
 Public Sub FormFields_Extract()
 Dim rsMSysObject As New ADODB.Recordset
 Dim rsFields As New ADODB.Recordset
