@@ -1,0 +1,19 @@
+Option Compare Database
+Option Explicit
+
+Public Sub ChangeDatabase(groupName As String, sourceDatabase As String, destinationDatabase As String)
+Dim rs As New ADODB.Recordset
+
+    'ChangeDatabase "ACenter_Cardoen","ACenter","ACenter_Test"
+    'ChangeDatabase "ACenter_Cardoen","ACenter_Test","ACenter"
+    
+    rs.Open "SELECT * FROM SSMAA_ODBC_Tables WHERE  SQLDatabase=" & Chr(34) & sourceDatabase & Chr(34) & " AND [Group]=" & Chr(34) & groupName & Chr(34), omSSMAAConnector.LocalCon, adOpenForwardOnly, adLockOptimistic
+    While Not rs.EOF
+        rs("SQLDatabase") = destinationDatabase
+        rs.MoveNext
+    Wend
+    rs.Close
+    Set rs = Nothing
+    omSSMAAConnector.LinkUsingSSMA "ACenter_Cardoen", SQLOBDC, alwaysUpdate:=True
+    omSSMAAConnector.PassthroughQueriesReplaceDatabaseName sourceDatabase, destinationDatabase
+End Sub

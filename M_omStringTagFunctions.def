@@ -1,0 +1,70 @@
+Option Compare Database
+Option Explicit
+' Created by Raoul Jacobs - opmaat bvba
+'
+' Last Modified by : Raoul Jacobs
+' on : 20050604
+
+Public Type Tag
+    Name As String
+    Position As Long
+    Level As Integer
+    CurrencyId As Long
+    Value As Double
+End Type
+Public Function GetOpenTagPosition(ByVal startPos As Long, ByVal text As String) As Long
+Dim ipos As Long
+Dim posEndTag As Long
+
+    GetOpenTagPosition = InStr(startPos, text, "<")
+    If GetOpenTagPosition > 0 And Len(text) > GetOpenTagPosition + 1 Then
+        If Mid(text, GetOpenTagPosition + 1, 1) = "<" Then
+            GetOpenTagPosition = GetOpenTagPosition + 1
+        End If
+    End If
+    If GetOpenTagPosition <> 0 Then
+        posEndTag = InStr(GetOpenTagPosition + 1, text, ">")
+        If posEndTag <> 0 Then
+            ipos = InStr(GetOpenTagPosition + 1, text, "<")
+            While ipos <> 0 And ipos < posEndTag
+                GetOpenTagPosition = ipos
+                ipos = InStr(GetOpenTagPosition + 1, text, "<")
+            Wend
+        Else
+            GetOpenTagPosition = 0
+        End If
+    End If
+End Function
+
+Public Function GetTag(ByVal startPos As Long, ByVal text As String) As Tag
+    GetTag.Position = startPos
+    GetTag.Level = -1
+    GetTag.Name = Mid(text, startPos + 1)
+    GetTag.Name = Left(GetTag.Name, InStr(1, GetTag.Name, ">") - 1)
+End Function
+Public Function GetNextTag(ByVal startPos, ByVal text As String) As Tag
+    startPos = GetOpenTagPosition(startPos, text)
+    If startPos <> 0 Then
+        GetNextTag = GetTag(startPos, text)
+    End If
+End Function
+Public Function GetTags(ByVal text As String) As Tag()
+Dim tagTemp As Tag
+Dim tagResult() As Tag
+Dim startPos As Long
+Dim Count As Long
+    
+    startPos = 1
+    While startPos <> 0
+        tagTemp = GetNextTag(startPos, text)
+        If tagTemp.Position <> 0 Then
+            Count = Count + 1
+            ReDim Preserve tagResult(Count)
+            tagResult(Count - 1) = tagTemp
+            startPos = tagTemp.Position + 1
+        Else
+            startPos = 0
+        End If
+    Wend
+    GetTags = tagResult
+End Function

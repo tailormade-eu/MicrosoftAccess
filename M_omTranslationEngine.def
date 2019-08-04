@@ -1,0 +1,149 @@
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+Dim omSO As New omSourceObject
+Dim omC As New omControl
+Dim omSOC As New omSourceObjectControl
+
+
+Public Sub Translate(obj As Object, languageId As Long)
+Dim rsTranslate As New ADODB.Recordset
+Dim ctrl As Object
+
+    rsTranslate.Open "omControlTranslations_Translate", CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    
+    rsTranslate.filter = "omLanguageId=" & languageId & " AND ControlTypeId=" & 0 & " AND ControlName='" & obj.Name & "'"
+    If Not rsTranslate.EOF Then
+        obj.Caption = rsTranslate("Default")
+        rsTranslate("LastUsedDate") = Now
+        rsTranslate.Update
+    End If
+    For Each ctrl In obj.Controls
+        rsTranslate.filter = "omLanguageId=" & languageId & " AND ControlTypeId=" & ctrl.ControlType & " AND ControlName='" & ctrl.Name & "'"
+        If Not rsTranslate.EOF Then
+            Select Case ctrl.Tag
+                Case "Short"
+                    ctrl.Caption = rsTranslate("Short")
+                Case "Long"
+                    ctrl.Caption = rsTranslate("Long")
+                Case Else
+                    ctrl.Caption = rsTranslate("Default")
+            End Select
+            rsTranslate("LastUsedDate") = Now
+            rsTranslate.Update
+        End If
+    Next
+    rsTranslate.Close
+    Set rsTranslate = Nothing
+End Sub
+
+Public Sub ClearAll()
+  DoCmd.RunSQL "truncate table omcontrols"
+  DoCmd.RunSQL "truncate table omControlTranslations"
+  DoCmd.RunSQL "truncate table omSourceObjectControls"
+  DoCmd.RunSQL "truncate table omSourceObjects"
+End Sub
+
+Public Sub IndexAll()
+Dim i As Long
+Dim frm As Form
+Dim rep As Report
+
+    For i = 0 To CurrentProject.AllForms.Count - 1
+        DoCmd.OpenForm CurrentProject.AllForms(i).Name, acDesign, WindowMode:=acHidden
+        Set frm = Forms(CurrentProject.AllForms(i).Name)
+        IndexByObject frm, acForm
+        DoCmd.Close acForm, CurrentProject.AllForms(i).Name, acSaveYes
+    Next
+    For i = 0 To CurrentProject.AllReports.Count - 1
+        DoCmd.OpenReport CurrentProject.AllReports(i).Name, acDesign, WindowMode:=acHidden
+        Set rep = Reports(CurrentProject.AllReports(i).Name)
+        IndexByObject rep, acReport
+        DoCmd.Close acReport, CurrentProject.AllReports(i).Name, acSaveYes
+    Next
+    DoCmd.SetWarnings False
+    'DoCmd.OpenQuery "omControlTranslations_Build"
+    SQL.Run "INSERT INTO omControlTranslations ( omlanguageid, omControlId, [Default], [Short], [Long], CreateDate, ModifyDate ) " & _
+      "SELECT omLanguages_omControls.omLanguageid, omLanguages_omControls.omcontrolid, omLanguages_omControls.[Default], omLanguages_omControls.short, omLanguages_omControls.long, GETDATE() AS Expr1, GETDATE() AS Expr2 " & _
+      "FROM omLanguages_omControls LEFT JOIN omControlTranslations ON (omLanguages_omControls.omLanguageId = omControlTranslations.omLanguageId) AND (omLanguages_omControls.omControlId = omControlTranslations.omControlId) " & _
+      "WHERE (((omControlTranslations.Id) Is Null)) "
+    DoCmd.SetWarnings True
+End Sub
+
+Private Sub IndexByObject(obj As Object, objType As AcObjectType)
+Dim ctrl As Control
+    
+    omSO.Load obj, objType
+    omC.Load obj '0, obj.Name, obj.Caption
+    omSOC.Load omSO.Id, omC.Id
+    For Each ctrl In obj.Controls
+        Select Case ctrl.ControlType
+            Case AcControlType.acCommandButton, AcControlType.acLabel, AcControlType.acToggleButton, AcControlType.acPage
+              omC.Load ctrl 'ctrl.ControlType, ctrl.Name, ctrl.Caption
+              If Not omC.HasNoCaption Then
+                omSOC.Load omSO.Id, omC.Id
+              End If
+        End Select
+    Next
+End Sub
+Private Sub Class_Initialize()
+    'rsTranslate.Open "omControlTranslations_Translate", CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+End Sub
+
+Private Sub Class_Terminate()
+    'rsTranslate.Close
+    'Set rsTranslate = Nothing
+End Sub
+
+Public Sub InsertTranslateCode(Optional TranslationClassName As String = "omTE")
+Dim i As Long
+Dim vbc As VBComponent
+Dim cm As CodeModule
+Dim posLine As Long
+Dim objType As String
+Dim translateLine As Long
+Dim strProcedure As String
+Dim strTranslateLine As String
+
+    On Error GoTo Test_Error
+    
+    For i = 1 To VBE.VBProjects.item(1).VBComponents.Count
+        Set vbc = VBE.VBProjects.item(1).VBComponents.item(i)
+        objType = ""
+        If Left(vbc.Name, 4) = "Form" Then
+            objType = "Form"
+        ElseIf Left(vbc.Name, 6) = "report" Then
+            objType = "Report"
+        End If
+        If Len(objType) > 0 Then
+            Set cm = vbc.CodeModule
+                
+            If Not cm.Find(TranslationClassName & ".Translate Me", 1, 1, -1, -1) Then
+                If Not cm.Find(objType & "_Open", 1, 1, -1, -1) Then
+                    cm.CreateEventProc "Open", objType
+                End If
+                posLine = cm.ProcBodyLine(objType & "_Open", vbext_pk_Proc) + 1
+                strTranslateLine = vbCrLf & vbTab & TranslationClassName & ".Translate Me, GetCurrentLanguage()"
+                While Left(cm.Lines(posLine, 1), 3) = "dim"
+                    posLine = posLine + 1
+                Wend
+                If cm.Lines(posLine, 1) = "" Then
+                    cm.DeleteLines posLine, 1
+                End If
+                cm.InsertLines posLine, strTranslateLine
+                DoCmd.Close IIf(objType = "form", acForm, acReport), Replace(vbc.Name, objType & "_", ""), acSaveYes
+            End If
+        End If
+        Set vbc = Nothing
+    Next i
+    Exit Sub
+Test_Error:
+    If Err = 35 Then
+        posLine = 0
+        Resume Next
+    End If
+    MsgBox Error & " (" & Err & ")"
+End Sub

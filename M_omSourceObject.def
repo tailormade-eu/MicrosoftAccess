@@ -1,0 +1,33 @@
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Dim rs As New ADODB.Recordset
+Public Id As Long
+
+Public Sub Load(obj As Object, objType As AcObjectType)
+
+    rs.filter = "ObjectTypeId=" & acForm & " AND Name='" & obj.Name & "'"
+    If rs.EOF Then
+        rs.AddNew
+        rs("ObjectTypeId") = objType
+        rs("Name") = obj.Name
+        rs("CreateDate") = Now
+        rs.Update
+    End If
+    rs("LastUsedDate") = Now
+    rs.Update
+    Id = rs("Id")
+End Sub
+
+Private Sub Class_Initialize()
+    rs.Open "omSourceObjects", CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+End Sub
+
+Private Sub Class_Terminate()
+    rs.Close
+    Set rs = Nothing
+End Sub

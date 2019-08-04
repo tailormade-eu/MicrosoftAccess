@@ -118,7 +118,7 @@ Dim lWeekCount As Long
         YYYYWW_Date = "01/01/" & lYear
     Else
         dateStart = ("01/01/" & lYear)
-        dateStart = dateStart - weekday(dateStart, vbMonday) + 1
+        dateStart = dateStart - Weekday(dateStart, vbMonday) + 1
         lWeekCount = 1
         While lWeekCount < lWeek
             dateStart = dateStart + 7
@@ -137,7 +137,7 @@ Dim dateWork As Date
         dateWork = str(lYearMonth Mod 100) & "/01/" & str(Int(lYearMonth / 100))
     End If
     While lYearMonth Mod 100 = Month(dateWork)
-        If weekday(dateWork, vbMonday) > 0 And weekday(dateWork, vbMonday) < 6 Then
+        If Weekday(dateWork, vbMonday) > 0 And Weekday(dateWork, vbMonday) < 6 Then
             WorkingDays = WorkingDays + 1
         End If
         dateWork = dateWork + 1
@@ -152,7 +152,7 @@ Dim dateWork As Date
             dateWork = str(lYearMonth Mod 100) & "/" & Month(dateWork) & "/" & str(Int(lYearMonth / 100))
         End If
         While lYearMonth Mod 100 = Month(dateWork)
-            If weekday(dateWork, vbMonday) > 0 And weekday(dateWork, vbMonday) < 6 Then
+            If Weekday(dateWork, vbMonday) > 0 And Weekday(dateWork, vbMonday) < 6 Then
                 WorkingDaysFrom = WorkingDaysFrom + 1
             End If
             dateWork = dateWork + 1
@@ -171,7 +171,7 @@ Dim dateWork As Date
             dateWork = str(lYearMonth Mod 100) & "/" & Month(dateWork) & "/" & str(Int(lYearMonth / 100))
         End If
         While lYearMonth Mod 100 = Month(dateWork)
-            If weekday(dateWork, vbMonday) > 0 And weekday(dateWork, vbMonday) < 6 Then
+            If Weekday(dateWork, vbMonday) > 0 And Weekday(dateWork, vbMonday) < 6 Then
                 WorkingDaysTill = WorkingDaysTill + 1
             End If
             dateWork = dateWork - 1
@@ -187,7 +187,7 @@ Dim dateWork As Date
     If IsDate(dateStart) And IsDate(dateEnd) Then
         dateWork = dateStart
         While dateWork <= dateEnd
-            If weekday(dateWork, vbMonday) > 0 And weekday(dateWork, vbMonday) < 6 Then
+            If Weekday(dateWork, vbMonday) > 0 And Weekday(dateWork, vbMonday) < 6 Then
                 WorkingDaysBetween = WorkingDaysBetween + 1
             End If
             dateWork = dateWork + 1
@@ -223,8 +223,8 @@ End Function
 Public Function DateYYYYMMDD(ByVal dt As Variant) As Long
     DateYYYYMMDD = ConvertVarDateToYYYYMMDD(CDate(dt))
 End Function
-Public Function startDate(ByVal Period As Long) As Date
-    startDate = GetPeriodStartDate(Period)
+Public Function StartDate(ByVal Period As Long) As Date
+    StartDate = GetPeriodStartDate(Period)
 End Function
 Public Function UniDate(dt As Date) As Long
     UniDate = ConvertDateToYYYYMMDD(dt)
@@ -241,11 +241,14 @@ Public Function IsPeriod(Period As Variant, Optional yearDelta = 100) As Boolean
     IsPeriod = IsPeriod And ((Period Mod 100) > 0) And ((Period Mod 100) < 13)
 End Function
 
-Public Function AddToDate(dt As Date, Optional addYear As Long = 0, Optional addMonth As Long = 0, Optional addDay As Long = 0) As Date
+Public Function AddToDate(dt As Date, Optional addYear As Long = 0, Optional addMonth As Long = 0, Optional addDay As Long = 0, Optional endOfMonth As Boolean = False) As Date
     AddToDate = dt
     AddToDate = DateAdd("yyyy", addYear, AddToDate)
     AddToDate = DateAdd("m", addMonth, AddToDate)
     AddToDate = DateAdd("d", addDay, AddToDate)
+    If endOfMonth Then
+        AddToDate = GetDateMonthEndDate(AddToDate)
+    End If
 End Function
 
 Public Function IsTimeOnly(dt As Variant) As Boolean

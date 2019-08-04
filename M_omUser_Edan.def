@@ -1,0 +1,63 @@
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Private cmdLoginByName As New ADODB.Command
+Private cmdLoginById As New ADODB.Command
+
+Public Id As Long
+Public Name As String
+Public UserRole As New UserRole
+Public Sub LoginById(UserId As Long, Password As String)
+Dim rs As ADODB.Recordset
+
+    cmdLoginById.Parameters(0) = UserId
+    cmdLoginById.Parameters(1) = Password
+    Set rs = cmdLoginById.Execute
+    If Not rs.EOF Then
+        Me.Id = rs("User_ID")
+        Me.UserRole.Id = rs("User_UserRole_ID")
+        Me.Name = rs("User_FirstName")
+    Else
+        Me.Id = 0
+        Me.UserRole.Id = 0
+        Me.Name = ""
+    End If
+    rs.Close
+    Set rs = Nothing
+End Sub
+
+Public Sub LoginByName(LoginName As String, Password As String)
+Dim rs As ADODB.Recordset
+
+    cmdLoginByName.Parameters(0) = LoginName
+    cmdLoginByName.Parameters(1) = Password
+    Set rs = cmdLoginByName.Execute
+    If Not rs.EOF Then
+        Me.Id = rs("User_ID")
+        Me.UserRole.Id = rs("User_UserRole_ID")
+        Me.Name = rs("User_FirstName")
+    Else
+        Me.Id = 0
+        Me.UserRole.Id = 0
+        Me.Name = ""
+    End If
+    rs.Close
+    Set rs = Nothing
+End Sub
+Private Sub Class_Initialize()
+    cmdLoginByName.commandText = "SELECT * FROM Users WHERE User_Login=? AND User_Password=?"
+    cmdLoginByName.ActiveConnection = CurrentProject.Connection
+    cmdLoginByName.Parameters.Refresh
+    cmdLoginById.commandText = "SELECT * FROM Users WHERE User_ID=? AND User_Password=?"
+    cmdLoginById.ActiveConnection = CurrentProject.Connection
+    cmdLoginById.Parameters.Refresh
+End Sub
+
+Private Sub Class_Terminate()
+    Set cmdLoginByName = Nothing
+    Set cmdLoginById = Nothing
+End Sub

@@ -1,0 +1,66 @@
+Option Compare Database
+Option Explicit
+
+Public Function UploadFile(ftpAddress As String, login As String, Password As String, fileName As String, Optional ftpPath As String = "/") As String
+Dim outFilename As String
+Dim ftpFilename As String
+Dim batFilename As String
+
+Dim lInt_FreeFile01 As Integer
+Dim lInt_FreeFile02 As Integer
+
+On Error GoTo Err_Handler
+    lInt_FreeFile01 = FreeFile
+    lInt_FreeFile02 = FreeFile
+
+
+    outFilename = fileName & ".out"
+    ftpFilename = fileName & ".ftp"
+    batFilename = fileName & ".bat"
+    
+    
+    '' Create text file with FTP commands
+    Open ftpFilename For Output As #lInt_FreeFile01
+    Print #lInt_FreeFile01, "open " & ftpAddress
+    Print #lInt_FreeFile01, login
+    Print #lInt_FreeFile01, Password
+    Print #lInt_FreeFile01, "cd " & ftpPath
+    Print #lInt_FreeFile01, "binary"
+    Print #lInt_FreeFile01, "send " & Chr(34) & fileName & Chr(34)
+
+    '' To receive a file, replace the above line with this one
+    ''Print #lInt_FreeFile01, "recv \Picture.gif " & ThisWorkbook.Path & "\Picture.gif"
+    
+    Print #lInt_FreeFile01, "bye"
+    Close #lInt_FreeFile01
+
+    '' Create Batch program
+    Open batFilename For Output As #lInt_FreeFile02
+    Print #lInt_FreeFile02, "ftp -s:" & Chr(34) & ftpFilename & Chr(34)
+
+    Print #lInt_FreeFile02, "Echo ""Complete"" > " & Chr(34) & outFilename & Chr(34)
+    Close #lInt_FreeFile02
+
+    '' Invoke Directory List generator
+    Shell (batFilename) ', vbHide '', vbMinimizedNoFocus
+    'Wait for completion
+    Do While Dir(outFilename) = ""
+        DoEvents
+    Loop
+
+    Sleep 3 * 1000
+
+    '' Clean up files
+    If Dir(batFilename) <> "" Then Kill (batFilename)
+    If Dir(outFilename) <> "" Then Kill (outFilename)
+    If Dir(ftpFilename) <> "" Then Kill (ftpFilename)
+
+bye:
+
+Exit Function
+
+Err_Handler:
+    MsgBox "Error : " & Err.number & vbCrLf & "Description : " & Err.description, vbCritical
+    Resume bye
+
+End Function

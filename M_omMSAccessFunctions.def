@@ -4,23 +4,23 @@ Option Explicit
 Public Function FormExists(FormName As String) As Boolean
     FormExists = False
     On Error Resume Next
-    FormExists = (CurrentProject.AllForms(FormName).NAME = FormName)
+    FormExists = (CurrentProject.AllForms(FormName).Name = FormName)
 End Function
 
-Public Function ReportExists(reportname As String) As Boolean
+Public Function ReportExists(reportName As String) As Boolean
     ReportExists = False
     On Error Resume Next
-    ReportExists = (CurrentProject.AllReports(reportname).NAME = reportname)
+    ReportExists = (CurrentProject.AllReports(reportName).Name = reportName)
 End Function
 Public Function TableExists(tableName As String) As Boolean
     TableExists = False
     On Error Resume Next
-    TableExists = (CurrentDb.TableDefs(tableName).NAME = tableName)
+    TableExists = (CurrentDb.TableDefs(tableName).Name = tableName)
 End Function
 Public Function QueryExists(queryName As String) As Boolean
     QueryExists = False
     On Error Resume Next
-    QueryExists = (CurrentDb.QueryDefs(queryName).NAME = queryName)
+    QueryExists = (CurrentDb.QueryDefs(queryName).Name = queryName)
 End Function
 'Public Function QueryExists(queryName As String) As Boolean
 '  QueryExists = NotIsNullOrEmpty(GetQuerySQL(queryName))
@@ -84,3 +84,117 @@ Dim rs As New ADODB.Recordset
     rs.Close
     Set rs = Nothing
 End Sub
+
+Public Sub FormFields_Extract()
+Dim rsMSysObject As New ADODB.Recordset
+Dim rsFields As New ADODB.Recordset
+Dim ObjectTemp As Object
+Dim ctl As Control
+    
+    On Error GoTo FormFields_Extract_Error
+    
+    rsMSysObject.Open "SELECT Name, Type FROM msysobjects WHERE (((Type)=-32768 Or (Type)=-32764))", CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    rsFields.Open "Fields", CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    While Not rsMSysObject.EOF
+        Select Case rsMSysObject("Type")
+            Case -32768 ' Form
+                DoCmd.OpenForm rsMSysObject("Name"), acDesign, , , , acHidden
+                Set ObjectTemp = Forms(rsMSysObject("Name"))
+            Case -32764 ' Report
+                DoCmd.OpenReport rsMSysObject("Name"), acViewDesign
+                DoCmd.Minimize
+                Set ObjectTemp = Reports(rsMSysObject("Name"))
+        End Select
+        For Each ctl In ObjectTemp.Controls
+            With ctl
+                If .ControlType = acLabel Or .ControlType = acCommandButton Then
+                    rsFields.AddNew
+                    rsFields("Field_ID") = newField_ID
+                    rsFields("Field_Name") = .Name
+                    rsFields.Update
+                End If
+            End With
+        Next
+        rsFields.AddNew
+        rsFields("Field_ID") = newField_ID
+        rsFields("Field_Name") = ObjectTemp.Name
+        rsFields.Update
+        Select Case rsMSysObject("Type")
+            Case -32768 ' Form
+                DoCmd.Close acForm, ObjectTemp.Name
+            Case -32764 ' Report
+                DoCmd.Close acReport, ObjectTemp.Name
+        End Select
+        rsMSysObject.MoveNext
+    Wend
+    rsMSysObject.Close
+    rsFields.Close
+    Set rsMSysObject = Nothing
+    Set rsFields = Nothing
+    Exit Sub
+    
+FormFields_Extract_Error:
+
+    Select Case Err
+        Case 3022
+            Resume Next
+        Case Else
+            Exit Sub
+    End Select
+        
+End Sub
+Public Sub cmdBarFields_Extract(strcmdBar As String, ctrl As Object)
+Dim rsFields As New ADODB.Recordset
+Dim ctl As Object
+
+    On Error GoTo cmdBarFields_Extract_Error
+    
+    rsFields.Open "Fields", CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    If strcmdBar <> "" Then
+        For Each ctl In CommandBars(strcmdBar).Controls
+            With ctl
+                rsFields.AddNew
+                rsFields("Field_ID") = newField_ID
+                rsFields("Field_Name") = .Tag
+                rsFields.Update
+                If .Type = 10 Then
+                    cmdBarFields_Extract "", ctl
+                End If
+            End With
+        Next
+    Else
+        For Each ctl In ctrl.Controls
+            With ctl
+                rsFields.AddNew
+                rsFields("Field_ID") = newField_ID
+                rsFields("Field_Name") = .Tag
+                rsFields.Update
+                If .Type = 10 Then
+                    cmdBarFields_Extract "", ctl
+                End If
+            End With
+        Next
+    End If
+    rsFields.Close
+    Set rsFields = Nothing
+    Exit Sub
+    
+cmdBarFields_Extract_Error:
+
+    Select Case Err
+        Case 3022
+            Resume Next
+        Case Else
+            Exit Sub
+    End Select
+    
+End Sub
+Public Function newField_ID() As Long
+    
+    If IsNull(DMax("Field_ID", "Fields")) Then
+        newField_ID = 1
+    Else
+        newField_ID = DMax("Field_ID", "Fields") + 1
+    End If
+    
+End Function

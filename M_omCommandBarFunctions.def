@@ -1,0 +1,18 @@
+Option Compare Database
+Option Explicit
+
+Public Sub PrintCommandBars(Optional cmdBarName As String)
+Dim cmdBar As CommandBar
+Dim i As Long
+  
+  ' PrintCommandBars "print"
+  For Each cmdBar In CommandBars
+    If InStr(1, cmdBar.Name, cmdBarName) > 0 Or IsNullOrEmpty(cmdBarName) Then
+      Debug.Print cmdBar.Name
+      For i = 1 To cmdBar.Controls.Count
+        Debug.Print vbTab; cmdBar.Controls(i).Id & vbTab & cmdBar.Controls(i).Caption
+      Next i
+    End If
+  Next
+
+End Sub
