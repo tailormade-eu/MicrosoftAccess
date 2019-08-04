@@ -301,3 +301,21 @@ Dim i As Long
                         End If
                 Next i
 End Function
+
+Public Function ExtractLong(text As Variant, findtext As String) As Long
+Dim pos As Long
+Dim posStart As Long
+
+    text = Nz(text, "")
+    While InStr(1, text, "  ") > 0
+        text = Replace(text, "  ", " ")
+    Wend
+    pos = InStr(1, text, " " & findtext)
+    If pos = 0 Then
+        pos = InStr(1, text, findtext)
+    End If
+    If pos <> 0 Then
+        posStart = InStrRev(text, " ", pos - 1) + 1
+        'ExtractLong = CLng(Replace(Replace(Trim(Mid(text, posStart, pos - posStart)), ".", ""), ",", ""))
+    End If
+End Function

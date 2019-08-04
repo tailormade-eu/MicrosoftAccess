@@ -1,0 +1,26 @@
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Public DeviceName As String
+Public PaperBin As Long
+
+Public Sub GetSettings()
+Dim reportName As String
+Dim rpt As Report
+
+  reportName = "omPrinterSettings"
+
+  DoCmd.OpenReport reportName, acViewPreview, WindowMode:=acDialog
+  'DoCmd.OpenReport reportName, acViewPreview
+  
+  'Set rpt = Reports(reportName)
+  'DeviceName = rpt.Printer.DeviceName
+  'PaperBin = rpt.Printer.PaperBin
+  
+  'DoCmd.Close acReport, reportName
+
+End Sub
