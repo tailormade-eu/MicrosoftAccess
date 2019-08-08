@@ -1,41 +1,38 @@
 Option Compare Database
 Option Explicit
 
-Public Sub AddReferenceByFile(Name As String, path As String)
-    RemoveByName Name
-    Application.References.AddFromFile path
+
+Public Sub AddReference(filename As String)
+    RemoveReference filename
+    Application.References.AddFromFile filename
 End Sub
 
-Public Sub PrintReferences()
+Public Function FindReference(Name As String) As Reference
 Dim r As Reference
+
+    omObjectFunctions.SetAsNothing r
     For Each r In Application.References
-        Debug.Print r.Name, r.FullPath
-    Next
-End Sub
-
-Public Sub RemoveByName(Name As String)
-Dim i As Long
-Dim r As Reference
-    For i = Application.References.Count To 1 Step -1
-        Set r = Application.References(i)
-        If r.Name = Name Then
-            Application.References.Remove r
+        If InStr(1, r.Name, Name) > 0 Then
+            Set FindReference = r
+            Exit Function
+        End If
+        If InStr(1, r.FullPath, Name) > 0 Then
+            Set FindReference = r
+            Exit Function
         End If
     Next
+End Function
+Public Sub RemoveReference(filename As String)
+Dim r As Reference
+    
+    Set r = FindReference(filename)
+    If omObjectFunctions.NotIsNothing(r) Then
+        Application.References.Remove r
+    End If
 End Sub
-
-Public Sub TestAddReferenceByFile()
-Dim xl As Excel.Application
-    AddReferenceByFile "Excel", "C:\Program Files (x86)\Microsoft Office\Office14\EXCEL.EXE" ' Excel         C:\Program Files (x86)\Microsoft Office\Root\Office16\EXCEL.EXE
-    Set xl = New Excel.Application
-    xl.visible = True
-    xl.Workbooks.Open "F:\Bestanden_MANAXA\Bh\FV_20170007_GBS.xlsx"
+Public Sub AddVBIDEReference()
+    AddReference "C:\Program Files (x86)\Common Files\Microsoft Shared\VBA\VBA6\VBE6EXT.OLB"
 End Sub
-
-
-Public Sub ReadyToDeploy()
-
-  'shell  "SUBST Q: C:\Users\Dirk\Kybucs
-  AddReferenceByFile "BarCode", "Q:\Barcode\.....mda" '"C:\kybucs\barcode\....mda"
-  
+Public Sub AddAdoDbReference()
+    AddReference "C:\Program Files (x86)\Common Files\System\ado\msado28.tlb"
 End Sub

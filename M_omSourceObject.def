@@ -7,10 +7,17 @@ Option Explicit
 
 Dim rs As New ADODB.Recordset
 Public Id As Long
+Public Name As String
+Public ObjectTypeId As AcObjectType
 
-Public Sub Load(obj As Object, objType As AcObjectType)
-
-    rs.filter = "ObjectTypeId=" & acForm & " AND Name='" & obj.Name & "'"
+Public Sub Load(obj As Object, Optional objType As AcObjectType = 0)
+    
+    Me.Name = obj.Name
+    If objType = 0 Then
+        objType = IIf(Left(TypeName(obj), 5) = "Form_", AcObjectType.acForm, AcObjectType.acReport)
+    End If
+    Me.ObjectTypeId = objType
+    rs.Filter = "ObjectTypeId=" & objType & " AND Name='" & obj.Name & "'"
     If rs.EOF Then
         rs.AddNew
         rs("ObjectTypeId") = objType

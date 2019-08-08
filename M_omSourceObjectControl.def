@@ -8,16 +8,20 @@ Option Explicit
 Dim rs As New ADODB.Recordset
 Public Id As Long
 
-Public Sub Load(soId As Long, cId As Long)
+Public Sub Load(soId As Long, c As omControl)
 
-    rs.filter = "omSourceObjectId=" & soId & " AND omControlId=" & cId
+    rs.Filter = "omSourceObjectId=" & soId & " AND omControlId=" & cId
     If rs.EOF Then
         rs.AddNew
         rs("omSourceObjectId") = soId
-        rs("omControlId") = cId
+        rs("omControlId") = c.Id
+        rs("ControlName") = c.Name
+        rs("ControlTypeId") = c.ControlTypeId
+        rs("ControlDefault") = c.Default
         rs("CreateDate") = Now
-        rs.Update
     End If
+    rs("LastUsedDate") = Now
+    rs.Update
     Id = rs("Id")
 End Sub
 
