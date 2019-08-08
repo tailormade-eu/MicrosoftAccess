@@ -4,25 +4,29 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
+
+' Reference: Microsoft Visual Basic for Applications Extensibility 3.5
+
 Dim omSO As New omSourceObject
 Dim omC As New omControl
 Dim omSOC As New omSourceObjectControl
 
-
 Public Sub Translate(obj As Object, languageId As Long)
 Dim rsTranslate As New ADODB.Recordset
 Dim ctrl As Object
-
-    rsTranslate.Open "omControlTranslations_Translate", CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+Dim omSO As omSourceObject
     
-    rsTranslate.filter = "omLanguageId=" & languageId & " AND ControlTypeId=" & 0 & " AND ControlName='" & obj.Name & "'"
+    omSO.Load obj
+    rsTranslate.Open "SELECT * FROM omSourceObjectControlTranslations_Translate WHERE LanguageId=" & languageId & " AND SourceObjectId=" & omSO.Id, CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    
+    rsTranslate.Filter = "ControlTypeId=" & 0 & " AND ControlName='" & obj.Name & "'"
     If Not rsTranslate.EOF Then
         obj.Caption = rsTranslate("Default")
         rsTranslate("LastUsedDate") = Now
         rsTranslate.Update
     End If
     For Each ctrl In obj.Controls
-        rsTranslate.filter = "omLanguageId=" & languageId & " AND ControlTypeId=" & ctrl.ControlType & " AND ControlName='" & ctrl.Name & "'"
+        rsTranslate.Filter = "ControlTypeId=" & ctrl.ControlType & " AND ControlName='" & ctrl.Name & "'"
         If Not rsTranslate.EOF Then
             Select Case ctrl.Tag
                 Case "Short"
@@ -41,10 +45,11 @@ Dim ctrl As Object
 End Sub
 
 Public Sub ClearAll()
-  DoCmd.RunSQL "truncate table omcontrols"
-  DoCmd.RunSQL "truncate table omControlTranslations"
-  DoCmd.RunSQL "truncate table omSourceObjectControls"
+  DoCmd.RunSQL "truncate table omControls"
+  'DoCmd.RunSQL "truncate table omControlTranslations"
   DoCmd.RunSQL "truncate table omSourceObjects"
+  DoCmd.RunSQL "truncate table omSourceObjectControls"
+  DoCmd.RunSQL "truncate table omSourceObjectControlTranslations"
 End Sub
 
 Public Sub IndexAll()
@@ -66,10 +71,11 @@ Dim rep As Report
     Next
     DoCmd.SetWarnings False
     'DoCmd.OpenQuery "omControlTranslations_Build"
-    SQL.Run "INSERT INTO omControlTranslations ( omlanguageid, omControlId, [Default], [Short], [Long], CreateDate, ModifyDate ) " & _
-      "SELECT omLanguages_omControls.omLanguageid, omLanguages_omControls.omcontrolid, omLanguages_omControls.[Default], omLanguages_omControls.short, omLanguages_omControls.long, GETDATE() AS Expr1, GETDATE() AS Expr2 " & _
-      "FROM omLanguages_omControls LEFT JOIN omControlTranslations ON (omLanguages_omControls.omLanguageId = omControlTranslations.omLanguageId) AND (omLanguages_omControls.omControlId = omControlTranslations.omControlId) " & _
-      "WHERE (((omControlTranslations.Id) Is Null)) "
+    DoCmd.OpenQuery "omSourceObjectControlTranslations_Build"
+    'SQL.Run "INSERT INTO omControlTranslations ( omlanguageid, omControlId, [Default], [Short], [Long], CreateDate, ModifyDate ) " & _
+    '  "SELECT omLanguages_omControls.omLanguageid, omLanguages_omControls.omcontrolid, omLanguages_omControls.[Default], omLanguages_omControls.short, omLanguages_omControls.long, GETDATE() AS Expr1, GETDATE() AS Expr2 " & _
+    '  "FROM omLanguages_omControls LEFT JOIN omControlTranslations ON (omLanguages_omControls.omLanguageId = omControlTranslations.omLanguageId) AND (omLanguages_omControls.omControlId = omControlTranslations.omControlId) " & _
+    '  "WHERE (((omControlTranslations.Id) Is Null)) "
     DoCmd.SetWarnings True
 End Sub
 
@@ -78,13 +84,13 @@ Dim ctrl As Control
     
     omSO.Load obj, objType
     omC.Load obj '0, obj.Name, obj.Caption
-    omSOC.Load omSO.Id, omC.Id
+    omSOC.Load omSO.Id, omC
     For Each ctrl In obj.Controls
         Select Case ctrl.ControlType
             Case AcControlType.acCommandButton, AcControlType.acLabel, AcControlType.acToggleButton, AcControlType.acPage
               omC.Load ctrl 'ctrl.ControlType, ctrl.Name, ctrl.Caption
               If Not omC.HasNoCaption Then
-                omSOC.Load omSO.Id, omC.Id
+                omSOC.Load omSO.Id, omC
               End If
         End Select
     Next
@@ -110,8 +116,8 @@ Dim strTranslateLine As String
 
     On Error GoTo Test_Error
     
-    For i = 1 To VBE.VBProjects.item(1).VBComponents.Count
-        Set vbc = VBE.VBProjects.item(1).VBComponents.item(i)
+    For i = 1 To VBE.VBProjects.Item(1).VBComponents.Count
+        Set vbc = VBE.VBProjects.Item(1).VBComponents.Item(i)
         objType = ""
         If Left(vbc.Name, 4) = "Form" Then
             objType = "Form"
