@@ -11,29 +11,29 @@ End Enum
 'Public Function Nz(Value As Variant, Optional valueifnull = "")
 '    Nz = IIf(IsNull(Value), valueifnull, Value)
 'End Function
-Public Function CleanString(value As Variant) As String
-    CleanString = Trim(Nz(value, ""))
+Public Function CleanString(Value As Variant) As String
+    CleanString = Trim(Nz(Value, ""))
 End Function
 
-Public Function IsNullOrEmpty(value As Variant) As Boolean
-    IsNullOrEmpty = (Len(CleanString(value)) = 0)
+Public Function IsNullOrEmpty(Value As Variant) As Boolean
+    IsNullOrEmpty = (Len(CleanString(Value)) = 0)
 End Function
 
-Public Function IsNullOrEmptyOrZero(value As Variant) As Boolean
-    IsNullOrEmptyOrZero = IsNullOrEmpty(value)
+Public Function IsNullOrEmptyOrZero(Value As Variant) As Boolean
+    IsNullOrEmptyOrZero = IsNullOrEmpty(Value)
     If Not IsNullOrEmptyOrZero Then
-        IsNullOrEmptyOrZero = (value = 0)
-        If Not IsNullOrEmptyOrZero And IsDate(value) Then
-            IsNullOrEmptyOrZero = (CDbl(CDate(value)) = 0)
+        IsNullOrEmptyOrZero = (Value = 0)
+        If Not IsNullOrEmptyOrZero And IsDate(Value) Then
+            IsNullOrEmptyOrZero = (CDbl(CDate(Value)) = 0)
         End If
     End If
 End Function
 
-Public Function NotIsNullOrEmptyOrZero(value As Variant) As Boolean
-    NotIsNullOrEmptyOrZero = Not IsNullOrEmptyOrZero(value)
+Public Function NotIsNullOrEmptyOrZero(Value As Variant) As Boolean
+    NotIsNullOrEmptyOrZero = Not IsNullOrEmptyOrZero(Value)
 End Function
-Public Function NotIsNullOrEmpty(value As Variant) As Boolean
-    NotIsNullOrEmpty = Not IsNullOrEmpty(value)
+Public Function NotIsNullOrEmpty(Value As Variant) As Boolean
+    NotIsNullOrEmpty = Not IsNullOrEmpty(Value)
 End Function
 
 Public Function ParseValue(arguments As Variant, valueName As String, Optional assignChar = "=", Optional splitchar = ",", Optional notFoundValue As Variant = Null) As Variant
@@ -53,20 +53,20 @@ Dim lPosEqual As Long
 End Function
 
 
-Public Function StringSplit(value As String, splitchar As String, Optional removeEmptyValues As Boolean = True) As String()
+Public Function StringSplit(Value As String, splitchar As String, Optional removeEmptyValues As Boolean = True) As String()
 Dim startPos As Long
 Dim endPos As Long
 Dim result() As String
 Dim Length As Long
 Dim tempValue As String
-    If Len(value) > 0 Then
+    If Len(Value) > 0 Then
         omArrayFunctions.StringArrayClear result
         startPos = 1
         While startPos <> 0
-            endPos = InStr(startPos, value, splitchar)
-            Length = IIf(endPos = 0, Len(value) + 1, endPos) - startPos
+            endPos = InStr(startPos, Value, splitchar)
+            Length = IIf(endPos = 0, Len(Value) + 1, endPos) - startPos
             If (removeEmptyValues = False) Or (removeEmptyValues And Length > 0) Then
-                tempValue = Mid(value, startPos, Length)
+                tempValue = Mid(Value, startPos, Length)
                 omArrayFunctions.StringArrayAdd result, tempValue
             End If
             startPos = IIf(endPos <> 0, endPos + 1, 0)
@@ -75,25 +75,25 @@ Dim tempValue As String
     StringSplit = result
 End Function
 
-Public Function StringSplitGetByIndex(value As String, splitchar As String, index As Long) As Variant
-    StringSplitGetByIndex = Split(value, splitchar)(index)
+Public Function StringSplitGetByIndex(Value As String, splitchar As String, index As Long) As Variant
+    StringSplitGetByIndex = Split(Value, splitchar)(index)
 End Function
-Public Function IsIdNullOrZero(value As Variant) As Boolean
-    IsIdNullOrZero = (Nz(value, 0) = 0)
+Public Function IsIdNullOrZero(Value As Variant) As Boolean
+    IsIdNullOrZero = (Nz(Value, 0) = 0)
 End Function
-Public Function NotIsIdNullOrZero(value As Variant) As Boolean
-    NotIsIdNullOrZero = Not IsIdNullOrZero(value)
+Public Function NotIsIdNullOrZero(Value As Variant) As Boolean
+    NotIsIdNullOrZero = Not IsIdNullOrZero(Value)
 End Function
-Public Function IsIdNullOrEmptyOrZero(value As Variant) As Boolean
-    If IsNullOrEmpty(value) Then
-        value = 0
+Public Function IsIdNullOrEmptyOrZero(Value As Variant) As Boolean
+    If IsNullOrEmpty(Value) Then
+        Value = 0
     End If
-    IsIdNullOrEmptyOrZero = (Nz(value, 0) = 0)
+    IsIdNullOrEmptyOrZero = (Nz(Value, 0) = 0)
 End Function
 
 
-Public Function NotIsIdNullOrEmptyOrZero(value As Variant) As Boolean
-    NotIsIdNullOrEmptyOrZero = Not IsIdNullOrEmptyOrZero(value)
+Public Function NotIsIdNullOrEmptyOrZero(Value As Variant) As Boolean
+    NotIsIdNullOrEmptyOrZero = Not IsIdNullOrEmptyOrZero(Value)
 End Function
 
 Public Function AreIdsEqual(id1 As Variant, id2 As Variant) As Boolean
@@ -157,14 +157,14 @@ Public Function ContainsString(source As Variant, containString As String, Optio
     
 End Function
 
-Public Function GetEnglishPlural(value As String) As String
+Public Function GetEnglishPlural(Value As String) As String
 
-    If Right(value, 1) = "y" Then
-        GetEnglishPlural = Left(value, Len(value) - 1) & "ies"
-    ElseIf Right(value, 1) = "s" Then
-        GetEnglishPlural = value & "es"
+    If Right(Value, 1) = "y" Then
+        GetEnglishPlural = Left(Value, Len(Value) - 1) & "ies"
+    ElseIf Right(Value, 1) = "s" Then
+        GetEnglishPlural = Value & "es"
     Else
-        GetEnglishPlural = value & "s"
+        GetEnglishPlural = Value & "s"
     End If
 End Function
 
@@ -182,20 +182,20 @@ Dim i As Long
         ReplaceCharPattern = returnString
     End If
 End Function
-Public Function CleanCommunication(value As Variant) As Variant
-    If IsNullOrEmpty(value) Then
+Public Function CleanCommunication(Value As Variant) As Variant
+    If IsNullOrEmpty(Value) Then
         CleanCommunication = Null
     Else
-        CleanCommunication = replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(value, " ", ""), "+", ""), ".", ""), ",", ""), "-", ""), "@", ""), ";", ""), "*", ""), "/", ""), "(", ""), ")", "")
+        CleanCommunication = replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(replaceString(Value, " ", ""), "+", ""), ".", ""), ",", ""), "-", ""), "@", ""), ";", ""), "*", ""), "/", ""), "(", ""), ")", "")
     End If
 End Function
 
-Public Function ReverseCommunication(value As Variant) As Variant
-    value = CleanCommunication(value)
-    If IsNullOrEmpty(value) Then
+Public Function ReverseCommunication(Value As Variant) As Variant
+    Value = CleanCommunication(Value)
+    If IsNullOrEmpty(Value) Then
         ReverseCommunication = Null
     Else
-        ReverseCommunication = StrReverse(value)
+        ReverseCommunication = StrReverse(Value)
     End If
 End Function
 
@@ -221,20 +221,20 @@ Function Proper(var As Variant) As Variant
 End Function
 
 
-Public Function replaceString(ByVal value As String, oldString As String, newString As String) As String
-    While InStr(1, value, oldString) > 0
-        value = Replace(value, oldString, newString)
+Public Function replaceString(ByVal Value As String, oldString As String, newString As String) As String
+    While InStr(1, Value, oldString) > 0
+        Value = Replace(Value, oldString, newString)
     Wend
-    replaceString = value
+    replaceString = Value
 End Function
 Public Function GetvbCrLf() As String
     GetvbCrLf = vbCrLf
 End Function
 
-Public Function GetDelimitedValue(value As String, Optional Position As Long = 0, Optional delimiter As String = ";", Optional EmbraceChar As String)
+Public Function GetDelimitedValue(Value As String, Optional Position As Long = 0, Optional delimiter As String = ";", Optional EmbraceChar As String)
 Dim strings() As String
 
-    strings = omStringFunctions.StringSplit(value, delimiter & EmbraceChar, False)
+    strings = omStringFunctions.StringSplit(Value, delimiter & EmbraceChar, False)
     GetDelimitedValue = Replace(strings(Position), EmbraceChar, "")
 End Function
 Public Function GetScrambleNumbers(Length As Long) As String
@@ -247,55 +247,55 @@ Dim i As Long
     GetScrambleNumbers = strTemp
 End Function
 
-Public Function IsStringInPattern(value As String, pattern As String) As Boolean
-    IsStringInPattern = (InStr(1, pattern, value) > 0)
+Public Function IsStringInPattern(Value As String, pattern As String) As Boolean
+    IsStringInPattern = (InStr(1, pattern, Value) > 0)
 End Function
 
-Public Function CleanStringUsingPattern(ByVal value As Variant, Optional findPattern As String = vbCrLf & vbTab, Optional replaceString As String = " ", Optional replaceDoubleBlanks As Boolean = True, Optional trimResult As Boolean = True) As String
-    If IsNull(value) Then
+Public Function CleanStringUsingPattern(ByVal Value As Variant, Optional findPattern As String = vbCrLf & vbTab, Optional replaceString As String = " ", Optional replaceDoubleBlanks As Boolean = True, Optional trimResult As Boolean = True) As String
+    If IsNull(Value) Then
         CleanStringUsingPattern = ""
         Exit Function
     End If
     
-    value = ReplaceCharPattern(value, findPattern, replaceString)
+    Value = ReplaceCharPattern(Value, findPattern, replaceString)
     If replaceDoubleBlanks Then
-        While InStr(1, value, "  ") > 0
-            value = Replace(value, "  ", " ")
+        While InStr(1, Value, "  ") > 0
+            Value = Replace(Value, "  ", " ")
         Wend
     End If
     If trimResult Then
-        CleanStringUsingPattern = CleanString(value)
+        CleanStringUsingPattern = CleanString(Value)
     Else
-        CleanStringUsingPattern = value
+        CleanStringUsingPattern = Value
     End If
 End Function
-Public Function StringPadLeft(s As String, totalLength As Long, paddingChar As String) As String
-    StringPadLeft = StringPad(s, totalLength, paddingChar, PadLeft)
+Public Function StringPadLeft(S As String, totalLength As Long, paddingChar As String) As String
+    StringPadLeft = StringPad(S, totalLength, paddingChar, PadLeft)
 End Function
-Public Function StringPadRight(s As String, totalLength As Long, paddingChar As String) As String
-    StringPadRight = StringPad(s, totalLength, paddingChar, PadRight)
+Public Function StringPadRight(S As String, totalLength As Long, paddingChar As String) As String
+    StringPadRight = StringPad(S, totalLength, paddingChar, PadRight)
 End Function
 
-Public Function StringPad(s As String, totalLength As Long, paddingChar As String, paddingMode As StringPaddingMode) As String
+Public Function StringPad(S As String, totalLength As Long, paddingChar As String, paddingMode As StringPaddingMode) As String
 Dim result As String
 
     result = strings.String(totalLength, paddingChar)
     If paddingMode = StringPaddingMode.PadLeft Then
-        result = result & Nz(s, "")
+        result = result & Nz(S, "")
         result = Right(result, totalLength)
     Else
-        result = Nz(s, "") & result
+        result = Nz(S, "") & result
         result = Left(result, totalLength)
     End If
     StringPad = result
 End Function
 
-Public Function ContainsCharFromPattern(s As String, pattern As String) As Boolean
+Public Function ContainsCharFromPattern(S As String, pattern As String) As Boolean
 Dim c As String
 Dim i As Long
                 For i = 1 To Len(pattern)
                         c = Mid(pattern, i, 1)
-                        If InStr(1, s, c) > 0 Then
+                        If InStr(1, S, c) > 0 Then
                                 ContainsCharFromPattern = True
                                 Exit Function
                         End If

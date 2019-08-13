@@ -45,9 +45,9 @@ Dim Id As String
 
     If parentForm.CurrentRecord <> -1 Then
         If parentForm.Recordset.Fields(keyName).Type = dbGUID Then
-            Id = StringFromGUID(parentForm.Recordset.Fields(keyName).value)
+            Id = StringFromGUID(parentForm.Recordset.Fields(keyName).Value)
         Else
-            Id = parentForm.Recordset.Fields(keyName).value
+            Id = parentForm.Recordset.Fields(keyName).Value
         End If
         DoCmd.OpenForm FormName, datamode:=acFormEdit, windowMode:=windowMode, whereCondition:=keyName & " =" & Id
         If Requery Then

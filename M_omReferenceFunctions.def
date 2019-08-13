@@ -7,18 +7,6 @@ Public Sub AddReference(filename As String)
     Application.References.AddFromFile filename
 End Sub
 
-Public Sub AddReferenceByFile(Name As String, path As String)
-    RemoveByName Name
-    Application.References.AddFromFile path
-End Sub
-
-Public Sub PrintReferences()
-Dim r As Reference
-    For Each r In Application.References
-        Debug.Print r.Name, r.FullPath
-    Next
-End Sub
-
 Public Function FindReference(Name As String) As Reference
 Dim r As Reference
 
@@ -34,7 +22,6 @@ Dim r As Reference
         End If
     Next
 End Function
-
 Public Sub RemoveReference(filename As String)
 Dim r As Reference
     
@@ -43,18 +30,6 @@ Dim r As Reference
         Application.References.Remove r
     End If
 End Sub
-
-Public Sub RemoveReferenceByName(Name As String)
-Dim i As Long
-Dim r As Reference
-    For i = Application.References.Count To 1 Step -1
-        Set r = Application.References(i)
-        If r.Name = Name Then
-            Application.References.Remove r
-        End If
-    Next
-End Sub
-
 Public Sub AddVBIDEReference()
     AddReference "C:\Program Files (x86)\Common Files\Microsoft Shared\VBA\VBA6\VBE6EXT.OLB"
 End Sub

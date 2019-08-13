@@ -28,7 +28,7 @@ Dim omSO As omSourceObject
     For Each ctrl In obj.Controls
         rsTranslate.Filter = "ControlTypeId=" & ctrl.ControlType & " AND ControlName='" & ctrl.Name & "'"
         If Not rsTranslate.EOF Then
-            Select Case ctrl.Tag
+            Select Case ctrl.tag
                 Case "Short"
                     ctrl.Caption = rsTranslate("Short")
                 Case "Long"
@@ -54,20 +54,12 @@ End Sub
 
 Public Sub IndexAll()
 Dim i As Long
-Dim frm As Form
-Dim rep As Report
 
     For i = 0 To CurrentProject.AllForms.Count - 1
-        DoCmd.OpenForm CurrentProject.AllForms(i).Name, acDesign, WindowMode:=acHidden
-        Set frm = Forms(CurrentProject.AllForms(i).Name)
-        IndexByObject frm, acForm
-        DoCmd.Close acForm, CurrentProject.AllForms(i).Name, acSaveYes
+        IndexForm CurrentProject.AllForms(i).Name
     Next
     For i = 0 To CurrentProject.AllReports.Count - 1
-        DoCmd.OpenReport CurrentProject.AllReports(i).Name, acDesign, WindowMode:=acHidden
-        Set rep = Reports(CurrentProject.AllReports(i).Name)
-        IndexByObject rep, acReport
-        DoCmd.Close acReport, CurrentProject.AllReports(i).Name, acSaveYes
+        IndexReport CurrentProject.AllReports(i).Name
     Next
     DoCmd.SetWarnings False
     'DoCmd.OpenQuery "omControlTranslations_Build"
@@ -78,8 +70,25 @@ Dim rep As Report
     '  "WHERE (((omControlTranslations.Id) Is Null)) "
     DoCmd.SetWarnings True
 End Sub
+Public Sub IndexForm(FormName As String)
+Dim frm As Form
 
-Private Sub IndexByObject(obj As Object, objType As AcObjectType)
+    DoCmd.OpenForm FormName, acDesign, windowMode:=acHidden
+    Set frm = Forms(FormName)
+    IndexByObject frm, acForm
+    DoCmd.Close acForm, FormName, acSaveYes
+End Sub
+
+Public Sub IndexReport(reportName As String)
+Dim rep As Report
+
+    DoCmd.OpenReport reportName, acDesign, windowMode:=acHidden
+    Set rep = Reports(reportName)
+    IndexByObject rep, acReport
+    DoCmd.Close acReport, reportName, acSaveYes
+End Sub
+
+Public Sub IndexByObject(obj As Object, objType As AcObjectType)
 Dim ctrl As Control
     
     omSO.Load obj, objType
@@ -95,6 +104,7 @@ Dim ctrl As Control
         End Select
     Next
 End Sub
+
 Private Sub Class_Initialize()
     'rsTranslate.Open "omControlTranslations_Translate", CurrentProject.Connection, adOpenDynamic, adLockOptimistic
 End Sub

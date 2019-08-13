@@ -132,9 +132,9 @@ End Function
 Public Function WorkingDays(ByVal lYearMonth As Long) As Long
 Dim dateWork As Date
 
-    dateWork = "01/" & str(lYearMonth Mod 100) & "/" & str(Int(lYearMonth / 100))
+    dateWork = "01/" & Str(lYearMonth Mod 100) & "/" & Str(Int(lYearMonth / 100))
     If Month(dateWork) <> (lYearMonth Mod 100) Then
-        dateWork = str(lYearMonth Mod 100) & "/01/" & str(Int(lYearMonth / 100))
+        dateWork = Str(lYearMonth Mod 100) & "/01/" & Str(Int(lYearMonth / 100))
     End If
     While lYearMonth Mod 100 = Month(dateWork)
         If Weekday(dateWork, vbMonday) > 0 And Weekday(dateWork, vbMonday) < 6 Then
@@ -149,7 +149,7 @@ Dim dateWork As Date
     If IsDate(dateFrom) Then
         dateWork = dateFrom
         If Month(dateWork) <> (lYearMonth Mod 100) Then
-            dateWork = str(lYearMonth Mod 100) & "/" & Month(dateWork) & "/" & str(Int(lYearMonth / 100))
+            dateWork = Str(lYearMonth Mod 100) & "/" & Month(dateWork) & "/" & Str(Int(lYearMonth / 100))
         End If
         While lYearMonth Mod 100 = Month(dateWork)
             If Weekday(dateWork, vbMonday) > 0 And Weekday(dateWork, vbMonday) < 6 Then
@@ -168,7 +168,7 @@ Dim dateWork As Date
     If IsDate(dateFrom) Then
         dateWork = dateFrom
         If Month(dateWork) <> (lYearMonth Mod 100) Then
-            dateWork = str(lYearMonth Mod 100) & "/" & Month(dateWork) & "/" & str(Int(lYearMonth / 100))
+            dateWork = Str(lYearMonth Mod 100) & "/" & Month(dateWork) & "/" & Str(Int(lYearMonth / 100))
         End If
         While lYearMonth Mod 100 = Month(dateWork)
             If Weekday(dateWork, vbMonday) > 0 And Weekday(dateWork, vbMonday) < 6 Then
@@ -223,8 +223,8 @@ End Function
 Public Function DateYYYYMMDD(ByVal dt As Variant) As Long
     DateYYYYMMDD = ConvertVarDateToYYYYMMDD(CDate(dt))
 End Function
-Public Function StartDate(ByVal Period As Long) As Date
-    StartDate = GetPeriodStartDate(Period)
+Public Function startDate(ByVal Period As Long) As Date
+    startDate = GetPeriodStartDate(Period)
 End Function
 Public Function UniDate(dt As Date) As Long
     UniDate = ConvertDateToYYYYMMDD(dt)
@@ -285,7 +285,7 @@ Dim calculatedTime As Date
     If excludeWeekends Then
         currentdate = DateOnly(startDate)
         While currentdate < endDate
-            If weekday(currentdate, vbMonday) > 5 Then
+            If Weekday(currentdate, vbMonday) > 5 Then
                 If DateOnly(startDate) = currentdate Then
                     calculatedTime = calculatedTime - (currentdate + 1 - startDate)
                 ElseIf DateOnly(endDate) = currentdate Then
@@ -334,7 +334,7 @@ Dim trEndInSeconds As Long
 
     currentdate = DateOnly(startDate)
     While currentdate <= DateOnly(endDate)
-        If weekday(currentdate, vbMonday) <= 5 Or Not excludeWeekends Then
+        If Weekday(currentdate, vbMonday) <= 5 Or Not excludeWeekends Then
             calcStartSeconds = GetTimeInSeconds("0:0")
             calcEndSeconds = GetTimeInSeconds("0:0", True)
             If DateOnly(startDate) = currentdate Then
@@ -383,7 +383,7 @@ Public Function GetTimeInSeconds(t As Date, Optional ZeroIsDay As Boolean = Fals
 End Function
 
 Public Function IsWeekDay(dt As Date, Optional FirstDayOfWeek As VbDayOfWeek = VbDayOfWeek.vbMonday) As Boolean
-    IsWeekDay = (weekday(dt, FirstDayOfWeek) <= 5)
+    IsWeekDay = (Weekday(dt, FirstDayOfWeek) <= 5)
 End Function
 
 Public Function GetQuarter(dt As Date, Optional FirstDayOfWeek As VbDayOfWeek = VbDayOfWeek.vbMonday, Optional FirstWeekOfYear As VbFirstWeekOfYear = VbFirstWeekOfYear.vbFirstFourDays) As Long

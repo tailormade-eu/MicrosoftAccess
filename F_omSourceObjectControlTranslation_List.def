@@ -6,8 +6,15 @@ Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
 
-Private Sub cmdNew_Click()
-    DoCmd.OpenForm "omEmptyTable_Edit", datamode:=acFormAdd, windowMode:=acDialog
+'Private Sub cmdNew_Click()
+'    DoCmd.OpenForm "omSourceObjectControlTranslation_Edit", datamode:=acFormAdd, windowMode:=acDialog
+'    Form_Search
+'End Sub
+
+Private Sub cmdBuild_Click()
+    DoCmd.SetWarnings False
+    DoCmd.OpenQuery "omSourceObjectControlTranslations_Build"
+    DoCmd.SetWarnings True
     Form_Search
 End Sub
 

@@ -21,7 +21,7 @@ Public Function UseWindowsUser()
     gUser.Name = GetWindowsUserName
 End Function
 Public Sub UserLock()
-    If FormExists("UserLock") Then
+    If omMSAccessFunctions.FormExists("UserLock") Then
         DoCmd.OpenForm "UserLock", , , , acFormReadOnly, acHidden
     End If
 End Sub

@@ -1,25 +1,25 @@
 Option Compare Database
 Option Explicit
 
-Private gLog As omLogging
+Public gLogging As omLogging
 
 
 Public Sub StartLogging(Optional enable As Boolean = False)
-    Set gLog = New omLogging
+    Set gLogging = New omLogging
     SetLoggingEnable enable
 End Sub
 
 Public Sub SetLoggingEnable(enable As Boolean)
-    If omObjectFunctions.NotIsNothing(gLog) Then
-        gLog.Enabled = enable
+    If omObjectFunctions.NotIsNothing(gLogging) Then
+        gLogging.Enabled = enable
     End If
 End Sub
 
-Public Function WriteToLog(Optional diffOnly As String = "y", Optional updateCurrentDate As Boolean = True, Optional description As String = "") As String
-    If omObjectFunctions.NotIsNothing(gLog) Then
-        WriteToLog = gLog.WriteToStream(diffOnly, updateCurrentDate, description)
+Public Function WriteToLog(Optional diffOnly As String = "y", Optional updateCurrentDate As Boolean = True, Optional Description As String = "") As String
+    If omObjectFunctions.NotIsNothing(gLogging) Then
+        WriteToLog = gLogging.WriteToStream(diffOnly, updateCurrentDate, Description)
     End If
 End Function
 Public Sub StopLogging()
-    Set gLog = Nothing
+    Set gLogging = Nothing
 End Sub

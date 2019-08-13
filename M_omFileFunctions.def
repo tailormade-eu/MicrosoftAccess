@@ -48,7 +48,7 @@ Public Sub CreateDatebase(filename As String)
     If gFso.FileExists(filename) Then
         gFso.DeleteFile filename
     End If
-    DBEngine.CreateDataBase filename, dbLangGeneral, dbVersion30
+    DBEngine.CreateDatabase filename, dbLangGeneral, dbVersion30
 End Sub
 Public Sub DeleteFile(filename As String, Optional force As Boolean = False)
     gFso.DeleteFile filename, force
@@ -145,7 +145,7 @@ Public Sub CreateFolderPath(strPath As String, Optional OpenFolderInExplorer As 
         If Not gFso.FolderExists(gFso.GetParentFolderName(strPath)) Then
             CreateFolderPath (gFso.GetParentFolderName(strPath))
         End If
-        gFso.createFolder strPath
+        gFso.CreateFolder strPath
     End If
     If OpenFolderInExplorer Then
         omFileFunctions.OpenFolder strPath
@@ -184,7 +184,7 @@ Public Function FileLocked(strFileName As String, Optional displayError As Boole
    If Err.Number <> 0 Then
       ' Display the error number and description.
       If displayError Then
-        MsgBox "Error #" & str(Err.Number) & " - " & Err.Description
+        MsgBox "Error #" & Str(Err.Number) & " - " & Err.Description
       End If
       FileLocked = True
       Err.Clear
