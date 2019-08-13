@@ -25,7 +25,7 @@ Dim rs As ADODB.Recordset
     If Nz(Me.Id, 0) = 0 Then
         If addWindowsLogon Then
             Set rs = New ADODB.Recordset
-            rs.Open "Users", CurrentProject.connection, adOpenForwardOnly, adLockOptimistic
+            rs.Open "Users", CurrentProject.Connection, adOpenForwardOnly, adLockOptimistic
             rs.AddNew
             rs("Login") = LoginName
             rs("Active") = True
@@ -67,17 +67,17 @@ Public Sub UpdatePassword(Password As String)
 End Sub
 Private Sub Class_Initialize()
     ClearFields
-    cmdLoginByName.commandText = "SELECT * FROM Users WHERE Login=? AND Password=?"
-    cmdLoginByName.ActiveConnection = CurrentProject.connection
+    cmdLoginByName.CommandText = "SELECT * FROM Users WHERE Login=? AND Password=?"
+    cmdLoginByName.ActiveConnection = CurrentProject.Connection
     cmdLoginByName.Parameters.Refresh
-    cmdLoginById.commandText = "SELECT * FROM Users WHERE Id=? AND Password=?"
-    cmdLoginById.ActiveConnection = CurrentProject.connection
+    cmdLoginById.CommandText = "SELECT * FROM Users WHERE Id=? AND Password=?"
+    cmdLoginById.ActiveConnection = CurrentProject.Connection
     cmdLoginById.Parameters.Refresh
-    cmdLoginByNameOnly.commandText = "SELECT * FROM Users WHERE Login=?"
-    cmdLoginByNameOnly.ActiveConnection = CurrentProject.connection
+    cmdLoginByNameOnly.CommandText = "SELECT * FROM Users WHERE Login=?"
+    cmdLoginByNameOnly.ActiveConnection = CurrentProject.Connection
     cmdLoginByNameOnly.Parameters.Refresh
-    cmdUpdatePassword.commandText = "UPDATE Users SET [Password]=? WHERE Id=?"
-    cmdUpdatePassword.ActiveConnection = CurrentProject.connection
+    cmdUpdatePassword.CommandText = "UPDATE Users SET [Password]=? WHERE Id=?"
+    cmdUpdatePassword.ActiveConnection = CurrentProject.Connection
     cmdUpdatePassword.Parameters.Refresh
 End Sub
 

@@ -21,8 +21,8 @@ End Sub
 
 Private Sub Class_Initialize()
     ClearFields
-    cmdLoadId.commandText = "SELECT * FROM UserRoles WHERE Id=?"
-    cmdLoadId.ActiveConnection = CurrentProject.connection
+    cmdLoadId.CommandText = "SELECT * FROM UserRoles WHERE Id=?"
+    cmdLoadId.ActiveConnection = CurrentProject.Connection
     cmdLoadId.Parameters.Refresh
 End Sub
 

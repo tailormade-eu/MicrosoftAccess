@@ -31,19 +31,19 @@ Public Sub DeleteQuery(queryName As String)
     CurrentDb.QueryDefs.Delete queryName
   End If
 End Sub
-Public Sub CreatePassthroughQuery(queryName As String, SQL As String, Connection As String)
+Public Sub CreatePassthroughQuery(queryName As String, sql As String, Connection As String)
 Dim qd As QueryDef
 
   DeleteQuery queryName
   Set qd = CurrentDb.CreateQueryDef(queryName)
   qd.Connect = Connection
-  qd.SQL = SQL
+  qd.sql = sql
   CurrentDb.QueryDefs.Refresh
 End Sub
 
 Public Function GetQuerySQL(queryName As String) As String
   On Error Resume Next
-  GetQuerySQL = CurrentDb.QueryDefs(queryName).SQL
+  GetQuerySQL = CurrentDb.QueryDefs(queryName).sql
 End Function
 
 Public Sub HideNavigationPane()
@@ -63,7 +63,7 @@ Dim accObj As AccessObject
     
     For Each accObj In CurrentData.AllTables
         On Error Resume Next
-        omExportFunctions.ExportQuery accObj.NAME
+        omExportFunctions.ExportQuery accObj.Name
     Next
 End Sub
 
@@ -89,7 +89,7 @@ Public Sub MakeLinkedTablesLocal()
 Dim i As Long
 Dim tbl As TableDef
 
-    For i = 0 To CurrentDb.TableDefs.count - 1
+    For i = 0 To CurrentDb.TableDefs.Count - 1
         If CurrentDb.TableDefs(i).Connect <> "" And Left(CurrentDb.TableDefs(i).Name, 4) <> "MSys" And Left(CurrentDb.TableDefs(i).Name, 1) <> "~" Then
             If Right(CurrentProject.Name, 1) = "b" Then
                 gLogging.WriteToFile Description:="MakeLinkedTables > Right(CurrentProject.Name, 1) = b"
@@ -116,7 +116,7 @@ Dim idx As DAO.index
 'DoCmd.TransferDatabase acExport, "Microsoft Access", CurrentDb.Name, acTable, "Accounts", "T_Accounts", StructureOnly:=True
 
     tempTableName = "TCOPY_" & tableName
-    DeleteTable tempTableName
+    omMSAccessFunctions.DeleteTable tempTableName
     gLogging.WriteToFile Description:="MakeLinkedTable > DeleteTable tempTableName"
     
     CurrentProject.Connection.Execute "SELECT * INTO [" & tempTableName & "] FROM [" & tableName & "]"
@@ -125,7 +125,7 @@ Dim idx As DAO.index
     Workspaces(0).Databases(0).TableDefs.Refresh
     Set tbl = Workspaces(0).Databases(0).TableDefs(tableName)
     For Each idx In tbl.Indexes
-        CreateIndexUsingDAO tempTableName, idx.Name, Mid(Replace(Replace(idx.Fields, ";+", "],["), "+", "][") & "]", 2), idx.primary, idx.unique, Not idx.IgnoreNulls ' not implemented,idx.Clustered ,idx.Foreign ,idx.Required
+        CreateIndexUsingDAO tempTableName, idx.Name, Mid(Replace(Replace(idx.Fields, ";+", "],["), "+", "][") & "]", 2), idx.Primary, idx.Unique, Not idx.IgnoreNulls ' not implemented,idx.Clustered ,idx.Foreign ,idx.Required
         gLogging.WriteToFile Description:="MakeLinkedTable > CreateIndex"
     Next
     DoCmd.DeleteObject acTable, tableName
@@ -156,8 +156,8 @@ Dim fldName As Variant
 
     Set tbl = Workspaces(0).Databases(0).TableDefs(tableName)
     Set idx = tbl.CreateIndex(indexName)
-    idx.primary = setPrimary
-    idx.unique = setUnique
+    idx.Primary = setPrimary
+    idx.Unique = setUnique
     fldNames = omStringFunctions.StringSplit(fieldNames, ",")
     For Each fldName In fldNames
         idx.Fields.Append idx.CreateField(Replace(Replace(fldName, "[", ""), "]", ""))
@@ -190,7 +190,7 @@ End Sub
 Public Sub DeleteTables(tablePrefix As String)
 Dim i As Long
 
-    For i = CurrentDb.TableDefs.count - 1 To 0 Step -1
+    For i = CurrentDb.TableDefs.Count - 1 To 0 Step -1
         If Left(CurrentDb.TableDefs(i).Name, Len(tablePrefix)) = tablePrefix Then
             DoCmd.DeleteObject acTable, CurrentDb.TableDefs(i).Name
         End If
@@ -290,7 +290,7 @@ Dim ctl As Object
             With ctl
                 rsFields.AddNew
                 rsFields("Field_ID") = newField_ID
-                rsFields("Field_Name") = .Tag
+                rsFields("Field_Name") = .tag
                 rsFields.Update
                 If .Type = 10 Then
                     cmdBarFields_Extract "", ctl
@@ -302,7 +302,7 @@ Dim ctl As Object
             With ctl
                 rsFields.AddNew
                 rsFields("Field_ID") = newField_ID
-                rsFields("Field_Name") = .Tag
+                rsFields("Field_Name") = .tag
                 rsFields.Update
                 If .Type = 10 Then
                     cmdBarFields_Extract "", ctl

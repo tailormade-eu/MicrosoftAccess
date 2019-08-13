@@ -10,11 +10,11 @@ Public Id As Long
 
 Public Sub Load(soId As Long, c As omControl)
 
-    rs.Filter = "omSourceObjectId=" & soId & " AND omControlId=" & cId
+    rs.Filter = "SourceObjectId=" & soId & " AND ControlId=" & c.Id
     If rs.EOF Then
         rs.AddNew
-        rs("omSourceObjectId") = soId
-        rs("omControlId") = c.Id
+        rs("SourceObjectId") = soId
+        rs("ControlId") = c.Id
         rs("ControlName") = c.Name
         rs("ControlTypeId") = c.ControlTypeId
         rs("ControlDefault") = c.Default

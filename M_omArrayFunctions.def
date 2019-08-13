@@ -1,19 +1,19 @@
 Option Compare Database
 Option Explicit
 
-Public Sub ObjectArrayAdd(objectArray() As Object, value As Object, Optional Clear = False)
+Public Sub ObjectArrayAdd(objectArray() As Object, Value As Object, Optional Clear = False)
     On Error Resume Next
     ReDim Preserve objectArray(UBound(objectArray) + 1) As Object
     If Err = 9 Or Clear Then ReDim objectArray(0) As Object
-    Set objectArray(UBound(objectArray)) = value
+    Set objectArray(UBound(objectArray)) = Value
 End Sub
 
 
-Public Sub StringArrayAdd(stringArray() As String, value As String, Optional Clear = False)
+Public Sub StringArrayAdd(stringArray() As String, Value As String, Optional Clear = False)
     On Error Resume Next
     ReDim Preserve stringArray(UBound(stringArray) + 1) As String
     If Err = 9 Or Clear Then ReDim stringArray(0) As String
-    stringArray(UBound(stringArray)) = value
+    stringArray(UBound(stringArray)) = Value
 End Sub
 Public Sub StringArrayClear(stringArray() As String)
 Dim emptyArray() As String
@@ -43,7 +43,7 @@ Public Function StringArrayCount(stringArray() As String) As Long
     On Error Resume Next
     StringArrayCount = UBound(stringArray) + 1
 End Function
-Public Function StringArrayFind(stringArray() As String, value As String, includeContains As Boolean) As Long
+Public Function StringArrayFind(stringArray() As String, Value As String, includeContains As Boolean) As Long
 Dim i As Long
 Dim Length As Long
 Dim containsArray() As String
@@ -55,7 +55,7 @@ Dim containsArray() As String
     StringArrayFind = -1
     If includeContains Then
         While i < Length
-            If InStr(1, stringArray(i), value) > 0 Then
+            If InStr(1, stringArray(i), Value) > 0 Then
                 StringArrayFind = i
                 Exit Function
             End If
@@ -63,7 +63,7 @@ Dim containsArray() As String
         Wend
     Else
         While i < Length
-            If stringArray(i) = value Then
+            If stringArray(i) = Value Then
                 StringArrayFind = i
                 Exit Function
             End If
@@ -71,14 +71,14 @@ Dim containsArray() As String
         Wend
     End If
 End Function
-Public Function StringArrayContains(stringArray() As String, value As String) As Boolean
+Public Function StringArrayContains(stringArray() As String, Value As String) As Boolean
 
-    StringArrayContains = (UBound(Filter(stringArray, value, True)) > -1)
+    StringArrayContains = (UBound(Filter(stringArray, Value, True)) > -1)
     
 End Function
-Public Function StringArrayDoesNotContain(stringArray() As String, value As String) As Boolean
+Public Function StringArrayDoesNotContain(stringArray() As String, Value As String) As Boolean
 
-    StringArrayDoesNotContain = Not StringArrayContains(stringArray, value)
+    StringArrayDoesNotContain = Not StringArrayContains(stringArray, Value)
     
 End Function
 
