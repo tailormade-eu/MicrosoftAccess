@@ -8,13 +8,13 @@ Public Function GetDefault(Name As String) As Variant
     omDefaultFunctions.Initialize
     GetDefault = gDefaults.Load(Name)
 End Function
-Public Function SaveDefault(Name As String, value As Variant)
+Public Function SaveDefault(Name As String, Value As Variant)
     omDefaultFunctions.Initialize
-    gDefaults.Save Name, value
+    gDefaults.Save Name, Value
 End Function
-Public Function SaveSystemDefault(Name As String, value As Variant)
+Public Function SaveSystemDefault(Name As String, Value As Variant)
     omDefaultFunctions.Initialize
-    gSystemDefaults.Save Name, value
+    gSystemDefaults.Save Name, Value
 End Function
 
 Public Function GetSystemDefault(Name As String) As Variant
@@ -22,11 +22,11 @@ Public Function GetSystemDefault(Name As String) As Variant
     GetSystemDefault = gSystemDefaults.Load(Name)
 End Function
 
-Public Sub Initialize(Optional reset As Boolean = False)
-    If omObjectFunctions.IsNothing(gSystemDefaults) Or reset Or Not gSystemDefaults.Initialized Then
+Public Sub Initialize(Optional Reset As Boolean = False)
+    If omObjectFunctions.IsNothing(gSystemDefaults) Or Reset Or Not gSystemDefaults.Initialized Then
         gSystemDefaults.Mode = LocalMode
     End If
-    If omObjectFunctions.IsNothing(gDefaults) Or reset Or Not gDefaults.Initialized Then
+    If omObjectFunctions.IsNothing(gDefaults) Or Reset Or Not gDefaults.Initialized Then
         gDefaults.Mode = serverMode
     End If
     gSystemDefaults.Development = gDevelopmentMode
