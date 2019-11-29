@@ -19,7 +19,7 @@ Dim cmdGetValue As New ADODB.Command
 Dim cmdSetValue As New ADODB.Command
 
 Public Name As String
-Public value As Variant
+Public Value As Variant
 Public ModifyDate As Variant
 Public Development As Boolean
 Private gMode As DefaultModes
@@ -35,20 +35,20 @@ Dim rs As ADODB.Recordset
             Set rs = cmdGetValue.Execute
         End If
         If Not rs.EOF Then
-            Me.value = rs(0)
+            Me.Value = rs(0)
             Me.ModifyDate = rs(1)
         Else
             Me.Name = ""
-            Me.value = Null
+            Me.Value = Null
             Me.ModifyDate = Null
         End If
     End If
     rs.Close
     Set rs = Nothing
-    Load = Me.value
+    Load = Me.Value
 End Function
-Public Function Save(defaultName As String, value As Variant)
-    cmdSetValue.Parameters(0) = value
+Public Function Save(defaultName As String, Value As Variant)
+    cmdSetValue.Parameters(0) = Value
     cmdSetValue.Parameters(2) = defaultName
     cmdSetValue.Parameters(1) = Now
     cmdSetValue.Execute
@@ -61,7 +61,7 @@ Dim tableName As String
     
     tableName = IIf(gMode = LocalMode, "omSysDefaults", "omDefaults")
     Initialized = False
-    If TableExists(tableName) Then
+    If omMSAccessFunctions.TableExists(tableName) Then
         cmdGetValue.commandText = "SELECT [Value],[ModifyDate] FROM " & tableName & " WHERE [Name]=?"
         cmdGetValue.ActiveConnection = CurrentProject.Connection
         cmdGetValue.Parameters.Refresh ' Does Not Work if there is a mistake in the SQL statement EG not existing Table
