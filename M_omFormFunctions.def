@@ -73,11 +73,11 @@ Public Sub UpdateCreateTracking(frm As Form, Optional UpdateModify = True)
     On Error Resume Next
     omUserFunctions.AuthenticateUser
     If gUser.LoggedIn Then
-        frm.ModifyUserName = gUser.Name
-        frm.ModifyUserId = gUser.Id
+        frm.CreateUserName = gUser.Name
+        frm.CreateUserId = gUser.Id
     Else
-        frm.ModifyUserName = gUser.Name
-        frm.ModifyUserId = gUser.Name
+        frm.CreateUserName = gUser.Name
+        frm.CreateUserId = gUser.Name
     End If
     If UpdateModify Then
         UpdateModifyTracking frm
