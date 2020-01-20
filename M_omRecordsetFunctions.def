@@ -26,3 +26,45 @@ Dim fld As ADODB.Field
         CopyRecord = rsDst(PrimaryKeyName).Value
     End If
 End Function
+
+Public Function GetList(SQL As String, Optional ColumnDelimiter As String = ", ", Optional RowDelimiter As String = vbCrLf) As String
+'PURPOSE: to return a combined string from the passed query
+'ARGS:
+'   1. SQL is a valid Select statement
+'   2. ColumnDelimiter is the character(s) that separate each column
+'   3. RowDelimiter is the character(s) that separate each row
+'RETURN VAL: Concatenated list
+'DESIGN NOTES:
+'EXAMPLE CALL: =GetList("Select Col1,Col2 From Table1 Where Table1.Key = " & OuterTable.Key)
+
+Const PROCNAME = "GetList"
+'Const adClipString = 2
+Dim oConn As ADODB.Connection
+Dim oRS As ADODB.Recordset
+Dim sResult As String
+
+On Error GoTo ProcErr
+
+Set oConn = CurrentProject.Connection
+Set oRS = oConn.Execute(SQL)
+
+sResult = oRS.GetString(adClipString, -1, ColumnDelimiter, RowDelimiter)
+
+If Right(sResult, Len(RowDelimiter)) = RowDelimiter Then
+    sResult = Mid$(sResult, 1, Len(sResult) - Len(RowDelimiter))
+End If
+
+GetList = sResult
+oRS.Close
+oConn.Close
+
+CleanUp:
+    Set oRS = Nothing
+    Set oConn = Nothing
+
+Exit Function
+ProcErr:
+    ' insert error handler
+    Resume CleanUp
+
+End Function
