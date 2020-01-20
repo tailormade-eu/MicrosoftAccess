@@ -1,0 +1,51 @@
+Option Compare Database
+Option Explicit
+
+
+Public Enum omSeqItemLevel
+    NotDefinedSeqLevel = 0
+    DebugSeqLevel = 1
+    WarningSeqLevel = 2
+    ErrorSeqLevel = 3
+End Enum
+
+Public Function omSeqItemLevelToString(value As omSeqItemLevel) As String
+    Select Case value
+        Case omSeqItemLevel.DebugSeqLevel
+            omSeqItemLevelToString = "Debug"
+        Case omSeqItemLevel.WarningSeqLevel
+            omSeqItemLevelToString = "Warning"
+            Case omSeqItemLevel.ErrorSeqLevel
+            omSeqItemLevelToString = "Error"
+    End Select
+End Function
+
+Public Sub SendSeqItem() 'item As omSeqItem)
+Dim json As New omJSON
+Dim i As New omSeqItem
+Dim result As String
+    
+    i.ApplicationName = "MSAccess-Test"
+    
+    result = json.request("http://seq.domainmmvii.local:35341/api/events/raw?clef", i.ToJson(), Text)
+End Sub
+
+Public Function GetUtcDateTime()
+Dim dt As Object
+    Set dt = CreateObject("WbemScripting.SWbemDateTime")
+    dt.SetVarDate Now
+    GetUtcDateTime = dt.GetVarDate(False)
+    Set dt = Nothing
+End Function
+
+'ISO to Access
+Public Function DtIsoToAccess(myisodate As String) As Date
+DtIsoToAccess = CDate(Replace(myisodate, "T", " "))
+End Function
+
+'Access to ISO
+Public Function DtAccessToIso(myaccdate As Date, Optional myUtcDate As Date) As String
+Dim dtDiff As Long
+    dtDiff = DateDiff("h", myUtcDate, myaccdate)
+    DtAccessToIso = format(myaccdate, "yyyy-mm-dd\Thh:nn:ss" & format(dtDiff, "+00") & ":00")
+End Function
