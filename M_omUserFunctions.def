@@ -35,3 +35,31 @@ Public Sub AuthenticateUser()
         End If
     End If
 End Sub
+
+Public Sub RecordsetUpdateCreateTracking(rs As ADODB.Recordset, Optional UpdateModify = True)
+    rs("CreateDate") = Now
+    On Error Resume Next
+    omUserFunctions.AuthenticateUser
+    If gUser.LoggedIn Then
+        rs("CreateUserName") = gUser.Name
+        rs("CreateUserId") = gUser.Id
+    Else
+        rs("CreateUserName") = gUser.Name
+        rs("CreateUserId") = gUser.Name
+    End If
+    If UpdateModify Then
+        RecordsetUpdateModifyTracking rs
+    End If
+End Sub
+Public Sub RecordsetUpdateModifyTracking(rs As ADODB.Recordset)
+    rs("ModifyDate") = Now
+    On Error Resume Next
+    omUserFunctions.AuthenticateUser
+    If gUser.LoggedIn Then
+        rs("ModifyName") = gUser.Name
+        rs("ModifyUserId") = gUser.Id
+    Else
+        rs("ModifyUserName") = gUser.Name
+        rs("ModifyUserId") = gUser.Name
+    End If
+End Sub
