@@ -1,0 +1,64 @@
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Public Action As String
+Public Step As String
+Public Parameters As String
+Public SourceContext As String
+Public EnvironmentUserName As String
+Public MachineName As String
+Public ProcessId As String
+Public ProcessName As String
+Public ThreadId As String
+Public ApplicationName As String
+Public ApplicationVersion As String
+Public ErrorMessage As String
+
+Public Level As omSeqItemLevel '@l
+Public MessageTemplate As String '@mt
+Public Exception As String '@e
+
+
+Public Function ToJson(Optional formatted As Boolean = False) As String
+Dim s As String
+
+    s = s & AddTemplate("@t", DtAccessToIso(Now, GetUtcDateTime()))
+    s = s & AddTemplate("@mt", MessageTemplate)
+    s = s & AddTemplate("@l", omSeqItemLevelToString(Level))
+    
+    s = s & AddTemplate("Action", Action)
+    s = s & AddTemplate("Step", Step)
+    s = s & AddTemplate("Parameters", Parameters)
+    s = s & AddTemplate("SourceContext", SourceContext)
+    s = s & AddTemplate("EnvironmentUserName", EnvironmentUserName)
+    s = s & AddTemplate("MachineName", MachineName)
+    s = s & AddTemplate("ProcessId", ProcessId)
+    s = s & AddTemplate("ProcessName", ProcessName)
+    s = s & AddTemplate("ThreadId", ThreadId)
+    s = s & AddTemplate("ApplicationName", ApplicationName)
+    s = s & AddTemplate("ApplicationVersion", ApplicationVersion)
+    s = s & AddTemplate("ErrorMessage", ErrorMessage)
+    
+    s = "{" & IIf(formatted, vbCrLf, "") & s & IIf(formatted, vbCrLf, "") & "}"
+    
+    ToJson = s
+End Function
+
+Private Function AddTemplate(name As String, value As String, Optional formatted As Boolean = False) As String
+Dim t As String
+    
+    t = Chr(34) & "{0}" & Chr(34) & ": " & Chr(34) & "{1}" & Chr(34) & "," & IIf(formatted, vbCrLf, "")
+    If Trim(Nz(value, "")) <> "" Then
+        AddTemplate = Replace(Replace(t, "{0}", name), "{1}", value)
+    End If
+End Function
+
+
+Private Sub Class_Initialize()
+    Me.Level = NotDefinedSeqLevel
+    Me.MessageTemplate = "{Action} {Step} - {Parameters}"
+End Sub
