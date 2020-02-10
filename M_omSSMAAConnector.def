@@ -9,7 +9,6 @@ Dim omCSLastUsed As New omConnectionString
 Dim m_ServerCon_ODBC As String
 Dim m_ServerCon As String
 Const cSSMAABAckup = "SSMAA_Backup_"
-Private Declare Function GetTickCount Lib "Kernel32" () As Long
 
 
 
@@ -26,8 +25,8 @@ Private Declare Function GetTickCount Lib "Kernel32" () As Long
 
 ' vm sqlserver : OPMAAT-D800VM\SQLEXPRESS
 
-Public Function LocalCon() As ADODB.Connection
-  Set LocalCon = CurrentProject.Connection
+Public Function LocalCon() As ADODB.connection
+  Set LocalCon = CurrentProject.connection
 End Function
 
 Public Function ServerCon(Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default, Optional ODBCConnection As Boolean = False) As String
@@ -81,7 +80,7 @@ Dim strDatabaseName As String
                 DoCmd.Rename cSSMAABAckup & rsODBC("ODBCTable"), acTable, rsODBC("ODBCTable")
             ElseIf Not alwaysUpdate Then
                 omCSTest.ParseByTableName rsODBC("ODBCTable")
-                If Not (omCSTest.HasPasswordSaved Or omCSTest.HasTrustedConnection) Or (omCSTest.server <> rsODBC("SQLServer")) Or (omCSTest.Database <> rsODBC("SQLDatabase")) Or (omCSTest.IsSQLNCLIConnection And omCSTest.SQLNCLIVersion <> GetSQLNCLIVersion) Then
+                If Not (omCSTest.HasPasswordSaved Or omCSTest.HasTrustedConnection) Or (omCSTest.Server <> rsODBC("SQLServer")) Or (omCSTest.Database <> rsODBC("SQLDatabase")) Or (omCSTest.IsSQLNCLIConnection And omCSTest.SQLNCLIVersion <> GetSQLNCLIVersion) Then
                     DoCmd.DeleteObject acTable, rsODBC("ODBCTable")
                 End If
             End If
@@ -119,7 +118,7 @@ Dim cmd As New ADODB.Command
     
     Set omCSLastUsed = New omConnectionString
     'cmd.CommandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Groups],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
-    cmd.CommandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Group],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
+    cmd.commandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Group],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
     cmd.ActiveConnection = LocalCon
     cmd.Parameters.Append cmd.CreateParameter("p1", adVarWChar, adParamInput, 512)
     cmd.Parameters.Append cmd.CreateParameter("p2", adLongVarWChar, adParamInput, 256)
@@ -281,7 +280,7 @@ Dim typeFilter As String
 Dim t As String
 
     rs.Open "SELECT * FROM MSysObjects", LocalCon, adOpenForwardOnly, adLockReadOnly
-    rsTable.Open storageTable, CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    rsTable.Open storageTable, CurrentProject.connection, adOpenDynamic, adLockOptimistic
     While Not rs.EOF
         
         typeFilter = "4" '",1,4,"
@@ -434,7 +433,7 @@ Dim strWhere As String
     'Debug.Print Now
     strWhere = IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), "")
     strWhere = omSQLFunctions.WhereAnd(strWhere, IIf(AttachOnly, "[Attach] = True", ""))
-    rsODBC.Open omSQLFunctions.BuildSQL("SELECT * FROM SSMAA_ODBC_Tables", WhereClause:=strWhere), LocalCon, adOpenForwardOnly
+    rsODBC.Open omSQLFunctions.BuildSQL("SELECT * FROM SSMAA_ODBC_Tables", whereClause:=strWhere), LocalCon, adOpenForwardOnly
     Do Until rsODBC.EOF
         If CurrentDb.TableDefs(rsODBC("ODBCTable")).Connect <> "" And TableExists(rsODBC("ODBCTable")) Then
             DoCmd.DeleteObject acTable, rsODBC("ODBCTable")
@@ -490,12 +489,12 @@ End Sub
 
 Public Function IsConnectingPossible(tableName As String, Optional connectionTimout As Long = 5) As Boolean
 Dim lngStartTime As Long
-Dim conn As New ADODB.Connection
+Dim conn As New ADODB.connection
 Dim cs As String
     
     cs = GetConnectionStringByProperty(tableName:=tableName, ODBCConnection:=False)
     
-    Set conn = New ADODB.Connection
+    Set conn = New ADODB.connection
     conn.ConnectionString = cs
     conn.ConnectionTimeout = connectionTimout
     conn.Open Options:=adAsyncConnect
@@ -520,7 +519,7 @@ Dim strWhere As String
     On Error Resume Next
     'Debug.Print Now
     strWhere = IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), "")
-    rsODBC.Open omSQLFunctions.BuildSQL("SELECT * FROM SSMAA_ODBC_Tables", WhereClause:=strWhere), LocalCon, adOpenForwardOnly
+    rsODBC.Open omSQLFunctions.BuildSQL("SELECT * FROM SSMAA_ODBC_Tables", whereClause:=strWhere), LocalCon, adOpenForwardOnly
     Do Until rsODBC.EOF
         If TableExists(rsODBC("ODBCTable")) Then
             DoCmd.DeleteObject acTable, rsODBC("ODBCTable")
@@ -536,14 +535,14 @@ Public Sub LinkMSAccess(Optional linkLocal As Boolean = False)
 Dim tblCon As New omTableConnector
 Dim DefaultPath As String
 Dim dataPath As String
-Dim filename As String
+Dim FileName As String
 
 
-    filename = omFileFunctions.RemoveExtension(CurrentProject.Name)
-    If InStrRev(filename, "_client") > 0 Then
-        filename = Replace(filename, "_client", "")
+    FileName = omFileFunctions.RemoveExtension(CurrentProject.Name)
+    If InStrRev(FileName, "_client") > 0 Then
+        FileName = Replace(FileName, "_client", "")
     End If
-    filename = filename & "_Data"
+    FileName = FileName & "_Data"
     gSystemDefaults.Mode = LocalMode
     gSystemDefaults.Development = gDevelopmentMode
     If linkLocal Then
@@ -552,15 +551,15 @@ Dim filename As String
         dataPath = Nz(gSystemDefaults.Load("DataPath"), "")
     End If
     
-    DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, filename & ".mdb")
+    DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, FileName & ".mdb")
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, filename & ".accdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, FileName & ".accdb")
     End If
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, filename & ".mdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, FileName & ".mdb")
     End If
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, filename & ".accdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, FileName & ".accdb")
     End If
     If Not gFso.FileExists(DefaultPath) Then
         MsgBox "No Data file was found at the location: " & DefaultPath & vbCrLf & "Application will now be closed.", vbCritical
