@@ -159,7 +159,7 @@ Dim F As Scripting.File
     DoCmd.SetWarnings False
     DoCmd.RunSQL "DELETE * FROM [" & tableName & "]"
     DoCmd.SetWarnings True
-    rs.Open tableName, CurrentProject.Connection, adOpenForwardOnly, adLockOptimistic
+    rs.Open tableName, CurrentProject.connection, adOpenForwardOnly, adLockOptimistic
     For Each F In gFso.GetFolder(folderPath).Files
         If InStr(1, F.Name, pattern) <> 0 And InStr(1, F.Name, "~") = 0 Then
             rs.AddNew
@@ -184,7 +184,7 @@ Public Function FileLocked(strFileName As String, Optional displayError As Boole
    If Err.Number <> 0 Then
       ' Display the error number and description.
       If displayError Then
-        MsgBox "Error #" & Str(Err.Number) & " - " & Err.Description
+        MsgBox "Error #" & str(Err.Number) & " - " & Err.Description
       End If
       FileLocked = True
       Err.Clear

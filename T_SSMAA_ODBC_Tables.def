@@ -11,7 +11,7 @@
 [SQLTableOwner] TEXT (100),
 [SQLTable] TEXT (255),
 [ODBCTable] TEXT (255),
-[Group] TEXT (50),
+[Groups] TEXT (50),
 [PrimaryKey] TEXT (255),
 [Sort] DOUBLE,
 [ConnectionString] MEMO,
@@ -51,7 +51,7 @@
       <OriginalValue name="OriginalValue" type="10"/>
       <VisibleValue name="VisibleValue" type="10"/>
       <ColumnWidth name="ColumnWidth" type="3" value="1935"/>
-      <ColumnOrder name="ColumnOrder" type="3" value="1"/>
+      <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
       <DisplayControl name="DisplayControl" type="3" value="109"/>
       <IMEMode name="IMEMode" type="2" value="0"/>
@@ -59,6 +59,8 @@
       <UnicodeCompression name="UnicodeCompression" type="1" value="True"/>
       <TextAlign name="TextAlign" type="2" value="0"/>
       <AggregateType name="AggregateType" type="4" value="-1"/>
+      <ResultType name="ResultType" type="2" value="0"/>
+      <CurrencyLCID name="CurrencyLCID" type="4" value="0"/>
     </Field_0>
     <Field_1 name="SQLServer">
       <Value name="Value" type="10"/>
@@ -127,6 +129,8 @@
       <UnicodeCompression name="UnicodeCompression" type="1" value="True"/>
       <TextAlign name="TextAlign" type="2" value="0"/>
       <AggregateType name="AggregateType" type="4" value="-1"/>
+      <ResultType name="ResultType" type="2" value="0"/>
+      <CurrencyLCID name="CurrencyLCID" type="4" value="0"/>
     </Field_2>
     <Field_3 name="SQLDatabase">
       <Value name="Value" type="10"/>
@@ -338,15 +342,15 @@
       <ResultType name="ResultType" type="2" value="0"/>
       <CurrencyLCID name="CurrencyLCID" type="4" value="0"/>
     </Field_8>
-    <Field_9 name="Group">
+    <Field_9 name="Groups">
       <Value name="Value" type="10"/>
       <Attributes name="Attributes" type="4" value="2"/>
       <CollatingOrder name="CollatingOrder" type="3" value="1033"/>
       <Type name="Type" type="3" value="10"/>
-      <Name name="Name" type="12" value="Group"/>
+      <Name name="Name" type="12" value="Groups"/>
       <OrdinalPosition name="OrdinalPosition" type="3" value="9"/>
       <Size name="Size" type="4" value="50"/>
-      <SourceField name="SourceField" type="12" value="Group"/>
+      <SourceField name="SourceField" type="12" value="Groups"/>
       <SourceTable name="SourceTable" type="12" value="SSMAA_ODBC_Tables"/>
       <ValidateOnSet name="ValidateOnSet" type="1"/>
       <DataUpdatable name="DataUpdatable" type="1" value="False"/>
@@ -411,7 +415,7 @@
     <Field_11 name="Sort">
       <Value name="Value" type="7"/>
       <Attributes name="Attributes" type="4" value="1"/>
-      <CollatingOrder name="CollatingOrder" type="3" value="1033"/>
+      <CollatingOrder name="CollatingOrder" type="3" value="1024"/>
       <Type name="Type" type="3" value="7"/>
       <Name name="Name" type="12" value="Sort"/>
       <OrdinalPosition name="OrdinalPosition" type="3" value="11"/>
@@ -473,6 +477,8 @@
       <TextFormat name="TextFormat" type="2" value="0"/>
       <TextAlign name="TextAlign" type="2" value="0"/>
       <AggregateType name="AggregateType" type="4" value="-1"/>
+      <ResultType name="ResultType" type="2" value="0"/>
+      <CurrencyLCID name="CurrencyLCID" type="4" value="0"/>
     </Field_12>
     <Field_13 name="ErrorMessage">
       <Value name="Value" type="10"/>
@@ -512,7 +518,7 @@
     <Field_14 name="Attach">
       <Value name="Value" type="1"/>
       <Attributes name="Attributes" type="4" value="1"/>
-      <CollatingOrder name="CollatingOrder" type="3" value="1033"/>
+      <CollatingOrder name="CollatingOrder" type="3" value="1024"/>
       <Type name="Type" type="3" value="1"/>
       <Name name="Name" type="12" value="Attach"/>
       <OrdinalPosition name="OrdinalPosition" type="3" value="14"/>
@@ -539,11 +545,13 @@
       <DisplayControl name="DisplayControl" type="3" value="106"/>
       <TextAlign name="TextAlign" type="2" value="0"/>
       <AggregateType name="AggregateType" type="4" value="-1"/>
+      <ResultType name="ResultType" type="2" value="0"/>
+      <CurrencyLCID name="CurrencyLCID" type="4" value="0"/>
     </Field_14>
     <Field_15 name="ConnectionTypeId">
       <Value name="Value" type="4"/>
       <Attributes name="Attributes" type="4" value="1"/>
-      <CollatingOrder name="CollatingOrder" type="3" value="1033"/>
+      <CollatingOrder name="CollatingOrder" type="3" value="1024"/>
       <Type name="Type" type="3" value="4"/>
       <Name name="Name" type="12" value="ConnectionTypeId"/>
       <OrdinalPosition name="OrdinalPosition" type="3" value="15"/>
@@ -582,32 +590,8 @@
       <AllowMultipleValues name="AllowMultipleValues" type="1" value="False"/>
       <AllowValueListEdits name="AllowValueListEdits" type="1" value="False"/>
       <ShowOnlyRowSourceValues name="ShowOnlyRowSourceValues" type="1" value="False"/>
+      <ResultType name="ResultType" type="2" value="0"/>
+      <CurrencyLCID name="CurrencyLCID" type="4" value="0"/>
     </Field_15>
   </FieldDefs>
-  <Indexes>
-    <Index_0 name="ConnectionTypeId">
-      <Name value="ConnectionTypeId"/>
-      <Unique value="false"/>
-      <Clustered value="false"/>
-      <Primary value="false"/>
-      <Foreign value="false"/>
-      <Required value="false"/>
-      <IgnoreNulls value="false"/>
-      <Fields>
-        <FieldNames value="+ConnectionTypeId"/>
-      </Fields>
-    </Index_0>
-    <Index_1 name="PrimaryKey">
-      <Name value="PrimaryKey"/>
-      <Unique value="false"/>
-      <Clustered value="false"/>
-      <Primary value="false"/>
-      <Foreign value="false"/>
-      <Required value="false"/>
-      <IgnoreNulls value="false"/>
-      <Fields>
-        <FieldNames value="+PrimaryKey"/>
-      </Fields>
-    </Index_1>
-  </Indexes>
 </TableDef>

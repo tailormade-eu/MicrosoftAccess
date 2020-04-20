@@ -63,12 +63,12 @@ Dim tableName As String
     Initialized = False
     If omMSAccessFunctions.TableExists(tableName) Then
         cmdGetValue.commandText = "SELECT [Value],[ModifyDate] FROM " & tableName & " WHERE [Name]=?"
-        cmdGetValue.ActiveConnection = CurrentProject.Connection
+        cmdGetValue.ActiveConnection = CurrentProject.connection
         cmdGetValue.Parameters.Refresh ' Does Not Work if there is a mistake in the SQL statement EG not existing Table
         'cmdGetValue.Parameters.Append cmdGetValue.CreateParameter("Name", adVarWChar, adParamInput, 256)
         
         cmdSetValue.commandText = "UPDATE [" & IIf(gMode = LocalMode, "omSysDefaults", "omDefaults") & "] SET [Value]=?,[ModifyDate]=? WHERE [Name]=?"
-        cmdSetValue.ActiveConnection = CurrentProject.Connection
+        cmdSetValue.ActiveConnection = CurrentProject.connection
         cmdSetValue.Parameters.Refresh
         'cmdSetValue.Parameters.Append cmdGetValue.CreateParameter("Value", adVarChar, adParamInput, 256)
         'cmdSetValue.Parameters.Append cmdGetValue.CreateParameter("ModifyDate", adDate, adParamInput)
