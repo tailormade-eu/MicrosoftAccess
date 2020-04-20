@@ -53,16 +53,16 @@ Public Sub ParseByQueryName(Name As String)
         queryName = Name
         Parse CurrentDb.QueryDefs(queryName).Connect
         On Error Resume Next
-        Description = CurrentDb.QueryDefs(queryName).Properties("Description").value
+        Description = CurrentDb.QueryDefs(queryName).Properties("Description").Value
         Group = omStringFunctions.ParseValue(Description, "Group", splitchar:=";", notFoundValue:="")
     End If
 End Sub
 
-Private Sub Parse(value As String)
+Private Sub Parse(Value As String)
 Dim arr() As String
 Dim S As Variant
 
-    arr = Split(value, ";")
+    arr = Split(Value, ";")
     For Each S In arr
         'Debug.Print s
         If S = "ODBC" Then IsODBC = True

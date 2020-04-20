@@ -70,8 +70,8 @@ Dim strDatabaseName As String
     
     UpdateSSMAConnectionString Group, ConnectionType
     rs.Open "SELECT Name, Type FROM MSysObjects WHERE Type=1 OR Type=6 OR Type=4", LocalCon, adOpenStatic, adLockReadOnly
-    'rsODBC.Open "SELECT * FROM SSMAA_ODBC_Tables" & IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), ""), LocalCon, adOpenForwardOnly, adLockOptimistic
-    rsODBC.Open "SELECT * FROM SSMAA_ODBC_Tables" & IIf(Group <> "", " WHERE [Group] like " & Chr(34) & "%," & Group & ",%" & Chr(34), ""), LocalCon, adOpenForwardOnly, adLockOptimistic
+    rsODBC.Open "SELECT * FROM SSMAA_ODBC_Tables" & IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), ""), LocalCon, adOpenForwardOnly, adLockOptimistic
+    'rsODBC.Open "SELECT * FROM SSMAA_ODBC_Tables" & IIf(Group <> "", " WHERE [Group] like " & Chr(34) & "%," & Group & ",%" & Chr(34), ""), LocalCon, adOpenForwardOnly, adLockOptimistic
     While Not rsODBC.EOF
         'rs.Requery
         rs.Filter = "Name='" & rsODBC("ODBCTable") & "'"
@@ -117,8 +117,8 @@ Dim rs As New ADODB.Recordset
 Dim cmd As New ADODB.Command
     
     Set omCSLastUsed = New omConnectionString
-    'cmd.CommandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Groups],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
-    cmd.commandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Group],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
+    cmd.commandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Groups],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
+    'cmd.commandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Group],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
     cmd.ActiveConnection = LocalCon
     cmd.Parameters.Append cmd.CreateParameter("p1", adVarWChar, adParamInput, 512)
     cmd.Parameters.Append cmd.CreateParameter("p2", adLongVarWChar, adParamInput, 256)
@@ -130,13 +130,13 @@ Dim cmd As New ADODB.Command
     cmd.Parameters.Append cmd.CreateParameter("p8", adLongVarWChar, adParamInput, 256)
     cmd.Parameters.Append cmd.CreateParameter("p9", adLongVarWChar, adParamInput, 256)
     
-    'rs.Open "SELECT [Groups], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword From SSMAA_ODBC_Tables " & IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), "") & " GROUP BY [Groups], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword", LocalCon, adOpenForwardOnly, adLockReadOnly
-    rs.Open "SELECT [Group], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword From SSMAA_ODBC_Tables " & IIf(Group <> "", " WHERE [Group] like " & Chr(34) & "%," & Group & ",%" & Chr(34), "") & " GROUP BY [Group], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword", LocalCon, adOpenForwardOnly, adLockReadOnly
+    rs.Open "SELECT [Groups], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword From SSMAA_ODBC_Tables " & IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), "") & " GROUP BY [Groups], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword", LocalCon, adOpenForwardOnly, adLockReadOnly
+    'rs.Open "SELECT [Group], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword From SSMAA_ODBC_Tables " & IIf(Group <> "", " WHERE [Group] like " & Chr(34) & "%," & Group & ",%" & Chr(34), "") & " GROUP BY [Group], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword", LocalCon, adOpenForwardOnly, adLockReadOnly
     While Not rs.EOF
-        'cmd.Parameters(0) = omCSLastUsed.GetConnectionString(Nz(rs("sqlDatabase"), ""), Nz(rs("SQLServer"), ""), False, Nz(rs("ConnectionTypeId"), ConnectionType), Nz(rs("DSN"), ""), Nz(rs("SQLLogin"), ""), Nz(rs("SQLPassword"), ""), Nz(rs("Groups"), ""), Nz(rs("SQLServerPort"), ""))
-        cmd.Parameters(0) = omCSLastUsed.GetConnectionString(Nz(rs("sqlDatabase"), ""), Nz(rs("SQLServer"), ""), False, Nz(rs("ConnectionTypeId"), ConnectionType), Nz(rs("DSN"), ""), Nz(rs("SQLLogin"), ""), Nz(rs("SQLPassword"), ""), Nz(rs("Group"), ""), Nz(rs("SQLServerPort"), ""))
-        'cmd.Parameters(1) = Nz(rs("Groups"), "")
-        cmd.Parameters(1) = Nz(rs("Group"), "")
+        cmd.Parameters(0) = omCSLastUsed.GetConnectionString(Nz(rs("sqlDatabase"), ""), Nz(rs("SQLServer"), ""), False, Nz(rs("ConnectionTypeId"), ConnectionType), Nz(rs("DSN"), ""), Nz(rs("SQLLogin"), ""), Nz(rs("SQLPassword"), ""), Nz(rs("Groups"), ""), Nz(rs("SQLServerPort"), ""))
+        'cmd.Parameters(0) = omCSLastUsed.GetConnectionString(Nz(rs("sqlDatabase"), ""), Nz(rs("SQLServer"), ""), False, Nz(rs("ConnectionTypeId"), ConnectionType), Nz(rs("DSN"), ""), Nz(rs("SQLLogin"), ""), Nz(rs("SQLPassword"), ""), Nz(rs("Group"), ""), Nz(rs("SQLServerPort"), ""))
+        cmd.Parameters(1) = Nz(rs("Groups"), "")
+        'cmd.Parameters(1) = Nz(rs("Group"), "")
         cmd.Parameters(2) = Nz(rs("DSN"), "")
         cmd.Parameters(3) = Nz(rs("SQLServer"), "")
         cmd.Parameters(4) = Nz(rs("SQLServerPort"), "")
@@ -219,8 +219,8 @@ Dim strFilter As String
         strFilter = strFilter & IIf(NotIsNullOrEmpty(databaseName), " AND sqldatabase='{1}'", "")
         strFilter = strFilter & IIf(NotIsNullOrEmpty(serverName), " AND sqlserver='{2}'", "")
         strFilter = strFilter & IIf(NotIsNullOrEmpty(dsnName), " AND dsn='{3}'", "")
-        strFilter = strFilter & IIf(NotIsNullOrEmpty(groupName), " AND group like '%,{4},%'", "")
-        'strFilter = strFilter & IIf(NotIsNullOrEmpty(groupName), " AND groups like '%,{4},%'", "")
+        'strFilter = strFilter & IIf(NotIsNullOrEmpty(groupName), " AND group like '%,{4},%'", "")
+        strFilter = strFilter & IIf(NotIsNullOrEmpty(groupName), " AND groups like '%,{4},%'", "")
         If NotIsNullOrEmpty(strFilter) Then
             rs.Filter = StringFormat(Mid(strFilter, 6), tableName, databaseName, serverName, dsnName, groupName)
             If rs.EOF Then
@@ -254,8 +254,8 @@ Dim strFilter As String
         If NotIsNullOrEmpty(strFilter) Then
             rs.Filter = StringFormat(Mid(strFilter, 6), tableName, databaseName, serverName, dsnName)
             If Not rs.EOF Then
-                GetGroupByProperty = rs("Group")
-                'GetGroupByProperty = rs("Groups")
+                'GetGroupByProperty = rs("Group")
+                GetGroupByProperty = rs("Groups")
                 If NotIsNullOrEmpty(GetGroupByProperty) Then
                     If Left(GetGroupByProperty, 1) = "," Then
                         GetGroupByProperty = Mid(GetGroupByProperty, 2)
@@ -302,8 +302,8 @@ Dim t As String
                     rsTable("SQLDatabase") = omCSTest.Database
                     rsTable("SQLLogin") = omCSTest.UID
                     rsTable("SQLPassword") = omCSTest.PWD
-                    rsTable("Group") = omCSTest.DSN
-                    'rsTable("Groups") = omCSTest.DSN
+                    'rsTable("Group") = omCSTest.DSN
+                    rsTable("Groups") = omCSTest.DSN
                     t = CurrentDb.TableDefs(rs("Name")).SourceTableName
                     If InStr(1, t, ".") = 0 Then
                         rsTable("SQLTableOwner") = ""
@@ -535,14 +535,14 @@ Public Sub LinkMSAccess(Optional linkLocal As Boolean = False)
 Dim tblCon As New omTableConnector
 Dim DefaultPath As String
 Dim dataPath As String
-Dim FileName As String
+Dim filename As String
 
 
-    FileName = omFileFunctions.RemoveExtension(CurrentProject.Name)
-    If InStrRev(FileName, "_client") > 0 Then
-        FileName = Replace(FileName, "_client", "")
+    filename = omFileFunctions.RemoveExtension(CurrentProject.Name)
+    If InStrRev(filename, "_client") > 0 Then
+        filename = Replace(filename, "_client", "")
     End If
-    FileName = FileName & "_Data"
+    filename = filename & "_Data"
     gSystemDefaults.Mode = LocalMode
     gSystemDefaults.Development = gDevelopmentMode
     If linkLocal Then
@@ -551,15 +551,15 @@ Dim FileName As String
         dataPath = Nz(gSystemDefaults.Load("DataPath"), "")
     End If
     
-    DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, FileName & ".mdb")
+    DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, filename & ".mdb")
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, FileName & ".accdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, filename & ".accdb")
     End If
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, FileName & ".mdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, filename & ".mdb")
     End If
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, FileName & ".accdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, filename & ".accdb")
     End If
     If Not gFso.FileExists(DefaultPath) Then
         MsgBox "No Data file was found at the location: " & DefaultPath & vbCrLf & "Application will now be closed.", vbCritical

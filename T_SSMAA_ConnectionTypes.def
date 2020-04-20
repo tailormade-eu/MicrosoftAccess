@@ -16,7 +16,7 @@
     <Field_0 name="Id">
       <Value name="Value" type="4"/>
       <Attributes name="Attributes" type="4" value="1"/>
-      <CollatingOrder name="CollatingOrder" type="3" value="1033"/>
+      <CollatingOrder name="CollatingOrder" type="3" value="1024"/>
       <Type name="Type" type="3" value="4"/>
       <Name name="Name" type="12" value="Id"/>
       <OrdinalPosition name="OrdinalPosition" type="3" value="0"/>
@@ -78,30 +78,4 @@
       <AggregateType name="AggregateType" type="4" value="-1"/>
     </Field_1>
   </FieldDefs>
-  <Indexes>
-    <Index_0 name="Id">
-      <Name value="Id"/>
-      <Unique value="false"/>
-      <Clustered value="false"/>
-      <Primary value="false"/>
-      <Foreign value="false"/>
-      <Required value="false"/>
-      <IgnoreNulls value="false"/>
-      <Fields>
-        <FieldNames value="+Id"/>
-      </Fields>
-    </Index_0>
-    <Index_1 name="PrimaryKey">
-      <Name value="PrimaryKey"/>
-      <Unique value="true"/>
-      <Clustered value="false"/>
-      <Primary value="true"/>
-      <Foreign value="false"/>
-      <Required value="true"/>
-      <IgnoreNulls value="false"/>
-      <Fields>
-        <FieldNames value="+Id"/>
-      </Fields>
-    </Index_1>
-  </Indexes>
 </TableDef>

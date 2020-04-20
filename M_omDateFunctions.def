@@ -132,9 +132,9 @@ End Function
 Public Function WorkingDays(ByVal lYearMonth As Long) As Long
 Dim dateWork As Date
 
-    dateWork = "01/" & Str(lYearMonth Mod 100) & "/" & Str(Int(lYearMonth / 100))
+    dateWork = "01/" & str(lYearMonth Mod 100) & "/" & str(Int(lYearMonth / 100))
     If Month(dateWork) <> (lYearMonth Mod 100) Then
-        dateWork = Str(lYearMonth Mod 100) & "/01/" & Str(Int(lYearMonth / 100))
+        dateWork = str(lYearMonth Mod 100) & "/01/" & str(Int(lYearMonth / 100))
     End If
     While lYearMonth Mod 100 = Month(dateWork)
         If Weekday(dateWork, vbMonday) > 0 And Weekday(dateWork, vbMonday) < 6 Then
@@ -149,7 +149,7 @@ Dim dateWork As Date
     If IsDate(dateFrom) Then
         dateWork = dateFrom
         If Month(dateWork) <> (lYearMonth Mod 100) Then
-            dateWork = Str(lYearMonth Mod 100) & "/" & Month(dateWork) & "/" & Str(Int(lYearMonth / 100))
+            dateWork = str(lYearMonth Mod 100) & "/" & Month(dateWork) & "/" & str(Int(lYearMonth / 100))
         End If
         While lYearMonth Mod 100 = Month(dateWork)
             If Weekday(dateWork, vbMonday) > 0 And Weekday(dateWork, vbMonday) < 6 Then
@@ -168,7 +168,7 @@ Dim dateWork As Date
     If IsDate(dateFrom) Then
         dateWork = dateFrom
         If Month(dateWork) <> (lYearMonth Mod 100) Then
-            dateWork = Str(lYearMonth Mod 100) & "/" & Month(dateWork) & "/" & Str(Int(lYearMonth / 100))
+            dateWork = str(lYearMonth Mod 100) & "/" & Month(dateWork) & "/" & str(Int(lYearMonth / 100))
         End If
         While lYearMonth Mod 100 = Month(dateWork)
             If Weekday(dateWork, vbMonday) > 0 And Weekday(dateWork, vbMonday) < 6 Then
@@ -403,7 +403,7 @@ Dim maxDate As Date
 
     minDate = Nz(DMax("Date", "Calendar"), DateSerial(2017, 1, 1) - 1) + 1
     maxDate = DateSerial(Year(Now) + 2, 1, 1) - 1
-    rs.Open "Calendar", CurrentProject.Connection, adOpenForwardOnly, adLockOptimistic
+    rs.Open "Calendar", CurrentProject.connection, adOpenForwardOnly, adLockOptimistic
     While minDate <= maxDate
         rs.AddNew
         rs("Date") = minDate
