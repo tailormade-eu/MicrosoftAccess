@@ -67,7 +67,7 @@ End Function
 Public Function GetTimeStamp(Optional ts As Date = 0) As String
 
     If ts = 0 Then ts = Now
-    GetTimeStamp = Format(Now, "yyyyMMdd_hhmmss")
+    GetTimeStamp = Format(Now, "yyyyMMdd_hhnnss")
 End Function
 
 Public Function YYYYMM_Offset(lMonthTemp As Long, lMonthOffset As Long) As Long
