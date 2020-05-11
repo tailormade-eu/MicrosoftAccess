@@ -176,19 +176,19 @@ Dim tbl As DAO.TableDef
 End Sub
 
 Public Sub CreateTable()
-Dim strsql As String
+Dim strSQL As String
 
-    strsql = "CREATE TABLE [SSMAA_ODBC_Tables]([SQLServer] TEXT(255),[SQLDatabase] TEXT(255),[SQLLogin] TEXT(100),[SQLPassword] TEXT(100),[SQLTableOwner] TEXT(100),[SQLTable] TEXT(255),[ODBCTable] TEXT(255),[ErrorMessage] TEXT(255)) "
+    strSQL = "CREATE TABLE [SSMAA_ODBC_Tables]([SQLServer] TEXT(255),[SQLDatabase] TEXT(255),[SQLLogin] TEXT(100),[SQLPassword] TEXT(100),[SQLTableOwner] TEXT(100),[SQLTable] TEXT(255),[ODBCTable] TEXT(255),[ErrorMessage] TEXT(255)) "
 
-    DoCmd.RunSQL strsql
+    DoCmd.RunSQL strSQL
     
 End Sub
 Public Sub PopulateTable()
-Dim strsql As String
+Dim strSQL As String
 
-    strsql = "INSERT INTO SSMAA_ODBC_Tables ( SQLTable, ODBCTable ) SELECT msysobjects.Name, msysobjects.Name FROM msysobjects LEFT JOIN SSMAA_ODBC_Tables ON msysobjects.Name = SSMAA_ODBC_Tables.SQLTable WHERE msysobjects.Type=6 AND SSMAA_ODBC_Tables.SQLTable Is Null"
+    strSQL = "INSERT INTO SSMAA_ODBC_Tables ( SQLTable, ODBCTable ) SELECT msysobjects.Name, msysobjects.Name FROM msysobjects LEFT JOIN SSMAA_ODBC_Tables ON msysobjects.Name = SSMAA_ODBC_Tables.SQLTable WHERE msysobjects.Type=6 AND SSMAA_ODBC_Tables.SQLTable Is Null"
 
-    DoCmd.RunSQL strsql
+    DoCmd.RunSQL strSQL
 End Sub
 
 Public Function GetSQLNCLIVersion() As String
@@ -236,7 +236,7 @@ Dim strFilter As String
             GetConnectionStringByProperty = "ODBC;" & GetConnectionStringByProperty
         End If
     Else
-        MsgBox "SSMAA Tables is empty!", vbExclamation
+        msgbox "SSMAA Tables is empty!", vbExclamation
     End If
     rs.Close
     Set rs = Nothing
@@ -267,7 +267,7 @@ Dim strFilter As String
             End If
         End If
     Else
-        MsgBox "SSMAA Tables is empty!", vbExclamation
+        msgbox "SSMAA Tables is empty!", vbExclamation
     End If
     rs.Close
     Set rs = Nothing
@@ -370,7 +370,7 @@ Dim rs As New ADODB.Recordset
 Dim typeFilter As String
 Dim t As String
 Dim connString As String
-Dim sql As String
+Dim SQL As String
 
     Debug.Print Now
     rs.Open "SELECT * FROM MSysObjects WHERE Type=5 AND flags=112", LocalCon, adOpenForwardOnly, adLockReadOnly
@@ -380,20 +380,20 @@ Dim sql As String
         If InStr(1, CurrentDb.QueryDefs(rs("Name")).Connect, "database=" & sourceDatabase & ";") > 0 Then
                 CurrentDb.QueryDefs(rs("Name")).Connect = Replace(CurrentDb.QueryDefs(rs("Name")).Connect, "database=" & sourceDatabase & ";", "database=" & destinationDatabase & ";")
         End If
-        sql = CurrentDb.QueryDefs(rs("Name")).sql
-        If InStr(1, sql, "USE ") > 0 Then
+        SQL = CurrentDb.QueryDefs(rs("Name")).SQL
+        If InStr(1, SQL, "USE ") > 0 Then
             Debug.Print "USE => " & rs("Name"), rs("Type"), rs("flags")
-            sql = omSQLFunctions.ReplaceDatabaseInUseClause(sql, sourceDatabase, destinationDatabase)
+            SQL = omSQLFunctions.ReplaceDatabaseInUseClause(SQL, sourceDatabase, destinationDatabase)
         End If
-        If InStr(1, sql, "." & schema & ".") > 0 Then
+        If InStr(1, SQL, "." & schema & ".") > 0 Then
             Debug.Print "." & schema & "." & rs("Name"), rs("Type"), rs("flags")
-            sql = Replace(sql, " " & sourceDatabase & "." & schema & ".", " " & destinationDatabase & "." & schema & ".")
-            sql = Replace(sql, "," & sourceDatabase & "." & schema & ".", "," & destinationDatabase & "." & schema & ".")
-            sql = Replace(sql, vbCrLf & sourceDatabase & "." & schema & ".", vbCrLf & destinationDatabase & "." & schema & ".")
-            sql = Replace(sql, vbCr & sourceDatabase & "." & schema & ".", vbCr & destinationDatabase & "." & schema & ".")
-            sql = Replace(sql, vbLf & sourceDatabase & "." & schema & ".", vbLf & destinationDatabase & "." & schema & ".")
+            SQL = Replace(SQL, " " & sourceDatabase & "." & schema & ".", " " & destinationDatabase & "." & schema & ".")
+            SQL = Replace(SQL, "," & sourceDatabase & "." & schema & ".", "," & destinationDatabase & "." & schema & ".")
+            SQL = Replace(SQL, vbCrLf & sourceDatabase & "." & schema & ".", vbCrLf & destinationDatabase & "." & schema & ".")
+            SQL = Replace(SQL, vbCr & sourceDatabase & "." & schema & ".", vbCr & destinationDatabase & "." & schema & ".")
+            SQL = Replace(SQL, vbLf & sourceDatabase & "." & schema & ".", vbLf & destinationDatabase & "." & schema & ".")
         End If
-        CurrentDb.QueryDefs(rs("Name")).sql = sql
+        CurrentDb.QueryDefs(rs("Name")).SQL = SQL
         rs.MoveNext
     Wend
     rs.Close
@@ -431,7 +431,8 @@ Dim strWhere As String
 
     On Error Resume Next
     'Debug.Print Now
-    strWhere = IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), "")
+    strWhere = IIf(Group <> "", " WHERE ',' & [Groups] & ',' like '%," & Group & ",%'", "")
+    strWhere = Replace(strWhere, "'", Chr(34))
     strWhere = omSQLFunctions.WhereAnd(strWhere, IIf(AttachOnly, "[Attach] = True", ""))
     rsODBC.Open omSQLFunctions.BuildSQL("SELECT * FROM SSMAA_ODBC_Tables", whereClause:=strWhere), LocalCon, adOpenForwardOnly
     Do Until rsODBC.EOF
@@ -562,7 +563,7 @@ Dim filename As String
         DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, filename & ".accdb")
     End If
     If Not gFso.FileExists(DefaultPath) Then
-        MsgBox "No Data file was found at the location: " & DefaultPath & vbCrLf & "Application will now be closed.", vbCritical
+        msgbox "No Data file was found at the location: " & DefaultPath & vbCrLf & "Application will now be closed.", vbCritical
         DoCmd.Quit acQuitSaveNone
     End If
     tblCon.DataFilename = DefaultPath

@@ -1,6 +1,9 @@
 Option Compare Database
 Option Explicit
 
+Private Function InternalGetTimeStamp(Optional prefix As String = "_") As String
+    InternalGetTimeStamp = prefix & Format(Now, "yyyymmdd_hhnnss")
+End Function
 Public Function ExportLibrary(Optional createFolder As Boolean = False, Optional startsWith As String = "om", Optional filenameWithTimestamp As Boolean = False) As String
 Dim c As VBComponent
 Dim sfx As String
@@ -8,7 +11,7 @@ Dim ts As String
 Dim fn As String
 Dim path As String
 
-    ts = omDateFunctions.GetTimeStamp(Now)
+    ts = InternalGetTimeStamp("")
     path = CurrentProject.path
     If createFolder Then
         path = gFso.BuildPath(path, ts)
@@ -72,7 +75,7 @@ Dim OType As AcObjectType
             oName = c.Name
             fn = path & "\" & oName & sfx
             If gFso.FileExists(fn) Then
-                Set cNew = Application.VBE.VBProjects(1).VBComponents.import(fn)
+                Set cNew = Application.VBE.VBProjects(1).VBComponents.Import(fn)
                 'DoCmd.DeleteObject oType, oName
                 'cNew.Name = oName
                 'DoCmd.Save oType, objectname:=oName
@@ -142,7 +145,7 @@ Public Sub SaveAsAXL(objectType As AcObjectType, objectName As String, filename 
     'Application.SaveAsAXL objectType, objectName, fileName
 End Sub
 
-Public Sub ExportFormControlProperties(formName As String, Optional writeToFile As Boolean = False, Optional controlEscaped As Boolean = False)
+Public Sub ExportFormControlProperties(FormName As String, Optional WriteToFile As Boolean = False, Optional controlEscaped As Boolean = False)
 Dim F As Form
 Dim c As Control
 Dim S1 As String
@@ -155,8 +158,8 @@ Dim cName As String
         cEscapedStart = "Controls(" & Chr(34)
         cEscapedEnd = Chr(34) & ")"
     End If
-    DoCmd.OpenForm formName, acDesign, , , , acHidden
-    Set F = Forms(formName)
+    DoCmd.OpenForm FormName, acDesign, , , , acHidden
+    Set F = Forms(FormName)
     S1 = "Public Sub SetDefaultControlProperties()" & vbCrLf
     S2 = "Public Sub SetMinimumControlProperties(minTop as long, minLeft as long, minWidth as long, minHeight as long)" & vbCrLf
     For Each c In F.Controls
@@ -166,7 +169,7 @@ Dim cName As String
         S1 = S1 & "me." & cName & ".Top=" & c.Top & vbCrLf
         S1 = S1 & "me." & cName & ".Left=" & c.Left & vbCrLf
         S1 = S1 & "me." & cName & ".Width=" & c.Width & vbCrLf
-        S1 = S1 & "me." & cName & ".Height=" & c.height & vbCrLf
+        S1 = S1 & "me." & cName & ".Height=" & c.Height & vbCrLf
         
         S2 = S2 & "' ------ " & c.Name & vbCrLf
         S2 = S2 & "me." & cName & ".Visible=false" & vbCrLf
@@ -177,18 +180,19 @@ Dim cName As String
     Next
     S1 = S1 & "End Sub" & vbCrLf
     S2 = S2 & "End Sub" & vbCrLf
-    If writeToFile Then
-        omFileFunctions.WriteStringToFile gFso.BuildPath(CurrentProject.path, "ExportFormControlProperties_" & formName & "_" & omDateFunctions.GetTimeStamp) & ".txt", S1 & vbCrLf & S2
+    If WriteToFile Then
+        omFileFunctions.WriteStringToFile gFso.BuildPath(CurrentProject.path, "ExportFormControlProperties_" & FormName & InternalGetTimeStamp()) & ".txt", S1 & vbCrLf & S2
     Else
         Debug.Print S1 & vbCrLf & S2
     End If
-    DoCmd.Close acForm, formName, acSaveNo
+    DoCmd.Close acForm, FormName, acSaveNo
 End Sub
 
 Public Sub Dump(Optional silentMode As Boolean = True, Optional destinationPath As String, Optional addTimeStamp As Boolean = True)
 Dim path As String
 Dim O As Object
 Dim currentPath As String
+Dim rs As New ADODB.Recordset
 
     If Len(Trim(Nz(destinationPath, ""))) <> 0 Then
         path = destinationPath
@@ -196,10 +200,20 @@ Dim currentPath As String
         path = gFso.BuildPath(CurrentProject.path, "Dump")
     End If
     If addTimeStamp Then
-        path = IIf(Right(path, 1) = "\", Left(path, Len(path) - 1), path) & "_" & omDateFunctions.GetTimeStamp
+        path = IIf(Right(path, 1) = "\", Left(path, Len(path) - 1), path) & InternalGetTimeStamp()
     End If
-    
+        
     omFileFunctions.CreateFolderPath path
+    currentPath = gFso.BuildPath(path, "Tables")
+    omFileFunctions.CreateFolderPath currentPath
+    rs.Open "SELECT T.Name FROM MSysObjects T WHERE T.Type=1 AND T.Flags=0", CurrentProject.Connection, adOpenForwardOnly, adLockReadOnly
+    While Not rs.EOF
+        Application.ExportXML acExportTable, rs("Name"), gFso.BuildPath(currentPath, rs("Name") & ".xml"), gFso.BuildPath(currentPath, rs("Name") & "_Schema.xml")
+        rs.MoveNext
+    Wend
+    rs.Close
+    Set rs = Nothing
+    
     currentPath = gFso.BuildPath(path, "Queries")
     omFileFunctions.CreateFolderPath currentPath
     For Each O In Application.CodeData.AllQueries
@@ -234,16 +248,39 @@ Dim currentPath As String
     End If
 End Sub
 
-Public Sub DumpImport(objectType As AcObjectType, Optional silentMode As Boolean = True)
+Public Sub DumpImport(objectType As AcObjectType, Optional silentMode As Boolean = True, Optional sourcePath As String)
 Dim path As String
 Dim O As Object
 Dim currentPath As String
 Dim fso As New FileSystemObject
 Dim F As File
+Dim i As Long
+Dim tableName As String
 
-    path = fso.BuildPath(CurrentProject.path, "Dump")
+    If Len(Trim(Nz(sourcePath, ""))) <> 0 Then
+        path = sourcePath
+    Else
+        path = gFso.BuildPath(CurrentProject.path, "Dump")
+    End If
     
     Select Case objectType
+        Case acTable
+            currentPath = fso.BuildPath(path, "Tables")
+            For Each F In fso.GetFolder(currentPath).Files
+                If InStr(1, F.Name, "_Schema") = 0 Then
+                    If Not silentMode Then
+                        Debug.Print "start : " & F.Name
+                        DoEvents
+                    End If
+                    tableName = Left(F.Name, Len(F.Name) - 4)
+                    For i = 0 To CurrentData.AllTables.Count - 1
+                        If CurrentData.AllTables(i).Name = tableName Then
+                            DoCmd.Rename tableName & "_" & Format(Now, "yyyymmdd_hhnnss"), acTable, tableName
+                        End If
+                    Next
+                    Application.ImportXML F.path, acStructureAndData
+                End If
+            Next
         Case acModule
             currentPath = fso.BuildPath(path, "Modules")
             For Each F In fso.GetFolder(currentPath).Files
