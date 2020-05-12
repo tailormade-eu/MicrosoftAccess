@@ -423,7 +423,7 @@ Dim msgBoxResult As VbMsgBoxResult
 
     For i = VBE.ActiveVBProject.VBComponents.Count To 1 Step -1
         Set F = VBE.ActiveVBProject.VBComponents(i)
-        If F.CodeModule.CountOfLines = F.CodeModule.CountOfDeclarationLines Then
+        If F.CodeModule.CountOfLines = F.CodeModule.CountOfDeclarationLines AND F.CodeModule.CountOfLines<3 Then
             msg = F.Name
             If F.CodeModule.CountOfLines > 0 Then
                 msg = msg & vbCrLf & F.CodeModule.Lines(1, F.CodeModule.CountOfLines)
@@ -467,4 +467,43 @@ Public Sub Commit()
     
     ' cmdshell exeute git -c -p folder, msg
     
+End Sub
+
+Public Sub RemoveDeletedObjects()
+Dim rs As New ADODB.Recordset
+Dim objType As AcObjectType
+
+    rs.Open "SELECT Name,Type FROM MSysobjects WHERE Name LIKE '~%'", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
+    While Not rs.EOF
+    
+        Select Case rs("Type")
+            Case 5
+                objType = acQuery
+            Case -32766
+                objType = acMacro
+            Case Else
+                objType = 0
+                msgbox "ObjectType Not Defined " & rs("type")
+        End Select
+        If objType <> 0 Then
+            DoCmd.DeleteObject objType, rs("Name")
+        End If
+        rs.MoveNext
+    Wend
+    rs.Close
+    Set rs = Nothing
+End Sub
+
+Public Sub ListFormsToTable()
+Dim rs As New ADODB.Recordset
+Dim f As AccessObject
+
+    rs.Open "___T_Forms", CurrentProject.connection, adOpenForwardOnly, adLockOptimistic
+    For Each f In CodeProject.AllForms
+        rs.AddNew
+        rs("Name") = f.Name
+        rs.Update
+    Next
+    rs.Close
+    Set rs = Nothing
 End Sub
