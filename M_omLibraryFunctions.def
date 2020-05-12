@@ -494,7 +494,7 @@ Dim objType As AcObjectType
     Set rs = Nothing
 End Sub
 
-Public Sub ListFormsToTable()
+Public Sub ListFormsToTable(tableName as String)
 Dim rs As New ADODB.Recordset
 Dim f As AccessObject
 
