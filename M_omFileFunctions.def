@@ -85,7 +85,7 @@ FileRename_Error:
             lBackupCount = lBackupCount + 1
             Resume FileRename_Backup
         Case Else
-            MsgBox "Error"
+            msgbox "Error"
             'DoCmd.SetWarnings True
             'ErrorBox.Module = "Module : File Functions"
             'ErrorBox.Procedure = "Procedure : FileRename"
@@ -145,7 +145,7 @@ Public Sub CreateFolderPath(strPath As String, Optional OpenFolderInExplorer As 
         If Not gFso.FolderExists(gFso.GetParentFolderName(strPath)) Then
             CreateFolderPath (gFso.GetParentFolderName(strPath))
         End If
-        gFso.CreateFolder strPath
+        gFso.createFolder strPath
     End If
     If OpenFolderInExplorer Then
         omFileFunctions.OpenFolder strPath
@@ -184,7 +184,7 @@ Public Function FileLocked(strFileName As String, Optional displayError As Boole
    If Err.Number <> 0 Then
       ' Display the error number and description.
       If displayError Then
-        MsgBox "Error #" & str(Err.Number) & " - " & Err.Description
+        msgbox "Error #" & str(Err.Number) & " - " & Err.description
       End If
       FileLocked = True
       Err.Clear
@@ -194,7 +194,9 @@ End Function
 Public Function GetDesktopFolder() As String
     GetDesktopFolder = CreateObject("WScript.Shell").SpecialFolders("Desktop")
 End Function
-
+Public Function GetUserRootFolder() As String
+    GetUserRootFolder = Environ("USERPROFILE")
+End Function
 Public Function ReadFileToString(path As String) As String
 Dim ts As TextStream
 
@@ -208,11 +210,11 @@ Public Sub PrintFile(filename As String)
     CreateObject("Shell.Application").NameSpace(0).ParseName(filename).InvokeVerb ("Print")
 End Sub
 
-Public Sub WriteStringToFile(filename As String, S As String)
+Public Sub WriteStringToFile(filename As String, s As String, Optional unicode As Boolean = False)
 Dim ts As TextStream
 
-    Set ts = gFso.CreateTextFile(filename, True, True)
-    ts.Write S
+    Set ts = gFso.CreateTextFile(filename, True, unicode)
+    ts.Write s
     ts.Close
     Set ts = Nothing
 End Sub
