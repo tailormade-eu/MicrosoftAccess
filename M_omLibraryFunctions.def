@@ -75,7 +75,7 @@ Dim OType As AcObjectType
             oName = c.Name
             fn = path & "\" & oName & sfx
             If gFso.FileExists(fn) Then
-                Set cNew = Application.VBE.VBProjects(1).VBComponents.Import(fn)
+                Set cNew = Application.VBE.VBProjects(1).VBComponents.import(fn)
                 'DoCmd.DeleteObject oType, oName
                 'cNew.Name = oName
                 'DoCmd.Save oType, objectname:=oName
@@ -169,7 +169,7 @@ Dim cName As String
         S1 = S1 & "me." & cName & ".Top=" & c.Top & vbCrLf
         S1 = S1 & "me." & cName & ".Left=" & c.Left & vbCrLf
         S1 = S1 & "me." & cName & ".Width=" & c.Width & vbCrLf
-        S1 = S1 & "me." & cName & ".Height=" & c.Height & vbCrLf
+        S1 = S1 & "me." & cName & ".Height=" & c.height & vbCrLf
         
         S2 = S2 & "' ------ " & c.Name & vbCrLf
         S2 = S2 & "me." & cName & ".Visible=false" & vbCrLf
@@ -188,7 +188,7 @@ Dim cName As String
     DoCmd.Close acForm, FormName, acSaveNo
 End Sub
 
-Public Sub Dump(Optional silentMode As Boolean = True, Optional destinationPath As String, Optional addTimeStamp As Boolean = True)
+Public Sub Dump(Optional objectType As AcObjectType = AcObjectType.acDefault, Optional silentMode As Boolean = True, Optional destinationPath As String, Optional addTimeStamp As Boolean = True)
 Dim path As String
 Dim O As Object
 Dim currentPath As String
@@ -204,45 +204,59 @@ Dim rs As New ADODB.Recordset
     End If
         
     omFileFunctions.CreateFolderPath path
-    currentPath = gFso.BuildPath(path, "Tables")
-    omFileFunctions.CreateFolderPath currentPath
-    rs.Open "SELECT T.Name FROM MSysObjects T WHERE T.Type=1 AND T.Flags=0", CurrentProject.Connection, adOpenForwardOnly, adLockReadOnly
-    While Not rs.EOF
-        Application.ExportXML acExportTable, rs("Name"), gFso.BuildPath(currentPath, rs("Name") & ".xml"), gFso.BuildPath(currentPath, rs("Name") & "_Schema.xml")
-        rs.MoveNext
-    Wend
-    rs.Close
-    Set rs = Nothing
     
-    currentPath = gFso.BuildPath(path, "Queries")
-    omFileFunctions.CreateFolderPath currentPath
-    For Each O In Application.CodeData.AllQueries
-        omLibraryFunctions.SaveAsText acQuery, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
-    Next
+    If objectType = acTable Or objectType = acDefault Then
+        currentPath = gFso.BuildPath(path, "Tables")
+        omFileFunctions.CreateFolderPath currentPath
+        rs.Open "SELECT T.Name FROM MSysObjects T WHERE T.Type=1 AND T.Flags=0", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
+        While Not rs.EOF
+            Application.ExportXml acExportTable, rs("Name"), gFso.BuildPath(currentPath, rs("Name") & ".xml"), gFso.BuildPath(currentPath, rs("Name") & "_Schema.xml")
+            rs.MoveNext
+        Wend
+        rs.Close
+        Set rs = Nothing
+    End If
     
-    currentPath = gFso.BuildPath(path, "Forms")
-    omFileFunctions.CreateFolderPath currentPath
-    For Each O In Application.CodeProject.AllForms
-        omLibraryFunctions.SaveAsText acForm, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
-    Next
-
-    currentPath = gFso.BuildPath(path, "Reports")
-    omFileFunctions.CreateFolderPath currentPath
-    For Each O In Application.CodeProject.AllReports
-        omLibraryFunctions.SaveAsText acReport, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
-    Next
+    If objectType = acQuery Or objectType = acDefault Then
+        currentPath = gFso.BuildPath(path, "Queries")
+        omFileFunctions.CreateFolderPath currentPath
+        For Each O In Application.CodeData.AllQueries
+            omLibraryFunctions.SaveAsText acQuery, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
+        Next
+    End If
     
-    currentPath = gFso.BuildPath(path, "Modules")
-    omFileFunctions.CreateFolderPath currentPath
-    For Each O In Application.CodeProject.AllModules
-        omLibraryFunctions.SaveAsText acModule, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
-    Next
+    If objectType = acForm Or objectType = acDefault Then
+        currentPath = gFso.BuildPath(path, "Forms")
+        omFileFunctions.CreateFolderPath currentPath
+        For Each O In Application.CodeProject.AllForms
+            omLibraryFunctions.SaveAsText acForm, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
+        Next
+    End If
     
-    currentPath = gFso.BuildPath(path, "Macros")
-    omFileFunctions.CreateFolderPath currentPath
-    For Each O In Application.CodeProject.AllMacros
-        omLibraryFunctions.SaveAsText acMacro, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
-    Next
+    If objectType = acReport Or objectType = acDefault Then
+        currentPath = gFso.BuildPath(path, "Reports")
+        omFileFunctions.CreateFolderPath currentPath
+        For Each O In Application.CodeProject.AllReports
+            omLibraryFunctions.SaveAsText acReport, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
+        Next
+    End If
+        
+    If objectType = acModule Or objectType = acDefault Then
+        currentPath = gFso.BuildPath(path, "Modules")
+        omFileFunctions.CreateFolderPath currentPath
+        For Each O In Application.CodeProject.AllModules
+            omLibraryFunctions.SaveAsText acModule, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
+        Next
+    End If
+    
+    If objectType = acMacro Or objectType = acDefault Then
+        currentPath = gFso.BuildPath(path, "Macros")
+        omFileFunctions.CreateFolderPath currentPath
+        For Each O In Application.CodeProject.AllMacros
+            omLibraryFunctions.SaveAsText acMacro, O.Name, gFso.BuildPath(currentPath, O.Name & ".txt")
+        Next
+    End If
+    
     If Not silentMode Then
         msgbox "Completed", vbOKOnly
     End If
@@ -266,6 +280,7 @@ Dim tableName As String
     Select Case objectType
         Case acTable
             currentPath = fso.BuildPath(path, "Tables")
+            gFso.DeleteFolder currentPath
             For Each F In fso.GetFolder(currentPath).Files
                 If InStr(1, F.Name, "_Schema") = 0 Then
                     If Not silentMode Then
@@ -283,6 +298,7 @@ Dim tableName As String
             Next
         Case acModule
             currentPath = fso.BuildPath(path, "Modules")
+            gFso.DeleteFolder currentPath
             For Each F In fso.GetFolder(currentPath).Files
                 If F.Name <> "omLibraryFunctions.txt" Then
                     If Not silentMode Then
@@ -294,6 +310,7 @@ Dim tableName As String
             Next
         Case acQuery
             currentPath = fso.BuildPath(path, "Queries")
+            gFso.DeleteFolder currentPath
             For Each F In fso.GetFolder(currentPath).Files
                 If Not silentMode Then
                     Debug.Print "start : " & F.Name
@@ -303,6 +320,7 @@ Dim tableName As String
             Next
         Case acForm
             currentPath = fso.BuildPath(path, "Forms")
+            gFso.DeleteFolder currentPath
             For Each F In fso.GetFolder(currentPath).Files
                 If Not silentMode Then
                     Debug.Print "start : " & F.Name
@@ -312,6 +330,7 @@ Dim tableName As String
             Next
         Case acReport
             currentPath = fso.BuildPath(path, "Reports")
+            gFso.DeleteFolder currentPath
             For Each F In fso.GetFolder(currentPath).Files
                 If Not silentMode Then
                     Debug.Print "start : " & F.Name
@@ -321,6 +340,7 @@ Dim tableName As String
             Next
         Case acMacro
             currentPath = fso.BuildPath(path, "Macros")
+            gFso.DeleteFolder currentPath
             For Each F In fso.GetFolder(currentPath).Files
                 If Not silentMode Then
                     Debug.Print "start : " & F.Name
@@ -374,6 +394,7 @@ Public Sub VBACountModules()
 Dim cnt As Long
     cnt = VBE.ActiveVBProject.VBComponents.Count
     msgbox "Access Project contains #" & cnt & " modules.", vbOKOnly
+    ' 20200512 : 1176 modules
 End Sub
 
 Public Sub VBACountLines()
@@ -389,16 +410,16 @@ End Sub
 Public Sub VBAFindReplace(findString As String, replaceString As String, Optional silentMode As Boolean = True)
 Dim c As VBIDE.VBComponent
 Dim i As Long
-Dim S As String
+Dim s As String
     
     For Each c In VBE.ActiveVBProject.VBComponents
         For i = 1 To c.CodeModule.CountOfLines
-            S = c.CodeModule.Lines(i, 1)
-            If InStr(1, S, findString) > 0 Then
+            s = c.CodeModule.Lines(i, 1)
+            If InStr(1, s, findString) > 0 Then
                 If Not silentMode Then
-                    Debug.Print "In module: " & c.Name & " -> replaced: " & S
+                    Debug.Print "In module: " & c.Name & " -> replaced: " & s
                 End If
-                c.CodeModule.ReplaceLine i, Replace(S, findString, replaceString)
+                c.CodeModule.ReplaceLine i, Replace(s, findString, replaceString)
             End If
         Next i
     Next
@@ -416,14 +437,14 @@ End Sub
 
 Public Sub RemoveModulesWithoutLines(Optional silentMode As Boolean = True)
 Dim F As VBIDE.VBComponent
-Dim S As String
+Dim s As String
 Dim i As Long
 Dim msg As String
 Dim msgBoxResult As VbMsgBoxResult
 
     For i = VBE.ActiveVBProject.VBComponents.Count To 1 Step -1
         Set F = VBE.ActiveVBProject.VBComponents(i)
-        If F.CodeModule.CountOfLines = F.CodeModule.CountOfDeclarationLines AND F.CodeModule.CountOfLines<3 Then
+        If F.CodeModule.CountOfLines = F.CodeModule.CountOfDeclarationLines And F.CodeModule.CountOfLines < 3 Then
             msg = F.Name
             If F.CodeModule.CountOfLines > 0 Then
                 msg = msg & vbCrLf & F.CodeModule.Lines(1, F.CodeModule.CountOfLines)
@@ -439,34 +460,52 @@ Dim msgBoxResult As VbMsgBoxResult
                 If F.Type = vbext_ct_ClassModule Or F.Type = vbext_ct_StdModule Then
                     VBE.ActiveVBProject.VBComponents.Remove F
                 ElseIf Left(F.Name, Len("Report_")) = "Report_" Then
-                    S = Mid(F.Name, Len("Report_") + 1)
-                    DoCmd.OpenReport S, acDesign
-                    Reports(S).HasModule = False
-                    DoCmd.Close acReport, S, acSaveYes
+                    s = Mid(F.Name, Len("Report_") + 1)
+                    DoCmd.OpenReport s, acDesign
+                    Reports(s).HasModule = False
+                    DoCmd.Close acReport, s, acSaveYes
                 ElseIf Left(F.Name, Len("Form_")) = "Form_" Then
-                    S = Mid(F.Name, Len("Form_") + 1)
-                    DoCmd.OpenForm S, acDesign
-                    Forms(S).HasModule = False
-                    DoCmd.Close acForm, S, acSaveYes
+                    s = Mid(F.Name, Len("Form_") + 1)
+                    DoCmd.OpenForm s, acDesign
+                    Forms(s).HasModule = False
+                    DoCmd.Close acForm, s, acSaveYes
                 End If
             End If
         End If
     Next
 End Sub
-Public Sub DumpAndCommit()
+Public Sub DumpAndCommitAndPush(Optional objectType As AcObjectType = AcObjectType.acDefault)
 Dim path As String
-Dim msgbox As String
+Dim msg As String
 
-    path = "\\dc2016\development\Projects\ACenter\Source\Dump"
-    'msgbox = InputBox("Geef een omschrijving")
-    omLibraryFunctions.Dump True, path, True
-    'omLibraryFunctions.Commit True, msgbox
+    path = gFso.BuildPath(omFileFunctions.GetUserRootFolder, "Source\Repos\ACenter\")
+    omLibraryFunctions.Dump objectType, True, path, False
+    omLibraryFunctions.CommitAndPush path
     
 End Sub
-Public Sub Commit()
-    
-    ' cmdshell exeute git -c -p folder, msg
-    
+Public Sub CommitAndPush(repositoryPath As String)
+Dim path As String
+Dim fn As String
+Dim s As String
+Dim commitMessage As String
+
+    commitMessage = InputBox("Geef een omschrijving")
+    If Len(commitMessage) = 0 Then
+        msgbox "Not message was given. Execution is aborted!", vbOKOnly
+        Exit Sub
+    End If
+    fn = gFso.BuildPath(repositoryPath, ".git\COMMITMESSAGE")
+    omFileFunctions.WriteStringToFile fn, commitMessage
+    s = "cd '<repositoryPath>'"
+    s = s & vbCrLf & "'C:\Program Files\Git\bin\git.exe' add -A"
+    s = s & vbCrLf & "'C:\Program Files\Git\bin\git.exe' commit -F '<FilenameCommitMessage>'"
+    s = s & vbCrLf & "'C:\Program Files\Git\bin\git.exe' push"
+    s = Replace(s, "<repositoryPath>", repositoryPath)
+    s = Replace(s, "<FilenameCommitMessage>", fn)
+    s = Replace(s, "'", Chr(34))
+    fn = gFso.BuildPath(CurrentProject.path, CurrentProject.Name & "_CommitAndPush.bat")
+    omFileFunctions.WriteStringToFile fn, s
+    Shell fn
 End Sub
 
 Public Sub RemoveDeletedObjects()
@@ -494,14 +533,14 @@ Dim objType As AcObjectType
     Set rs = Nothing
 End Sub
 
-Public Sub ListFormsToTable(tableName as String)
+Public Sub ListFormsToTable()
 Dim rs As New ADODB.Recordset
-Dim f As AccessObject
+Dim F As AccessObject
 
     rs.Open "___T_Forms", CurrentProject.connection, adOpenForwardOnly, adLockOptimistic
-    For Each f In CodeProject.AllForms
+    For Each F In CodeProject.AllForms
         rs.AddNew
-        rs("Name") = f.Name
+        rs("Name") = F.Name
         rs.Update
     Next
     rs.Close
