@@ -53,6 +53,11 @@ End Sub
 Public Sub DeleteFile(filename As String, Optional force As Boolean = False)
     gFso.DeleteFile filename, force
 End Sub
+Public Sub DeleteFolder(folderName As String, Optional force As Boolean = False)
+    If omFileFunctions.FolderExists(folderName) Then
+        gFso.DeleteFolder folderName, force
+    End If
+End Sub
 
 Public Sub RenameFile(strOldName As String, strNewName As String, Optional strNewExtension As String = "")
 Dim strBackupName As String
@@ -210,11 +215,11 @@ Public Sub PrintFile(filename As String)
     CreateObject("Shell.Application").NameSpace(0).ParseName(filename).InvokeVerb ("Print")
 End Sub
 
-Public Sub WriteStringToFile(filename As String, s As String, Optional unicode As Boolean = False)
+Public Sub WriteStringToFile(filename As String, S As String, Optional unicode As Boolean = False)
 Dim ts As TextStream
 
     Set ts = gFso.CreateTextFile(filename, True, unicode)
-    ts.Write s
+    ts.Write S
     ts.Close
     Set ts = Nothing
 End Sub
