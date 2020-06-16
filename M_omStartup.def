@@ -32,7 +32,7 @@ Public Function LinkSSMADatabase() As Variant
     omSSMAAConnector.LinkUsingSSMA SavePassword:=True, alwaysUpdate:=True
 End Function
 Public Function LinkSSMADatabaseSQLODBC() As Variant
-    omSSMAAConnector.LinkUsingSSMA ConnectionType:=SQLOBDC, SavePassword:=True, alwaysUpdate:=True
+    omSSMAAConnector.LinkUsingSSMA ConnectionType:=SQLODBC_Deprecated, SavePassword:=True, alwaysUpdate:=True
 End Function
 
 'Public Function SyncUserMain() As Boolean
