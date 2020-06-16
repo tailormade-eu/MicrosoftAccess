@@ -152,7 +152,7 @@ End Sub
 Public Sub SetVisible(wa As Word.Application, visible As Boolean)
     wa.visible = visible
 End Sub
-Public Sub Find(wd As Word.Document, text As String)
+Public Function Find(wd As Word.Document, text As String) As Boolean
     wd.ActiveWindow.Selection.WholeStory
     With wd.Application.Selection.Find
      .Forward = True
@@ -161,8 +161,9 @@ Public Sub Find(wd As Word.Document, text As String)
      .MatchCase = False
      .Wrap = wdFindContinue
      .Execute findtext:=text
+     Find = .Found
     End With
-End Sub
+End Function
 Public Sub FindReplaceAll(wd As Word.Document, findtext As String, replaceText As String)
     With wd.ActiveWindow
         .Selection.WholeStory
