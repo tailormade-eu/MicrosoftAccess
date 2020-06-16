@@ -31,8 +31,9 @@ Public Enum ConnectionTypes
     Default = 0
     SQLOLEDBProvider = 1
     LocalDSN = 2
-    SQLOBDC = 3
+    SQLODBC_Deprecated = 3
     MySQL = 4
+    SQLODBC = 5
 End Enum
 
 
@@ -195,7 +196,7 @@ Public Function GetCurrentConnectionStringForType(ODBCConnection As Boolean, Opt
         CurrentConnectionString = "Driver={MySQL ODBC 3.51 Driver};SERVER=[SQLServer];DATABASE=[SQLDatabase];"
     ElseIf ConnectionType = ConnectionTypes.LocalDSN Then
         CurrentConnectionString = "DSN=[DSN];"
-    ElseIf GetSQLODBCVersion <> 0 And ConnectionType = SQLOBDC Then
+    ElseIf GetSQLODBCVersion <> 0 And ConnectionType = SQLODBC Then
         If Not ODBCConnection Then
           CurrentConnectionString = "DRIVER=ODBC Driver " & cSQLODBCVersion & " for SQL Server;SERVER=[SQLServer];DATABASE=[SQLDatabase];"
         Else

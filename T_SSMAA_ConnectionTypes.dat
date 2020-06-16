@@ -15,11 +15,15 @@
     </Row_3>
     <Row_4>
       <field_0 name="Id" binary="false" null="false" value="3"/>
-      <field_1 name="Name" binary="false" null="false">SQLOBDC</field_1>
+      <field_1 name="Name" binary="false" null="false">SQLOBDC_Deprecated</field_1>
     </Row_4>
     <Row_5>
       <field_0 name="Id" binary="false" null="false" value="4"/>
       <field_1 name="Name" binary="false" null="false">MySQL</field_1>
     </Row_5>
+    <Row_6>
+      <field_0 name="Id" binary="false" null="false" value="5"/>
+      <field_1 name="Name" binary="false" null="false">SQLODBC</field_1>
+    </Row_6>
   </Rows>
 </TableData>
