@@ -1,7 +1,11 @@
 Option Compare Database
 Option Explicit
-Global cSQLNCLI As Integer
+Global cSQLNCLIVersion As Integer
 Global cSQLNCLIFound As Boolean
+Global cSQLODBCVersion As Integer
+Global cSQLODBCFound As Boolean
+    
+
 'Global gomCS As New omConnectionString
 
 Dim omCSTest As New omConnectionString
@@ -195,18 +199,36 @@ Public Function GetSQLNCLIVersion() As String
 Dim i As Long
 
     If cSQLNCLIFound Then
-        GetSQLNCLIVersion = cSQLNCLI
+        GetSQLNCLIVersion = cSQLNCLIVersion
     Else
         i = 15
-        While i > 9 And cSQLNCLI = 0
+        While i > 9 And cSQLNCLIVersion = 0
             If gFso.FileExists("c:\windows\system32\sqlncli" & i & ".dll") Then
-                cSQLNCLI = i
+                cSQLNCLIVersion = i
                 cSQLNCLIFound = True
             Else
                 i = i - 1
             End If
         Wend
-        GetSQLNCLIVersion = cSQLNCLI
+        GetSQLNCLIVersion = cSQLNCLIVersion
+    End If
+End Function
+Public Function GetSQLODBCVersion() As String
+Dim i As Long
+
+    If cSQLODBCFound Then
+        GetSQLODBCVersion = cSQLODBCVersion
+    Else
+        i = 25
+        While i > 9 And cSQLODBCVersion = 0
+            If gFso.FileExists("c:\windows\system32\msodbcsql" & i & ".dll") Then
+                cSQLODBCVersion = i
+                cSQLODBCFound = True
+            Else
+                i = i - 1
+            End If
+        Wend
+        GetSQLODBCVersion = cSQLODBCVersion
     End If
 End Function
 Public Function GetConnectionStringByProperty(Optional tableName As String = "", Optional databaseName As String = "", Optional serverName As String = "", Optional dsnName As String, Optional groupName As String, Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default, Optional ODBCConnection As Boolean = True) As String
@@ -236,7 +258,7 @@ Dim strFilter As String
             GetConnectionStringByProperty = "ODBC;" & GetConnectionStringByProperty
         End If
     Else
-        msgbox "SSMAA Tables is empty!", vbExclamation
+        MsgBox "SSMAA Tables is empty!", vbExclamation
     End If
     rs.Close
     Set rs = Nothing
@@ -267,7 +289,7 @@ Dim strFilter As String
             End If
         End If
     Else
-        msgbox "SSMAA Tables is empty!", vbExclamation
+        MsgBox "SSMAA Tables is empty!", vbExclamation
     End If
     rs.Close
     Set rs = Nothing
@@ -330,7 +352,7 @@ Dim t As String
 Dim connString As String
 Dim descriptionString As String
 
-    rs.Open "SELECT * FROM MSysObjects WHERE Type=5 AND flags=112", LocalCon, adOpenForwardOnly, adLockReadOnly
+    rs.Open "SELECT * FROM MSysObjects WHERE Type=5 AND (flags=112 OR flags=144)", LocalCon, adOpenForwardOnly, adLockReadOnly
     While Not rs.EOF
         Debug.Print rs("Name"), rs("Type"), rs("flags")
         Debug.Print CurrentDb.QueryDefs(rs("Name")).Connect
@@ -370,7 +392,7 @@ Dim rs As New ADODB.Recordset
 Dim typeFilter As String
 Dim t As String
 Dim connString As String
-Dim SQL As String
+Dim sql As String
 
     Debug.Print Now
     rs.Open "SELECT * FROM MSysObjects WHERE Type=5 AND flags=112", LocalCon, adOpenForwardOnly, adLockReadOnly
@@ -380,20 +402,20 @@ Dim SQL As String
         If InStr(1, CurrentDb.QueryDefs(rs("Name")).Connect, "database=" & sourceDatabase & ";") > 0 Then
                 CurrentDb.QueryDefs(rs("Name")).Connect = Replace(CurrentDb.QueryDefs(rs("Name")).Connect, "database=" & sourceDatabase & ";", "database=" & destinationDatabase & ";")
         End If
-        SQL = CurrentDb.QueryDefs(rs("Name")).SQL
-        If InStr(1, SQL, "USE ") > 0 Then
+        sql = CurrentDb.QueryDefs(rs("Name")).sql
+        If InStr(1, sql, "USE ") > 0 Then
             Debug.Print "USE => " & rs("Name"), rs("Type"), rs("flags")
-            SQL = omSQLFunctions.ReplaceDatabaseInUseClause(SQL, sourceDatabase, destinationDatabase)
+            sql = omSQLFunctions.ReplaceDatabaseInUseClause(sql, sourceDatabase, destinationDatabase)
         End If
-        If InStr(1, SQL, "." & schema & ".") > 0 Then
+        If InStr(1, sql, "." & schema & ".") > 0 Then
             Debug.Print "." & schema & "." & rs("Name"), rs("Type"), rs("flags")
-            SQL = Replace(SQL, " " & sourceDatabase & "." & schema & ".", " " & destinationDatabase & "." & schema & ".")
-            SQL = Replace(SQL, "," & sourceDatabase & "." & schema & ".", "," & destinationDatabase & "." & schema & ".")
-            SQL = Replace(SQL, vbCrLf & sourceDatabase & "." & schema & ".", vbCrLf & destinationDatabase & "." & schema & ".")
-            SQL = Replace(SQL, vbCr & sourceDatabase & "." & schema & ".", vbCr & destinationDatabase & "." & schema & ".")
-            SQL = Replace(SQL, vbLf & sourceDatabase & "." & schema & ".", vbLf & destinationDatabase & "." & schema & ".")
+            sql = Replace(sql, " " & sourceDatabase & "." & schema & ".", " " & destinationDatabase & "." & schema & ".")
+            sql = Replace(sql, "," & sourceDatabase & "." & schema & ".", "," & destinationDatabase & "." & schema & ".")
+            sql = Replace(sql, vbCrLf & sourceDatabase & "." & schema & ".", vbCrLf & destinationDatabase & "." & schema & ".")
+            sql = Replace(sql, vbCr & sourceDatabase & "." & schema & ".", vbCr & destinationDatabase & "." & schema & ".")
+            sql = Replace(sql, vbLf & sourceDatabase & "." & schema & ".", vbLf & destinationDatabase & "." & schema & ".")
         End If
-        CurrentDb.QueryDefs(rs("Name")).SQL = SQL
+        CurrentDb.QueryDefs(rs("Name")).sql = sql
         rs.MoveNext
     Wend
     rs.Close
@@ -500,12 +522,12 @@ Dim cs As String
     conn.ConnectionTimeout = connectionTimout
     conn.Open Options:=adAsyncConnect
     
-    lngStartTime = GetTickCount()
+    lngStartTime = omKernalFunctions.GetTickCount()
     
-    Do While ((GetTickCount() - lngStartTime) < conn.ConnectionTimeout * 1000) And (Not conn.state = adStateOpen)
+    Do While ((omKernalFunctions.GetTickCount() - lngStartTime) < conn.ConnectionTimeout * 1000) And (Not conn.State = adStateOpen)
     Loop
     
-    If conn.state = adStateOpen Then
+    If conn.State = adStateOpen Then
         IsConnectingPossible = True
         conn.Close
     End If
@@ -563,7 +585,7 @@ Dim filename As String
         DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, filename & ".accdb")
     End If
     If Not gFso.FileExists(DefaultPath) Then
-        msgbox "No Data file was found at the location: " & DefaultPath & vbCrLf & "Application will now be closed.", vbCritical
+        MsgBox "No Data file was found at the location: " & DefaultPath & vbCrLf & "Application will now be closed.", vbCritical
         DoCmd.Quit acQuitSaveNone
     End If
     tblCon.DataFilename = DefaultPath
