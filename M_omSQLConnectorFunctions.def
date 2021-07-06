@@ -2,3 +2,12 @@ Option Compare Database
 Option Explicit
 
 Global gSQLConnector As New omSQLConnector
+
+Public Sub ConnectorTest()
+
+    ' when the table is available as linked table then you can use the MSAccess Connection (default behaviour)
+    gSQLConnector.ExecuteCommandTextNonQuery "UPDATE [LinkedTableName] SET Field1=? WHERE Field2=?", 1, 1
+    
+    gSQLConnector.ConnectionString = omSSMAAConnector.GetConnectionStringByProperty("LinkedTableName")
+    gSQLConnector.ExecuteCommandTextNonQuery "UPDATE [NotLinkedTableName] SET Field1=? WHERE Field2=?", 1, 2
+End Sub

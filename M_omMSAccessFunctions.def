@@ -7,10 +7,10 @@ Public Function FormExists(FormName As String) As Boolean
     FormExists = (CurrentProject.AllForms(FormName).Name = FormName)
 End Function
 
-Public Function ReportExists(reportName As String) As Boolean
+Public Function ReportExists(ReportName As String) As Boolean
     ReportExists = False
     On Error Resume Next
-    ReportExists = (CurrentProject.AllReports(reportName).Name = reportName)
+    ReportExists = (CurrentProject.AllReports(ReportName).Name = ReportName)
 End Function
 Public Function TableExists(tableName As String) As Boolean
     TableExists = False
@@ -290,7 +290,7 @@ Dim ctl As Object
             With ctl
                 rsFields.AddNew
                 rsFields("Field_ID") = newField_ID
-                rsFields("Field_Name") = .Tag
+                rsFields("Field_Name") = .tag
                 rsFields.Update
                 If .Type = 10 Then
                     cmdBarFields_Extract "", ctl
@@ -302,7 +302,7 @@ Dim ctl As Object
             With ctl
                 rsFields.AddNew
                 rsFields("Field_ID") = newField_ID
-                rsFields("Field_Name") = .Tag
+                rsFields("Field_Name") = .tag
                 rsFields.Update
                 If .Type = 10 Then
                     cmdBarFields_Extract "", ctl
@@ -333,3 +333,19 @@ Public Function newField_ID() As Long
     End If
     
 End Function
+
+Public Sub RegisterCurrentLocation()
+'Dim c As New cRegistry
+'    With c
+'        .ClassKey = HKEY_CURRENT_USER
+'        .SectionKey = "Software\Microsoft\Office\16.0\Access\Security\Trusted Locations\YourTrustedLocationName"
+'        .ValueKey = "Path"
+'        .ValueType = REG_DWORD
+'        .value = CurrentProject.path
+'    End With
+End Sub
+
+Public Function IsRuntimeMode() As Boolean
+    IsRuntimeMode = SysCmd(acSysCmdRuntime)
+End Function
+    
