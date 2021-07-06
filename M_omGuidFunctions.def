@@ -1,6 +1,6 @@
 Option Compare Database
 Option Explicit
-Private Declare Function CoCreateGuid Lib "ole32" (Id As Any) As Long
+Private Declare PtrSafe Function CoCreateGuid Lib "ole32" (Id As Any) As Long
 Public Function CreateGuid() As String
     Dim Id(0 To 15) As Byte
     Dim cnt As Long, Guid As String
@@ -18,14 +18,14 @@ Public Function CreateRandomEAN13() As String
 Dim cnt As Long
 Dim i As Long
 Dim seed As String
-Dim s As String
+Dim S As String
 
     seed = CreateGuid() & CreateGuid & CreateGuid() & CreateGuid
     i = 1
     While cnt < 13
-        s = Mid(seed, i, 1)
-        If IsNumeric(s) Then
-            CreateRandomEAN13 = CreateRandomEAN13 & s
+        S = Mid(seed, i, 1)
+        If IsNumeric(S) Then
+            CreateRandomEAN13 = CreateRandomEAN13 & S
             cnt = cnt + 1
         End If
         i = i + 1

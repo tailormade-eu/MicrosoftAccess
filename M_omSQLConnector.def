@@ -18,6 +18,10 @@ Dim i As Long
     cmd.Parameters.Refresh
     ' Parameters are 0 based
     For i = 0 To cmd.Parameters.Count - 1
+		If cmd.Parameters(i).Type = 201 Then
+            cmd.Parameters(i).Type = adVarChar
+            cmd.Parameters(i).Size = 4096
+        End If
         Select Case i
             Case 0
                 cmd.Parameters(i) = parameter1
@@ -169,7 +173,7 @@ Public Property Let ConnectionString(ByVal vNewValue As Variant)
     p_ConnectionString = IIf(Left(vNewValue, 5) = "odbc;", Mid(vNewValue, 6), vNewValue)
     Set connection = Nothing
     connection = New ADODB.connection
-    connection.ConnectionString = vNewValue
+    connection.ConnectionString = p_ConnectionString ' in case of ODBC
     connection.Open
 
 End Property

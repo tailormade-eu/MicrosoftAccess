@@ -1,6 +1,7 @@
 Option Compare Database
 Option Explicit
 
+Const seqUrl = "http://seq.domainmmvii.local:5341/"
 
 Public Enum omSeqItemLevel
     NotDefinedSeqLevel = 0
@@ -20,14 +21,28 @@ Public Function omSeqItemLevelToString(value As omSeqItemLevel) As String
     End Select
 End Function
 
-Public Sub SendSeqItem() 'item As omSeqItem)
+Public Sub SendSeqItem(Optional seqItem As omSeqItem) 'item As omSeqItem)
 Dim json As New omJSON
-Dim i As New omSeqItem
 Dim result As String
     
-    i.ApplicationName = "MSAccess-Test"
-    
-    result = json.request("http://seq.domainmmvii.local:35341/api/events/raw?clef", i.ToJson(), Text)
+    If omObjectFunctions.IsNothing(seqItem) Then
+        Set seqItem = New omSeqItem
+        With seqItem
+            .ApplicationName = "MSAccess-Test"
+            .Level = ErrorSeqLevel
+            .action = "omSeqFunctions.SendSeqItem"
+            .Step = "self test"
+        End With
+    End If
+    result = json.request(seqUrl & "api/events/raw?clef", seqItem.ToJson(), text)
+    seqItem.Step = ""
+    seqItem.Level = DebugSeqLevel
+    seqItem.Exception = ""
+    seqItem.Parameters = ""
+End Sub
+
+Public Sub OpenSeq(Optional filter As String = "")
+    omFileFunctions.OpenUrl seqUrl & IIf(NotIsNullOrEmpty(filter), "#/events?filter=" & filter, "")
 End Sub
 
 Public Function GetUtcDateTime()
@@ -44,8 +59,9 @@ DtIsoToAccess = CDate(Replace(myisodate, "T", " "))
 End Function
 
 'Access to ISO
-Public Function DtAccessToIso(myaccdate As Date, Optional myUtcDate As Date) As String
+Public Function DtAccessToIso(myaccdate As Date, Optional myUtcDate As Date = 0) As String
 Dim dtDiff As Long
+    myUtcDate = IIf(myUtcDate = 0, myaccdate, myUtcDate)
     dtDiff = DateDiff("h", myUtcDate, myaccdate)
-    DtAccessToIso = format(myaccdate, "yyyy-mm-dd\Thh:nn:ss" & format(dtDiff, "+00") & ":00")
+    DtAccessToIso = format(myaccdate, "yyyy-mm-dd\Thh:nn:ss.000" & IIf(dtDiff = 0, "z", format(dtDiff, "+00") & ":00"))
 End Function

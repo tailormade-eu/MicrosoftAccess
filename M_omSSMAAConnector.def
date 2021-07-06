@@ -106,7 +106,7 @@ Dim strDatabaseName As String
         'Debug.Print Now
         DoEvents
         rsODBC("Attach") = 0
-        rsODBC.Update
+        rsODBC.update
         rsODBC.MoveNext
     Wend
     rsODBC.Close
@@ -335,7 +335,7 @@ Dim t As String
                         rsTable("SQLTable") = StringSplitGetByIndex(t, ".", 1)
                     End If
                 End If
-                rsTable.Update
+                rsTable.update
             End If
         End If
         rs.MoveNext
@@ -492,7 +492,7 @@ End Sub
 
 
 Public Sub DeleteSSMAABackupTables()
-    DeleteTables cSSMAABAckup
+    omMSAccessFunctions.DeleteTables cSSMAABAckup
 End Sub
 
 Public Sub UpdateSSMAAGroups()
@@ -502,7 +502,7 @@ Dim rs As New ADODB.Recordset
     While Not rs.EOF
         If NotIsNullOrEmpty(rs("Groups")) Then
             rs("Groups") = Replace("," & rs("Groups") & ",", ",,", ",")
-            rs.Update
+            rs.update
         End If
         rs.MoveNext
     Wend
@@ -524,10 +524,10 @@ Dim cs As String
     
     lngStartTime = omKernalFunctions.GetTickCount()
     
-    Do While ((omKernalFunctions.GetTickCount() - lngStartTime) < conn.ConnectionTimeout * 1000) And (Not conn.State = adStateOpen)
+    Do While ((omKernalFunctions.GetTickCount() - lngStartTime) < conn.ConnectionTimeout * 1000) And (Not conn.state = adStateOpen)
     Loop
     
-    If conn.State = adStateOpen Then
+    If conn.state = adStateOpen Then
         IsConnectingPossible = True
         conn.Close
     End If
