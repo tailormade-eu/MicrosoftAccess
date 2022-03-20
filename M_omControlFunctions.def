@@ -10,9 +10,18 @@ Public Sub IfNullOrEmpty(ctrl As Control, Optional UseDefaultValue As Boolean = 
         End If
     End If
 End Sub
+
 Public Sub SetDefaultValue(ctrl As Control)
-    ctrl = IIf(omStringFunctions.IsNullOrEmpty(ctrl), ctrl.DefaultValue, ctrl)
+Dim vDate As Variant
+
+    If omStringFunctions.NotIsNullOrEmpty(ctrl) Then
+        Exit Sub
+    End If
+    
+    vDate = Replace(Replace(Nz(ctrl.defaultValue, ""), Chr(34), ""), "#", "")
+    ctrl = IIf(IsDate(vDate), vDate, ctrl.defaultValue)
 End Sub
+
 
 Public Function IsFormOpen(FormName As String) As Boolean
 
