@@ -42,6 +42,9 @@ Dim lPosTerminator
 Dim lPosEqual As Long
 
     ParseValue = notFoundValue
+    If IsNullOrEmpty(arguments) Then
+        Exit Function
+    End If
     lPos = InStr(1, Nz(arguments, ""), valueName & assignChar)
     If lPos <> 0 Then
         lPosEqual = InStr(lPos, arguments, assignChar)
@@ -138,19 +141,18 @@ Dim i As Long
 Dim currentChar As String
  
     returnString = Nz(source, "")
-    For i = 1 To Len(source)
+    i = 1
+    While i <= Len(returnString)
         currentChar = Mid(returnString, i, 1)
         If InStr(1, keepPattern, currentChar) = 0 Then
             returnString = Replace(returnString, currentChar, replaceString)
+        Else
+            i = i + 1
         End If
-        'If InStr(1, findPattern, Mid(source, i, 1)) > 0 Then
-        '    returnString = returnString & Mid(source, i, 1)
-        'Else
-        '    returnString = returnString & replaceString
-        'End If
-    Next i
+    Wend
     KeepChars = returnString
 End Function
+
 
 Public Function ContainsString(source As Variant, containString As String, Optional useDelimiter As String = "") As Long
     ContainsString = InStr(1, useDelimiter & source & useDelimiter, useDelimiter & containString & useDelimiter)
