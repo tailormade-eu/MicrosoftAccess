@@ -116,6 +116,12 @@ Dim strDatabaseName As String
     Debug.Print Now
 End Function
 
+Public Sub LinkTableViewUsingSSMA(existingTableName As String, toLinkName As String)
+Dim cn As String
+    cn = GetConnectionStringByProperty(existingTableName)
+    AttachTable cn, toLinkName, toLinkName
+End Sub
+
 Sub UpdateSSMAConnectionString(Optional Group As String = "", Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default)
 Dim rs As New ADODB.Recordset
 Dim cmd As New ADODB.Command
