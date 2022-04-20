@@ -58,6 +58,11 @@ Public Sub MinimizeNavigationPane()
     DoCmd.Minimize
 End Sub
 
+Public Sub UnhideNavigationPane()
+    On Error Resume Next
+    DoCmd.SelectObject acTable, , True
+End Sub
+
 Public Sub ExportAllTables()
 Dim accObj As AccessObject
     
