@@ -354,8 +354,9 @@ Dim tableName As String
     End If
 End Sub
 
-Public Sub DeleteByObjectType(objectType As AcObjectType, Optional silentMode As Boolean = True)
+Public Sub DeleteByObjectType(objectType As AcObjectType, Optional silentMode As Boolean = True, Optional maxNumberOfObjects = 0)
 Dim cnt As Long
+Dim cntTo As Long
 Dim i As Long
 
     Select Case objectType
@@ -371,12 +372,16 @@ Dim i As Long
             Next
         Case acForm
             cnt = Application.CodeProject.AllForms.Count - 1
-            For i = cnt To 0 Step -1
+            cntTo = IIf(maxNumberOfObjects = 0, 0, cnt - maxNumberOfObjects)
+            cntTo = IIf(cntTo < 0, 0, cntTo)
+            For i = cnt To cntTo Step -1
                 DoCmd.DeleteObject objectType, Application.CodeProject.AllForms(i).Name
             Next
         Case acReport
             cnt = Application.CodeProject.AllReports.Count - 1
-            For i = cnt To 0 Step -1
+            cntTo = IIf(maxNumberOfObjects = 0, 0, cnt - maxNumberOfObjects)
+            cntTo = IIf(cntTo < 0, 0, cntTo)
+            For i = cnt To cntTo Step -1
                 DoCmd.DeleteObject objectType, Application.CodeProject.AllReports(i).Name
             Next
         Case acMacro
@@ -386,7 +391,7 @@ Dim i As Long
             Next
     End Select
     If Not silentMode Then
-        msgbox "Completed", vbOKOnly
+        MsgBox "Completed", vbOKOnly
     End If
 End Sub
 
