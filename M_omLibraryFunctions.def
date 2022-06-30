@@ -553,3 +553,23 @@ Dim F As AccessObject
     rs.Close
     Set rs = Nothing
 End Sub
+
+Public Sub CreateBinaryColumns()
+
+    Dim td As DAO.TableDef
+    Dim db As DAO.Database
+    Dim fd As Field
+
+    Set db = CurrentDb
+    Set td = db.TableDefs("Table1")
+
+    Set fd = td.CreateField("BinaryColumn", DataTypeEnum.dbBinary, 100)
+    fd.Attributes = fd.Attributes Or dbFixedField
+    td.Fields.Append fd
+
+    Set fd = td.CreateField("VarbinaryColumn", DataTypeEnum.dbBinary, 100)
+    td.Fields.Append fd
+
+    td.Fields.Refresh
+    db.TableDefs.Refresh
+End Sub
