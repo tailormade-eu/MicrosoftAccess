@@ -1,5 +1,6 @@
-Version =19
-VersionRequired =19
+Version =21
+VersionRequired =20
+PublishOption =1
 Checksum =122265361
 Begin Form
     RecordSelectors = NotDefault
