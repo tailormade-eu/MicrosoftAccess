@@ -116,9 +116,9 @@ Dim strDatabaseName As String
     Debug.Print Now
 End Function
 
-Public Sub LinkTableViewUsingSSMA(existingTableName As String, toLinkName As String)
+Public Sub LinkTableViewUsingSSMA(existingTableName As String, toLinkName As String, Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default)
 Dim cn As String
-    cn = GetConnectionStringByProperty(existingTableName)
+    cn = GetConnectionStringByProperty(existingTableName, ConnectionType:=ConnectionType)
     AttachTable cn, toLinkName, toLinkName
 End Sub
 
