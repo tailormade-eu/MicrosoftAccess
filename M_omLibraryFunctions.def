@@ -211,7 +211,7 @@ Dim rs As New ADODB.Recordset
         omFileFunctions.CreateFolderPath currentPath
         rs.Open "SELECT T.Name FROM MSysObjects T WHERE T.Type=1 AND T.Flags=0", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
         While Not rs.EOF
-            Application.ExportXml acExportTable, rs("Name"), gFso.BuildPath(currentPath, rs("Name") & ".xml"), gFso.BuildPath(currentPath, rs("Name") & "_Schema.xml")
+            Application.ExportXml acExportTable, Rs("Name"), gFso.BuildPath(currentPath, Rs("Name") & ".xml"), gFso.BuildPath(currentPath, Rs("Name") & "_Schema.xml"), , , , acExportAllTableAndFieldProperties + acEmbedSchema
             rs.MoveNext
         Wend
         rs.Close
@@ -573,3 +573,79 @@ Public Sub CreateBinaryColumns()
     td.Fields.Refresh
     db.TableDefs.Refresh
 End Sub
+
+Public Function GenerateDataMacroAfterInsert(tableName As String) As String
+Dim s As String
+Dim statementActionTemplate As String
+Dim statements As String
+Dim f As Field
+Dim cdb As Database
+
+    statementActionTemplate = "<Action Name='SetField'>" & vbCrLf
+    statementActionTemplate = statementActionTemplate + "<Argument Name='Field'><!FieldName!></Argument>" & vbCrLf
+    statementActionTemplate = statementActionTemplate + "<Argument Name='Value'>[<!TableName!>].[<!FieldName!>]</Argument>" & vbCrLf
+    statementActionTemplate = statementActionTemplate + "</Action>"
+    statementActionTemplate = Replace(statementActionTemplate, "'", Chr(34))
+    
+    s = "<?xml version='1.0' encoding='UTF-16' standalone='no'?>" & vbCrLf
+    s = s + "<DataMacros xmlns='http://schemas.microsoft.com/office/accessservices/2009/11/application'>" & vbCrLf
+    s = s + "<DataMacro Event='AfterInsert'>" & vbCrLf
+    s = s + "<Statements>" & vbCrLf
+    s = s + "<CreateRecord>" & vbCrLf
+    s = s + "<Data>" & vbCrLf
+    s = s + "<Reference>Log_<!TableName!></Reference>" & vbCrLf
+    s = s + "</Data>" & vbCrLf
+    s = s + "<Statements>" & vbCrLf
+    s = s + "<!Statements!>"
+    s = s + "</Statements>" & vbCrLf
+    s = s + "</CreateRecord>" & vbCrLf
+    s = s + "</Statements>" & vbCrLf
+    s = s + "</DataMacro>" & vbCrLf
+    s = s + "</DataMacros>"
+    s = Replace(s, "'", Chr(34))
+    s = Replace(s, "<!TableName!>", tableName)
+    Set cdb = CurrentDb
+    For Each f In cdb.TableDefs(tableName).Fields
+        statements = statements + Replace(Replace(statementActionTemplate, "<!FieldName!>", f.Name), "<!TableName!>", tableName) & vbCrLf
+    Next
+    
+    GenerateDataMacroAfterInsert = Replace(s, "<!Statements!>", statements)
+End Function
+Public Function GenerateDataMacroAfterUpdate(tableName As String) As String
+Dim s As String
+Dim statementActionTemplate As String
+Dim statements As String
+Dim f As Field
+Dim cdb As Database
+
+    statementActionTemplate = "<Action Name='SetField'>" & vbCrLf
+    statementActionTemplate = statementActionTemplate + "<Argument Name='Field'><!FieldName!></Argument>" & vbCrLf
+    statementActionTemplate = statementActionTemplate + "<Argument Name='Value'>[<!TableName!>].[<!FieldName!>]</Argument>" & vbCrLf
+    statementActionTemplate = statementActionTemplate + "</Action>"
+    statementActionTemplate = Replace(statementActionTemplate, "'", Chr(34))
+    
+    s = "<?xml version='1.0' encoding='UTF-16' standalone='no'?>" & vbCrLf
+    s = s + "<DataMacros xmlns='http://schemas.microsoft.com/office/accessservices/2009/11/application'>" & vbCrLf
+    s = s + "<DataMacro Event='AfterUpdate'>" & vbCrLf
+    s = s + "<Statements>" & vbCrLf
+    s = s + "<CreateRecord>" & vbCrLf
+    s = s + "<Data>" & vbCrLf
+    s = s + "<Reference>Log_<!TableName!></Reference>" & vbCrLf
+    s = s + "</Data>" & vbCrLf
+    s = s + "<Statements>" & vbCrLf
+    s = s + "<!Statements!>"
+    s = s + "</Statements>" & vbCrLf
+    s = s + "</CreateRecord>" & vbCrLf
+    s = s + "</Statements>" & vbCrLf
+    s = s + "</DataMacro>" & vbCrLf
+    s = s + "</DataMacros>"
+    s = Replace(s, "'", Chr(34))
+    s = Replace(s, "<!TableName!>", tableName)
+    Set cdb = CurrentDb
+    For Each f In cdb.TableDefs(tableName).Fields
+        statements = statements + Replace(Replace(statementActionTemplate, "<!FieldName!>", f.Name), "<!TableName!>", tableName) & vbCrLf
+    Next
+    
+    GenerateDataMacroAfterUpdate = Replace(s, "<!Statements!>", statements)
+End Function
+
