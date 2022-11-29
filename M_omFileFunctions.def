@@ -223,3 +223,11 @@ Dim ts As TextStream
     ts.Close
     Set ts = Nothing
 End Sub
+
+Public Function ReadFileToString(filename As String) As String
+Dim ts As TextStream
+    Set ts = gFso.OpenTextFile(filename, ForReading, False, TristateUseDefault)
+    ReadFileToString = ts.ReadAll
+    ts.Close
+    Set ts = Nothing
+End Function
