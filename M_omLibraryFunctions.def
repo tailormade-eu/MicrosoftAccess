@@ -493,20 +493,26 @@ Dim path As String
 Dim fn As String
 Dim S As String
 Dim commitMessage As String
+Dim gitFolder As String
 
+    gitFolder = "C:\Program Files\Git\"
+    If gFso.FolderExists(gitFolder) = False Then
+        gitFolder = gFso.BuildPath(omFileFunctions.GetUserRootFolder, "AppData\Local\Programs\Git\")
+    End If
     commitMessage = InputBox("Geef een omschrijving")
     If Len(commitMessage) = 0 Then
-        msgbox "Not message was given. Execution is aborted!", vbOKOnly
+        MsgBox "Not message was given. Execution is aborted!", vbOKOnly
         Exit Sub
     End If
     fn = gFso.BuildPath(repositoryPath, ".git\COMMITMESSAGE")
     omFileFunctions.WriteStringToFile fn, commitMessage
-    S = "cd '<repositoryPath>'"
-    S = S & vbCrLf & "'C:\Program Files\Git\bin\git.exe' add -A"
-    S = S & vbCrLf & "'C:\Program Files\Git\bin\git.exe' commit -F '<FilenameCommitMessage>'"
-    S = S & vbCrLf & "'C:\Program Files\Git\bin\git.exe' push"
-    S = Replace(S, "<repositoryPath>", repositoryPath)
-    S = Replace(S, "<FilenameCommitMessage>", fn)
+    S = "cd '{{repositoryPath}}'"
+    S = S & vbCrLf & "'{{GitFolder}}bin\git.exe' add -A"
+    S = S & vbCrLf & "'{{GitFolder}}bin\git.exe' commit -F '{{FilenameCommitMessage}}'"
+    S = S & vbCrLf & "'{{GitFolder}}bin\git.exe' push"
+    S = Replace(S, "{{repositoryPath}}", repositoryPath)
+    S = Replace(S, "{{GitFolder}}", gitFolder)
+    S = Replace(S, "{{FilenameCommitMessage}}", fn)
     S = Replace(S, "'", Chr(34))
     fn = gFso.BuildPath(CurrentProject.path, CurrentProject.Name & "_CommitAndPush.bat")
     omFileFunctions.WriteStringToFile fn, S
