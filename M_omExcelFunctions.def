@@ -229,3 +229,8 @@ Public Sub AutoFitRows(sh As Excel.Worksheet)
     sh.Cells.Select
     sh.Cells.EntireRow.AutoFit
 End Sub
+Public Sub UpdateFontOnSelection(sh As Excel.Worksheet, bold As Boolean)
+    With sh.Application.Selection.font
+        .bold = bold
+    End With
+End Sub
