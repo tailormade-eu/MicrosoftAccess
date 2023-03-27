@@ -27,6 +27,9 @@ End Sub
 Public Sub SelectColumn(columnIndex As Long)
     omExcelFunctions.SelectColumn xlWB.ActiveSheet, columnIndex
 End Sub
+Public Sub SelectRow(rowIndex As Long)
+    omExcelFunctions.SelectRow xlWB.ActiveSheet, rowIndex
+End Sub
 Public Sub FormatColumn(columnIndex As Long, numberFormat As String)
     omExcelFunctions.FormatColumn xlWB.ActiveSheet, columnIndex, numberFormat
 End Sub
