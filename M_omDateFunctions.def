@@ -431,3 +431,15 @@ End Function
 Public Function EOMonth(dt As Date) As Date
     EOMonth = DateSerial(year(dt), Month(dt) + 1, 0)
 End Function
+
+Public Function CalculatePayDate(dt As Date, Days As Integer, EndOfMonth As Boolean, ExtraDays As Integer) As Date
+
+    dt = DateAdd("d", Days, dt)
+    If EndOfMonth Then
+        dt = DateSerial(year(dt), Month(dt), 1)
+        dt = DateAdd("m", 1, dt)
+        dt = DateAdd("d", -1, dt)
+    End If
+    dt = DateAdd("d", ExtraDays, dt)
+    CalculatePayDate = dt
+End Function
