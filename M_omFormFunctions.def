@@ -83,3 +83,35 @@ Public Sub UpdateCreateTracking(frm As Form, Optional UpdateModify = True)
         UpdateModifyTracking frm
     End If
 End Sub
+Public Sub ListFormFields(formName As String)
+    Dim frm As Form
+    Dim ctl As Control
+    Dim intControlOrder As Integer
+    Dim ts As Scripting.TextStream
+    
+    Set ts = gFso.CreateTextFile(formName, True)
+    Set frm = Forms(formName)
+    
+    For Each ctl In frm.Controls
+        Debug.Print "Control Name: " & ctl.Name
+        ts.Write "Control Name|" & ctl.Name & "|"
+        Debug.Print "Control Type: " & TypeName(ctl)
+        ts.Write "Control Type|" & TypeName(ctl) & "|"
+        On Error Resume Next
+        If Not ctl.Properties("Caption") Is Nothing Then
+            Debug.Print "Control Caption: " & ctl.Properties("Caption")
+            ts.Write "Control Caption|" & ctl.Properties("Caption") & "|"
+        End If
+        If Not ctl.Properties("LabelName") Is Nothing Then
+            Debug.Print "Related Label: " & ctl.Properties("LabelName"), frm.Controls(ctl.Properties("LabelName")).Caption
+            ts.Write "Related Label|" & ctl.Properties("LabelName") & "|"
+            ts.Write "Related Label Caption|" & frm.Controls(ctl.Properties("LabelName")).Caption & "|"
+        End If
+        intControlOrder = ctl.Properties("Order")
+        Debug.Print "Order: " & intControlOrder
+        Debug.Print "----------------------"
+        ts.Write (vbCrLf)
+    Next ctl
+    ts.Close
+    Set ts = Nothing
+End Sub
