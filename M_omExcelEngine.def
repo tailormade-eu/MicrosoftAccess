@@ -14,7 +14,7 @@ Dim xlWb As Excel.Workbook
         Set xlWb = xlApp.Workbooks.Open(Template)
         MergeFromCurrentRecord xlApp.ActiveSheet, rs, "<<,>>,<,>,«,»,“,»"
         If Not show Then
-            xlWb.SaveAs SaveAs, wdFormatDocumentDefault
+            xlWb.SaveAs SaveAs
         Else
             omExcelFunctions.SetVisible xlApp, True
         End If
