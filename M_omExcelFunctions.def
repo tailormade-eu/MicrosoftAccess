@@ -26,7 +26,7 @@ FindFirst_NotFound:
 End Function
 
 Public Sub DeleteRow(sh As Excel.Worksheet, rowIndex As Long)
-    sh.Application.rows(rowIndex).Delete
+    sh.Application.Rows(rowIndex).Delete
 End Sub
 Public Sub DeleteSheet(sh As Excel.Worksheet)
 Dim ap As Excel.Application
@@ -38,12 +38,12 @@ Dim ap As Excel.Application
 End Sub
 Public Sub HideRow(sh As Excel.Worksheet, rowIndex As Long)
     If rowIndex <> 0 Then
-        sh.Application.rows(rowIndex).Hidden = True
+        sh.Application.Rows(rowIndex).Hidden = True
     End If
 End Sub
 Public Sub ShowRow(sh As Excel.Worksheet, rowIndex As Long)
     If rowIndex <> 0 Then
-        sh.Application.rows(rowIndex).Hidden = False
+        sh.Application.Rows(rowIndex).Hidden = False
     End If
 End Sub
 Public Sub HideColumn(sh As Excel.Worksheet, columnIndex As Long)
@@ -61,6 +61,15 @@ Public Sub SelectColumn(sh As Excel.Worksheet, columnIndex As Long)
         sh.Application.Columns(columnIndex).Select
     End If
 End Sub
+Public Sub SelectRow(sh As Excel.Worksheet, rowIndex As Long)
+    If rowIndex <> 0 Then
+        sh.Application.Rows(rowIndex).Select
+    End If
+End Sub
+Public Sub SetSelectionBold(sh As Excel.Worksheet, Optional boldFlag As Boolean = True)
+    sh.Application.Selection.Font.bold = boldFlag
+End Sub
+
 Public Sub FormatColumn(sh As Excel.Worksheet, columnIndex As Long, numberFormat As String)
     If columnIndex <> 0 Then
         sh.Columns(columnIndex).Select
@@ -130,21 +139,21 @@ Public Sub InsertRow(sh As Excel.Worksheet, rowIndex As Long, Optional copyRowIn
         sh.activate
     End If
     If copyRowIndex <> 0 Then
-        sh.Application.rows(copyRowIndex).Select
+        sh.Application.Rows(copyRowIndex).Select
         sh.Application.Selection.Copy
     End If
     If moveRowIndex <> 0 Then
-        sh.Application.rows(moveRowIndex).Select
+        sh.Application.Rows(moveRowIndex).Select
         sh.Application.Selection.Cut
     End If
-    sh.Application.rows(rowIndex).Select
+    sh.Application.Rows(rowIndex).Select
     sh.Application.Selection.Insert Shift:=direction ', CopyOrigin:=xlFormatFromLeftOrAbove
 End Sub
 
 Public Function FindSheetByName(wb As Excel.Workbook, sheetName As String) As Excel.Worksheet
 Dim i As Long
 
-    For i = 1 To wb.Sheets.count
+    For i = 1 To wb.Sheets.Count
         If wb.Sheets(i).Name = sheetName Then
             Set FindSheetByName = wb.Sheets(i)
             Exit Function
@@ -154,7 +163,7 @@ End Function
 Public Function FindSheetByCell(wb As Excel.Workbook, Value As String, Optional rowIndex As Long = 1, Optional columnIndex As Long = 1) As Excel.Worksheet
 Dim i As Long
 
-    For i = 1 To wb.Sheets.count
+    For i = 1 To wb.Sheets.Count
         If wb.Sheets(i).Cells(rowIndex, columnIndex) = Value Then
             Set FindSheetByCell = wb.Sheets(i)
             Exit Function
@@ -217,4 +226,50 @@ End Sub
 Public Sub AutoFitRows(sh As Excel.Worksheet)
     sh.Cells.Select
     sh.Cells.EntireRow.AutoFit
+End Sub
+Public Function GetMaxRow(sh As Excel.Worksheet)
+    GoToNextFullCell sh, xlDown
+    GetMaxRow = sh.Application.ActiveCell.row
+End Function
+Public Function GetMaxColumn(sh As Excel.Worksheet)
+    GoToNextFullCell sh, xlToRight
+    GetMaxColumn = sh.Application.ActiveCell.Column
+End Function
+
+Public Sub ConvertToImage(sh As Excel.Worksheet, columnIndex As Long, findString As String, replaceString As String)
+Dim rowMax As Long
+Dim currentRow As Long
+Dim Value As String
+Dim currentRange As Excel.Range
+
+    sh.Cells(1, columnIndex).Select
+    rowMax = GetMaxRow(sh)
+    If rowMax = 1048576 Then Exit Sub
+    currentRow = 2
+    While currentRow <= rowMax
+        sh.Cells(currentRow, columnIndex).Select
+        Value = sh.Application.ActiveCell.Value
+        sh.Application.ActiveCell.FormulaR1C1 = "=Image(" & Chr(34) & Replace(Value, findString, replaceString) & Chr(34) & ")"
+        currentRow = currentRow + 1
+    Wend
+    
+End Sub
+Public Sub SetRowHeight(sh As Excel.Worksheet, startRow As Long, endRow As Long, height As Double)
+Dim rowMax As Long
+
+    sh.Cells(1, 1).Select
+    rowMax = IIf(endRow > startRow, endRow, GetMaxRow(sh))
+    If rowMax = 1048576 Then Exit Sub
+    sh.Rows(startRow & ":" & rowMax).Select
+    sh.Application.Selection.RowHeight = height
+End Sub
+
+Public Sub SetRowWidth(sh As Excel.Worksheet, startColumn As Long, endColumn As Long, width As Double)
+Dim columnMax As Long
+
+    sh.Cells(1, 1).Select
+    columnMax = IIf(endColumn >= startColumn, endColumn, GetMaxColumn(sh))
+    If columnMax = 1048576 Then Exit Sub
+    sh.Columns(startColumn).Resize(, columnMax).Select
+    sh.Application.Selection.ColumnWidth = width
 End Sub
