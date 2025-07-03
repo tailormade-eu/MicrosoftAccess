@@ -46,6 +46,17 @@ Public Sub ShowRow(sh As Excel.Worksheet, rowIndex As Long)
         sh.Application.Rows(rowIndex).Hidden = False
     End If
 End Sub
+Public Sub SelectRow(sh As Excel.Worksheet, rowIndex As Long)
+    If rowIndex <> 0 Then
+        sh.Application.rows(rowIndex).Select
+    End If
+End Sub
+Public Sub FormatRow(sh As Excel.Worksheet, rowIndex As Long, numberFormat As String)
+    If rowIndex <> 0 Then
+        sh.Columns(rowIndex).Select
+        sh.Application.Selection.numberFormat = numberFormat ' "#,##0.00" - "0.00%"
+    End If
+End Sub
 Public Sub HideColumn(sh As Excel.Worksheet, columnIndex As Long)
     If columnIndex <> 0 Then
         sh.Application.Columns(columnIndex).Hidden = True
@@ -272,4 +283,10 @@ Dim columnMax As Long
     If columnMax = 1048576 Then Exit Sub
     sh.Columns(startColumn).Resize(, columnMax).Select
     sh.Application.Selection.ColumnWidth = width
+End Sub
+
+Public Sub UpdateFontOnSelection(sh As Excel.Worksheet, bold As Boolean)
+    With sh.Application.Selection.font
+        .bold = bold
+    End With
 End Sub
