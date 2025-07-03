@@ -27,12 +27,17 @@ Public Sub UserLock()
 End Sub
 
 Public Sub AuthenticateUser()
-    If Not gUser.LoggedIn Then
-        If UseWindowsAuthentication Then
-            omUserFunctions.LoginWithWindowsUser True
-        ElseIf UseLoginForm Then
-            DoCmd.OpenForm "Login", windowMode:=acDialog
-        End If
+    If gUser.LoggedIn Then
+        Exit Sub
+    End If
+    If UseWindowsAuthentication = UseLoginForm Then
+        MsgBox "Set the correct variable for Login method in omUserFunctions.", vbExclamation
+        Exit Sub
+    End If
+    If UseWindowsAuthentication Then
+        omUserFunctions.LoginWithWindowsUser True
+    ElseIf UseLoginForm Then
+        DoCmd.OpenForm "Login", windowMode:=acDialog
     End If
 End Sub
 
@@ -63,3 +68,6 @@ Public Sub RecordsetUpdateModifyTracking(rs As ADODB.Recordset)
         rs("ModifyUserId") = gUser.Name
     End If
 End Sub
+Public Function GetUserId() As Long
+    GetUserId = Nz(gUser.Id, 0)
+End Function
