@@ -3,11 +3,12 @@ Option Explicit
 
 Global gSQLConnector As New omSQLConnector
 
-Public Sub ConnectorTest()
 
-    ' when the table is available as linked table then you can use the MSAccess Connection (default behaviour)
-    gSQLConnector.ExecuteCommandTextNonQuery "UPDATE [LinkedTableName] SET Field1=? WHERE Field2=?", 1, 1
-    
-    gSQLConnector.ConnectionString = omSSMAAConnector.GetConnectionStringByProperty("LinkedTableName")
-    gSQLConnector.ExecuteCommandTextNonQuery "UPDATE [NotLinkedTableName] SET Field1=? WHERE Field2=?", 1, 2
+Public Sub ConnectorTest()
+    'gSQLConnector.ExecuteCommandTextNonQuery "update External_T_Auto set id_uitrsuting=?, ManualMatched=?,HideLine=? where TextClean=?", ID_Uitrsuting, ManualMatched, HideLine, TextClean
+    ' Als tabel gelinked is kan de gewone access connectie gebruikt worden : dit is default
+    gSQLConnector.ExecuteCommandTextNonQuery "UPDATE t_klantenquete SET ID_Taal=? WHERE ID_Enquete=?", 1, 1
+
+    gSQLConnector.ConnectionString = omSSMAAConnector.GetConnectionStringByProperty("T_Auto", ConnectionType:=ConnectionTypes.SQLODBC, encryptType:=EncryptMandatory)
+    gSQLConnector.ExecuteCommandTextNonQuery "UPDATE t_klantenquete SET ID_Taal=? WHERE ID_Enquete=?", 1, 2
 End Sub
