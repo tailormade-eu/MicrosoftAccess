@@ -353,3 +353,52 @@ Public Function GetSubstringAfterChar(s As String, Optional c As String = ".", O
 
     GetSubstringAfterChar = result
 End Function
+
+Public Function ByteArrayToHexString(ba() As Byte) As String
+Dim i As Long
+Dim S As String
+
+    For i = 0 To UBound(ba)
+        S = S & Right("00" & Hex$(ba(i)), 2)
+    Next
+    ByteArrayToHexString = "0x" & S
+End Function
+
+Public Function ByteArrayToString(ba() As Byte) As String
+Dim i As Long
+Dim S As Double
+
+    For i = 0 To UBound(ba)
+        S = S * 256 + ba(i)
+    Next
+    ByteArrayToString = S
+End Function
+
+Public Function CheckIllegalCharInString(strCheck As String) As String
+    'Check of the illegal characters include the following characters :    !#€$%()`'?§&ç[]@{}=+<>:;,*^|"  and
+    'char(10) = LF - char(13) = CR - Char(34) = " - char(39) = ' - char(126) = tilde
+
+    Dim intI As Integer
+    Dim intPassedString As Integer
+    Dim intCheckString As Integer
+    Dim strChar As String
+    Dim strIllegalChars As String
+    Dim intReplaceLen As Integer
+
+    If IsNull(strCheck) Then Exit Function
+
+    CheckIllegalCharInString = ""
+    'char(10) = LF - char(13) = CR - Char(34) = " - char(39) = ' - char(126) = tilde
+    strIllegalChars = "éè!#€$%`'?§&ç£²³@{}=+<>:;,*^|µ""" & Chr(34) & Chr(39) & Chr(13) & Chr(10) & Chr(126)  'add/remove characters you need removed to this string
+
+    intPassedString = Len(strCheck)
+    intCheckString = Len(strIllegalChars)
+
+    For intI = 1 To intCheckString
+        strChar = Mid(strIllegalChars, intI, 1)
+        If InStr(strCheck, strChar) > 0 Then
+            CheckIllegalCharInString = strChar
+            Exit For
+        End If
+    Next intI
+End Function
