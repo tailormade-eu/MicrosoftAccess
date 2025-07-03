@@ -57,6 +57,9 @@ Public Sub AutoFit()
     omExcelFunctions.AutoFitColumns xlWb.ActiveSheet
     omExcelFunctions.AutoFitRows xlWb.ActiveSheet
 End Sub
+Public Sub SelectionUpdateBold(bold As Boolean)
+    UpdateFontOnSelection xlWB.ActiveSheet, bold
+End Sub
 Private Sub Class_Terminate()
     Set xlWb = Nothing
     xlApp.Quit
