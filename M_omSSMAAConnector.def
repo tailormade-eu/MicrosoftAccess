@@ -4,7 +4,7 @@ Global cSQLNCLIVersion As Integer
 Global cSQLNCLIFound As Boolean
 Global cSQLODBCVersion As Integer
 Global cSQLODBCFound As Boolean
-    
+
 
 'Global gomCS As New omConnectionString
 
@@ -14,43 +14,39 @@ Dim m_ServerCon_ODBC As String
 Dim m_ServerCon As String
 Const cSSMAABAckup = "SSMAA_Backup_"
 
-
-
 ' Module Name   SSMAAConnector
 '
 ' Author        Raoul Jacobs
-' Company       opmaat bvba
-' Email         jara@opmaat.be
-' Modify Date   2006-07-25
+' Company       Tailormade bv
+' Email         jara@tailormade.eu
+' Modify Date   2025-06-25
 '
 ' Description
 '   the function Link will relink all tables which are defined in the table SSMAA_ODBC_Tables
 '   the function CreateTable will create the tabel SSMAA_ODBC_Tables
 
-' vm sqlserver : OPMAAT-D800VM\SQLEXPRESS
-
 Public Function LocalCon() As ADODB.connection
   Set LocalCon = CurrentProject.connection
 End Function
 
-Public Function ServerCon(Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default, Optional ODBCConnection As Boolean = False) As String
+Public Function ServerCon(Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional ODBCConnection As Boolean = False, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional) As String
   ' ODBCConnection = true => Direct connection to Database Server Using ODBC Provider
   ' ODBCConnection = False = Connection using MSAccess Objects OR ADODB Connection
   If ODBCConnection Then
     If IsNullOrEmpty(m_ServerCon_ODBC) Then
-        m_ServerCon_ODBC = omSSMAAConnector.GetConnectionStringByProperty(ConnectionType:=ConnectionType, ODBCConnection:=ODBCConnection)
+        m_ServerCon_ODBC = omSSMAAConnector.GetConnectionStringByProperty(ConnectionType:=ConnectionType, ODBCConnection:=ODBCConnection, encryptType:=encryptType)
     End If
     ServerCon = m_ServerCon_ODBC
   Else
     If IsNullOrEmpty(m_ServerCon) Then
-        m_ServerCon = omSSMAAConnector.GetConnectionStringByProperty(ConnectionType:=ConnectionType, ODBCConnection:=ODBCConnection)
+        m_ServerCon = omSSMAAConnector.GetConnectionStringByProperty(ConnectionType:=ConnectionType, ODBCConnection:=ODBCConnection, encryptType:=encryptType)
     End If
     ServerCon = m_ServerCon
   End If
 End Function
 
 
-Public Function LinkUsingSSMA(Optional Group As String = "", Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default, Optional SavePassword As Boolean = False, Optional alwaysUpdate As Boolean = False) As Boolean
+Public Function LinkUsingSSMA(Optional Group As String = "", Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional SavePassword As Boolean = False, Optional alwaysUpdate As Boolean = False, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional) As Boolean
 Dim rs As New ADODB.Recordset
 Dim rsODBC As New ADODB.Recordset
 Dim strSQLTable As String
@@ -61,9 +57,9 @@ Dim strDatabaseName As String
     '    Exit Function
     'End If
     Debug.Print Now
-    
+
     UpdateSSMAAGroups
-    
+
     If alwaysUpdate Then
         'DeleteLinkTables Group
         LinkDeleteTables Group
@@ -71,14 +67,14 @@ Dim strDatabaseName As String
         'DeleteLinkTables Group, True
         LinkDeleteTables Group, True
     End If
-    
-    UpdateSSMAConnectionString Group, ConnectionType
+
+    UpdateSSMAConnectionString Group, ConnectionType, encryptType
     rs.Open "SELECT Name, Type FROM MSysObjects WHERE Type=1 OR Type=6 OR Type=4", LocalCon, adOpenStatic, adLockReadOnly
     rsODBC.Open "SELECT * FROM SSMAA_ODBC_Tables" & IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), ""), LocalCon, adOpenForwardOnly, adLockOptimistic
     'rsODBC.Open "SELECT * FROM SSMAA_ODBC_Tables" & IIf(Group <> "", " WHERE [Group] like " & Chr(34) & "%," & Group & ",%" & Chr(34), ""), LocalCon, adOpenForwardOnly, adLockOptimistic
     While Not rsODBC.EOF
         'rs.Requery
-        rs.Filter = "Name='" & rsODBC("ODBCTable") & "'"
+        rs.filter = "Name='" & rsODBC("ODBCTable") & "'"
         If Not rs.EOF Then
             If rs("Type") = 1 Then
                 DoCmd.Rename cSSMAABAckup & rsODBC("ODBCTable"), acTable, rsODBC("ODBCTable")
@@ -93,7 +89,7 @@ Dim strDatabaseName As String
             strSQLTable = "[SQLTableOwner][SQLTable]"
             strSQLTable = Replace(strSQLTable, "[SQLTableOwner]", IIf(Len(rsODBC("SQLTableOwner")) > 0, rsODBC("SQLTableOwner") & ".", ""))
             strSQLTable = Replace(strSQLTable, "[SQLTable]", rsODBC("SQLTable"))
-            
+
             'strDatabaseName = omCSLastUsed.GetConnectionString(rsODBC("SQLDatabase"), rsODBC("SQLServer"), True, ConnectionType, rsODBC("DSN"), rsODBC("SQLLogin"), rsODBC("SQLPassword"), Group)
             'strDatabaseName = "ODBC;" & rsODBC("ConnectionString")
             strDatabaseName = rsODBC("ConnectionString")
@@ -106,7 +102,7 @@ Dim strDatabaseName As String
         'Debug.Print Now
         DoEvents
         rsODBC("Attach") = 0
-        rsODBC.update
+        rsODBC.Update
         rsODBC.MoveNext
     Wend
     rsODBC.Close
@@ -116,16 +112,16 @@ Dim strDatabaseName As String
     Debug.Print Now
 End Function
 
-Public Sub LinkTableViewUsingSSMA(existingTableName As String, toLinkName As String, Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default)
+Public Sub LinkTableViewUsingSSMA(existingTableName As String, toLinkName As String, Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional)
 Dim cn As String
-    cn = GetConnectionStringByProperty(existingTableName, ConnectionType:=ConnectionType)
+    cn = GetConnectionStringByProperty(existingTableName, ConnectionType:=ConnectionType, encryptType:=encryptType)
     AttachTable cn, toLinkName, toLinkName
 End Sub
 
-Sub UpdateSSMAConnectionString(Optional Group As String = "", Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default)
+Sub UpdateSSMAConnectionString(Optional Group As String = "", Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional)
 Dim rs As New ADODB.Recordset
 Dim cmd As New ADODB.Command
-    
+
     Set omCSLastUsed = New omConnectionString
     cmd.commandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Groups],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
     'cmd.commandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Group],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
@@ -139,11 +135,11 @@ Dim cmd As New ADODB.Command
     cmd.Parameters.Append cmd.CreateParameter("p7", adLongVarWChar, adParamInput, 256)
     cmd.Parameters.Append cmd.CreateParameter("p8", adLongVarWChar, adParamInput, 256)
     cmd.Parameters.Append cmd.CreateParameter("p9", adLongVarWChar, adParamInput, 256)
-    
+
     rs.Open "SELECT [Groups], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword From SSMAA_ODBC_Tables " & IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), "") & " GROUP BY [Groups], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword", LocalCon, adOpenForwardOnly, adLockReadOnly
     'rs.Open "SELECT [Group], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword From SSMAA_ODBC_Tables " & IIf(Group <> "", " WHERE [Group] like " & Chr(34) & "%," & Group & ",%" & Chr(34), "") & " GROUP BY [Group], DSN, SQLServer, SQLServerPort, SQLDatabase, ConnectionTypeId, SQLLogin, SQLPassword", LocalCon, adOpenForwardOnly, adLockReadOnly
     While Not rs.EOF
-        cmd.Parameters(0) = omCSLastUsed.GetConnectionString(Nz(rs("sqlDatabase"), ""), Nz(rs("SQLServer"), ""), False, Nz(rs("ConnectionTypeId"), ConnectionType), Nz(rs("DSN"), ""), Nz(rs("SQLLogin"), ""), Nz(rs("SQLPassword"), ""), Nz(rs("Groups"), ""), Nz(rs("SQLServerPort"), ""))
+        cmd.Parameters(0) = omCSLastUsed.GetConnectionString(Nz(rs("sqlDatabase"), ""), Nz(rs("SQLServer"), ""), False, Nz(rs("ConnectionTypeId"), ConnectionType), Nz(rs("DSN"), ""), Nz(rs("SQLLogin"), ""), Nz(rs("SQLPassword"), ""), Nz(rs("Groups"), ""), Nz(rs("SQLServerPort"), ""), encryptType)
         'cmd.Parameters(0) = omCSLastUsed.GetConnectionString(Nz(rs("sqlDatabase"), ""), Nz(rs("SQLServer"), ""), False, Nz(rs("ConnectionTypeId"), ConnectionType), Nz(rs("DSN"), ""), Nz(rs("SQLLogin"), ""), Nz(rs("SQLPassword"), ""), Nz(rs("Group"), ""), Nz(rs("SQLServerPort"), ""))
         cmd.Parameters(1) = Nz(rs("Groups"), "")
         'cmd.Parameters(1) = Nz(rs("Group"), "")
@@ -165,13 +161,14 @@ End Sub
 'Sub AttachedTable(ConnectionString As String, sourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False)
 Sub AttachTable(ConnectionString As String, SourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False, Optional primaryKey As String = "")
 Dim tbl As DAO.TableDef
-              
+
     On Error Resume Next
     'Create a new TableDef object.
     Set tbl = CurrentDb.CreateTableDef(DestinationTable)
     'Set the properties to create the link
     tbl.Connect = ConnectionString
     tbl.SourceTableName = SourceTable
+
     If SavePassword And (tbl.Attributes And dbAttachSavePWD) = 0 Then
         tbl.Attributes = tbl.Attributes + dbAttachSavePWD
     End If
@@ -191,7 +188,7 @@ Dim strSQL As String
     strSQL = "CREATE TABLE [SSMAA_ODBC_Tables]([SQLServer] TEXT(255),[SQLDatabase] TEXT(255),[SQLLogin] TEXT(100),[SQLPassword] TEXT(100),[SQLTableOwner] TEXT(100),[SQLTable] TEXT(255),[ODBCTable] TEXT(255),[ErrorMessage] TEXT(255)) "
 
     DoCmd.RunSQL strSQL
-    
+
 End Sub
 Public Sub PopulateTable()
 Dim strSQL As String
@@ -237,7 +234,7 @@ Dim i As Long
         GetSQLODBCVersion = cSQLODBCVersion
     End If
 End Function
-Public Function GetConnectionStringByProperty(Optional tableName As String = "", Optional databaseName As String = "", Optional serverName As String = "", Optional dsnName As String, Optional groupName As String, Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default, Optional ODBCConnection As Boolean = True) As String
+Public Function GetConnectionStringByProperty(Optional tableName As String = "", Optional databaseName As String = "", Optional serverName As String = "", Optional dsnName As String, Optional GroupName As String, Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional ODBCConnection As Boolean = True, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional) As String
 Dim rs As New ADODB.Recordset
 Dim strFilter As String
 
@@ -248,17 +245,17 @@ Dim strFilter As String
         strFilter = strFilter & IIf(NotIsNullOrEmpty(serverName), " AND sqlserver='{2}'", "")
         strFilter = strFilter & IIf(NotIsNullOrEmpty(dsnName), " AND dsn='{3}'", "")
         'strFilter = strFilter & IIf(NotIsNullOrEmpty(groupName), " AND group like '%,{4},%'", "")
-        strFilter = strFilter & IIf(NotIsNullOrEmpty(groupName), " AND groups like '%,{4},%'", "")
+        strFilter = strFilter & IIf(NotIsNullOrEmpty(GroupName), " AND groups like '%,{4},%'", "")
         If NotIsNullOrEmpty(strFilter) Then
-            rs.Filter = StringFormat(Mid(strFilter, 6), tableName, databaseName, serverName, dsnName, groupName)
+            rs.filter = StringFormat(Mid(strFilter, 6), tableName, databaseName, serverName, dsnName, GroupName)
             If rs.EOF Then
-                rs.Filter = ""
+                rs.filter = ""
                 rs.MoveFirst
             End If
         End If
         GetConnectionStringByProperty = Nz(rs("ConnectionString"), "")
         If IsNullOrEmpty(GetConnectionStringByProperty) Or Nz(rs("ConnectionTypeId"), 0) <> ConnectionType Then
-            GetConnectionStringByProperty = omCSLastUsed.GetConnectionString(rs("SQLDatabase"), rs("SQLServer"), ODBCConnection, ConnectionType, rs("DSN"), rs("SQLLogin"), rs("SQLPassword"))
+            GetConnectionStringByProperty = omCSLastUsed.GetConnectionString(rs("SQLDatabase"), rs("SQLServer"), ODBCConnection, ConnectionType, rs("DSN"), rs("SQLLogin"), rs("SQLPassword"), encryptType:=encryptType)
         End If
         If ODBCConnection And Left(GetConnectionStringByProperty, 5) <> "ODBC;" Then
             GetConnectionStringByProperty = "ODBC;" & GetConnectionStringByProperty
@@ -280,7 +277,7 @@ Dim strFilter As String
         strFilter = strFilter & IIf(NotIsNullOrEmpty(serverName), " AND sqlserver='{2}'", "")
         strFilter = strFilter & IIf(NotIsNullOrEmpty(dsnName), " AND dsn='{3}'", "")
         If NotIsNullOrEmpty(strFilter) Then
-            rs.Filter = StringFormat(Mid(strFilter, 6), tableName, databaseName, serverName, dsnName)
+            rs.filter = StringFormat(Mid(strFilter, 6), tableName, databaseName, serverName, dsnName)
             If Not rs.EOF Then
                 'GetGroupByProperty = rs("Group")
                 GetGroupByProperty = rs("Groups")
@@ -310,11 +307,11 @@ Dim t As String
     rs.Open "SELECT * FROM MSysObjects", LocalCon, adOpenForwardOnly, adLockReadOnly
     rsTable.Open storageTable, CurrentProject.connection, adOpenDynamic, adLockOptimistic
     While Not rs.EOF
-        
+
         typeFilter = "4" '",1,4,"
         If omStringFunctions.ContainsString(typeFilter, rs("Type"), ",") And rs("Name") <> storageTable Then
             Debug.Print rs("Name"), rs("Type")
-            rsTable.Filter = "[odbcTable]=" & "'" & rs("Name") & "'"
+            rsTable.filter = "[odbcTable]=" & "'" & rs("Name") & "'"
             'rsTable.Filter = "[odbcTable]=" & Chr(34) & rs("Name") & Chr(34)
             If rsTable.EOF Then
                 rsTable.AddNew
@@ -341,7 +338,7 @@ Dim t As String
                         rsTable("SQLTable") = StringSplitGetByIndex(t, ".", 1)
                     End If
                 End If
-                rsTable.update
+                rsTable.Update
             End If
         End If
         rs.MoveNext
@@ -352,7 +349,7 @@ Dim t As String
     Set rs = Nothing
 End Sub
 
-Public Sub LinkPassthroughQueries(Optional ConnectionType As ConnectionTypes = ConnectionTypes.Default)
+Public Sub LinkPassthroughQueries(Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional)
 Dim rs As New ADODB.Recordset
 Dim t As String
 Dim connString As String
@@ -367,16 +364,16 @@ Dim descriptionString As String
         t = ""
         t = omCSTest.Group
         If NotIsNullOrEmpty(t) Then
-            connString = GetConnectionStringByProperty(groupName:=t, ConnectionType:=ConnectionType)
+            connString = GetConnectionStringByProperty(GroupName:=t, ConnectionType:=ConnectionType, encryptType:=encryptType)
         Else
             t = omCSTest.DSN
             If NotIsNullOrEmpty(t) Then
-                connString = GetConnectionStringByProperty(dsnName:=t, ConnectionType:=ConnectionType)
+                connString = GetConnectionStringByProperty(dsnName:=t, ConnectionType:=ConnectionType, encryptType:=encryptType)
                 descriptionString = "Group=" & t
             Else
                 t = omCSTest.Database
                 If NotIsNullOrEmpty(t) Then
-                    connString = GetConnectionStringByProperty(databaseName:=t, ConnectionType:=ConnectionType)
+                    connString = GetConnectionStringByProperty(databaseName:=t, ConnectionType:=ConnectionType, encryptType:=encryptType)
                 End If
             End If
         End If
@@ -398,7 +395,7 @@ Dim rs As New ADODB.Recordset
 Dim typeFilter As String
 Dim t As String
 Dim connString As String
-Dim sql As String
+Dim SQL As String
 
     Debug.Print Now
     rs.Open "SELECT * FROM MSysObjects WHERE Type=5 AND flags IN (112,144)", LocalCon, adOpenForwardOnly, adLockReadOnly
@@ -408,20 +405,20 @@ Dim sql As String
         If InStr(1, CurrentDb.QueryDefs(rs("Name")).Connect, "database=" & sourceDatabase & ";") > 0 Then
                 CurrentDb.QueryDefs(rs("Name")).Connect = Replace(CurrentDb.QueryDefs(rs("Name")).Connect, "database=" & sourceDatabase & ";", "database=" & destinationDatabase & ";")
         End If
-        sql = CurrentDb.QueryDefs(rs("Name")).sql
-        If InStr(1, sql, "USE ") > 0 Then
+        SQL = CurrentDb.QueryDefs(rs("Name")).SQL
+        If InStr(1, SQL, "USE ") > 0 Then
             Debug.Print "USE => " & rs("Name"), rs("Type"), rs("flags")
-            sql = omSQLFunctions.ReplaceDatabaseInUseClause(sql, sourceDatabase, destinationDatabase)
+            SQL = omSQLFunctions.ReplaceDatabaseInUseClause(SQL, sourceDatabase, destinationDatabase)
         End If
-        If InStr(1, sql, "." & schema & ".") > 0 Then
+        If InStr(1, SQL, "." & schema & ".") > 0 Then
             Debug.Print "." & schema & "." & rs("Name"), rs("Type"), rs("flags")
-            sql = Replace(sql, " " & sourceDatabase & "." & schema & ".", " " & destinationDatabase & "." & schema & ".")
-            sql = Replace(sql, "," & sourceDatabase & "." & schema & ".", "," & destinationDatabase & "." & schema & ".")
-            sql = Replace(sql, vbCrLf & sourceDatabase & "." & schema & ".", vbCrLf & destinationDatabase & "." & schema & ".")
-            sql = Replace(sql, vbCr & sourceDatabase & "." & schema & ".", vbCr & destinationDatabase & "." & schema & ".")
-            sql = Replace(sql, vbLf & sourceDatabase & "." & schema & ".", vbLf & destinationDatabase & "." & schema & ".")
+            SQL = Replace(SQL, " " & sourceDatabase & "." & schema & ".", " " & destinationDatabase & "." & schema & ".")
+            SQL = Replace(SQL, "," & sourceDatabase & "." & schema & ".", "," & destinationDatabase & "." & schema & ".")
+            SQL = Replace(SQL, vbCrLf & sourceDatabase & "." & schema & ".", vbCrLf & destinationDatabase & "." & schema & ".")
+            SQL = Replace(SQL, vbCr & sourceDatabase & "." & schema & ".", vbCr & destinationDatabase & "." & schema & ".")
+            SQL = Replace(SQL, vbLf & sourceDatabase & "." & schema & ".", vbLf & destinationDatabase & "." & schema & ".")
         End If
-        CurrentDb.QueryDefs(rs("Name")).sql = sql
+        CurrentDb.QueryDefs(rs("Name")).SQL = SQL
         rs.MoveNext
     Wend
     rs.Close
@@ -456,6 +453,7 @@ End Sub
 Public Sub LinkDeleteTables(Optional Group As String = "", Optional AttachOnly As Boolean = False)
 Dim rsODBC As New ADODB.Recordset
 Dim strWhere As String
+Dim td As TableDef
 
     On Error Resume Next
     'Debug.Print Now
@@ -464,13 +462,14 @@ Dim strWhere As String
     strWhere = omSQLFunctions.WhereAnd(strWhere, IIf(AttachOnly, "[Attach] = True", ""))
     rsODBC.Open omSQLFunctions.BuildSQL("SELECT * FROM SSMAA_ODBC_Tables", whereClause:=strWhere), LocalCon, adOpenForwardOnly
     Do Until rsODBC.EOF
-        If CurrentDb.TableDefs(rsODBC("ODBCTable")).Connect <> "" And TableExists(rsODBC("ODBCTable")) Then
-            DoCmd.DeleteObject acTable, rsODBC("ODBCTable")
+        If CurrentDb.TableDefs(rsODBC("ODBCTable")).Connect <> "" Then
+            CurrentDb.TableDefs.Delete rsODBC("ODBCTable")
         End If
         rsODBC.MoveNext
     Loop
     rsODBC.Close
     Set rsODBC = Nothing
+    CurrentDb.TableDefs.Refresh
     'Debug.Print Now
 End Sub
 
@@ -478,7 +477,7 @@ End Sub
 'Public Sub DeleteLinkPTs()
 Public Sub LinkDeletePTs()
 Dim rs As New ADODB.Recordset
-  
+
   ' Does not work with LIKE "PT*"
   'rs.Open "SELECT Name, Type FROM MSysObjects AS O WHERE O.Type=5 AND O.[Name] LIKE " & SQLStringAcs("PT%"), LocalCon, adOpenStatic, adLockReadOnly
 
@@ -492,8 +491,8 @@ Dim rs As New ADODB.Recordset
 
 End Sub
 
-Public Sub SetSQLConnectorConnectionString(tableName As String)
-    gSQLConnector.ConnectionString = omSSMAAConnector.GetConnectionStringByProperty(tableName, ConnectionType:=SQLOLEDBProvider)
+Public Sub SetSQLConnectorConnectionString(tableName As String, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional)
+    gSQLConnector.ConnectionString = omSSMAAConnector.GetConnectionStringByProperty(tableName, ConnectionType:=SQLOLEDBProvider, encryptType:=encryptType)
 End Sub
 
 
@@ -508,7 +507,7 @@ Dim rs As New ADODB.Recordset
     While Not rs.EOF
         If NotIsNullOrEmpty(rs("Groups")) Then
             rs("Groups") = Replace("," & rs("Groups") & ",", ",,", ",")
-            rs.update
+            rs.Update
         End If
         rs.MoveNext
     Wend
@@ -516,28 +515,28 @@ Dim rs As New ADODB.Recordset
     Set rs = Nothing
 End Sub
 
-Public Function IsConnectingPossible(tableName As String, Optional connectionTimout As Long = 5) As Boolean
+Public Function IsConnectingPossible(tableName As String, Optional connectionTimout As Long = 5, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional) As Boolean
 Dim lngStartTime As Long
 Dim conn As New ADODB.connection
 Dim cs As String
-    
-    cs = GetConnectionStringByProperty(tableName:=tableName, ODBCConnection:=False)
-    
+
+    cs = GetConnectionStringByProperty(tableName:=tableName, ODBCConnection:=False, encryptType:=encryptType)
+
     Set conn = New ADODB.connection
     conn.ConnectionString = cs
     conn.ConnectionTimeout = connectionTimout
     conn.Open Options:=adAsyncConnect
-    
+
     lngStartTime = omKernalFunctions.GetTickCount()
-    
+
     Do While ((omKernalFunctions.GetTickCount() - lngStartTime) < conn.ConnectionTimeout * 1000) And (Not conn.state = adStateOpen)
     Loop
-    
+
     If conn.state = adStateOpen Then
         IsConnectingPossible = True
         conn.Close
     End If
-    
+
     Set conn = Nothing
 End Function
 
@@ -564,14 +563,14 @@ Public Sub LinkMSAccess(Optional linkLocal As Boolean = False)
 Dim tblCon As New omTableConnector
 Dim DefaultPath As String
 Dim dataPath As String
-Dim filename As String
+Dim FileName As String
 
 
-    filename = omFileFunctions.RemoveExtension(CurrentProject.Name)
-    If InStrRev(filename, "_client") > 0 Then
-        filename = Replace(filename, "_client", "")
+    FileName = omFileFunctions.RemoveExtension(CurrentProject.Name)
+    If InStrRev(FileName, "_client") > 0 Then
+        FileName = Replace(FileName, "_client", "")
     End If
-    filename = filename & "_Data"
+    FileName = FileName & "_Data"
     gSystemDefaults.Mode = LocalMode
     gSystemDefaults.Development = gDevelopmentMode
     If linkLocal Then
@@ -579,16 +578,16 @@ Dim filename As String
     Else
         dataPath = Nz(gSystemDefaults.Load("DataPath"), "")
     End If
-    
-    DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, filename & ".mdb")
+
+    DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, FileName & ".mdb")
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, filename & ".accdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, FileName & ".accdb")
     End If
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, filename & ".mdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, FileName & ".mdb")
     End If
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, filename & ".accdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, FileName & ".accdb")
     End If
     If Not gFso.FileExists(DefaultPath) Then
         MsgBox "No Data file was found at the location: " & DefaultPath & vbCrLf & "Application will now be closed.", vbCritical
@@ -596,5 +595,5 @@ Dim filename As String
     End If
     tblCon.DataFilename = DefaultPath
     tblCon.Connect omTableConnectionType.DatafileIsSource
-    
+
 End Sub
