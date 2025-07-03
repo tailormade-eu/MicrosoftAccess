@@ -28,7 +28,7 @@ Public CurrentConnectionString As String
 Public CurrentConnectionType As ConnectionTypes
 
 Public Enum ConnectionTypes
-    Default = 0
+    SQLNCLI = 0
     SQLOLEDBProvider = 1
     LocalDSN = 2
     SQLODBC_Deprecated = 3
