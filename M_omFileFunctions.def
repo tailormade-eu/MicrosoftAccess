@@ -51,7 +51,10 @@ Public Sub CreateDatebase(filename As String)
     DBEngine.CreateDatabase filename, dbLangGeneral, dbVersion30
 End Sub
 Public Sub DeleteFile(filename As String, Optional force As Boolean = False)
-    gFso.DeleteFile filename, force
+    If gFso.FileExists(filename)=false Then
+		Exit Sub
+	End If
+	gFso.DeleteFile filename, force
 End Sub
 Public Sub DeleteFolder(folderName As String, Optional force As Boolean = False)
     If omFileFunctions.FolderExists(folderName) Then
