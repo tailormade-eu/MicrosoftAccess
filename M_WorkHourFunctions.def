@@ -1,0 +1,21 @@
+Option Compare Database
+Option Explicit
+Public WorkHourStartDate As Variant
+Public WorkHourStartPeriod As Variant
+Public WorkHourEndDate As Variant
+Public WorkHourEndPeriod As Variant
+
+Public Function GetWorkHourStartDate() As Date
+    If omStringFunctions.IsNullOrEmptyOrZero(WorkHourStartPeriod) Then
+        GetWorkHourStartDate = omDateFunctions.ConvertVarDateToDate("1/1/1900")
+    Else
+        GetWorkHourStartDate = omDateFunctions.GetDateMonthStartDate(WorkHourStartPeriod)
+    End If
+End Function
+Public Function GetWorkHourEndDate() As Date
+    If omStringFunctions.IsNullOrEmptyOrZero(WorkHourEndPeriod) Then
+        GetWorkHourEndDate = omDateFunctions.ConvertVarDateToDate("31/12/9999")
+    Else
+        GetWorkHourEndDate = omDateFunctions.GetDateMonthEndDate(WorkHourEndPeriod)
+    End If
+End Function
