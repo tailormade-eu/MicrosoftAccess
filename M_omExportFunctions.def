@@ -2,22 +2,33 @@ Option Compare Database
 Option Explicit
 
 
-Public Function ExportQuery(queryName As String, Optional exportPath As String = "", Optional filename As String = "") As String
 
-    If IsNullOrEmpty(filename) Then
-        If IsNullOrEmpty(exportPath) Then
-            exportPath = gFso.BuildPath(omFileFunctions.GetDesktopFolder(), "ExportQuery")
-        End If
-        omFileFunctions.CreateFolderPath (exportPath)
-        filename = gFso.BuildPath(exportPath, queryName & ".xlsx")
+Public Function ExportQuery(queryName As String, Optional exportPath As String = "", Optional filename As String, Optional withTimestamp As Boolean = False) As String
+Dim fullFilename As String
+Dim omxl As New omExcel
+
+    If IsNullOrEmpty(exportPath) Then
+        exportPath = gFso.BuildPath(GetDesktopFolder, "ExportQuery")
     End If
-    If omFileFunctions.FileLocked(filename) Then
-        MsgBox "File: " & filename & " is open"
-        Exit Function
+    omFileFunctions.CreateFolderPath (exportPath)
+    If omStringFunctions.IsNullOrEmpty(filename) Then
+        fullFilename = gFso.BuildPath(exportPath, queryName & ".xlsx")
+    Else
+        fullFilename = gFso.BuildPath(exportPath, filename & ".xlsx")
     End If
-    If gFso.FileExists(filename) Then
-        gFso.DeleteFile filename, True
+    If withTimestamp Then
+        fullFilename = Replace(fullFilename, ".xlsx", "_" & omDateFunctions.GetTimeStamp() & ".xlsx")
     End If
-    DoCmd.TransferSpreadsheet acExport, acSpreadsheetTypeExcel12Xml, queryName, filename, True
-    ExportQuery = filename
+    If gFso.FileExists(fullFilename) Then
+        gFso.DeleteFile fullFilename, True
+    End If
+    DoCmd.TransferSpreadsheet acExport, acSpreadsheetTypeExcel12Xml, queryName, fullFilename, True
+    omxl.LoadWB fullFilename
+    omxl.SetVisible True
+    omxl.SetHeaderBold
+    omxl.AutoFit
+    omxl.CloseWB True
+    Set omxl = Nothing
+    ExportQuery = fullFilename
+    
 End Function
