@@ -1,0 +1,36 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"mcp.inputs": [
+            {
+                "id": "mssql_host",
+                "type": "promptString",
+                "description": "Enter the MSSQL host",
+				"default": "198.18.0.5"
+
+            },
+            {
+                "id": "mssql_username",
+                "type": "promptString",
+                "description": "Enter the MSSQL username",
+				"default": "sa"
+            },
+            {
+                "id": "mssql_password",
+                "type": "promptString",
+                "description": "Enter the MSSQL password",
+				"default": "!81a3a4:GH"
+            },
+            {
+                "id": "mssql_database",
+                "type": "promptString",
+                "description": "Enter the MSSQL database name",
+				"default": "HulchiBelluni"
+            }
+        ]
+	}
+}
