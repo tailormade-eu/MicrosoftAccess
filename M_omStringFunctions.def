@@ -12,7 +12,11 @@ End Enum
 '    Nz = IIf(IsNull(Value), valueifnull, Value)
 'End Function
 Public Function CleanString(Value As Variant) As String
-    CleanString = Trim(Nz(Value, ""))
+    If IsNull(Value) or IsEmpty(Value) Then
+        CleanString = ""
+    Else
+        CleanString = Trim(Value)
+    End If
 End Function
 
 Public Function IsNullOrEmpty(Value As Variant) As Boolean
@@ -320,4 +324,32 @@ Dim posStart As Long
         posStart = InStrRev(text, " ", pos - 1) + 1
         'ExtractLong = CLng(Replace(Replace(Trim(Mid(text, posStart, pos - posStart)), ".", ""), ",", ""))
     End If
+End Function
+
+Public Function GetSubstringAfterChar(s As String, Optional c As String = ".", Optional autoTrim As Boolean = True) As String
+    Dim pos As Integer
+    Dim result As String
+
+    ' Check if the input string is null or empty
+    If omStringFunctions.IsNullOrEmpty(s) Then
+        result = s
+    Else
+        ' Find the position of the last occurrence of the character
+        pos = InStrRev(s, c)
+
+        If pos > 0 Then
+            ' Extract the substring after the character
+            result = Mid(s, pos + Len(c))
+        Else
+            ' If the character is not found, return the original string
+            result = s
+        End If
+    End If
+
+    ' Trim the result if autoTrim is True
+    If autoTrim Then
+        result = Trim(result)
+    End If
+
+    GetSubstringAfterChar = result
 End Function
