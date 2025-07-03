@@ -401,7 +401,7 @@ Dim connString As String
 Dim sql As String
 
     Debug.Print Now
-    rs.Open "SELECT * FROM MSysObjects WHERE Type=5 AND flags=112", LocalCon, adOpenForwardOnly, adLockReadOnly
+    rs.Open "SELECT * FROM MSysObjects WHERE Type=5 AND flags IN (112,144)", LocalCon, adOpenForwardOnly, adLockReadOnly
     While Not rs.EOF
         'Debug.Print rs("Name"), rs("Type"), rs("flags")
         'Debug.Print CurrentDb.QueryDefs(rs("Name")).Connect
@@ -436,7 +436,7 @@ Dim t As String
 Dim connString As String
 Dim descriptionString As String
 
-    rs.Open "SELECT * FROM MSysObjects WHERE Type=5 AND flags=112", LocalCon, adOpenForwardOnly, adLockReadOnly
+    rs.Open "SELECT * FROM MSysObjects WHERE Type=5 AND flags IN (112,144)", LocalCon, adOpenForwardOnly, adLockReadOnly
     While Not rs.EOF
         Debug.Print rs("Name"), rs("Type"), rs("flags")
         Debug.Print CurrentDb.QueryDefs(rs("Name")).Connect
@@ -482,7 +482,7 @@ Dim rs As New ADODB.Recordset
   ' Does not work with LIKE "PT*"
   'rs.Open "SELECT Name, Type FROM MSysObjects AS O WHERE O.Type=5 AND O.[Name] LIKE " & SQLStringAcs("PT%"), LocalCon, adOpenStatic, adLockReadOnly
 
-  rs.Open "SELECT Name, Type FROM MSysObjects WHERE Type=5 AND flags=112", LocalCon, adOpenStatic, adLockReadOnly
+  rs.Open "SELECT Name, Type FROM MSysObjects WHERE Type=5 AND flags IN (112,144)", LocalCon, adOpenStatic, adLockReadOnly
   While Not rs.EOF
     DoCmd.DeleteObject acQuery, rs("Name")
     rs.MoveNext
