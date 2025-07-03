@@ -131,8 +131,10 @@ Dim bodyEnd As Long
             .HTMLBody = StringFormat("{0}{1}{2}{3}", Left(signature, bodyStart), body, "<br/>", Mid(signature, bodyStart + 1))
         End If
         If NotIsNullOrEmpty(replyAddress) Then
-            If useReplyAddressAsOnBehalf And DoesMailboxExist(replyAddress) Then
-                .SentOnBehalfOfName = replyAddress
+            If useReplyAddressAsOnBehalf Then
+                If DoesMailboxExist(replyAddress) Then
+                    .SentOnBehalfOfName = replyAddress
+                End If
             Else
                 .ReplyRecipients.Add replyAddress
                 Set mailbox = GetMailbox(replyAddress)
