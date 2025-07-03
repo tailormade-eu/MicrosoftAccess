@@ -354,3 +354,12 @@ Public Function IsRuntimeMode() As Boolean
     IsRuntimeMode = SysCmd(acSysCmdRuntime)
 End Function
     
+
+Public Sub TruncateMSAccessTable(tableName As String)
+Dim strSql As String
+
+    strSql = "DELETE FROM [" & tableName & "]"
+    CurrentProject.connection.Execute strSql
+    strSql = "ALTER TABLE [" & tableName & "] ALTER COLUMN id COUNTER (1, 1);"
+    CurrentProject.connection.Execute strSql
+End Sub
