@@ -1,0 +1,288 @@
+﻿Attribute VB_Name = "omExcelFunctions"
+Option Compare Database
+Option Explicit
+
+Public Function ReplaceFirst(sh As Excel.Worksheet, findValue As String, replaceValue As String)
+Dim rng As Excel.range
+
+    Set rng = omExcelFunctions.FindFirst(sh, findValue)
+    If omObjectFunctions.NotIsNothing(rng) Then
+        rng.activate
+        sh.Application.ActiveCell.FormulaR1C1 = replaceValue
+    End If
+End Function
+
+Public Function FindFirst(sh As Excel.Worksheet, findValue As String) As Excel.range
+Dim s As Object
+
+    sh.activate
+
+    sh.Application.Cells(1, 1).Select
+    On Error GoTo FindFirst_NotFound
+    sh.Application.Cells.Find(What:=findValue, After:=sh.Application.ActiveCell, LookIn:=xlFormulas, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:=False, SearchFormat:=False).Select
+    Set FindFirst = sh.Application.Selection
+    Exit Function
+FindFirst_NotFound:
+    Set FindFirst = Nothing
+End Function
+
+Public Sub DeleteRow(sh As Excel.Worksheet, rowIndex As Long)
+    sh.Application.rows(rowIndex).Delete
+End Sub
+Public Sub DeleteSheet(sh As Excel.Worksheet)
+Dim ap As Excel.Application
+
+    Set ap = sh.Application
+    ap.DisplayAlerts = False
+    sh.Delete
+    ap.DisplayAlerts = True
+End Sub
+Public Sub HideRow(sh As Excel.Worksheet, rowIndex As Long)
+    If rowIndex <> 0 Then
+        sh.Application.rows(rowIndex).Hidden = True
+    End If
+End Sub
+Public Sub ShowRow(sh As Excel.Worksheet, rowIndex As Long)
+    If rowIndex <> 0 Then
+        sh.Application.rows(rowIndex).Hidden = False
+    End If
+End Sub
+Public Sub SelectRow(sh As Excel.Worksheet, rowIndex As Long)
+    If rowIndex <> 0 Then
+        sh.Application.rows(rowIndex).Select
+    End If
+End Sub
+Public Sub FormatRow(sh As Excel.Worksheet, rowIndex As Long, numberFormat As String)
+    If rowIndex <> 0 Then
+        sh.Columns(rowIndex).Select
+        sh.Application.Selection.numberFormat = numberFormat ' "#,##0.00" - "0.00%"
+    End If
+End Sub
+Public Sub HideColumn(sh As Excel.Worksheet, columnIndex As Long)
+    If columnIndex <> 0 Then
+        sh.Application.Columns(columnIndex).Hidden = True
+    End If
+End Sub
+Public Sub ShowColumn(sh As Excel.Worksheet, columnIndex As Long)
+    If columnIndex <> 0 Then
+        sh.Application.Columns(columnIndex).Hidden = False
+    End If
+End Sub
+Public Sub SelectColumn(sh As Excel.Worksheet, columnIndex As Long)
+    If columnIndex <> 0 Then
+        sh.Application.Columns(columnIndex).Select
+    End If
+End Sub
+Public Sub SetSelectionBold(sh As Excel.Worksheet, Optional boldFlag As Boolean = True)
+    sh.Application.Selection.font.bold = boldFlag
+End Sub
+
+Public Sub FormatColumn(sh As Excel.Worksheet, columnIndex As Long, numberFormat As String)
+    If columnIndex <> 0 Then
+        sh.Columns(columnIndex).Select
+        sh.Application.Selection.numberFormat = numberFormat ' "#,##0.00" - "0.00%"
+    End If
+End Sub
+Public Sub FormatCells(sh As Excel.Worksheet, Optional rowIndexStart As Long = 0, Optional columnIndexStart As Long = 0, Optional rowIndexEnd As Long = 0, Optional columnIndexEnd As Long = 0, Optional numberFormat As Variant = Null, Optional horizontalAlignment As Excel.Constants = xlLeft, Optional verticalAlignment As Excel.Constants = xlTop, Optional MergeCells As Boolean = False, Optional WrapText As Boolean = False)
+    If rowIndexStart <> 0 And columnIndexStart <> 0 Then
+        If rowIndexEnd <> 0 And columnIndexEnd <> 0 Then
+            SelectRange sh, rowIndexStart, columnIndexStart, rowIndexEnd, columnIndexEnd
+        Else
+            SelectCell sh, rowIndexStart, columnIndexStart
+        End If
+    End If
+    With sh.Application.Selection
+        If Not IsNull(numberFormat) Then
+            .numberFormat = numberFormat ' "#,##0.00" - "0.00%"
+        End If
+        .horizontalAlignment = horizontalAlignment
+        .verticalAlignment = verticalAlignment
+        .WrapText = WrapText
+        .MergeCells = MergeCells
+    End With
+End Sub
+
+Public Sub WriteCell(sh As Excel.Worksheet, rowIndex As Long, columnIndex As Long, Value As Variant)
+    If rowIndex <> 0 And columnIndex <> 0 Then
+        sh.Cells(rowIndex, columnIndex) = Value
+    End If
+End Sub
+Public Sub SelectCell(sh As Excel.Worksheet, rowIndex As Long, columnIndex As Long)
+    sh.Application.Cells(rowIndex, columnIndex).Select
+End Sub
+Public Sub SelectRange(sh As Excel.Worksheet, rowIndexStart As Long, columnIndexStart As Long, rowIndexEnd As Long, columnIndexEnd As Long)
+    With sh.Application
+        .range(.Cells(rowIndexStart, columnIndexStart), .Cells(rowIndexEnd, columnIndexEnd)).Select
+    End With
+End Sub
+
+Public Sub GoToNextFullCell(sh As Excel.Worksheet, direction As XlDirection)
+   sh.Application.Selection.End(direction).Select
+End Sub
+
+Public Function GetCurrentRow(sh As Excel.Worksheet) As Long
+    GetCurrentRow = sh.Application.ActiveCell.row
+End Function
+
+Public Function GetCurrentColumn(sh As Excel.Worksheet) As Long
+    GetCurrentColumn = sh.Application.ActiveCell.row
+End Function
+
+Public Function NextRowHasValue(sh As Excel.Worksheet) As Boolean
+    NextRowHasValue = omStringFunctions.NotIsNullOrEmpty(sh.Cells(GetCurrentRow(sh) + 1, GetCurrentColumn(sh)))
+End Function
+
+Public Function NextColumnHasValue(sh As Excel.Worksheet) As Boolean
+    NextColumnHasValue = omStringFunctions.NotIsNullOrEmpty(sh.Cells(GetCurrentRow(sh), GetCurrentColumn(sh) + 1))
+End Function
+
+Public Sub InsertColumn(sh As Excel.Worksheet, columnIndex As Long, Optional direction As XlDirection = xlToRight)
+    sh.Application.Columns(columnIndex).Select
+    sh.Application.Selection.Insert Shift:=direction ', CopyOrigin:=xlFormatFromLeftOrAbove
+End Sub
+
+Public Sub InsertRow(sh As Excel.Worksheet, rowIndex As Long, Optional copyRowIndex As Long = 0, Optional moveRowIndex As Long = 0, Optional direction As XlDirection = xlDown, Optional activate As Boolean = False)
+    If activate Then
+        sh.activate
+    End If
+    If copyRowIndex <> 0 Then
+        sh.Application.rows(copyRowIndex).Select
+        sh.Application.Selection.Copy
+    End If
+    If moveRowIndex <> 0 Then
+        sh.Application.rows(moveRowIndex).Select
+        sh.Application.Selection.Cut
+    End If
+    sh.Application.rows(rowIndex).Select
+    sh.Application.Selection.Insert Shift:=direction ', CopyOrigin:=xlFormatFromLeftOrAbove
+End Sub
+
+Public Function FindSheetByName(wb As Excel.Workbook, sheetName As String) As Excel.Worksheet
+Dim i As Long
+
+    For i = 1 To wb.Sheets.Count
+        If wb.Sheets(i).Name = sheetName Then
+            Set FindSheetByName = wb.Sheets(i)
+            Exit Function
+        End If
+    Next i
+End Function
+Public Function FindSheetByCell(wb As Excel.Workbook, Value As String, Optional rowIndex As Long = 1, Optional columnIndex As Long = 1) As Excel.Worksheet
+Dim i As Long
+
+    For i = 1 To wb.Sheets.Count
+        If wb.Sheets(i).Cells(rowIndex, columnIndex) = Value Then
+            Set FindSheetByCell = wb.Sheets(i)
+            Exit Function
+        End If
+    Next i
+
+End Function
+Public Function FindRowByColumn(xs As Excel.Worksheet, columnIndex As Long, Value As String, Optional startRowIndex As Long = 1, Optional endRowIndex As Long = 65536) As Long
+Dim i As Long
+
+    xs.activate
+    For i = startRowIndex To endRowIndex
+         If xs.Application.Cells(i, columnIndex) = Value Then
+            FindRowByColumn = i
+            Exit Function
+         End If
+    Next
+End Function
+Public Function FindRow(xs As Excel.Worksheet, Value As String) As Long
+Dim rng As Excel.range
+
+    Set rng = omExcelFunctions.FindFirst(xs, Value)
+    If omObjectFunctions.NotIsNothing(rng) Then
+        FindRow = rng.row
+    End If
+End Function
+Public Function FindColumn(xs As Excel.Worksheet, Value As String) As Long
+Dim rng As Excel.range
+
+    Set rng = omExcelFunctions.FindFirst(xs, Value)
+    If omObjectFunctions.NotIsNothing(rng) Then
+        FindColumn = rng.Column
+    End If
+End Function
+
+
+Public Function RenameSheet(sh As Excel.Worksheet, newName As String) As String
+Dim cnt As Long
+
+    RenameSheet = newName
+    On Error GoTo RenameSheet_Error
+RenameSheet_Retry:
+    sh.Name = RenameSheet
+    Exit Function
+
+RenameSheet_Error:
+    cnt = cnt + 1
+    RenameSheet = omStringFunctions.StringFormat("{0} ({1})", newName, cnt)
+    Resume RenameSheet_Retry
+End Function
+
+Public Sub SetVisible(xa As Excel.Application, visible As Boolean)
+    xa.visible = visible
+End Sub
+
+Public Sub AutoFitColumns(sh As Excel.Worksheet)
+    sh.Cells.Select
+    sh.Cells.EntireColumn.AutoFit
+End Sub
+Public Sub AutoFitRows(sh As Excel.Worksheet)
+    sh.Cells.Select
+    sh.Cells.EntireRow.AutoFit
+End Sub
+Public Function GetMaxRow(sh As Excel.Worksheet)
+    GoToNextFullCell sh, xlDown
+    GetMaxRow = sh.Application.ActiveCell.row
+End Function
+Public Function GetMaxColumn(sh As Excel.Worksheet)
+    GoToNextFullCell sh, xlToRight
+    GetMaxColumn = sh.Application.ActiveCell.Column
+End Function
+
+Public Sub ConvertToImage(sh As Excel.Worksheet, columnIndex As Long, findString As String, replaceString As String)
+Dim rowMax As Long
+Dim currentRow As Long
+Dim Value As String
+Dim currentRange As Excel.range
+
+    sh.Cells(1, columnIndex).Select
+    rowMax = GetMaxRow(sh)
+    If rowMax = 1048576 Then Exit Sub
+    currentRow = 2
+    While currentRow <= rowMax
+        sh.Cells(currentRow, columnIndex).Select
+        Value = sh.Application.ActiveCell.Value
+        sh.Application.ActiveCell.FormulaR1C1 = "=Image(" & Chr(34) & Replace(Value, findString, replaceString) & Chr(34) & ")"
+        currentRow = currentRow + 1
+    Wend
+
+End Sub
+Public Sub SetRowHeight(sh As Excel.Worksheet, startRow As Long, endRow As Long, height As Double)
+Dim rowMax As Long
+
+    sh.Cells(1, 1).Select
+    rowMax = IIf(endRow > startRow, endRow, GetMaxRow(sh))
+    If rowMax = 1048576 Then Exit Sub
+    sh.rows(startRow & ":" & rowMax).Select
+    sh.Application.Selection.RowHeight = height
+End Sub
+
+Public Sub SetRowWidth(sh As Excel.Worksheet, startColumn As Long, endColumn As Long, width As Double)
+Dim columnMax As Long
+
+    sh.Cells(1, 1).Select
+    columnMax = IIf(endColumn >= startColumn, endColumn, GetMaxColumn(sh))
+    If columnMax = 1048576 Then Exit Sub
+    sh.Columns(startColumn).Resize(, columnMax).Select
+    sh.Application.Selection.ColumnWidth = width
+End Sub
+
+Public Sub UpdateFontOnSelection(sh As Excel.Worksheet, bold As Boolean)
+    With sh.Application.Selection.font
+        .bold = bold
+    End With
+End Sub

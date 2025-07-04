@@ -1,0 +1,252 @@
+﻿VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "omConnectionString"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+Public queryName As String
+Public tableName As String
+Public IsODBC As Boolean
+Private m_Driver As String
+Public IsSQLNCLIConnection As Boolean
+Public SQLNCLIVersion As Integer
+Public IsSQLODBCConnection As Boolean
+Public SQLODBCVersion As Integer
+Public Server As String
+Public port As String
+Public APP As String
+Public Database As String
+Public DSN As String
+Public Provider As String
+Public UID As String
+Public PWD As String
+Public HasPasswordSaved As Boolean
+Public HasTrustedConnection As Boolean
+Public Description As String
+Public Group As String
+Public CurrentConnectionString As String
+Public CurrentConnectionType As ConnectionTypes
+
+Public Enum ConnectionTypes
+    SQLNCLI = 0
+    SQLOLEDBProvider = 1
+    LocalDSN = 2
+    SQLODBC_Deprecated = 3
+    MySQL = 4
+    SQLODBC = 5
+End Enum
+Public Enum EncryptTypes
+    EncryptOptional = 0
+    EncryptMandatory = 1
+    EncryptStrict = 2
+End Enum
+
+
+
+Public Sub ParseByTableName(Name As String)
+Dim arr() As String
+Dim s As Variant
+
+    If (tableName <> Name) Then
+        Class_Initialize
+        tableName = Name
+        Parse CurrentDb.TableDefs(tableName).Connect
+        HasPasswordSaved = ((CurrentDb.TableDefs(tableName).Attributes And dbAttachSavePWD) <> 0)
+    End If
+End Sub
+Public Sub ParseByQueryName(Name As String)
+    If (queryName <> Name) Then
+        Class_Initialize
+        queryName = Name
+        Parse CurrentDb.QueryDefs(queryName).Connect
+        On Error Resume Next
+        Description = CurrentDb.QueryDefs(queryName).Properties("Description").Value
+        Group = omStringFunctions.ParseValue(Description, "Group", splitchar:=";", notFoundValue:="")
+    End If
+End Sub
+
+Private Sub Parse(Value As String)
+Dim arr() As String
+Dim s As Variant
+
+    arr = Split(Value, ";")
+    For Each s In arr
+        'Debug.Print s
+        If s = "ODBC" Then IsODBC = True
+        If InStr(1, s, "driver=") > 0 Then Driver = Mid(s, 8)
+        If InStr(1, s, "server=") > 0 Then Server = Mid(s, 8)
+        If InStr(1, s, "port=") > 0 Then port = Mid(s, 6)
+        If InStr(1, s, "APP=") > 0 Then APP = Mid(s, 5)
+        If InStr(1, s, "database=") > 0 Then Database = Mid(s, 10)
+        If InStr(1, s, "DSN=") > 0 Then DSN = Mid(s, 5)
+        If InStr(1, s, "Provider=") > 0 Then Provider = Mid(s, 10)
+        If InStr(1, s, "UID=") > 0 Then UID = Mid(s, 5)
+        If InStr(1, s, "PWD=") > 0 Then PWD = Mid(s, 5)
+        If s = "Trusted_Connection=yes" Then HasTrustedConnection = True
+    Next
+End Sub
+Private Sub Class_Initialize()
+    queryName = ""
+    tableName = ""
+    IsODBC = False
+    Driver = ""
+    Server = ""
+    port = ""
+    APP = ""
+    Database = ""
+    DSN = ""
+    Provider = ""
+    UID = ""
+    PWD = ""
+    HasPasswordSaved = False
+    HasTrustedConnection = False
+    Description = ""
+    Group = ""
+    CurrentConnectionType = ConnectionTypes.SQLNCLI
+End Sub
+Public Function GetValue(Name As String) As Variant
+    Select Case Name
+        Case "TableName"
+            GetValue = tableName
+        Case "IsODBC"
+            GetValue = IsODBC
+        Case "Driver"
+            GetValue = Driver
+        Case "Server"
+            GetValue = Server
+        Case "Port"
+            GetValue = port
+        Case "APP"
+            GetValue = APP
+        Case "Database"
+            GetValue = Database
+        Case "DSN"
+            GetValue = DSN
+        Case "Provider"
+            GetValue = Provider
+        Case "UID"
+            GetValue = UID
+        Case "PWD"
+            GetValue = PWD
+        Case "IsPasswordSaved"
+            GetValue = HasPasswordSaved
+        Case "IsTrustedConnection"
+            GetValue = HasTrustedConnection
+        Case "IsSQLNCLIConnection"
+            GetValue = IsSQLNCLIConnection
+        Case "SQLNCLIVersion"
+            GetValue = SQLNCLIVersion
+        Case "IsSQLODBCConnection"
+            GetValue = IsSQLODBCConnection
+        Case "SQLODBCVersion"
+            GetValue = SQLODBCVersion
+        Case "Description"
+            GetValue = Description
+        Case "Group"
+            GetValue = Group
+    End Select
+End Function
+Public Function ToString() As String
+    ToString = omStringFunctions.StringFormat("TableName={0};IsODBC={1};Driver={2};Server={3};App={4};Database={5};DSN={6};Provider={7};UID={8},PWD={9}", tableName, IsODBC, Driver, Server, APP, Database, DSN, Provider, UID, PWD)
+End Function
+
+Public Property Get Driver() As String
+    Driver = m_Driver
+End Property
+
+Public Property Let Driver(ByVal vNewValue As String)
+    If Len(vNewValue) = 0 Then m_Driver = "": Exit Property
+    m_Driver = Replace(Replace(vNewValue, "{", ""), "}", "")
+    If InStr(1, m_Driver, "SQL Server Native Client") > 0 Then
+        IsSQLNCLIConnection = True
+        SQLNCLIVersion = CInt(Replace(m_Driver, "SQL Server Native Client", "")) / 10
+    ElseIf InStr(1, m_Driver, "ODBC Driver ") > 0 And InStr(1, m_Driver, " for SQL Server") > 0 Then
+        IsSQLODBCConnection = True
+        SQLODBCVersion = CInt(Replace(Replace(m_Driver, "ODBC Driver ", ""), " for SQL Server", ""))
+    Else
+        IsSQLNCLIConnection = False
+        SQLNCLIVersion = 0
+    End If
+End Property
+
+Public Function GetConnectionString(databaseName As String, serverName As String, ODBCConnection As Boolean, Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional DSN As Variant = "", Optional Login As Variant = "", Optional Password As Variant = "", Optional GroupName As String = "", Optional portNr As Variant = "", Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional) As String
+    If Not (GroupName = "") And GroupName = Me.Group Then
+        GetConnectionString = Me.CurrentConnectionString
+    ElseIf databaseName = Me.Database And serverName = Me.Server And ODBCConnection = Me.IsODBC And ConnectionType = Me.CurrentConnectionType And DSN = Me.DSN And Login = Me.UID And Password = Me.PWD Then
+        GetConnectionString = Me.CurrentConnectionString
+    Else
+        Class_Initialize
+        Me.Group = GroupName
+        Me.Database = databaseName
+        Me.Server = serverName
+        Me.IsODBC = ODBCConnection
+        Me.CurrentConnectionType = ConnectionType
+        Me.DSN = Nz(DSN, "")
+        Me.UID = Nz(Login, "")
+        Me.PWD = Nz(Password, "")
+        Me.port = Nz(portNr, "")
+        GetConnectionString = Me.GetCurrentConnectionStringForType(Me.IsODBC, Me.CurrentConnectionType, encryptType)
+    End If
+End Function
+
+Public Function GetCurrentConnectionStringForType(ODBCConnection As Boolean, Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional) As String
+
+    ' Default we will  use SQLOBDC if SQLNCLI is installed then it will be overwritten
+    CurrentConnectionString = "DRIVER=SQL Server;SERVER=[SQLServer];DATABASE=[SQLDatabase];"
+
+    If ConnectionType = SQLOLEDBProvider Then
+        CurrentConnectionString = "Provider=SQLOLEDB;SERVER=[SQLServer];DATABASE=[SQLDatabase];"
+    ElseIf ConnectionType = MySQL Then
+        CurrentConnectionString = "Driver={MySQL ODBC 3.51 Driver};SERVER=[SQLServer];DATABASE=[SQLDatabase];"
+    ElseIf ConnectionType = ConnectionTypes.LocalDSN Then
+        CurrentConnectionString = "DSN=[DSN];"
+    ElseIf GetSQLODBCVersion <> 0 And ConnectionType = SQLODBC Then
+        If Not ODBCConnection Then
+          CurrentConnectionString = "DRIVER=ODBC Driver " & cSQLODBCVersion & " for SQL Server;SERVER=[SQLServer];DATABASE=[SQLDatabase];" & GetEncryptString(encryptType)
+        Else
+          'CurrentConnectionString = "Provider=msodbcsql" & cSQLODBCVersion & ";SERVER=[SQLServer];DATABASE=[SQLDatabase];" & GetEncryptString(encryptType)
+          CurrentConnectionString = "DRIVER=ODBC Driver " & cSQLODBCVersion & " for SQL Server;SERVER=[SQLServer];DATABASE=[SQLDatabase];" & GetEncryptString(encryptType)
+        End If
+    ElseIf GetSQLNCLIVersion <> 0 And ConnectionType = Default Then
+        If Not ODBCConnection Then
+          CurrentConnectionString = "DRIVER={SQL Server Native Client " & cSQLNCLIVersion & ".0};SERVER=[SQLServer];DATABASE=[SQLDatabase];"
+        Else
+          CurrentConnectionString = "Provider=SQLNCLI" & cSQLNCLIVersion & ";SERVER=[SQLServer];DATABASE=[SQLDatabase];"
+        End If
+    End If
+
+    CurrentConnectionString = Replace(CurrentConnectionString, "[SQLServer]", Me.Server)
+    CurrentConnectionString = Replace(CurrentConnectionString, "[SQLDatabase]", Me.Database)
+    CurrentConnectionString = Replace(CurrentConnectionString, "[DSN]", Nz(DSN, ""))
+    If NotIsNullOrEmpty(Me.port) Then
+        CurrentConnectionString = CurrentConnectionString & "PORT=" & Me.port & ";"
+    End If
+    If NotIsNullOrEmpty(Me.UID) Then
+        CurrentConnectionString = CurrentConnectionString & "UID=[UID];PWD=[PWD];"
+        CurrentConnectionString = Replace(CurrentConnectionString, "[UID]", Nz(Me.UID, ""))
+        CurrentConnectionString = Replace(CurrentConnectionString, "[PWD]", Nz(Me.PWD, ""))
+    ElseIf ConnectionType <> ConnectionTypes.LocalDSN Then
+        CurrentConnectionString = CurrentConnectionString & "Trusted_Connection=yes;"
+    End If
+    CurrentConnectionString = IIf(ODBCConnection And Left(CurrentConnectionString, 6) = "driver", "ODBC;", "") & CurrentConnectionString
+    GetCurrentConnectionStringForType = CurrentConnectionString
+End Function
+
+Public Static Function GetEncryptString(encrypType As EncryptTypes) As String
+    Select Case encrypType
+        Case EncryptTypes.EncryptOptional
+            GetEncryptString = "Encrypt=optional;"
+        Case EncryptTypes.EncryptMandatory
+            GetEncryptString = "Encrypt=yes;TrustServerCertificate=yes;"
+        Case EncryptTypes.EncryptStrict
+            GetEncryptString = "Encrypt=strict;"
+        Case Else
+            ' Optional: handle unexpected values
+            GetEncryptString = "Encrypt=optional;" ' or raise an error
+    End Select
+End Function

@@ -1,0 +1,39 @@
+﻿VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "omSQLObject"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Public SQLSelect As String
+Public SQLFrom As String
+Public sqlWhere As String
+Public SQLOrderBy As String
+
+Public Sub SplitSQL(SQL As String)
+    SQLSelect = omSQLFunctions.GetSelect(SQL)
+    SQLFrom = omSQLFunctions.GetFrom(SQL)
+    sqlWhere = omSQLFunctions.GetWhere(SQL)
+    SQLOrderBy = omSQLFunctions.GetOrderBy(SQL)
+End Sub
+
+Public Function BuildSQL(Optional selectClause As Variant = Null, Optional fromClause As Variant = Null, Optional whereClause As Variant = Null, Optional orderByClause As Variant = Null) As String
+    If Not IsNull(selectClause) Then
+        Me.SQLSelect = selectClause
+    End If
+    If Not IsNull(fromClause) Then
+        Me.SQLFrom = fromClause
+    End If
+    If Not IsNull(whereClause) Then
+        Me.sqlWhere = whereClause
+    End If
+    If Not IsNull(orderByClause) Then
+        Me.SQLOrderBy = orderByClause
+    End If
+    BuildSQL = omSQLFunctions.BuildSQL(SQLSelect, SQLFrom, sqlWhere, SQLOrderBy)
+End Function

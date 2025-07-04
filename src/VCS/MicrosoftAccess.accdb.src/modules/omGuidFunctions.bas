@@ -1,0 +1,34 @@
+﻿Attribute VB_Name = "omGuidFunctions"
+Option Compare Database
+Option Explicit
+Private Declare PtrSafe Function CoCreateGuid Lib "ole32" (Id As Any) As Long
+Public Function CreateGuid() As String
+    Dim Id(0 To 15) As Byte
+    Dim cnt As Long, Guid As String
+    If CoCreateGuid(Id(0)) = 0 Then
+        For cnt = 0 To 15
+            CreateGuid = CreateGuid + IIf(Id(cnt) < 16, "0", "") + Hex$(Id(cnt))
+        Next cnt
+        CreateGuid = Left$(CreateGuid, 8) + "-" + Mid$(CreateGuid, 9, 4) + "-" + Mid$(CreateGuid, 13, 4) + "-" + Mid$(CreateGuid, 17, 4) + "-" + Right$(CreateGuid, 12)
+    Else
+        MsgBox "Error while creating GUID!"
+    End If
+End Function
+
+Public Function CreateRandomEAN13() As String
+Dim cnt As Long
+Dim i As Long
+Dim seed As String
+Dim s As String
+
+    seed = CreateGuid() & CreateGuid & CreateGuid() & CreateGuid
+    i = 1
+    While cnt < 13
+        s = Mid(seed, i, 1)
+        If IsNumeric(s) Then
+            CreateRandomEAN13 = CreateRandomEAN13 & s
+            cnt = cnt + 1
+        End If
+        i = i + 1
+    Wend
+End Function

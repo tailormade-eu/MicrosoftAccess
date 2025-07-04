@@ -1,0 +1,81 @@
+﻿Attribute VB_Name = "omSSMAConnector_Test"
+Option Compare Database
+Option Explicit
+
+Public Sub ChangeDatabase(GroupName As String, sourceDatabase As String, destinationDatabase As String)
+Dim rs As New ADODB.Recordset
+Dim strSQL As String
+
+    'ChangeDatabase "ACenter_Cardoen","ACenter","ACenter_Dev"
+    'ChangeDatabase "ACenter_Cardoen","ACenter_Dev","ACenter"
+
+    'ChangeDatabase "ACenter_Cardoen","ACenter","ACenter_Test"
+    'ChangeDatabase "ACenter_Cardoen","ACenter_Test","ACenter"
+
+    strSQL = "SELECT * FROM SSMAA_ODBC_Tables WHERE  SQLDatabase='" & sourceDatabase & "' AND ',' & [Groups] & ',' LIKE '%," & GroupName & ",%'"
+    strSQL = Replace(strSQL, "'", Chr(34))
+    rs.Open strSQL, omSSMAAConnector.LocalCon, adOpenForwardOnly, adLockOptimistic
+    While Not rs.EOF
+        rs("SQLDatabase") = destinationDatabase
+        rs.MoveNext
+    Wend
+    rs.Close
+    Set rs = Nothing
+    ' Deze lijn linkt alle tabellen opnieuw voor een bepaalde group
+    omSSMAAConnector.LinkUsingSSMA GroupName, SQLODBC, alwaysUpdate:=True
+    omSSMAAConnector.PassthroughQueriesReplaceDatabaseName sourceDatabase, destinationDatabase
+End Sub
+
+Public Sub LinkMySQL()
+    omSSMAAConnector.LinkUsingSSMA "CardoenOnlineNW", SavePassword:=True, alwaysUpdate:=True
+End Sub
+
+Public Function GetCurrentConnectedDatabase(Optional tableName As String = "T_Medewerkers") As String
+Dim cs As New omConnectionString
+
+    cs.ParseByTableName tableName
+    GetCurrentConnectedDatabase = cs.Database
+End Function
+
+Public Function GetCurrentConnectedServer(Optional tableName As String = "T_Medewerkers") As String
+Dim cs As New omConnectionString
+
+    cs.ParseByTableName tableName
+    GetCurrentConnectedServer = cs.Server
+End Function
+
+Public Sub HerlinkACenter()
+    omSSMAAConnector.LinkUsingSSMA "ACenter_Cardoen", SQLODBC, alwaysUpdate:=True
+    'omSSMAAConnector.LinkUsingSSMA "Intranet", , True, True
+End Sub
+Public Sub ChangeServer(sourceServer As String, destinationServer As String)
+Dim rs As New ADODB.Recordset
+Dim strSQL As String
+
+    strSQL = "SELECT * FROM SSMAA_ODBC_Tables WHERE  SQLServer='" & sourceServer & "' "
+    strSQL = Replace(strSQL, "'", Chr(34))
+    rs.Open strSQL, omSSMAAConnector.LocalCon, adOpenForwardOnly, adLockOptimistic
+    While Not rs.EOF
+        rs("SQLServer") = destinationServer
+        rs.MoveNext
+    Wend
+    rs.Close
+    Set rs = Nothing
+    ' Deze lijn linkt alle tabellen opnieuw voor een bepaalde group
+'''    omSSMAAConnector.LinkUsingSSMA GroupName, SQLOBDC, alwaysUpdate:=True
+'''    omSSMAAConnector.PassthroughQueriesReplaceDatabaseName sourceDatabase, destinationDatabase
+End Sub
+
+Public Sub TestAdodbRecordsetConnectionstringEncrypt()
+Dim rs As New ADODB.Recordset
+Dim cs As String
+
+    cs = omSSMAAConnector.GetConnectionStringByProperty("T_Auto", ConnectionType:=ConnectionTypes.SQLODBC, ODBCConnection:=False, encryptType:=EncryptMandatory)
+    rs.CursorLocation = adUseClient
+    rs.Open "SELECT * FROM T_Auto", cs, adOpenForwardOnly, adLockOptimistic
+    rs("ModifyUserId") = 900
+    rs.Update
+    rs.Close
+    Set rs = Nothing
+
+End Sub

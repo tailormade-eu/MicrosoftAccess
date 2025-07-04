@@ -1,0 +1,194 @@
+﻿Attribute VB_Name = "omHTML"
+Option Compare Database
+Option Explicit
+Dim gFso As New Scripting.FileSystemObject
+
+Dim strPathWWW As String
+Dim strPathTemplate As String
+Dim strPathTemplateWWW As String
+Dim strTemplate As String
+Dim strAnchor As String
+
+Public Sub Run()
+Dim rs As New ADODB.Recordset
+Dim lCount As Long
+Dim lMax As Long
+    CurrentProject.connection.Execute "spUrl_UpdatePageName"
+    strAnchor = Replace("<a href='<href>' <target>><text></a>", "'", Chr(34))
+    strPathWWW = gFso.BuildPath(CurrentProject.path, "www")
+    strPathTemplate = gFso.BuildPath(CurrentProject.path, "Template")
+    strPathTemplateWWW = gFso.BuildPath(strPathTemplate, "WWW")
+    If gFso.FolderExists(strPathTemplateWWW) Then
+        gFso.DeleteFolder strPathTemplateWWW
+    End If
+    gFso.createFolder strPathTemplateWWW
+    If gFso.FolderExists(strPathWWW) Then
+        gFso.DeleteFolder strPathWWW
+    End If
+    gFso.createFolder strPathWWW
+    gFso.CopyFile gFso.BuildPath(strPathTemplate, "xxx.css"), gFso.BuildPath(strPathWWW, "xxx.css")
+
+    SaveFile gFso.BuildPath(strPathWWW, "footer.shtml"), GenerateFooter
+    strTemplate = ReadFile(gFso.BuildPath(strPathTemplate, "page.txt"))
+    GenerateTemplate
+    lMax = DCount("*", "Url")
+    rs.Open "Domain", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
+    While Not rs.EOF
+        GenerateDomain rs("Domain_Name"), rs("Domain_Folder"), lCount
+        lCount = lCount + 1
+        If lCount >= lMax Then
+            lCount = 0
+        End If
+        rs.MoveNext
+    Wend
+    rs.Close
+    Set rs = Nothing
+End Sub
+
+Public Sub GenerateDomain(DomainName As String, DomainFolder As String, DefaultCount As Long)
+Dim fl As File
+Dim strTemp As String
+Dim strFolder As String
+Dim i As Long
+    strFolder = gFso.BuildPath(strPathWWW, DomainFolder)
+    gFso.createFolder gFso.BuildPath(strPathWWW, DomainFolder)
+    For Each fl In gFso.GetFolder(strPathTemplateWWW).Files
+        strTemp = ReadFile(fl.path)
+        strTemp = Replace(strTemp, "<%DomainName%>", "http://" & DomainName)
+        strTemp = Replace(strTemp, "<%DomainFolder%>", DomainFolder)
+        strTemp = Replace(strTemp, vbTab, "")
+        strTemp = Replace(strTemp, vbCr, "")
+        strTemp = Replace(strTemp, vbLf, "")
+        strTemp = Replace(Replace(strTemp, "  ", " "), "  ", " ")
+        SaveFile gFso.BuildPath(strFolder, fl.Name & ".aspx"), strTemp
+        If i = DefaultCount Then
+            SaveFile gFso.BuildPath(strFolder, "default.aspx"), strTemp
+        End If
+        i = i + 1
+    Next
+    Set fl = Nothing
+End Sub
+Public Sub GenerateTemplate()
+Dim cmdUrl As New ADODB.Command
+Dim rs As ADODB.Recordset
+Dim rsGroup As New ADODB.Recordset
+
+    cmdUrl.commandText = "SELECT * FROM Url WHERE Url_UrlGroup_ID=? ORDER BY Url_Title"
+    cmdUrl.ActiveConnection = CurrentProject.connection
+    cmdUrl.Parameters.Refresh
+    rsGroup.Open "SELECT * FROM UrlGroup ORDER BY UrlGroup_Sort", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
+    While Not rsGroup.EOF
+        cmdUrl.Parameters(0) = rsGroup("UrlGroup_ID")
+        Set rs = cmdUrl.Execute
+        While Not rs.EOF
+            GeneratePage gFso.BuildPath(strPathTemplateWWW, rs("Url_PageName")), rs("Url_Title"), rs("Url_Name"), "", GenerateMenu("<%DomainName%>", "<%DomainFolder%>", rsGroup("UrlGroup_ID")), rsGroup("UrlGroup_Name")
+            DoEvents
+            rs.MoveNext
+        Wend
+        rs.Close
+        Set rs = Nothing
+        rsGroup.MoveNext
+    Wend
+    rsGroup.Close
+    Set rsGroup = Nothing
+    Set rs = Nothing
+    Set cmdUrl = Nothing
+End Sub
+Public Sub GeneratePage(filename As String, Title As String, source As String, Keywords As String, Menu As String, UrlGroup As String)
+Dim strTemp As String
+
+    strTemp = strTemplate
+    strTemp = Replace(strTemp, "<%Title%>", Title)
+    strTemp = Replace(strTemp, "<%Source%>", source)
+    strTemp = Replace(strTemp, "<%Keywords%>", Keywords)
+    strTemp = Replace(strTemp, "<%Menu%>", Menu)
+    strTemp = Replace(strTemp, "<%UrlGroup%>", UrlGroup)
+
+    SaveFile filename, strTemp
+End Sub
+
+Public Function GenerateMenu(DomainName As String, DomainFolder As String, UrlGroupId As Long) As String
+Dim rsGroup As New ADODB.Recordset
+Dim strMenu  As String
+
+    rsGroup.Open "SELECT * FROM UrlGroup ORDER BY UrlGroup_Sort", CurrentProject.connection, adOpenDynamic, adLockReadOnly
+    rsGroup.Find "UrlGroup_ID=" & UrlGroupId
+    If Not rsGroup.EOF Then
+         strMenu = GenerateMenuBlock(DomainName, DomainFolder, rsGroup("UrlGroup_ID"), rsGroup("UrlGroup_Name"))
+    End If
+    rsGroup.MoveNext
+    If rsGroup.EOF Then
+        rsGroup.MoveFirst
+    End If
+    If Not rsGroup.EOF Then
+        If Len(strMenu) > 0 Then
+            strMenu = strMenu & "<br><br>"
+        End If
+        strMenu = strMenu & GenerateMenuBlock(DomainName, DomainFolder, rsGroup("UrlGroup_ID"), rsGroup("UrlGroup_Name"))
+    End If
+    rsGroup.Close
+    Set rsGroup = Nothing
+    GenerateMenu = strMenu
+End Function
+
+Public Function GenerateMenuBlock(DomainName As String, DomainFolder As String, UrlGroupId As Long, UrlGroup) As String
+Dim cmdUrl As New ADODB.Command
+Dim rs As ADODB.Recordset
+Dim strMenuBlock  As String
+
+    cmdUrl.commandText = "SELECT * FROM Url WHERE Url_UrlGroup_ID=? ORDER BY Url_Title"
+    cmdUrl.ActiveConnection = CurrentProject.connection
+    cmdUrl.Parameters.Refresh
+    cmdUrl.Parameters(0) = UrlGroupId
+    Set rs = cmdUrl.Execute
+    If Not rs.EOF Then
+        strMenuBlock = UrlGroup & "<br><br>"
+    End If
+    While Not rs.EOF
+        strMenuBlock = strMenuBlock & GetAnchor(DomainName & "/" & DomainFolder & "/" & rs("Url_PageName") & ".aspx", rs("Url_Title"), TargetBlank:=False) & "<br>"
+        rs.MoveNext
+    Wend
+    rs.Close
+    Set rs = Nothing
+    GenerateMenuBlock = strMenuBlock
+End Function
+
+
+Public Function GenerateFooter() As String
+Dim rs As New ADODB.Recordset
+Dim strFooter As String
+    rs.Open "Domain", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
+    If Not rs.EOF Then
+        strFooter = Replace("<div width='750px' class='footer'>", "'", Chr(34)) & GetAnchor(rs("Domain_Name") & "/" & rs("Domain_Folder"), rs("Domain_Name"), True)
+        rs.MoveNext
+    End If
+    While Not rs.EOF
+        strFooter = strFooter & " | " & GetAnchor(rs("Domain_Name") & "/" & rs("Domain_Folder"), rs("Domain_Name"), True)
+        rs.MoveNext
+    Wend
+    rs.Close
+    Set rs = Nothing
+    GenerateFooter = strFooter & "</div>"
+End Function
+Public Sub SaveFile(filename As String, text As String)
+Dim ts As TextStream
+
+    Set ts = gFso.CreateTextFile(filename, True, False)
+    ts.Write text
+    ts.Close
+    Set ts = Nothing
+End Sub
+Public Function ReadFile(filename As String) As String
+Dim ts As TextStream
+
+    Set ts = gFso.OpenTextFile(filename, ForReading, format:=TristateMixed)
+    ReadFile = ts.ReadAll
+    ts.Close
+    Set ts = Nothing
+End Function
+Public Function GetAnchor(ByVal HRef As String, ByVal text As String, Optional ByVal CheckHttp As Boolean = False, Optional ByVal TargetBlank As Boolean = True) As String
+    If CheckHttp And InStr(1, HRef, "://") = 0 Then
+        HRef = "http://" & HRef
+    End If
+    GetAnchor = Replace(Replace(Replace(strAnchor, "<text>", text), "<href>", HRef), "<target>", IIf(TargetBlank, "target='_blank'", ""))
+End Function

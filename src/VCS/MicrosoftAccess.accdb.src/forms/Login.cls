@@ -1,0 +1,22 @@
+﻿Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Private Sub Form_Close()
+    If Not gUser.LoggedIn Then
+        DoCmd.Quit acQuitSaveNone
+    End If
+End Sub
+
+Private Sub txtPassword_AfterUpdate()
+    If NotIsNullOrEmpty(Me.txtPassword) Then
+        If gUser.LoginById(Me.cmbUser, Me.txtPassword) Then
+            DoCmd.Close acForm, Me.Name
+        Else
+            Me.lblStatus.Caption = "Wrong Password"
+        End If
+    End If
+End Sub

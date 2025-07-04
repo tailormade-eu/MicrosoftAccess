@@ -1,0 +1,68 @@
+﻿Attribute VB_Name = "omSeqFunctions"
+Option Compare Database
+Option Explicit
+
+Const seqUrl = "http://seq.domainmmvii.local:5341/"
+
+Public Enum omSeqItemLevel
+    NotDefinedSeqLevel = 0
+    DebugSeqLevel = 1
+    WarningSeqLevel = 2
+    ErrorSeqLevel = 3
+End Enum
+
+Public Function omSeqItemLevelToString(Value As omSeqItemLevel) As String
+    Select Case Value
+        Case omSeqItemLevel.DebugSeqLevel
+            omSeqItemLevelToString = "Debug"
+        Case omSeqItemLevel.WarningSeqLevel
+            omSeqItemLevelToString = "Warning"
+            Case omSeqItemLevel.ErrorSeqLevel
+            omSeqItemLevelToString = "Error"
+    End Select
+End Function
+
+Public Sub SendSeqItem(Optional seqItem As omSeqItem) 'item As omSeqItem)
+Dim json As New omJSON
+Dim result As String
+
+    If omObjectFunctions.IsNothing(seqItem) Then
+        Set seqItem = New omSeqItem
+        With seqItem
+            .ApplicationName = "MSAccess-Test"
+            .Level = ErrorSeqLevel
+            .Action = "omSeqFunctions.SendSeqItem"
+            .Step = "self test"
+        End With
+    End If
+    result = json.request(seqUrl & "api/events/raw?clef", seqItem.ToJson(), text)
+    seqItem.Step = ""
+    seqItem.Level = DebugSeqLevel
+    seqItem.Exception = ""
+    seqItem.Parameters = ""
+End Sub
+
+Public Sub OpenSeq(Optional filter As String = "")
+    omFileFunctions.OpenUrl seqUrl & IIf(NotIsNullOrEmpty(filter), "#/events?filter=" & filter, "")
+End Sub
+
+Public Function GetUtcDateTime()
+Dim dt As Object
+    Set dt = CreateObject("WbemScripting.SWbemDateTime")
+    dt.SetVarDate Now
+    GetUtcDateTime = dt.GetVarDate(False)
+    Set dt = Nothing
+End Function
+
+'ISO to Access
+Public Function DtIsoToAccess(myisodate As String) As Date
+DtIsoToAccess = CDate(Replace(myisodate, "T", " "))
+End Function
+
+'Access to ISO
+Public Function DtAccessToIso(myaccdate As Date, Optional myUtcDate As Date = 0) As String
+Dim dtDiff As Long
+    myUtcDate = IIf(myUtcDate = 0, myaccdate, myUtcDate)
+    dtDiff = DateDiff("h", myUtcDate, myaccdate)
+    DtAccessToIso = format(myaccdate, "yyyy-mm-dd\Thh:nn:ss.000" & IIf(dtDiff = 0, "z", format(dtDiff, "+00") & ":00"))
+End Function

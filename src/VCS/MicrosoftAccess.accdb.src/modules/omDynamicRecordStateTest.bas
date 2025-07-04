@@ -1,0 +1,76 @@
+﻿Attribute VB_Name = "omDynamicRecordStateTest"
+Option Compare Database
+Option Explicit
+Dim drec As New omDynamicRecordState
+
+
+Public Sub Test()
+Dim rsSrc As New ADODB.Recordset
+
+    rsSrc.Open "T_Auto", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
+    drec.SetupFieldsFromRecordset rsSrc, "ID_Auto,DAflevering,SAflevering,upsize_ts"
+
+    drec.SetupFields
+Dim rs As ADODB.Recordset
+' start record ophalen
+    'drec.SetOldRecord (rs)
+    Set rs = drec.rsOriginal
+    rs("ID_Auto") = 101
+    rs("upsize_ts") = 0
+    rs("DAflevering") = "01/01/2022"
+    rs("SAflevering") = 1
+' verschillen updaten
+    'drec.InputRecord("ID_Auto") = 1
+    'drec.InputRecord("DAflevering") = Date
+    'drec.InputRecord("SAflevering") = 1
+' db record ophalen
+    'drec.SetDbRecord (rs)
+    Set rs = drec.rsDatabase
+    rs("ID_Auto") = 101
+    rs("upsize_ts") = 1
+    rs("DAflevering") = "01/01/2022"
+    rs("SAflevering") = 1
+' geef verschillen
+    drec.Compare
+    Set rs = drec.rsChangedFields
+    'rs.RecordCount
+End Sub
+
+
+Public Sub TestFromRecordset()
+Dim rsSrc As New ADODB.Recordset
+Dim rs As ADODB.Recordset
+
+    rsSrc.Open "T_Auto", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
+    drec.SetupFieldsFromRecordset rsSrc, "ID_Auto,DAflevering,SAflevering,upsize_ts"
+    rsSrc.Close
+
+    rsSrc.Open "T_Auto", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
+    drec.SetDatabaseRecord rsSrc
+    rsSrc.Close
+' geef verschillen
+    drec.Compare
+    Set rs = drec.rsChangedFields
+    Debug.Print rs.RecordCount
+End Sub
+
+Public Sub TestAutoClass()
+'Dim auto As New auto
+
+    'auto.LoadMetDR (dr)
+    'rs
+    'DR.SetFIeldFromReceord(RS,"velden")
+
+
+    'AUTO.SaveMetDR (dr)
+    'rs
+    'dr.SetDatabaseRecord (rs)
+    'dr.Compare
+    'Set rs = drec.rsChangedFields
+    'If rs.RecordCount <> 0 Then
+    '    Fields Updated
+    '    Exit Function
+    'End If
+
+    '-- SaveAuto
+End Sub

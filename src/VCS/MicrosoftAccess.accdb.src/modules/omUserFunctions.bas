@@ -1,0 +1,74 @@
+﻿Attribute VB_Name = "omUserFunctions"
+Option Compare Database
+Option Explicit
+
+Public gUser As New omUser
+Public Const UseWindowsAuthentication As Boolean = False
+Public Const UseLoginForm As Boolean = True
+
+Public Function GetWindowsUserName() As String
+    GetWindowsUserName = Environ$("UserName")
+End Function
+Public Function GetWindowsComputerName() As String
+    GetWindowsComputerName = Environ$("computername")
+End Function
+
+Public Function LoginWithWindowsUser(Optional addWindowsLogon As Boolean = False)
+    Set gUser = New omUser
+    gUser.LoginByNameOnly GetWindowsUserName, addWindowsLogon:=True
+End Function
+Public Function UseWindowsUser()
+    Set gUser = New omUser
+    gUser.Name = GetWindowsUserName
+End Function
+Public Sub UserLock()
+    If omMSAccessFunctions.FormExists("UserLock") Then
+        DoCmd.OpenForm "UserLock", , , , acFormReadOnly, acHidden
+    End If
+End Sub
+
+Public Sub AuthenticateUser()
+    If gUser.LoggedIn Then
+        Exit Sub
+    End If
+    If UseWindowsAuthentication = UseLoginForm Then
+        MsgBox "Set the correct variable for Login method in omUserFunctions.", vbExclamation
+        Exit Sub
+    End If
+    If UseWindowsAuthentication Then
+        omUserFunctions.LoginWithWindowsUser True
+    ElseIf UseLoginForm Then
+        DoCmd.OpenForm "Login", windowMode:=acDialog
+    End If
+End Sub
+
+Public Sub RecordsetUpdateCreateTracking(rs As ADODB.Recordset, Optional UpdateModify = True)
+    rs("CreateDate") = Now
+    On Error Resume Next
+    omUserFunctions.AuthenticateUser
+    If gUser.LoggedIn Then
+        rs("CreateUserName") = gUser.Name
+        rs("CreateUserId") = gUser.Id
+    Else
+        rs("CreateUserName") = gUser.Name
+        rs("CreateUserId") = gUser.Name
+    End If
+    If UpdateModify Then
+        RecordsetUpdateModifyTracking rs
+    End If
+End Sub
+Public Sub RecordsetUpdateModifyTracking(rs As ADODB.Recordset)
+    rs("ModifyDate") = Now
+    On Error Resume Next
+    omUserFunctions.AuthenticateUser
+    If gUser.LoggedIn Then
+        rs("ModifyName") = gUser.Name
+        rs("ModifyUserId") = gUser.Id
+    Else
+        rs("ModifyUserName") = gUser.Name
+        rs("ModifyUserId") = gUser.Name
+    End If
+End Sub
+Public Function GetUserId() As Long
+    GetUserId = Nz(gUser.Id, 0)
+End Function

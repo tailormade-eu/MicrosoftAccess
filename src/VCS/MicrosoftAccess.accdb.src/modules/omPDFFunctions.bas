@@ -1,0 +1,9 @@
+﻿Attribute VB_Name = "omPDFFunctions"
+Option Compare Database
+Option Explicit
+
+Public Sub SaveReportAsPDF(ReportName As String, filename As String, Optional whereCondition As String = "")
+    DoCmd.OpenReport ReportName, acViewPreview, whereCondition:=whereCondition
+    DoCmd.OutputTo acOutputReport, ReportName, acFormatPDF, filename, False
+    DoCmd.Close acReport, ReportName
+End Sub

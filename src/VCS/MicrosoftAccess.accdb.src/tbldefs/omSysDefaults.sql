@@ -1,0 +1,6 @@
+﻿CREATE TABLE [omSysDefaults] (
+  [Id] AUTOINCREMENT CONSTRAINT [PrimaryKey] PRIMARY KEY UNIQUE NOT NULL,
+  [Name] VARCHAR (255),
+  [Value] LONGTEXT,
+  [ModifyDate] DATETIME
+)

@@ -1,0 +1,107 @@
+﻿Attribute VB_Name = "omStartup"
+Option Compare Database
+Option Explicit
+' Code written by Raoul Jacobs
+' E. jara@opmaat.be
+' Date Craeted : 201112
+
+Public Function Main(Optional linkLocal As Boolean = False) As Integer
+Dim formName As String
+
+    omUserFunctions.AuthenticateUser
+    'omUserFunctions.UserLock
+    omMSAccessFunctions.MinimizeNavigationPane
+
+    'Stop
+    formName = "Flow"
+    If NotIsNullOrEmpty(Command()) Then
+        If omStringFunctions.ParseValue(Trim(Command()), "OpenScreen") = "magazijn" Then
+            formName = "StockCheck_List"
+        End If
+    End If
+    If gUser.UserRole.Name = "User" Then
+            formName = "Project_List"
+    End If
+    DoCmd.OpenForm formName
+End Function
+
+Public Function LinkAccessDatabase() As Variant
+    omSSMAAConnector.LinkMSAccess False
+End Function
+
+Public Function LinkSSMADatabase() As Variant
+    omSSMAAConnector.LinkUsingSSMA SavePassword:=True, alwaysUpdate:=True
+End Function
+Public Function LinkSSMADatabaseSQLODBC() As Variant
+    omSSMAAConnector.LinkUsingSSMA ConnectionType:=SQLODBC_Deprecated, SavePassword:=True, alwaysUpdate:=True
+End Function
+
+'Public Function SyncUserMain() As Boolean
+'Dim LastSyncUser As Variant
+'Dim makeConnection As Boolean
+'    'omSSMAAConnector.LinkUsingSSMA ConnectionType:=Default, alwaysUpdate:=True
+'    gLogging.Enabled = True
+'    Application.SetOption "Move after enter", 0
+'    Application.SetOption "Auto compact", False
+'    If InStr(1, CurrentProject.Name, "mbi_client") > 0 Then
+'
+'        gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true"
+'        omSSMAAConnector.UpdateSSMAConnectionString Group:="mBIClientUser"
+'        gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > UpdateSSMAConnectionString for mBIClientUser"
+'
+'        LastSyncUser = omDefaultFunctions.GetSystemDefault("LastSyncUser")
+'        gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > LastSyncUser=" & LastSyncUser
+'
+'        makeConnection = True
+'        If LastSyncUser = GetCurrentUserName Then
+'            gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > LastSyncUser = GetCurrentUserName"
+'
+'            If IsTableLocal("Users") And IsTableLocal("UserRoles") Then
+'                gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > LastSyncUser = GetCurrentUserName > IsTableLocal"
+'                makeConnection = False
+'            End If
+'        End If
+'        If makeConnection Then
+'            MsgBox "Please make sure you are in the companies network or have an open VPN connection!", vbOKOnly
+'            If IsConnectingPossible("Users") Then
+'                OrderSheetSyncFunctions.SetupOrderSheet
+'
+'                gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > makeConnection=true > isConnectingPossible(users)"
+'                omSSMAAConnector.LinkUsingSSMA Group:="mBIClientUser", ConnectionType:=SQLNCLI, SavePassword:=True
+'                gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > makeConnection=true > LinkUsingSSMA for mBIClientUser"
+'                OrderSheetSyncFunctions.SyncData
+'                gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > makeConnection=true > SyncData"
+'            End If
+'        Else
+'            OrderSheetFunctions.LoginCurrentUserName
+'        End If
+'        If gCurrentOrderSheetUser.Active Then
+'            gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > gCurrentOrderSheetUser.Active"
+'            omDefaultFunctions.Initialize True
+'            gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > gCurrentOrderSheetUser.Active > omDefaultFunctions.Initialize True"
+'            DoCmd.OpenForm "OrderSheet_List"
+'            gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > gCurrentOrderSheetUser.Active > OpenForm OrderSheet_List"
+'        Else
+'            omDefaultFunctions.SaveSystemDefault "LastSyncUser", Null
+'            gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > SetDefault LastSyncUser=null"
+'
+'            omSSMAAConnector.DeleteLinkTables
+'            gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > DeleteLinkTables"
+'            omSSMAAConnector.DeleteSSMAATables
+'            gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > DeleteSSMAATables"
+'            omSSMAAConnector.DeleteSSMAABackupTables
+'            gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > DeleteSSMAABackupTables"
+'            Application.SetOption "Auto compact", True
+'            gLogging.WriteToFile Description:="Startup > Main > mBI_Client=true > SetOption Auto Compact=true"
+'            DoCmd.Quit acQuitSaveNone
+'        End If
+'    Else
+'        omSSMAAConnector.LinkUsingSSMA Group:="mBI", ConnectionType:=SQLNCLI, SavePassword:=True
+'        DeleteSSMAABackupTables
+'        omDefaultFunctions.Initialize True
+'        DoCmd.OpenForm "Flow"
+'    End If
+'    'gDefaults.Mode = ServerMode
+'    'gSystemDefaults.Mode = LocalMode
+'End Function
+'

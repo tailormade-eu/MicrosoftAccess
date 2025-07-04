@@ -1,0 +1,184 @@
+﻿VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "omSQLConnector"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Private connection As New ADODB.connection
+Private p_ConnectionString As String
+Public ODBCConnectionString As String
+Public Sub ExecuteCommandTextNonQuery(commandText As String, Optional Parameter1 As Variant = Null, Optional Parameter2 As Variant = Null, Optional Parameter3 As Variant = Null, Optional Parameter4 As Variant = Null, Optional parameter5 As Variant = Null, Optional parameter6 As Variant = Null, Optional parameter7 As Variant = Null, Optional parameter8 As Variant = Null, Optional parameter9 As Variant = Null, Optional parameter10 As Variant = Null, Optional parameter11 As Variant = Null, Optional parameter12 As Variant = Null, Optional parameter13 As Variant = Null, Optional parameter14 As Variant = Null, Optional parameter15 As Variant = Null, Optional parameter16 As Variant = Null, Optional parameter17 As Variant = Null, Optional parameter18 As Variant = Null, Optional parameter19 As Variant = Null)
+Dim cmd As New ADODB.Command
+Dim i As Long
+
+    cmd.CommandType = adCmdText
+    cmd.commandText = commandText
+    cmd.ActiveConnection = connection
+    cmd.Parameters.Refresh
+    ' Parameters are 0 based
+    For i = 0 To cmd.Parameters.Count - 1
+        If cmd.Parameters(i).Type = 201 Then
+            cmd.Parameters(i).Type = adVarChar
+            cmd.Parameters(i).Size = 4096
+        End If
+        Select Case i
+            Case 0
+                cmd.Parameters(i) = Parameter1
+            Case 1
+                cmd.Parameters(i) = Parameter2
+            Case 2
+                cmd.Parameters(i) = Parameter3
+            Case 3
+                cmd.Parameters(i) = Parameter4
+            Case 4
+                cmd.Parameters(i) = parameter5
+            Case 5
+                cmd.Parameters(i) = parameter6
+            Case 6
+                cmd.Parameters(i) = parameter7
+            Case 7
+                cmd.Parameters(i) = parameter8
+            Case 8
+                cmd.Parameters(i) = parameter9
+            Case 9
+                cmd.Parameters(i) = parameter10
+            Case 10
+                cmd.Parameters(i) = parameter11
+            Case 11
+                cmd.Parameters(i) = parameter12
+            Case 12
+                cmd.Parameters(i) = parameter13
+            Case 13
+                cmd.Parameters(i) = parameter14
+            Case 14
+                cmd.Parameters(i) = parameter15
+            Case 15
+                cmd.Parameters(i) = parameter16
+            Case 16
+                cmd.Parameters(i) = parameter17
+            Case 17
+                cmd.Parameters(i) = parameter18
+            Case 18
+                cmd.Parameters(i) = parameter19
+        End Select
+    Next
+    cmd.Execute
+    Set cmd = Nothing
+End Sub
+Public Sub ExecuteStoredProcedureNonQuery(storedProcedureName As String, Optional Parameter1 As Variant = Null, Optional Parameter2 As Variant = Null, Optional Parameter3 As Variant = Null, Optional Parameter4 As Variant = Null, Optional parameter5 As Variant = Null, Optional parameter6 As Variant = Null, Optional parameter7 As Variant = Null, Optional parameter8 As Variant = Null, Optional parameter9 As Variant = Null, Optional parameter10 As Variant = Null, Optional parameter11 As Variant = Null, Optional parameter12 As Variant = Null, Optional parameter13 As Variant = Null, Optional parameter14 As Variant = Null, Optional parameter15 As Variant = Null, Optional parameter16 As Variant = Null, Optional parameter17 As Variant = Null, Optional parameter18 As Variant = Null, Optional parameter19 As Variant = Null)
+Dim cmd As New ADODB.Command
+Dim i As Long
+
+    cmd.CommandType = adCmdStoredProc
+    cmd.commandText = storedProcedureName
+    cmd.ActiveConnection = connection
+    cmd.Parameters.Refresh
+    For i = 1 To cmd.Parameters.Count - 1
+        Select Case i
+            Case 1
+                cmd.Parameters(i) = Parameter1
+            Case 2
+                cmd.Parameters(i) = Parameter2
+            Case 3
+                cmd.Parameters(i) = Parameter3
+            Case 4
+                cmd.Parameters(i) = Parameter4
+            Case 5
+                cmd.Parameters(i) = parameter5
+            Case 6
+                cmd.Parameters(i) = parameter6
+            Case 7
+                cmd.Parameters(i) = parameter7
+            Case 8
+                cmd.Parameters(i) = parameter8
+            Case 9
+                cmd.Parameters(i) = parameter9
+            Case 10
+                cmd.Parameters(i) = parameter10
+            Case 11
+                cmd.Parameters(i) = parameter11
+            Case 12
+                cmd.Parameters(i) = parameter12
+            Case 13
+                cmd.Parameters(i) = parameter13
+            Case 14
+                cmd.Parameters(i) = parameter14
+            Case 15
+                cmd.Parameters(i) = parameter15
+            Case 16
+                cmd.Parameters(i) = parameter16
+            Case 17
+                cmd.Parameters(i) = parameter17
+            Case 18
+                cmd.Parameters(i) = parameter18
+            Case 19
+                cmd.Parameters(i) = parameter19
+        End Select
+    Next
+    cmd.Execute
+    Set cmd = Nothing
+End Sub
+Public Sub ExecuteSQLPassThrough(commandText As String, queryName As String)
+Dim qryDef As QueryDef
+
+    Set qryDef = CurrentDb.QueryDefs(queryName)
+    qryDef.SQL = commandText
+    qryDef.Connect = ODBCConnectionString
+    qryDef.Execute
+End Sub
+
+Public Sub Execute(commandText As String)
+    On Error GoTo Execute_Error
+    connection.Execute commandText
+    Exit Sub
+Execute_Error:
+    MsgBox Error
+    Resume Next
+End Sub
+Public Property Get ActiveConnection() As ADODB.connection
+    Set ActiveConnection = connection
+End Property
+
+Private Sub Class_Initialize()
+
+
+    'p_ConnectionString = "Provider=SQLNCLI" & cSQLNCLI & ";Persist Security Info=True;Data Source=" & DFirst("SQLServer", "SSMAA_ODBC_Tables") & ";Initial Catalog=" & DFirst("SQLDatabase", "SSMAA_ODBC_Tables") & ";Data Provider=SQLOLEDB.1"
+    'If Len(Nz(DFirst("SQLLogin", "SSMAA_ODBC_Tables"), "")) > 0 Then
+    '    p_ConnectionString = p_ConnectionString & ";User ID=" & DFirst("SQLLogin", "SSMAA_ODBC_Tables") & ";Password=" & DFirst("SQLPassword", "SSMAA_ODBC_Tables")
+    'Else
+    '    p_ConnectionString = p_ConnectionString & ";Trusted_Connection=yes"
+    'End If
+    'ODBCConnectionString = CurrentDb.TableDefs(DFirst("ODBCTable", "SSMAA_ODBC_Tables")).Connect
+    'p_ConnectionString = CurrentProject.connection.ConnectionString
+    'connection.ConnectionString = p_ConnectionString
+    'On Error Resume Next
+    'connection.Open
+End Sub
+
+Private Sub Class_Terminate()
+    connection.Close
+    Set connection = Nothing
+End Sub
+
+
+Public Property Get ConnectionString() As Variant
+    ConnectionString = p_ConnectionString
+End Property
+
+Public Property Let ConnectionString(ByVal vNewValue As Variant)
+    If connection.state = 1 Then
+        connection.Close
+    End If
+    p_ConnectionString = IIf(Left(vNewValue, 5) = "odbc;", Mid(vNewValue, 6), vNewValue)
+    Set connection = Nothing
+    connection = New ADODB.connection
+    connection.ConnectionString = p_ConnectionString
+    connection.Open
+
+End Property

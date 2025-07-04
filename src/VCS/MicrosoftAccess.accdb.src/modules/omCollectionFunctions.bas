@@ -1,0 +1,50 @@
+﻿Attribute VB_Name = "omCollectionFunctions"
+Option Compare Database
+Option Explicit
+
+Public Sub SortCollectionTest()
+Dim d As New Collection
+Dim i As omKeyValue
+
+    Set i = New omKeyValue
+    i.key = 1
+    i.Value = "hallo"
+    d.Add i
+    Set i = New omKeyValue
+    i.key = -1
+    i.Value = "test"
+    d.Add i
+    SortCollection d
+End Sub
+
+
+Public Function SortCollection(data As Collection, Optional asNumeric As Boolean = True) As Boolean
+    Dim vItm As Variant
+    Dim i As Long, j As Long
+    Dim vTemp As Object
+
+    For i = 1 To data.Count - 1
+        For j = i + 1 To data.Count
+            If CompareKeys(data(i).key, data(j).key, asNumeric) Then
+                'store the lesser item
+                Set vTemp = data(j)
+
+                'remove the lesser item
+                data.Remove j
+
+                're-add the lesser item before the greater Item
+                data.Add vTemp, , i
+
+                SortCollection = True
+            End If
+        Next j
+    Next i
+End Function
+
+Public Function CompareKeys(x As Variant, y As Variant, Optional asNumeric As Boolean = True) As Boolean
+    If asNumeric Then
+        CompareKeys = (CDbl(x) > CDbl(y))
+    Else
+        CompareKeys = (x > y)
+    End If
+End Function
