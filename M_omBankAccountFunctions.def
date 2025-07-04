@@ -1,0 +1,187 @@
+Option Compare Database
+Option Explicit
+
+Const COUNTRY_CODE_BE As String = "BE"
+Const MODULO_DIVISOR As Long = 97
+Const IBAN_MIN_LENGTH As Long = 15
+Const IBAN_MAX_LENGTH As Long = 34
+
+Public Function ValidateIbanAndFormatBankAccount(ByVal BankNr As Variant) As String
+Dim ibanLength As Long
+Dim cleanedBankNumber As String
+
+    ' Remove spaces
+    cleanedBankNumber = Replace(Nz(BankNr, ""), " ", "")
+
+    ' Check IBAN length
+    ibanLength = Len(cleanedBankNumber)
+    If ibanLength < IBAN_MIN_LENGTH Or ibanLength > IBAN_MAX_LENGTH Then
+        ValidateIbanAndFormatBankAccount = ""
+        Exit Function
+    End If
+    
+    ' Check Belgian Length
+    If InStr(UCase(cleanedBankNumber), COUNTRY_CODE_BE) > 0 Then
+        If Len(cleanedBankNumber) <> 16 Then
+            ValidateIbanAndFormatBankAccount = ""
+            Exit Function
+        End If
+    End If
+    
+    If Not ValidateIban(cleanedBankNumber) Then
+        ValidateIbanAndFormatBankAccount = ""
+        Exit Function
+    End If
+
+    If Not ValidateBelgianAccountNumber(cleanedBankNumber) Then
+        ValidateIbanAndFormatBankAccount = ""
+        Exit Function
+    End If
+    
+    ValidateIbanAndFormatBankAccount = FormatIbanWithSpaces(cleanedBankNumber)
+End Function
+
+Public Function FormatIbanWithSpaces(IBAN As String) As String
+Dim strBank As String
+Dim i As Long
+
+    strBank = Left(IBAN, 4)
+    For i = 5 To Len(IBAN) Step 4
+        strBank = strBank & " " & Mid(IBAN, i, 4)
+    Next i
+    FormatIbanWithSpaces = strBank
+End Function
+
+' https://francescofoti.com/2020/10/how-to-validate-an-iban-code-with-vb-a/
+Public Function ValidateIban(ByVal psIban As String) As Boolean
+  Dim iLen      As Integer
+  
+  'trim, upper case and remove spaces
+  psIban = UCase$(Replace(psIban, " ", ""))
+  iLen = Len(psIban)
+  If iLen = 0 Then Exit Function
+  
+  Dim sChecksum       As String
+  Dim sCountry        As String
+  Dim sBankCode       As String
+  Dim sAccountNumber  As String
+  
+  sCountry = Left$(psIban, 2)  'Country code
+  sChecksum = Mid$(psIban, 3, 2)
+  sBankCode = Mid$(psIban, 5, 5)
+  sAccountNumber = Right$(psIban, iLen - 9)
+  
+  If Not IsOnlyNumbers(sChecksum) Then Exit Function
+  If Not IsAlphaNum(sAccountNumber) Then Exit Function
+  If (sCountry = "CH") Or (sCountry = "LI") Then
+    'swiss has only numbers for bank codes
+    If Not IsOnlyNumbers(sBankCode) Then Exit Function
+  End If
+  
+  'Prepare for checksum computing
+  Dim sToCheck      As String
+  Dim sConverted    As String 'converted to number according to translation table
+  Dim i             As Integer
+  Dim iAsc          As Integer
+  Const ASC_A       As Integer = 65
+  Const ASC_Z       As Integer = 90
+  
+  'sToCheck = sBankCode & sAccountNumber & sCountry & sChecksum
+  sToCheck = Right$(psIban, iLen - 4) & Left$(psIban, 4)
+  For i = 1 To Len(sToCheck)
+    iAsc = Asc(Mid$(sToCheck, i, 1))
+    If (iAsc >= ASC_A) And (iAsc <= ASC_Z) Then 'if it's a letter
+      sConverted = sConverted & CStr(iAsc - ASC_A + 10)
+    Else
+      sConverted = sConverted & Chr$(iAsc)  'otherwise just concatenate
+    End If
+  Next i
+  
+  'Smart part from : https://gist.github.com/juancho618/f34a58c3c9c4ac903a453abc1de01ea8
+  'Loop through the IBAN, as it is too long to calculate at one go
+  Dim CurrPart    As String   'FF
+  Dim Answer      As String   'FF
+  Dim CurrDigit   As Integer  'FF
+  Dim CurrNumber  As Long     'FF
+  Dim LeftOver    As Long
+  Dim Workvalue   As Long
+  
+  CurrPart = ""
+  Answer = ""
+  For CurrDigit = 1 To Len(sConverted)
+    CurrPart = CurrPart & Mid$(sConverted, CurrDigit, 1)
+    CurrNumber = CLng(CurrPart)
+    'If the number can be divided
+    If 97 <= CurrNumber Then
+      LeftOver = CurrNumber Mod 97
+      Workvalue = (CurrNumber - LeftOver) / 97
+      Answer = Answer & CStr(Workvalue)
+      CurrPart = CStr(LeftOver)
+    Else
+      'If no division occurred, add a trailing zero
+      If Len(Answer) > 0 Then
+        Answer = Answer & "0"
+        'Exception for the last number
+        If CurrDigit = Len(sConverted) Then
+          LeftOver = CurrNumber Mod 97
+        Else
+        End If
+      Else
+      End If
+    End If
+  Next
+  If LeftOver = 1 Then
+    ValidateIban = True
+  End If
+End Function
+
+Public Function IsOnlyNumbers(ByVal psText As String) As Boolean
+  Const ASC_0 As Integer = 48
+  Const ASC_9 As Integer = 57
+  Dim i       As Integer
+  Dim iAsc    As Integer
+  
+  For i = 1 To Len(psText)
+    iAsc = Asc(Mid$(psText, i, 1))
+    If (iAsc < ASC_0) Or (iAsc > ASC_9) Then Exit Function
+  Next i
+  
+  IsOnlyNumbers = True
+End Function
+ 
+Public Function IsAlphaNum(ByVal psText As String) As Boolean
+  Const ASC_A As Integer = 65
+  Const ASC_Z As Integer = 90
+  Const ASC_0 As Integer = 48
+  Const ASC_9 As Integer = 57
+  Dim i       As Integer
+  Dim iAsc    As Integer
+  
+  For i = 1 To Len(psText)
+    iAsc = Asc(Mid$(psText, i, 1))
+    If ((iAsc < ASC_0) Or (iAsc > ASC_9)) And ((iAsc < ASC_A) Or (iAsc > ASC_Z)) Then Exit Function
+  Next i
+  
+  IsAlphaNum = True
+End Function
+
+Public Function ValidateBelgianAccountNumber(IBAN As String) As Boolean
+    ' Check if the IBAN is for Belgium
+    If Left(IBAN, 2) <> COUNTRY_CODE_BE Then
+        ValidateBelgianAccountNumber = True ' Not a Belgian IBAN, so no validation needed
+        Exit Function
+    End If
+
+    ' Extract the 12-digit Belgian account number
+    Dim belgianAccountDetails, accountNumber, checksum
+    belgianAccountDetails = Mid(IBAN, 5) ' Skip the first 4 characters (country code and IBAN checksum)
+    accountNumber = Left(belgianAccountDetails, 10) ' First 10 digits
+    checksum = Right(belgianAccountDetails, 2) ' Last 2 digits
+
+    ' Validate checksum using CLng for large numbers
+    If (CLng(accountNumber) Mod MODULO_DIVISOR) = CLng(checksum) Or (CLng(accountNumber) Mod MODULO_DIVISOR = 0 And CLng(checksum) = MODULO_DIVISOR) Then
+        ValidateBelgianAccountNumber = True ' Valid checksum
+    Else
+        ValidateBelgianAccountNumber = False ' Invalid checksum
+    End If
+End Function
