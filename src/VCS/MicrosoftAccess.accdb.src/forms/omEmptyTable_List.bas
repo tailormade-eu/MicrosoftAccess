@@ -1,0 +1,152 @@
+﻿Version =20
+VersionRequired =20
+Begin Form
+    RecordSelectors = NotDefault
+    AutoCenter = NotDefault
+    NavigationButtons = NotDefault
+    DividingLines = NotDefault
+    AllowDesignChanges = NotDefault
+    DefaultView =0
+    ScrollBars =0
+    PictureAlignment =2
+    DatasheetGridlinesBehavior =3
+    GridY =10
+    Width =18035
+    DatasheetFontHeight =11
+    ItemSuffix =20
+    Right =23090
+    Bottom =13580
+    RecSrcDt = Begin
+        0xd644a0f73d43e440
+    End
+    DatasheetFontName ="Calibri"
+    FilterOnLoad =0
+    DatasheetGridlinesColor12 =15132391
+    Begin
+        Begin Label
+            BackStyle =0
+            FontSize =11
+            FontName ="Calibri"
+        End
+        Begin CommandButton
+            Width =1701
+            Height =283
+            FontSize =11
+            FontWeight =400
+            FontName ="Calibri"
+            BorderLineStyle =0
+        End
+        Begin CheckBox
+            BorderLineStyle =0
+            LabelX =230
+            LabelY =-30
+        End
+        Begin TextBox
+            AddColon = NotDefault
+            FELineBreak = NotDefault
+            BorderLineStyle =0
+            Width =1701
+            LabelX =-1701
+            FontSize =11
+            FontName ="Calibri"
+            AsianLineBreak =255
+        End
+        Begin ComboBox
+            AddColon = NotDefault
+            BorderLineStyle =0
+            Width =1701
+            LabelX =-1701
+            FontSize =11
+            FontName ="Calibri"
+        End
+        Begin Subform
+            BorderLineStyle =0
+            Width =1701
+            Height =1701
+        End
+        Begin FormHeader
+            CanGrow = NotDefault
+            Height =1153
+            BackColor =15064278
+            Name ="FormHeader"
+            Begin
+                Begin CommandButton
+                    OverlapFlags =85
+                    Left =4785
+                    Top =403
+                    Width =291
+                    Height =298
+                    ForeColor =4210752
+                    Name ="cmdClearSearch"
+                    Caption ="Command8"
+                    OnClick ="[Event Procedure]"
+
+                End
+                Begin TextBox
+                    OverlapFlags =85
+                    AccessKey =83
+                    IMESentenceMode =3
+                    Left =1032
+                    Top =390
+                    Width =3681
+                    Height =315
+                    TabIndex =1
+                    BorderColor =10921638
+                    ForeColor =4210752
+                    Name ="txtSearch"
+                    AfterUpdate ="[Event Procedure]"
+                    UnicodeAccessKey =83
+
+                    Begin
+                        Begin Label
+                            OverlapFlags =85
+                            Left =225
+                            Top =390
+                            Width =690
+                            Height =315
+                            BorderColor =8355711
+                            ForeColor =8355711
+                            Name ="lblSearch"
+                            Caption ="&Search"
+                        End
+                    End
+                End
+                Begin CommandButton
+                    OverlapFlags =85
+                    AccessKey =78
+                    Left =7653
+                    Top =396
+                    TabIndex =2
+                    ForeColor =4210752
+                    Name ="cmdNew"
+                    Caption ="&New"
+                    OnClick ="[Event Procedure]"
+                    UnicodeAccessKey =78
+
+                End
+            End
+        End
+        Begin Section
+            CanGrow = NotDefault
+            Height =6300
+            Name ="Detail"
+            Begin
+                Begin Subform
+                    OverlapFlags =85
+                    Width =18030
+                    Height =6300
+                    BorderColor =10921638
+                    Name ="subSearch"
+                    SourceObject ="Form.omEmptyTable_List_Search"
+
+                End
+            End
+        End
+        Begin FormFooter
+            Height =0
+            Name ="FormFooter"
+        End
+    End
+End
+CodeBehindForm
+' See "omEmptyTable_List.cls"

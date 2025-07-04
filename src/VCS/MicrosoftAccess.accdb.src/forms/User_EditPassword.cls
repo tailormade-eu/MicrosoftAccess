@@ -1,0 +1,16 @@
+﻿Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+
+Private Sub txtPasswordVerify_AfterUpdate()
+    If NotIsNullOrEmpty(Me.txtPassword) And Me.txtPassword = Me.txtPasswordVerify Then
+        gUser.UpdatePassword Me.txtPassword
+        DoCmd.Close acForm, Me.Name
+    Else
+        Me.lblStatus.Caption = "Passwords don't match!"
+    End If
+End Sub

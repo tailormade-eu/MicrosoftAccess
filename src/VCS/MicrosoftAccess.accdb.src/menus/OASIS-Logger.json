@@ -1,0 +1,44 @@
+﻿{
+  "Info": {
+    "Class": "clsDbCommandBar",
+    "Description": "CommandBar"
+  },
+  "Items": {
+    "AdaptiveMenu": false,
+    "Context": "",
+    "Enabled": true,
+    "Height": 832,
+    "Left": 0,
+    "NameLocal": "OASIS-Logger",
+    "Position": 2,
+    "Protection": 1,
+    "RowIndex": 1,
+    "Top": 0,
+    "Type": 0,
+    "Visible": false,
+    "Width": 320,
+    "Controls": [
+      {
+        "BeginGroup": false,
+        "BuiltIn": true,
+        "Caption": "OASIS-Logger",
+        "DescriptionText": "",
+        "Enabled": true,
+        "Height": 0,
+        "HelpContextId": 0,
+        "HelpFile": "",
+        "Index": 1,
+        "IsPriorityDropped": true,
+        "OLEUsage": 1,
+        "Parameter": "",
+        "Priority": 3,
+        "Tag": "",
+        "TooltipText": "Tas&k Pane",
+        "Type": 25,
+        "Visible": true,
+        "Width": 0,
+        "Id": 5746
+      }
+    ]
+  }
+}

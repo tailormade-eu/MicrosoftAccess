@@ -1,0 +1,316 @@
+﻿VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "omWordEngine"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Dim doc As Word.Document
+
+Public Sub Merge(Template As String, SaveAs As String, RecordSource As String, Optional show As Boolean = False)
+Dim rs As New ADODB.Recordset
+Dim i As Integer
+Dim wrd  As New Word.Application
+
+    rs.Open "SELECT * FROM [" & RecordSource & "]", CurrentProject.connection, adOpenForwardOnly, adLockOptimistic
+    If Not rs.EOF Then
+        Set doc = wrd.Documents.Open(Template)
+        'For i = 0 To rs.Fields.Count - 1
+        '    Me.FindReplaceAll doc, "<<" & rs.Fields(i).Name & ">>", Nz(rs.Fields(i), "")
+        '    Me.FindReplaceAll doc, "<" & rs.Fields(i).Name & ">", Nz(rs.Fields(i), "")
+        '    Me.FindReplaceAll doc, "«" & rs.Fields(i).Name & "»", Nz(rs.Fields(i), "")
+        '    Me.FindReplaceAll doc, "“" & rs.Fields(i).Name & "»", Nz(rs.Fields(i), "")
+        'Next i
+        MergeFromCurrentRecord doc, rs, "<<,>>,<,>,«,»,“,»"
+        If Not show Then
+            doc.SaveAs SaveAs, wdFormatDocumentDefault
+        Else
+            wrd.visible = True
+        End If
+    End If
+
+    Set doc = Nothing
+    If Not show Then
+        wrd.Quit
+    End If
+    Set wrd = Nothing
+    rs.Close
+    Set rs = Nothing
+End Sub
+Public Sub MergeFromCurrentRecord(wd As Word.Document, rs As ADODB.Recordset, Optional delimiters As String = "<<,>>")
+Dim k As Integer
+Dim j As Integer
+Dim del() As String
+Dim ranges() As Object
+Dim range As Variant
+Dim rangeCount As Long
+
+
+    If Not rs.EOF Then
+        del = Split(delimiters, ",")
+        For j = 0 To UBound(del) Step 2
+            ranges = GetTextRanges(wd, del(j))
+            For rangeCount = 0 To UBound(ranges)
+                Set range = ranges(rangeCount)
+                For k = 0 To rs.Fields.Count - 1
+                    'gLogging.Reset
+                    'Debug.Print gLogging.ToString(description:="omWordEngine.Start FindReplaceAnywhere")
+                    'Me.FindReplaceAnywhere wd, del(j) & rs.Fields(i).Name & del(j + 1), Nz(rs.Fields(k), "")
+                    Me.SearchAndReplaceInStory range, del(j) & rs.Fields(k).Name & del(j + 1), Nz(rs.Fields(k), "")
+                    'Debug.Print gLogging.ToString(description:="omWordEngine.End FindReplaceAnywhere")
+                Next k
+            Next rangeCount
+        Next j
+    End If
+End Sub
+Public Sub MergeFromRecordset(wd As Word.Document, rs As ADODB.Recordset, keyField As String, valueField As String, Optional delimiters As String = "<<,>>")
+Dim str As String
+Dim j As Integer
+Dim del() As String
+Dim ranges() As Object
+Dim range As Variant
+Dim rangeCount As Long
+
+    del = Split(delimiters, ",")
+    For j = 0 To UBound(del) Step 2
+        ranges = GetTextRanges(wd, del(j))
+        For rangeCount = 0 To UBound(ranges)
+            Set range = ranges(rangeCount)
+            rs.MoveFirst
+            While Not rs.EOF
+                str = rs(keyField)
+                If InStr(1, str, del(j)) = 0 Then
+                    str = del(j) & str
+                End If
+                If InStrRev(str, del(j + 1)) = 0 Then
+                    str = str & del(j + 1)
+                End If
+                'me.FindReplaceAnywhere wd,str, Nz(rs(valueField), "")
+                Me.SearchAndReplaceInStory range, str, Nz(rs(valueField), "")
+                rs.MoveNext
+            Wend
+        Next rangeCount
+    Next j
+End Sub
+
+Public Sub FillTable(doc As Word.Document, rs As ADODB.Recordset)
+Dim cols As Long
+Dim rows As Long
+Dim colCount As Long
+Dim rowCount As Long
+Dim tbl As Word.Table
+
+     If Not rs.EOF Then
+        rows = 0
+        While Not rs.EOF
+            rows = rows + 1
+            rs.MoveNext
+        Wend
+        cols = rs.Fields.Count
+        With doc.Application
+            .Selection.Find.ClearFormatting
+            With .Selection.Find
+                .text = "[Table]"
+                .Replacement.text = ""
+                .Forward = True
+                .Wrap = wdFindContinue
+                .format = False
+                .MatchCase = False
+                .MatchWholeWord = False
+                .MatchWildcards = False
+                .MatchSoundsLike = False
+                .MatchAllWordForms = False
+            End With
+            .Selection.Find.Execute
+            .Selection.Delete Unit:=wdCharacter, Count:=1
+            Set tbl = .ActiveDocument.Tables.Add(range:=.Selection.range, NumRows:=rows + 1, NumColumns:=cols, DefaultTableBehavior:=wdWord9TableBehavior, AutoFitBehavior:=wdAutoFitFixed)
+        End With
+        'tbl.Cell(1, 1).Select
+        'tbl.Application.Selection.Cells.Split NumRows:=rows + 1, NumColumns:=cols, MergeBeforeSplit:=False
+        rowCount = 1
+        For colCount = 0 To rs.Fields.Count - 1
+            tbl.Cell(rowCount, colCount + 1).Select
+            tbl.Application.Selection.font.bold = True
+            tbl.Application.Selection.font.Size = 10
+            tbl.Application.Selection.TypeText rs.Fields(colCount).Name
+        Next
+        rs.MoveFirst
+        rowCount = rowCount + 1
+        While Not rs.EOF
+            For colCount = 0 To rs.Fields.Count - 1
+                tbl.Cell(rowCount, colCount + 1).Select
+                tbl.Application.Selection.font.Size = 10
+                tbl.Application.Selection.TypeText Nz(rs(colCount), "")
+            Next
+            rowCount = rowCount + 1
+            rs.MoveNext
+        Wend
+        tbl.AutoFitBehavior wdAutoFitContent
+    End If
+End Sub
+
+Public Sub SetVisible(wa As Word.Application, visible As Boolean)
+    wa.visible = visible
+End Sub
+Public Function Find(wd As Word.Document, text As String) As Boolean
+    wd.ActiveWindow.Selection.WholeStory
+    With wd.Application.Selection.Find
+     .Forward = True
+     .ClearFormatting
+     .MatchWholeWord = True
+     .MatchCase = False
+     .Wrap = wdFindContinue
+     .Execute findtext:=text
+     Find = .Found
+    End With
+End Function
+Public Sub FindReplaceAll(wd As Word.Document, findtext As String, replaceText As String)
+    With wd.ActiveWindow
+        .Selection.WholeStory
+        .Selection.Find.ClearFormatting
+        .Selection.Find.Replacement.ClearFormatting
+        With .Selection.Find
+            .text = findtext
+            .Replacement.text = replaceText
+            .Forward = True
+            .Wrap = wdFindAsk
+            .format = False
+            .MatchCase = False
+            .MatchWholeWord = False
+            .MatchWildcards = False
+            .MatchSoundsLike = False
+            .MatchAllWordForms = False
+            .Execute Replace:=wdReplaceAll
+        End With
+    End With
+End Sub
+
+Public Function GetTextRanges(wd As Word.Document, findtext As String) As Object()
+Dim rngStory As Word.range
+Dim lngJunk As Long
+Dim ranges() As Object
+Dim iShapeRangeCount As Long
+
+    'Fix the skipped blank Header/Footer problem
+    lngJunk = wd.Sections(1).Headers(1).range.StoryType
+    For Each rngStory In wd.StoryRanges
+      'Iterate through all linked stories
+      Do
+        If Me.SearchInStory(rngStory, findtext) Then
+            omArrayFunctions.ObjectArrayAdd ranges, rngStory
+        End If
+        On Error Resume Next
+        Select Case rngStory.StoryType
+        Case 6, 7, 8, 9, 10, 11
+            For iShapeRangeCount = 1 To rngStory.ShapeRange.Count
+                If rngStory.ShapeRange(iShapeRangeCount).TextFrame.HasText Then
+                    If Me.SearchInStory(rngStory.ShapeRange(iShapeRangeCount).TextFrame.TextRange, findtext) Then
+                        omArrayFunctions.ObjectArrayAdd ranges, rngStory.ShapeRange(iShapeRangeCount).TextFrame.TextRange
+                    End If
+                End If
+            Next
+        Case Else
+          'Do Nothing
+        End Select
+        On Error GoTo 0
+        'Get next linked story (if any)
+        Set rngStory = rngStory.NextStoryRange
+      Loop Until rngStory Is Nothing
+    Next
+    GetTextRanges = ranges
+End Function
+
+Public Sub FindReplaceAnywhere(wd As Word.Document, findtext As String, replaceText As String)
+Dim rngStory As Word.range
+Dim lngJunk As Long
+Dim oShp As Shape
+Dim iShapeRangeCount As Long
+
+    'Fix the skipped blank Header/Footer problem
+    lngJunk = wd.Sections(1).Headers(1).range.StoryType
+    'Iterate through all story types in the current document
+    For Each rngStory In wd.StoryRanges
+      'Iterate through all linked stories
+      Do
+        SearchAndReplaceInStory rngStory, findtext, replaceText
+        On Error Resume Next
+        Select Case rngStory.StoryType
+        Case 6, 7, 8, 9, 10, 11
+            For iShapeRangeCount = 1 To rngStory.ShapeRange.Count
+                If rngStory.ShapeRange(iShapeRangeCount).TextFrame.HasText Then
+                    SearchAndReplaceInStory rngStory.ShapeRange(iShapeRangeCount).TextFrame.TextRange, findtext, replaceText
+                End If
+            Next
+        Case Else
+          'Do Nothing
+        End Select
+        On Error GoTo 0
+        'Get next linked story (if any)
+        Set rngStory = rngStory.NextStoryRange
+      Loop Until rngStory Is Nothing
+    Next
+End Sub
+
+Public Function SearchInStory(ByVal rngStory As Word.range, ByVal strSearch As String) As Boolean
+  'Debug.Print gLogging.ToString(description:="omWordEngine.Start SearchAndReplaceInStory: " & strSearch & "(" & Len(rngStory.text) & ")")
+  With rngStory.Find
+    .ClearFormatting
+    .Replacement.ClearFormatting
+    .text = strSearch
+    .Wrap = wdFindContinue
+     SearchInStory = .Execute()
+  End With
+  'Debug.Print gLogging.ToString(description:="omWordEngine.End SearchAndReplaceInStory: " & strSearch & "(" & Len(rngStory.text) & ")")
+End Function
+
+
+Public Sub SearchAndReplaceInStory(ByVal rngStory As Word.range, ByVal strSearch As String, ByVal strReplace As String)
+  'Debug.Print gLogging.ToString(description:="omWordEngine.Start SearchAndReplaceInStory: " & strSearch & "(" & Len(rngStory.text) & ")")
+  With rngStory.Find
+    .ClearFormatting
+    .Replacement.ClearFormatting
+    .text = strSearch
+    .Replacement.text = strReplace
+    .Wrap = wdFindContinue
+    .Execute Replace:=wdReplaceAll
+  End With
+  'Debug.Print gLogging.ToString(description:="omWordEngine.End SearchAndReplaceInStory: " & strSearch & "(" & Len(rngStory.text) & ")")
+End Sub
+
+Public Sub ToggleBold(wd As Word.Document)
+    wd.Application.Selection.font.bold = wdToggle
+End Sub
+Public Sub TypeNewLine(wd As Word.Document)
+    Me.TypeText wd, Chr(11)
+End Sub
+Public Sub TypeParagraph(wd As Word.Document)
+    wd.Application.Selection.TypeParagraph
+End Sub
+Public Sub TypeText(wd As Word.Document, text As Variant)
+    wd.Application.Selection.TypeText Nz(text, "")
+End Sub
+Public Sub ToggleUnderline(wd As Word.Document)
+
+    With wd.Application.Selection.font
+        If .Underline = wdUnderlineNone Then
+            .Underline = wdUnderlineSingle
+        Else
+            .Underline = wdUnderlineNone
+        End If
+        If .Underline = wdUnderlineNone Then
+            .Underline = wdUnderlineSingle
+        Else
+            .Underline = wdUnderlineNone
+        End If
+    End With
+End Sub
+
+
+Private Sub Class_Terminate()
+    Set doc = Nothing
+End Sub

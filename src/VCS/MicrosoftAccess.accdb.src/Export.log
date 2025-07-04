@@ -1,0 +1,320 @@
+﻿-------------------------------------
+Beginning Export of Source Files
+MicrosoftAccess.accdb
+VCS Version 4.1.0
+Full Path: D:\source\repos\Github\tailormade.eu\MicrosoftAccess\databases\MicrosoftAccess.accdb
+Export Folder: D:\source\repos\Github\tailormade.eu\MicrosoftAccess\databases\MicrosoftAccess.accdb.src\
+Performing Full Export
+04/07/2025 15:13:53
+-------------------------------------
+Scanning source files...
+No db connections found in this database.
+No vbe forms found in this database.
+No proj properties found in this database.
+No saved specs found in this database.
+No shared images found in this database.
+No imex specs found in this database.
+No reports found in this database.
+No table data found in this database.
+No table data macros found in this database.
+No relations found in this database.
+No hidden attributes found in this database.
+-------------------------------------
+Exporting project...          
+  MicrosoftAccess.accdb
+[1]
+-------------------------------------
+Exporting vb project...       
+  Database
+[1]
+-------------------------------------
+Exporting vbe references...   
+  stdole
+[9]
+-------------------------------------
+Exporting modules...          
+  omReferenceFunctions
+  omKernalFunctions
+  omArrayFunctions
+  omStringTagFunctions
+  omUserFunctions
+  omAppSettings
+  omSQLDataAdapter
+  omExcelFunctions
+  omDateFunctions
+  omFormFunctions
+  omStringFunctions
+  omSQLFunctions
+  omSQLConnectorFunctions
+  omExportFunctions
+  omDatabaseFunctions
+  omADODBFunctions
+  omPictureFunctions
+  omPDFFunctions
+  omSystemProcessFunctions
+  omSQLServerFunctions
+  omCollectionFunctions
+  omTranslationEngineFunctions
+  omDevelopmentFunctions
+  omLoggingFunctions
+  omControlFunctions
+  omByteArrayFunctions
+  omCommandBarFunctions
+  omDAOFunctions
+  omLibraryFunctions
+  omTableFunctions
+  omSQLObject
+  omTesseractOCR
+  omSourceObject
+  omBankAccountFunctions
+  omAPI32FileFunctions
+  omSeqFunctions
+  omAPIClipboard
+  omAPISpecialFolders
+  omExportManager
+  omFTP
+  omHTML
+  omKeyObject
+  omReportFunctions
+  omZipFunctions
+  omDefaultFunctions
+  omPrinterSettingsManager
+  omPrinterSettingsManagerFunctions
+  omRecordsetFunctions
+  omGuidFunctions
+  omInvoiceFunctions
+  omUser_Edan
+  omSourceObjectControl
+  omControl
+  omBaseClass
+  omJsonConverter
+  omUser
+  omKeyValue
+  omTimeRange
+  omTranslationEngine
+  omWordEngine
+  omExcelEngine
+  omSeqItem
+  omJSON
+  omUserRole
+  omDefaults
+  omOutlook
+  omLogging
+  omFileFunctions
+  omObjectFunctions
+  omGlobalDeclarations
+  omStartup
+  omDynamicRecordState
+  omDynamicRecordStateTest
+  omMSAccessFunctions
+  omConnectionString
+  omSQLConnector
+  omSSMAAConnector
+  omSSMAConnector_Test
+  omTableConnector
+  omExcel
+[80]
+-------------------------------------
+Exporting commandbars...      
+  OASIS-Logger
+[1]
+-------------------------------------
+Exporting themes...           
+  Office Theme
+[1]
+-------------------------------------
+Exporting db properties...    
+  Database Properties (DAO)
+[48]
+-------------------------------------
+Exporting tables...           
+  omControls
+    Sanitized in 0,003 seconds.
+  omControls (SQL)
+  omEmptyTables
+    Sanitized in 0,002 seconds.
+  omEmptyTables (SQL)
+  omLanguages
+    Sanitized in 0,001 seconds.
+  omLanguages (SQL)
+  omSourceObjectControls
+    Sanitized in 0,001 seconds.
+  omSourceObjectControls (SQL)
+  omSourceObjectControlTranslations
+    Sanitized in 0,001 seconds.
+  omSourceObjectControlTranslations (SQL)
+  omSourceObjects
+    Sanitized in 0,001 seconds.
+  omSourceObjects (SQL)
+  omSysDefaults
+    Sanitized in 0,001 seconds.
+  omSysDefaults (SQL)
+  SSMAA_ConnectionTypes
+    Sanitized in 0,001 seconds.
+  SSMAA_ConnectionTypes (SQL)
+  SSMAA_ODBC_Tables
+    Sanitized in 0,002 seconds.
+  SSMAA_ODBC_Tables (SQL)
+  UserRoles
+    Sanitized in 0,001 seconds.
+  UserRoles (SQL)
+  Users
+    Sanitized in 0,002 seconds.
+  Users (SQL)
+[11]
+-------------------------------------
+Exporting queries...          
+  omEmptyTable_List_Search
+    Sanitized in 0,001 seconds.
+  omEmptyTable_List_Search (SQL)
+  omEmptyTable_Select
+    Sanitized in 0,001 seconds.
+  omEmptyTable_Select (SQL)
+  omLanguagesSourceObjectControls
+    Sanitized in 0,001 seconds.
+  omLanguagesSourceObjectControls (SQL)
+  omSourceObjectControlTranslation_List_Search
+    Sanitized in 0,001 seconds.
+  omSourceObjectControlTranslation_List_Search (SQL)
+  omSourceObjectControlTranslation_Select
+    Sanitized in 0,001 seconds.
+  omSourceObjectControlTranslation_Select (SQL)
+  omSourceObjectControlTranslations_Build
+    Sanitized in 0,001 seconds.
+  omSourceObjectControlTranslations_Build (SQL)
+  User_List_Search
+    Sanitized in 0,001 seconds.
+  User_List_Search (SQL)
+  User_Select
+    Sanitized in 0,001 seconds.
+  User_Select (SQL)
+  UserRole_List_Search
+    Sanitized in 0,001 seconds.
+  UserRole_List_Search (SQL)
+  UserRole_Select
+    Sanitized in 0,001 seconds.
+  UserRole_Select (SQL)
+[10]
+-------------------------------------
+Exporting forms...            
+  UserLock
+    Sanitized in 0,001 seconds.
+  omSourceObjectControlTranslation_List_Search
+    Sanitized in 0,004 seconds.
+  User_List_Search
+    Sanitized in 0,006 seconds.
+  UserRole_List_Search
+    Sanitized in 0,004 seconds.
+  Login
+    Sanitized in 0,002 seconds.
+  User_Edit
+    Sanitized in 0,007 seconds.
+  UserRole_Edit
+    Sanitized in 0,003 seconds.
+  User_EditPassword
+    Sanitized in 0,002 seconds.
+  omSourceObjectControlTranslation_List
+    Sanitized in 0,003 seconds.
+  UserRole_List
+    Sanitized in 0,002 seconds.
+  omSourceObjectControlTranslation_Edit
+    Sanitized in 0,002 seconds.
+  User_List
+    Sanitized in 0,004 seconds.
+  omEmptyTable_List_Search
+    Sanitized in 0,004 seconds.
+  omEmptyTable_Edit
+    Sanitized in 0,003 seconds.
+  omEmptyTable_List
+    Sanitized in 0,002 seconds.
+[15]
+-------------------------------------
+Exporting macros...           
+  omLinkDatabase
+    Sanitized in 0,000 seconds.
+[1]
+-------------------------------------
+Exporting doc properties...   
+  Database Documents
+[1]
+-------------------------------------
+Exporting nav pane groups...  
+  Groups
+[1]
+-------------------------------------
+Done. (4,31 seconds)
+
+--------------------------------------------------
+                PERFORMANCE REPORTS
+--------------------------------------------------
+Category                      Count     Seconds
+--------------------------------------------------
+Modules                       80        1,57
+Forms                         15        1,16
+Themes                        1         0,46
+Queries                       10        0,19
+DB Properties                 48        0,18
+Tables                        11        0,14
+Macros                        1         0,10
+CommandBars                   1         0,04
+Doc Properties                1         0,04
+VBE References                9         0,04
+Nav Pane Groups               1         0,03
+Project                       1         0,03
+VB Project                    1         0,02
+Hidden Attributes             0         0,01
+DB Connections                0         0,01
+Table Data Macros             0         0,00
+Proj Properties               0         0,00
+Shared Images                 0         0,00
+Relations                     0         0,00
+IMEX Specs                    0         0,00
+VBE Forms                     0         0,00
+Table Data                    0         0,00
+Saved Specs                   0         0,00
+Reports                       0         0,00
+--------------------------------------------------
+TOTALS:                       180       4,04
+--------------------------------------------------
+
+--------------------------------------------------
+Operations                    Count     Seconds
+--------------------------------------------------
+Read File                     117       0,80
+Increment Progress            250       0,72
+Extract Theme                 1         0,44
+Export VBE Module             80        0,26
+App.SaveAsText()              26        0,25
+Read File Bytes               118       0,24
+Convert to JSON               792       0,13
+Scan DB Objects               1         0,08
+Sanitize File                 26        0,06
+App.ExportXML()               11        0,06
+Console Updates               4         0,05
+Format SQL                    10        0,05
+Write File                    160       0,05
+Get File Property Hash        125       0,04
+Delete File                   119       0,04
+Get VBA Hash                  95        0,02
+Compute SHA256                370       0,02
+Read File DevMode             15        0,02
+Sanitize VBA Code             95        0,01
+Get Modified Date             252       0,01
+modFileAccess.VerifyPath      198       0,01
+Sanitize XML                  11        0,01
+Save Table SQL                11        0,01
+Format XML                    11        0,01
+Save Query SQL                10        0,01
+Check for linked table        11        0,00
+Export Theme                  1         0,00
+Quick Count Objects           1         0,00
+modFileAccess.GetUncPath      2         0,00
+Clear Files by Ext            6         0,00
+Quick Count Files             1         0,00
+Clear Orphaned Files          9         0,00
+Close Open Objects            1         0,00
+--------------------------------------------------
+Other Operations                        0,91
+--------------------------------------------------
+
+

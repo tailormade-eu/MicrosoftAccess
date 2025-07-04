@@ -1,0 +1,160 @@
+﻿Attribute VB_Name = "omAPI32FileFunctions"
+Option Compare Database
+Option Explicit
+
+Public Const FILE_ATTRIBUTE_NORMAL = &H80
+Public Const FILE_ATTRIBUTE_ARCHIVE = &H20
+Public Const FILE_ATTRIBUTE_SYSTEM = &H4
+Public Const FILE_ATTRIBUTE_HIDDEN = &H2
+Public Const FILE_ATTRIBUTE_READONLY = &H1
+
+Type SECURITY_ATTRIBUTES
+        nLength As Long
+        lpSecurityDescriptor As Long
+        bInheritHandle As Long
+End Type
+
+Private Const STARTF_USESHOWWINDOW& = &H1
+Private Const NORMAL_PRIORITY_CLASS = &H20&
+Private Const INFINITE = -1&
+
+Private Type STARTUPINFO
+    cb As Long
+    lpReserved As String
+    lpDesktop As String
+    lpTitle As String
+    dwX As Long
+    dwY As Long
+    dwXSize As Long
+    dwYSize As Long
+    dwXCountChars As Long
+    dwYCountChars As Long
+    dwFillAttribute As Long
+    dwFlags As Long
+    wShowWindow As Integer
+    cbReserved2 As Integer
+    lpReserved2 As Long
+    hStdInput As Long
+    hStdOutput As Long
+    hStdError As Long
+End Type
+
+Private Type PROCESS_INFORMATION
+    hProcess As Long
+    hThread As Long
+    dwProcessID As Long
+    dwThreadID As Long
+End Type
+
+Declare PtrSafe Function WaitForSingleObject Lib "kernel32" (ByVal hHandle As Long, ByVal dwMilliseconds As Long) As Long
+Declare PtrSafe Function CreateProcessA Lib "kernel32" (ByVal lpApplicationName As Long, ByVal lpCommandLine As String, ByVal lpProcessAttributes As Long, ByVal lpThreadAttributes As Long, ByVal bInheritHandles As Long, ByVal dwCreationFlags As Long, ByVal lpEnvironment As Long, ByVal lpCurrentDirectory As Long, lpStartupInfo As STARTUPINFO, lpProcessInformation As PROCESS_INFORMATION) As Long
+Declare PtrSafe Function CloseHandle Lib "kernel32" (ByVal hObject As Long) As Long
+Declare PtrSafe Function apiGetUserName Lib "advapi32.dll" Alias "GetUserNameA" (ByVal lpBuffer As String, nSize As Long) As Long
+Declare PtrSafe Function SetFileAttributes Lib "kernel32" Alias "SetFileAttributesA" (ByVal lpFileName As String, ByVal dwFileAttributes As Long) As Long
+Declare PtrSafe Function GetFileAttributes Lib "kernel32" Alias "GetFileAttributesA" (ByVal lpFileName As String) As Long
+Declare PtrSafe Function GetShortPathName Lib "kernel32" Alias "GetShortPathNameA" (ByVal lpszLongPath As String, ByVal lpszShortPath As String, ByVal cchBuffer As Long) As Long
+Declare PtrSafe Function GetTempPath Lib "kernel32" Alias "GetTempPathA" (ByVal nBufferLength As Long, ByVal lpBuffer As String) As Long
+Declare PtrSafe Function GetTempFileName Lib "kernel32" Alias "GetTempFileNameA" (ByVal lpszPath As String, ByVal lpPrefixString As String, ByVal wUnique As Long, ByVal lpTempFileName As String) As Long
+Declare PtrSafe Function CreateDirectory Lib "kernel32" Alias "CreateDirectoryA" (ByVal lpPathName As String, lpSecurityAttributes As SECURITY_ATTRIBUTES) As Long
+
+Public Function GetShortFileName(sFileName As String) As String
+On Error Resume Next
+
+   Dim lpszShortPath As String
+   Dim cchBuffer As Long
+   Dim szSize As Long
+   Dim iFile As Integer
+   Dim fDelete As Boolean
+
+   ' This function will only return a value for a file that exists, so
+   ' we must create a dummy file for it to work consistently.
+   If Dir(sFileName) = "" Then
+      iFile = FreeFile
+      Open sFileName For Output As iFile
+      Print #iFile, "bye"
+      Close #iFile
+      fDelete = True
+   Else
+      fDelete = False
+   End If
+
+   cchBuffer = 256
+   lpszShortPath = String$(cchBuffer, Chr(0))
+
+   szSize = GetShortPathName(sFileName, lpszShortPath, cchBuffer)
+   GetShortFileName = Left(lpszShortPath, szSize)
+
+   If fDelete = True Then Kill (sFileName)
+
+End Function
+
+Public Function GetShortFolderName(sFolderName As String) As String
+On Error Resume Next
+
+   Dim lpszShortPath As String
+   Dim cchBuffer As Long
+   Dim szSize As Long
+   Dim iFile As Integer
+   Dim fDelete As Boolean
+   Const sFile As String * 8 = "temp.txt"
+
+   sFolderName = sFolderName & sFile
+
+   iFile = FreeFile
+   Open sFolderName For Output As iFile
+   Print #iFile, "bye"
+   Close #iFile
+
+   cchBuffer = 256
+   lpszShortPath = String$(cchBuffer, Chr(0))
+
+   szSize = GetShortPathName(sFolderName, lpszShortPath, cchBuffer)
+   sFolderName = Left(lpszShortPath, szSize)
+   GetShortFolderName = Left(sFolderName, Len(sFolderName) - 8)
+
+   Kill (sFolderName)
+
+End Function
+
+Public Sub ShellWait(Pathname As String, Optional WindowStyle As Long)
+On Error GoTo Err_Handler
+
+   Dim proc As PROCESS_INFORMATION
+   Dim start As STARTUPINFO
+   Dim ret As Long
+
+   ' Initialize the STARTUPINFO structure:
+   With start
+      .cb = Len(start)
+      If Not IsMissing(WindowStyle) Then
+         .dwFlags = STARTF_USESHOWWINDOW
+         .wShowWindow = WindowStyle
+      End If
+   End With
+   ' Start the shelled application:
+   ret& = CreateProcessA(0&, Pathname, 0&, 0&, 1&, NORMAL_PRIORITY_CLASS, 0&, 0&, start, proc)
+   ' Wait for the shelled application to finish:
+   ret& = WaitForSingleObject(proc.hProcess, INFINITE)
+   ret& = CloseHandle(proc.hProcess)
+
+Exit_Here:
+   Exit Sub
+Err_Handler:
+   MsgBox Err.Description, vbExclamation, "E R R O R"
+   Resume Exit_Here
+
+End Sub
+
+Public Function GetUserName() As Variant
+On Error Resume Next
+
+   Dim sUserName As String
+   Dim lngLength As Long
+   Dim lngResult As Long
+
+   sUserName = String$(255, 0)
+   lngLength = 255
+   lngResult = apiGetUserName(sUserName, lngLength)
+   GetUserName = Left(sUserName, InStr(1, sUserName, Chr(0)) - 1)
+
+End Function
