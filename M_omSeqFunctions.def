@@ -10,8 +10,8 @@ Public Enum omSeqItemLevel
     ErrorSeqLevel = 3
 End Enum
 
-Public Function omSeqItemLevelToString(value As omSeqItemLevel) As String
-    Select Case value
+Public Function omSeqItemLevelToString(Value As omSeqItemLevel) As String
+    Select Case Value
         Case omSeqItemLevel.DebugSeqLevel
             omSeqItemLevelToString = "Debug"
         Case omSeqItemLevel.WarningSeqLevel
@@ -30,7 +30,7 @@ Dim result As String
         With seqItem
             .ApplicationName = "MSAccess-Test"
             .Level = ErrorSeqLevel
-            .action = "omSeqFunctions.SendSeqItem"
+            .Action = "omSeqFunctions.SendSeqItem"
             .Step = "self test"
         End With
     End If

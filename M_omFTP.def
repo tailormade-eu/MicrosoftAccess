@@ -1,7 +1,7 @@
 Option Compare Database
 Option Explicit
 
-Public Function UploadFile(ftpAddress As String, login As String, Password As String, fileName As String, Optional ftpPath As String = "/") As String
+Public Function UploadFile(ftpAddress As String, Login As String, Password As String, filename As String, Optional ftpPath As String = "/") As String
 Dim outFilename As String
 Dim ftpFilename As String
 Dim batFilename As String
@@ -14,19 +14,19 @@ On Error GoTo Err_Handler
     lInt_FreeFile02 = FreeFile
 
 
-    outFilename = fileName & ".out"
-    ftpFilename = fileName & ".ftp"
-    batFilename = fileName & ".bat"
+    outFilename = filename & ".out"
+    ftpFilename = filename & ".ftp"
+    batFilename = filename & ".bat"
     
     
     '' Create text file with FTP commands
     Open ftpFilename For Output As #lInt_FreeFile01
     Print #lInt_FreeFile01, "open " & ftpAddress
-    Print #lInt_FreeFile01, login
+    Print #lInt_FreeFile01, Login
     Print #lInt_FreeFile01, Password
     Print #lInt_FreeFile01, "cd " & ftpPath
     Print #lInt_FreeFile01, "binary"
-    Print #lInt_FreeFile01, "send " & Chr(34) & fileName & Chr(34)
+    Print #lInt_FreeFile01, "send " & Chr(34) & filename & Chr(34)
 
     '' To receive a file, replace the above line with this one
     ''Print #lInt_FreeFile01, "recv \Picture.gif " & ThisWorkbook.Path & "\Picture.gif"
@@ -60,7 +60,7 @@ bye:
 Exit Function
 
 Err_Handler:
-    MsgBox "Error : " & Err.number & vbCrLf & "Description : " & Err.description, vbCritical
+    MsgBox "Error : " & Err.number & vbCrLf & "Description : " & Err.Description, vbCritical
     Resume bye
 
 End Function

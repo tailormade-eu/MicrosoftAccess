@@ -10,7 +10,7 @@ Public Id As Long
 
 Public Sub Load(soId As Long, c As omControl)
 
-    rs.Filter = "SourceObjectId=" & soId & " AND ControlId=" & c.Id
+    rs.filter = "SourceObjectId=" & soId & " AND ControlId=" & c.Id
     If rs.EOF Then
         rs.AddNew
         rs("SourceObjectId") = soId
@@ -26,7 +26,7 @@ Public Sub Load(soId As Long, c As omControl)
 End Sub
 
 Private Sub Class_Initialize()
-    rs.Open "omSourceObjectControls", CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    rs.Open "omSourceObjectControls", CurrentProject.connection, adOpenDynamic, adLockOptimistic
 End Sub
 
 Private Sub Class_Terminate()

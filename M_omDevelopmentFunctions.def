@@ -6,11 +6,11 @@ Dim fno As Long
 
     fno = FreeFile
     Open "Queries.txt" For Output As fno
-    rsQueries.Open "SELECT Name FROM MSysObjects WHERE Type = 5", CurrentProject.Connection, adOpenForwardOnly, adLockReadOnly
+    rsQueries.Open "SELECT Name FROM MSysObjects WHERE Type = 5", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
     While Not rsQueries.EOF
         Print #fno, "Create Procedure " & Chr(34) & rsQueries("Name") & Chr(34) & vbCrLf
         Print #fno, "As" & vbCrLf
-        Print #fno, DBEngine(0)(0).QueryDefs(rsQueries("Name")).sql & vbCrLf
+        Print #fno, DBEngine(0)(0).QueryDefs(rsQueries("Name")).SQL & vbCrLf
         rsQueries.MoveNext
     Wend
     rsQueries.Close
@@ -27,16 +27,16 @@ Public Sub TemplateCopy(strFind As String, strReplace As String)
 End Sub
 Public Sub QueryCopy(strQuery As String, strFind As String, strReplace As String)
 Dim strNewQuery As String
-Dim strsql As String
+Dim strSQL As String
 
     strNewQuery = Replace(strQuery, GetEnglishPlural(strFind), GetEnglishPlural(strReplace))
     strNewQuery = Replace(strNewQuery, strFind, strReplace)
     DoCmd.CopyObject , strNewQuery, acQuery, strQuery
     DBEngine(0)(0).QueryDefs.Refresh
-    strsql = DBEngine(0)(0).QueryDefs(strNewQuery).sql
-    strsql = Replace(strsql, GetEnglishPlural(strFind), GetEnglishPlural(strReplace))
-    strsql = Replace(strsql, strFind, strReplace)
-    DBEngine(0)(0).QueryDefs(strNewQuery).sql = strsql
+    strSQL = DBEngine(0)(0).QueryDefs(strNewQuery).SQL
+    strSQL = Replace(strSQL, GetEnglishPlural(strFind), GetEnglishPlural(strReplace))
+    strSQL = Replace(strSQL, strFind, strReplace)
+    DBEngine(0)(0).QueryDefs(strNewQuery).SQL = strSQL
     DBEngine(0)(0).QueryDefs.Refresh
 End Sub
 
@@ -134,7 +134,7 @@ End Sub
 Public Sub DeleteTempObjects()
 Dim rs As New ADODB.Recordset
 
-    rs.Open "SELECT Name, Type FROM MSysObjects WHERE Name Like '~%'", CurrentProject.Connection, adOpenForwardOnly, adLockReadOnly
+    rs.Open "SELECT Name, Type FROM MSysObjects WHERE Name Like '~%'", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
     While Not rs.EOF
         Debug.Print rs(0), rs(1)
         Select Case rs(1)
@@ -149,7 +149,7 @@ Dim rs As New ADODB.Recordset
     Set rs = Nothing
 End Sub
 
-Public Sub ReportReplaceBackColor(reportName As String, OldColor As Long, NewColor As Long)
+Public Sub ReportReplaceBackColor(ReportName As String, OldColor As Long, NewColor As Long)
 Dim ctrl As Control
 Dim InvalidProperty As Boolean
 
@@ -178,8 +178,8 @@ Dim InvalidProperty As Boolean
 ' ReportReplaceBackColor "SPricelistProductProductCost_Print",1384554,472939
 
     On Error GoTo ReportReplaceBackColor_Error
-    DoCmd.OpenReport reportName, acViewDesign
-    For Each ctrl In Reports(reportName).Controls
+    DoCmd.OpenReport ReportName, acViewDesign
+    For Each ctrl In Reports(ReportName).Controls
         InvalidProperty = False
         If ctrl.BackColor = OldColor Then
             If Not InvalidProperty Then
@@ -187,22 +187,22 @@ Dim InvalidProperty As Boolean
             End If
         End If
     Next
-    DoCmd.Close acReport, reportName, acSaveYes
+    DoCmd.Close acReport, ReportName, acSaveYes
     Exit Sub
 ReportReplaceBackColor_Error:
     InvalidProperty = True
     Resume Next
 End Sub
 
-Public Sub ReportReplaceForeColor(reportName As String, OldColor As Long, NewColor As Long)
+Public Sub ReportReplaceForeColor(ReportName As String, OldColor As Long, NewColor As Long)
 Dim ctrl As Control
 Dim InvalidProperty As Boolean
 
 ' ReportReplaceForeColor "SOrder_Print",1384554,472939
 
     On Error GoTo ReportReplaceForeColor_Error
-    DoCmd.OpenReport reportName, acViewDesign
-    For Each ctrl In Reports(reportName).Controls
+    DoCmd.OpenReport ReportName, acViewDesign
+    For Each ctrl In Reports(ReportName).Controls
         InvalidProperty = False
         If ctrl.ForeColor = OldColor Then
             If Not InvalidProperty Then
@@ -210,7 +210,7 @@ Dim InvalidProperty As Boolean
             End If
         End If
     Next
-    DoCmd.Close acReport, reportName, acSaveYes
+    DoCmd.Close acReport, ReportName, acSaveYes
     Exit Sub
 ReportReplaceForeColor_Error:
     InvalidProperty = True
@@ -293,7 +293,7 @@ Dim i As Long
 
     For i = 0 To CurrentProject.AllForms.Count - 1
         DoCmd.OpenForm CurrentProject.AllForms(i).Name, acDesign, windowMode:=acHidden
-        Forms(CurrentProject.AllForms(i).Name).PopUp = False
+        Forms(CurrentProject.AllForms(i).Name).Popup = False
         DoCmd.Close acForm, CurrentProject.AllForms(i).Name, acSaveYes
     Next
 End Sub

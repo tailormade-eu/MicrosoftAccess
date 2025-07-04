@@ -160,7 +160,7 @@ End Sub
 
 'Sub AttachedTable(ConnectionString As String, sourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False)
 Sub AttachTable(ConnectionString As String, SourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False, Optional primaryKey As String = "")
-Dim tbl As DAO.TableDef
+Dim tbl As dao.TableDef
 
     On Error Resume Next
     'Create a new TableDef object.
@@ -563,14 +563,14 @@ Public Sub LinkMSAccess(Optional linkLocal As Boolean = False)
 Dim tblCon As New omTableConnector
 Dim DefaultPath As String
 Dim dataPath As String
-Dim FileName As String
+Dim filename As String
 
 
-    FileName = omFileFunctions.RemoveExtension(CurrentProject.Name)
-    If InStrRev(FileName, "_client") > 0 Then
-        FileName = Replace(FileName, "_client", "")
+    filename = omFileFunctions.RemoveExtension(CurrentProject.Name)
+    If InStrRev(filename, "_client") > 0 Then
+        filename = Replace(filename, "_client", "")
     End If
-    FileName = FileName & "_Data"
+    filename = filename & "_Data"
     gSystemDefaults.Mode = LocalMode
     gSystemDefaults.Development = gDevelopmentMode
     If linkLocal Then
@@ -579,15 +579,15 @@ Dim FileName As String
         dataPath = Nz(gSystemDefaults.Load("DataPath"), "")
     End If
 
-    DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, FileName & ".mdb")
+    DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, filename & ".mdb")
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, FileName & ".accdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(dataPath, filename & ".accdb")
     End If
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, FileName & ".mdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, filename & ".mdb")
     End If
     If DefaultPath = "" Then
-        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, FileName & ".accdb")
+        DefaultPath = omFileFunctions.BuildPathFileExists(CurrentProject.path, filename & ".accdb")
     End If
     If Not gFso.FileExists(DefaultPath) Then
         MsgBox "No Data file was found at the location: " & DefaultPath & vbCrLf & "Application will now be closed.", vbCritical

@@ -66,27 +66,27 @@ Private Const CF_USESTYLE = &H80&
 Private Const CF_WAVE = 12
 Private Const CF_WYSIWYG = &H8000
 
-Private Declare Function GlobalAlloc Lib "kernel32" (ByVal wFlags&, ByVal _
+Private Declare PtrSafe Function GlobalAlloc Lib "kernel32" (ByVal wFlags&, ByVal _
   dwBytes As Long) As Long
-Private Declare Function GlobalLock Lib "kernel32" (ByVal hMem As Long) _
+Private Declare PtrSafe Function GlobalLock Lib "kernel32" (ByVal hMem As Long) _
   As Long
-Private Declare Function GlobalSize Lib "kernel32" (ByVal hMem As Long) _
+Private Declare PtrSafe Function GlobalSize Lib "kernel32" (ByVal hMem As Long) _
   As Long
-Private Declare Function lstrcpy Lib "kernel32" (ByVal lpString1 As Any, _
+Private Declare PtrSafe Function lstrcpy Lib "kernel32" (ByVal lpString1 As Any, _
   ByVal lpString2 As Any) As Long
-Private Declare Function lstrlen Lib "kernel32" Alias "lstrlenA" _
+Private Declare PtrSafe Function lstrlen Lib "kernel32" Alias "lstrlenA" _
   (ByVal lpString As String) As Long
 
-Private Declare Function GlobalUnlock Lib "kernel32" (ByVal hMem As Long) _
+Private Declare PtrSafe Function GlobalUnlock Lib "kernel32" (ByVal hMem As Long) _
   As Long
 
-Private Declare Function OpenClipboard Lib "user32" (ByVal hwnd As Long) _
+Private Declare PtrSafe Function OpenClipboard Lib "user32" (ByVal hwnd As Long) _
   As Long
-Private Declare Function CloseClipboard Lib "user32" () As Long
-Private Declare Function GetClipboardData Lib "user32" (ByVal wFormat As _
+Private Declare PtrSafe Function CloseClipboard Lib "user32" () As Long
+Private Declare PtrSafe Function GetClipboardData Lib "user32" (ByVal wFormat As _
   Long) As Long
-Private Declare Function EmptyClipboard Lib "user32" () As Long
-Private Declare Function SetClipboardData Lib "user32" (ByVal wFormat _
+Private Declare PtrSafe Function EmptyClipboard Lib "user32" () As Long
+Private Declare PtrSafe Function SetClipboardData Lib "user32" (ByVal wFormat _
   As Long, ByVal hMem As Long) As Long
 
 Function ClipBoard_SetText(strCopyString As String) As Boolean
@@ -119,7 +119,7 @@ Function ClipBoard_GetText() As String
   Dim hClipMemory As Long
   Dim lpClipMemory As Long
   Dim strCBText As String
-  Dim RetVal As Long
+  Dim retVal As Long
   Dim lngSize As Long
   If OpenClipboard(0&) <> 0 Then
     ' Obtain the handle to the global memory
@@ -132,8 +132,8 @@ Function ClipBoard_GetText() As String
       If lpClipMemory <> 0 Then
         lngSize = GlobalSize(lpClipMemory)
         strCBText = Space$(lngSize)
-        RetVal = lstrcpy(strCBText, lpClipMemory)
-        RetVal = GlobalUnlock(hClipMemory)
+        retVal = lstrcpy(strCBText, lpClipMemory)
+        retVal = GlobalUnlock(hClipMemory)
         ' Peel off the null terminating character.
         strCBText = Left(strCBText, InStr(1, strCBText, Chr$(0), 0) - 1)
       Else

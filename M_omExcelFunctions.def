@@ -2,7 +2,7 @@ Option Compare Database
 Option Explicit
 
 Public Function ReplaceFirst(sh As Excel.Worksheet, findValue As String, replaceValue As String)
-Dim rng As Excel.Range
+Dim rng As Excel.range
 
     Set rng = omExcelFunctions.FindFirst(sh, findValue)
     If omObjectFunctions.NotIsNothing(rng) Then
@@ -11,7 +11,7 @@ Dim rng As Excel.Range
     End If
 End Function
 
-Public Function FindFirst(sh As Excel.Worksheet, findValue As String) As Excel.Range
+Public Function FindFirst(sh As Excel.Worksheet, findValue As String) As Excel.range
 Dim s As Object
     
     sh.activate
@@ -26,7 +26,7 @@ FindFirst_NotFound:
 End Function
 
 Public Sub DeleteRow(sh As Excel.Worksheet, rowIndex As Long)
-    sh.Application.Rows(rowIndex).Delete
+    sh.Application.rows(rowIndex).Delete
 End Sub
 Public Sub DeleteSheet(sh As Excel.Worksheet)
 Dim ap As Excel.Application
@@ -38,12 +38,12 @@ Dim ap As Excel.Application
 End Sub
 Public Sub HideRow(sh As Excel.Worksheet, rowIndex As Long)
     If rowIndex <> 0 Then
-        sh.Application.Rows(rowIndex).Hidden = True
+        sh.Application.rows(rowIndex).Hidden = True
     End If
 End Sub
 Public Sub ShowRow(sh As Excel.Worksheet, rowIndex As Long)
     If rowIndex <> 0 Then
-        sh.Application.Rows(rowIndex).Hidden = False
+        sh.Application.rows(rowIndex).Hidden = False
     End If
 End Sub
 Public Sub SelectRow(sh As Excel.Worksheet, rowIndex As Long)
@@ -72,13 +72,8 @@ Public Sub SelectColumn(sh As Excel.Worksheet, columnIndex As Long)
         sh.Application.Columns(columnIndex).Select
     End If
 End Sub
-Public Sub SelectRow(sh As Excel.Worksheet, rowIndex As Long)
-    If rowIndex <> 0 Then
-        sh.Application.Rows(rowIndex).Select
-    End If
-End Sub
 Public Sub SetSelectionBold(sh As Excel.Worksheet, Optional boldFlag As Boolean = True)
-    sh.Application.Selection.Font.bold = boldFlag
+    sh.Application.Selection.font.bold = boldFlag
 End Sub
 
 Public Sub FormatColumn(sh As Excel.Worksheet, columnIndex As Long, numberFormat As String)
@@ -116,7 +111,7 @@ Public Sub SelectCell(sh As Excel.Worksheet, rowIndex As Long, columnIndex As Lo
 End Sub
 Public Sub SelectRange(sh As Excel.Worksheet, rowIndexStart As Long, columnIndexStart As Long, rowIndexEnd As Long, columnIndexEnd As Long)
     With sh.Application
-        .Range(.Cells(rowIndexStart, columnIndexStart), .Cells(rowIndexEnd, columnIndexEnd)).Select
+        .range(.Cells(rowIndexStart, columnIndexStart), .Cells(rowIndexEnd, columnIndexEnd)).Select
     End With
 End Sub
 
@@ -150,14 +145,14 @@ Public Sub InsertRow(sh As Excel.Worksheet, rowIndex As Long, Optional copyRowIn
         sh.activate
     End If
     If copyRowIndex <> 0 Then
-        sh.Application.Rows(copyRowIndex).Select
+        sh.Application.rows(copyRowIndex).Select
         sh.Application.Selection.Copy
     End If
     If moveRowIndex <> 0 Then
-        sh.Application.Rows(moveRowIndex).Select
+        sh.Application.rows(moveRowIndex).Select
         sh.Application.Selection.Cut
     End If
-    sh.Application.Rows(rowIndex).Select
+    sh.Application.rows(rowIndex).Select
     sh.Application.Selection.Insert Shift:=direction ', CopyOrigin:=xlFormatFromLeftOrAbove
 End Sub
 
@@ -194,7 +189,7 @@ Dim i As Long
     Next
 End Function
 Public Function FindRow(xs As Excel.Worksheet, Value As String) As Long
-Dim rng As Excel.Range
+Dim rng As Excel.range
     
     Set rng = omExcelFunctions.FindFirst(xs, Value)
     If omObjectFunctions.NotIsNothing(rng) Then
@@ -202,7 +197,7 @@ Dim rng As Excel.Range
     End If
 End Function
 Public Function FindColumn(xs As Excel.Worksheet, Value As String) As Long
-Dim rng As Excel.Range
+Dim rng As Excel.range
     
     Set rng = omExcelFunctions.FindFirst(xs, Value)
     If omObjectFunctions.NotIsNothing(rng) Then
@@ -251,7 +246,7 @@ Public Sub ConvertToImage(sh As Excel.Worksheet, columnIndex As Long, findString
 Dim rowMax As Long
 Dim currentRow As Long
 Dim Value As String
-Dim currentRange As Excel.Range
+Dim currentRange As Excel.range
 
     sh.Cells(1, columnIndex).Select
     rowMax = GetMaxRow(sh)
@@ -271,7 +266,7 @@ Dim rowMax As Long
     sh.Cells(1, 1).Select
     rowMax = IIf(endRow > startRow, endRow, GetMaxRow(sh))
     If rowMax = 1048576 Then Exit Sub
-    sh.Rows(startRow & ":" & rowMax).Select
+    sh.rows(startRow & ":" & rowMax).Select
     sh.Application.Selection.RowHeight = height
 End Sub
 

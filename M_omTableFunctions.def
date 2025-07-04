@@ -5,10 +5,10 @@ Public Sub TableAddId(tableName As String)
     AddField tableName, "ID", dbLong, True
 End Sub
 
-Public Sub AddField(tableName As String, FieldName As String, FieldType As DAO.DataTypeEnum, Optional AutoIncrement As Boolean = False)
-Dim fld As DAO.Field
+Public Sub AddField(tableName As String, fieldName As String, FieldType As dao.DataTypeEnum, Optional AutoIncrement As Boolean = False)
+Dim fld As dao.Field
     
-        Set fld = CurrentDb.TableDefs(tableName).CreateField(FieldName, FieldType)
+        Set fld = CurrentDb.TableDefs(tableName).CreateField(fieldName, FieldType)
         If AutoIncrement Then
             fld.Attributes = fld.Attributes + dbAutoIncrField
         End If
@@ -17,7 +17,7 @@ Dim fld As DAO.Field
 End Sub
 
 Sub AttachedTable(ConnectionString As String, SourceTable As String, DestinationTable As String)
-Dim tbl As DAO.TableDef
+Dim tbl As dao.TableDef
        
     'Create a new TableDef object.
     Set tbl = CurrentDb.CreateTableDef(DestinationTable)
@@ -37,7 +37,7 @@ Dim exFlds() As String
 
     exFlds = Split(excludeFields, ",")
     
-    rs.Open "[" & tableName & "]", CurrentProject.Connection, adOpenForwardOnly, adLockReadOnly
+    rs.Open "[" & tableName & "]", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
     For Each fld In rs.Fields
         If omArrayFunctions.StringArrayFind(exFlds, fld.Name, False) = -1 Then
             If includeTableName Then
@@ -62,7 +62,7 @@ Dim strInsertValues
 Dim exFlds() As String
 
     exFlds = Split(excludeFields, ",")
-    rs.Open "[" & tableName & "]", CurrentProject.Connection, adOpenForwardOnly, adLockReadOnly
+    rs.Open "[" & tableName & "]", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
     For Each fld In rs.Fields
         If fld.Name <> idFieldName Then
             If omArrayFunctions.StringArrayFind(exFlds, fld.Name, False) = -1 Then
@@ -89,7 +89,7 @@ Dim strUpdateFields
 Dim exFlds() As String
 
     exFlds = Split(excludeFields, ",")
-    rs.Open "[" & tableName & "]", CurrentProject.Connection, adOpenForwardOnly, adLockReadOnly
+    rs.Open "[" & tableName & "]", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
     For Each fld In rs.Fields
         If fld.Name <> idFieldName Then
             If omArrayFunctions.StringArrayFind(exFlds, fld.Name, False) = -1 Then

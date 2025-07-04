@@ -11,22 +11,22 @@ Dim omSO As New omSourceObject
 Dim omC As New omControl
 Dim omSOC As New omSourceObjectControl
 
-Public Sub Translate(obj As Object, languageId As Long)
+Public Sub Translate(obj As Object, LanguageId As Long)
 Dim rsTranslate As New ADODB.Recordset
 Dim ctrl As Object
 Dim omSO As omSourceObject
     
     omSO.Load obj
-    rsTranslate.Open "SELECT * FROM omSourceObjectControlTranslations_Translate WHERE LanguageId=" & languageId & " AND SourceObjectId=" & omSO.Id, CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    rsTranslate.Open "SELECT * FROM omSourceObjectControlTranslations_Translate WHERE LanguageId=" & LanguageId & " AND SourceObjectId=" & omSO.Id, CurrentProject.connection, adOpenDynamic, adLockOptimistic
     
-    rsTranslate.Filter = "ControlTypeId=" & 0 & " AND ControlName='" & obj.Name & "'"
+    rsTranslate.filter = "ControlTypeId=" & 0 & " AND ControlName='" & obj.Name & "'"
     If Not rsTranslate.EOF Then
         obj.Caption = rsTranslate("Default")
         rsTranslate("LastUsedDate") = Now
         rsTranslate.Update
     End If
     For Each ctrl In obj.Controls
-        rsTranslate.Filter = "ControlTypeId=" & ctrl.ControlType & " AND ControlName='" & ctrl.Name & "'"
+        rsTranslate.filter = "ControlTypeId=" & ctrl.ControlType & " AND ControlName='" & ctrl.Name & "'"
         If Not rsTranslate.EOF Then
             Select Case ctrl.tag
                 Case "Short"
@@ -70,22 +70,22 @@ Dim i As Long
     '  "WHERE (((omControlTranslations.Id) Is Null)) "
     DoCmd.SetWarnings True
 End Sub
-Public Sub IndexForm(FormName As String)
+Public Sub IndexForm(formName As String)
 Dim frm As Form
 
-    DoCmd.OpenForm FormName, acDesign, windowMode:=acHidden
-    Set frm = Forms(FormName)
+    DoCmd.OpenForm formName, acDesign, windowMode:=acHidden
+    Set frm = Forms(formName)
     IndexByObject frm, acForm
-    DoCmd.Close acForm, FormName, acSaveYes
+    DoCmd.Close acForm, formName, acSaveYes
 End Sub
 
-Public Sub IndexReport(reportName As String)
+Public Sub IndexReport(ReportName As String)
 Dim rep As Report
 
-    DoCmd.OpenReport reportName, acDesign, windowMode:=acHidden
-    Set rep = Reports(reportName)
+    DoCmd.OpenReport ReportName, acDesign, windowMode:=acHidden
+    Set rep = Reports(ReportName)
     IndexByObject rep, acReport
-    DoCmd.Close acReport, reportName, acSaveYes
+    DoCmd.Close acReport, ReportName, acSaveYes
 End Sub
 
 Public Sub IndexByObject(obj As Object, objType As AcObjectType)

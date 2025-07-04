@@ -12,7 +12,7 @@ Option Explicit
 
 Dim cmdGetValue As New ADODB.Command
 Public Name As String
-Public value As Variant
+Public Value As Variant
 
 Public Function Load(SettingsName As String) As Variant
 Dim rs As ADODB.Recordset
@@ -21,20 +21,20 @@ Dim rs As ADODB.Recordset
         cmdGetValue.Parameters(0) = SettingsName
         Set rs = cmdGetValue.Execute
         If Not rs.EOF Then
-            Me.value = rs(0)
+            Me.Value = rs(0)
         Else
             Me.Name = ""
-            Me.value = ""
+            Me.Value = ""
         End If
         rs.Close
     End If
     Set rs = Nothing
-    Load = Me.value
+    Load = Me.Value
 End Function
 Public Sub Save(SettingsName As String, NewValue As String)
 Dim rs As New ADODB.Recordset
 
-    rs.Open "SELECT * FROM appSettings WHERE Name=" & Chr(34) & SettingsName & Chr(34), CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    rs.Open "SELECT * FROM appSettings WHERE Name=" & Chr(34) & SettingsName & Chr(34), CurrentProject.connection, adOpenDynamic, adLockOptimistic
     If rs.EOF Then
         rs.AddNew
         rs("Name") = SettingsName
@@ -44,12 +44,12 @@ Dim rs As New ADODB.Recordset
     rs.Close
     Set rs = Nothing
     Name = SettingsName
-    value = NewValue
+    Value = NewValue
 End Sub
 
 Private Sub Class_Initialize()
-    cmdGetValue.CommandText = "SELECT Value FROM appSettings WHERE Name=?"
-    cmdGetValue.ActiveConnection = CurrentProject.Connection
+    cmdGetValue.commandText = "SELECT Value FROM appSettings WHERE Name=?"
+    cmdGetValue.ActiveConnection = CurrentProject.connection
     cmdGetValue.Parameters.Refresh
 End Sub
 

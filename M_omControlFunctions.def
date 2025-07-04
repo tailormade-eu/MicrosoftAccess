@@ -3,7 +3,7 @@ Option Explicit
 
 Public Sub IfNullOrEmpty(ctrl As Control, Optional UseDefaultValue As Boolean = True)
     If omStringFunctions.IsNullOrEmpty(ctrl) Then
-        If UseDefaultValue And NotIsNullOrEmpty(ctrl.DefaultValue) Then
+        If UseDefaultValue And NotIsNullOrEmpty(ctrl.defaultValue) Then
             SetDefaultValue ctrl
         Else
             ctrl = ctrl.OldValue
@@ -23,54 +23,54 @@ Dim vDate As Variant
 End Sub
 
 
-Public Function IsFormOpen(FormName As String) As Boolean
+Public Function IsFormOpen(formName As String) As Boolean
 
 On Error GoTo IsFormOpen_Error
 
-    IsFormOpen = (Forms(FormName).Name = FormName)
+    IsFormOpen = (Forms(formName).Name = formName)
     Exit Function
 IsFormOpen_Error:
     IsFormOpen = False
     
 End Function
 
-Public Function GetOpenForm(FormName As String) As Form
+Public Function GetOpenForm(formName As String) As Form
             
-    If IsFormOpen(FormName) Then
-        Set GetOpenForm = Forms(FormName)
+    If IsFormOpen(formName) Then
+        Set GetOpenForm = Forms(formName)
     End If
 End Function
 
-Public Function NotInList(ctrl As Control, ObjectName As String, idFieldName As String, valueFieldName As String, NewData As String, Optional OpenEdit As Boolean = False, Optional ParentFieldName As String = "", Optional ParentData As Variant = Null) As Integer
+Public Function NotInList(ctrl As Control, objectName As String, idFieldName As String, valueFieldName As String, NewData As String, Optional OpenEdit As Boolean = False, Optional ParentFieldName As String = "", Optional ParentData As Variant = Null) As Integer
 Dim rs As New ADODB.Recordset
 Dim Id As Long
 
     If MsgBox("Nieuw item: " & NewData & " toevoegen?", vbYesNo) = vbYes Then
-        rs.Open omStringFunctions.GetEnglishPlural(ObjectName), CurrentProject.Connection, adOpenForwardOnly, adLockOptimistic
+        rs.Open omStringFunctions.GetEnglishPlural(objectName), CurrentProject.connection, adOpenForwardOnly, adLockOptimistic
         rs.AddNew
         rs(valueFieldName) = NewData
         If NotIsNullOrEmpty(ParentFieldName) Then
             rs(ParentFieldName) = ParentData
         End If
-        rs.update
+        rs.Update
         Id = rs(idFieldName)
         rs.Close
         Set rs = Nothing
         If OpenEdit Then
-            DoCmd.OpenForm ObjectName & "_Edit", , , "Id=" & Id, acFormEdit, acDialog
+            DoCmd.OpenForm objectName & "_Edit", , , "Id=" & Id, acFormEdit, acDialog
         End If
     End If
     If Id = 0 Then
         NotInList = acDataErrContinue
     Else
-        ctrl.value = Id
+        ctrl.Value = Id
         NotInList = acDataErrAdded
     End If
 
 End Function
 
-Public Sub Edit(ctrl As Control, ObjectName As String, Optional idFieldName As String = "Id")
-    If NotIsNullOrEmpty(ctrl.value) Then
-        DoCmd.OpenForm ObjectName & "_Edit", , , idFieldName & "=" & ctrl.value, acFormEdit, acDialog
+Public Sub Edit(ctrl As Control, objectName As String, Optional idFieldName As String = "Id")
+    If NotIsNullOrEmpty(ctrl.Value) Then
+        DoCmd.OpenForm objectName & "_Edit", , , idFieldName & "=" & ctrl.Value, acFormEdit, acDialog
     End If
 End Sub

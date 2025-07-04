@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Properties>
+  <CurrentDb context="0">
+    <AccessVersion name="AccessVersion" type="10" value="09.50" sort="1"/>
+    <AllowBuiltInToolbars name="AllowBuiltInToolbars" type="1" value="True" sort="1"/>
+    <AllowDatasheetSchema name="AllowDatasheetSchema" type="1" value="True" sort="1"/>
+    <AllowFullMenus name="AllowFullMenus" type="1" value="True" sort="1"/>
+    <AllowShortcutMenus name="AllowShortcutMenus" type="1" value="True" sort="1"/>
+    <AllowSpecialKeys name="AllowSpecialKeys" type="1" value="True" sort="1"/>
+    <AllowToolbarChanges name="AllowToolbarChanges" type="1" value="True" sort="1"/>
+    <ANSIQueryMode name="ANSI Query Mode" type="4" value="0" sort="1"/>
+    <AutoCompact name="Auto Compact" type="4" value="0" sort="1"/>
+    <Build name="Build" type="4" value="720" sort="1"/>
+    <CheckTruncatedNumFields name="CheckTruncatedNumFields" type="4" value="1" sort="1"/>
+    <ClearCacheonClose name="Clear Cache on Close" type="4" value="0" sort="1"/>
+    <DesignWithData name="DesignWithData" type="1" value="True" sort="1"/>
+    <HasOfflineLists name="HasOfflineLists" type="3" value="70" sort="1"/>
+    <NavPaneCategory name="NavPane Category" type="4" value="0" sort="1"/>
+    <NavPaneClosed name="NavPane Closed" type="4" value="0" sort="1"/>
+    <NavPaneSortBy name="NavPane Sort By" type="4" value="1" sort="1"/>
+    <NavPaneViewBy name="NavPane View By" type="4" value="0" sort="1"/>
+    <NavPaneWidth name="NavPane Width" type="4" value="215" sort="1"/>
+    <NeverCache name="Never Cache" type="4" value="0" sort="1"/>
+    <PicturePropertyStorageFormat name="Picture Property Storage Format" type="4" value="0" sort="1"/>
+    <ProjVer name="ProjVer" type="3" value="142" sort="1"/>
+    <QueryTimeout name="QueryTimeout" type="3" value="60" sort="1"/>
+    <ShowNavigationPaneSearchBar name="Show Navigation Pane Search Bar" type="4" value="1" sort="1"/>
+    <ShowValuesinIndexed name="Show Values in Indexed" type="4" value="1" sort="1"/>
+    <ShowValuesinNonIndexed name="Show Values in Non-Indexed" type="4" value="1" sort="1"/>
+    <ShowValuesinRemote name="Show Values in Remote" type="4" value="0" sort="1"/>
+    <ShowValuesLimit name="Show Values Limit" type="4" value="1000" sort="1"/>
+    <ShowDocumentTabs name="ShowDocumentTabs" type="1" value="True" sort="1"/>
+    <StartUpShowDBWindow name="StartUpShowDBWindow" type="1" value="True" sort="1"/>
+    <StartUpShowStatusBar name="StartUpShowStatusBar" type="1" value="True" sort="1"/>
+    <ThemeResourceName name="Theme Resource Name" type="10" value="Office Theme" sort="1"/>
+    <ThemedFormControls name="Themed Form Controls" type="4" value="1" sort="1"/>
+    <TrackNameAutoCorrectInfo name="Track Name AutoCorrect Info" type="10" value="-1" sort="1"/>
+    <UseMicrosoftAccess2007compatiblecache name="Use Microsoft Access 2007 compatible cache" type="4" value="0" sort="1"/>
+    <UseAppIconForFrmRpt name="UseAppIconForFrmRpt" type="1" value="False" sort="1"/>
+    <UseMDIMode name="UseMDIMode" type="2" value="0" sort="1"/>
+    <WebDesignMode name="WebDesignMode" type="2" value="0" sort="1"/>
+  </CurrentDb>
+  <SummaryInfo context="2">
+    <Title name="Title" type="10" value="Database" sort="3"/>
+  </SummaryInfo>
+  <UserDefined context="3">
+    <ReplicateProject name="ReplicateProject" type="1" value="True" sort="4"/>
+  </UserDefined>
+  <ActiveVBProject context="4">
+    <Name name="Name" type="10" value="Database" sort="5"/>
+  </ActiveVBProject>
+  <GetOptions context="5">
+    <ActiveServerPagesSessionTimeout name="Active Server Pages Session Timeout" type="0" value="" sort="6"/>
+    <ActiveServerPagesURL name="Active Server Pages URL" type="1" value="" sort="6"/>
+    <AlwaysUseEventProcedures name="Always Use Event Procedures" type="2" value="0" sort="6"/>
+    <ArrowKeyBehavior name="Arrow Key Behavior" type="3" value="0" sort="6"/>
+    <AutoCompact name="Auto Compact" type="4" value="0" sort="6"/>
+    <AutoCompactPercentage name="Auto Compact Percentage" type="5" value="25" sort="6"/>
+    <AutoIndexonImportCreate name="AutoIndex on Import/Create" type="6" value="ID;key;code;num" sort="6"/>
+    <BehaviorEnteringField name="Behavior Entering Field" type="7" value="0" sort="6"/>
+    <BottomMargin name="Bottom Margin" type="8" value="0,635cm" sort="6"/>
+    <BreakonAllErrors name="Break on All Errors" type="9" value="0" sort="6"/>
+    <BuiltInToolbarsAvailable name="Built-In Toolbars Available" type="10" value="-1" sort="6"/>
+    <CanCustomizeToolbars name="Can Customize Toolbars" type="11" value="0" sort="6"/>
+    <CommandLineArguments name="Command-Line Arguments" type="12" value="" sort="6"/>
+    <ConditionalCompilationArguments name="Conditional Compilation Arguments" type="13" value="" sort="6"/>
+    <ConfirmActionQueries name="Confirm Action Queries" type="14" value="-1" sort="6"/>
+    <ConfirmDocumentDeletions name="Confirm Document Deletions" type="15" value="-1" sort="6"/>
+    <ConfirmRecordChanges name="Confirm Record Changes" type="16" value="-1" sort="6"/>
+    <ControlWizards name="Control Wizards" type="17" value="-1" sort="6"/>
+    <CursorStopsatFirstLastField name="Cursor Stops at First/Last Field" type="18" value="0" sort="6"/>
+    <DataSourceName name="Data Source Name" type="19" value="" sort="6"/>
+    <DataAssistant name="DataAssistant" type="20" value="0;300;50;600;400" sort="6"/>
+    <DatabaseExplorerClickBehavior name="Database Explorer Click Behavior" type="21" value="1" sort="6"/>
+    <DatapageSortingGroupingState name="DatapageSortingGroupingState" type="22" value="0;150;140;780;465" sort="6"/>
+    <DebugWindowOnTop name="Debug Window On Top" type="23" value="0" sort="6"/>
+    <DefaultBackgroundColor name="Default Background Color" type="24" value="-1" sort="6"/>
+    <DefaultCellEffect name="Default Cell Effect" type="25" value="0" sort="6"/>
+    <DefaultColumnWidth name="Default Column Width" type="26" value="2,499cm" sort="6"/>
+    <DefaultDatabaseDirectory name="Default Database Directory" type="27" value="%USERPROFILE%\OneDrive\Documenten\" sort="6"/>
+    <DefaultFieldType name="Default Field Type" type="28" value="0" sort="6"/>
+    <DefaultFindReplaceBehavior name="Default Find/Replace Behavior" type="29" value="0" sort="6"/>
+    <DefaultFontColor name="Default Font Color" type="30" value="-1" sort="6"/>
+    <DefaultFontItalic name="Default Font Italic" type="31" value="0" sort="6"/>
+    <DefaultFontName name="Default Font Name" type="32" value="Calibri" sort="6"/>
+    <DefaultFontSize name="Default Font Size" type="33" value="11" sort="6"/>
+    <DefaultFontUnderline name="Default Font Underline" type="34" value="0" sort="6"/>
+    <DefaultFontWeight name="Default Font Weight" type="35" value="3" sort="6"/>
+    <DefaultGridlinesColor name="Default Gridlines Color" type="36" value="-1" sort="6"/>
+    <DefaultGridlinesHorizontal name="Default Gridlines Horizontal" type="37" value="-1" sort="6"/>
+    <DefaultGridlinesVertical name="Default Gridlines Vertical" type="38" value="-1" sort="6"/>
+    <DefaultNumberFieldSize name="Default Number Field Size" type="39" value="2" sort="6"/>
+    <DefaultOpenModeforDatabases name="Default Open Mode for Databases" type="40" value="0" sort="6"/>
+    <DefaultRecordLocking name="Default Record Locking" type="41" value="0" sort="6"/>
+    <DefaultTextFieldSize name="Default Text Field Size" type="42" value="255" sort="6"/>
+    <DPPopPropST name="DPPopPropST" type="43" value="0;275;150;600;400" sort="6"/>
+    <ECLST name="ECLST" type="44" value="0;300;50;400;200;" sort="6"/>
+    <EnableAutoJoin name="Enable AutoJoin" type="45" value="-1" sort="6"/>
+    <EnableDDERefresh name="Enable DDE Refresh" type="46" value="-1" sort="6"/>
+    <EnableFontSwitching name="Enable Font Switching" type="47" value="0" sort="6"/>
+    <EnableMRUFileList name="Enable MRU File List" type="48" value="-1" sort="6"/>
+    <ErrorTrapping name="Error Trapping" type="49" value="2" sort="6"/>
+    <FDCategory name="FDCategory" type="50" value="4" sort="6"/>
+    <FollowedHyperlinkColor name="Followed Hyperlink Color" type="51" value="5" sort="6"/>
+    <FormTemplate name="Form Template" type="52" value="Normal" sort="6"/>
+    <FourDigitYearFormatting name="Four-Digit Year Formatting" type="53" value="0" sort="6"/>
+    <FourDigitYearFormattingAllDatabases name="Four-Digit Year Formatting All Databases" type="54" value="0" sort="6"/>
+    <GeneralAlignment name="General Alignment" type="55" value="0" sort="6"/>
+    <HlinkTab name="HlinkTab" type="56" value="0" sort="6"/>
+    <HTMLTemplate name="HTML Template" type="57" value="" sort="6"/>
+    <HyperlinkColor name="Hyperlink Color" type="58" value="12" sort="6"/>
+    <IgnoreDDERequests name="Ignore DDE Requests" type="59" value="0" sort="6"/>
+    <ImeAutocommit name="Ime Autocommit" type="60" value="-1" sort="6"/>
+    <IndexesST name="IndexesST" type="61" value="0;175;60;650;300" sort="6"/>
+    <IPaneST name="IPaneST" type="62" value="" sort="6"/>
+    <KeyAssignmentMacro name="Key Assignment Macro" type="63" value="AutoKeys" sort="6"/>
+    <LargeToolbarButtons name="Large Toolbar Buttons" type="64" value="0" sort="6"/>
+    <LastUser name="Last User" type="65" value="" sort="6"/>
+    <LeftMargin name="Left Margin" type="66" value="0,635cm" sort="6"/>
+    <LogNameAutoCorrectChanges name="Log Name AutoCorrect Changes" type="67" value="0" sort="6"/>
+    <Maximized name="Maximized" type="68" value="-1" sort="6"/>
+    <MoveAfterEnter name="Move After Enter" type="69" value="1" sort="6"/>
+    <MoveEnclosedControls name="Move Enclosed Controls" type="70" value="0" sort="6"/>
+    <NavPaneCategory name="NavPane Category" type="71" value="0" sort="6"/>
+    <NavPaneCategoryName name="NavPane Category Name" type="72" value="" sort="6"/>
+    <NavPaneClosed name="NavPane Closed" type="73" value="0" sort="6"/>
+    <NavPaneSortBy name="NavPane Sort By" type="74" value="1" sort="6"/>
+    <NavPaneViewBy name="NavPane View By" type="75" value="0" sort="6"/>
+    <NavPaneWidth name="NavPane Width" type="76" value="215" sort="6"/>
+    <NewDatabaseSortOrder name="New Database Sort Order" type="77" value="3082" sort="6"/>
+    <NumberofUpdateRetries name="Number of Update Retries" type="78" value="2" sort="6"/>
+    <ObjectsSnaptoGrid name="Objects Snap to Grid" type="79" value="-1" sort="6"/>
+    <ODBCRefreshIntervalsec name="ODBC Refresh Interval (sec)" type="80" value="1500" sort="6"/>
+    <OLEDDETimeoutsec name="OLE/DDE Timeout (sec)" type="81" value="30" sort="6"/>
+    <OutputAllFields name="Output All Fields" type="82" value="0" sort="6"/>
+    <Password name="Password" type="83" value="" sort="6"/>
+    <PerformNameAutoCorrect name="Perform Name AutoCorrect" type="84" value="-1" sort="6"/>
+    <PrefsMigrated name="Prefs Migrated" type="85" value="-1" sort="6"/>
+    <ProjectName name="Project Name" type="86" value="Database" sort="6"/>
+    <ProvideFeedbackwithSound name="Provide Feedback with Sound" type="87" value="0" sort="6"/>
+    <RefreshIntervalsec name="Refresh Interval (sec)" type="88" value="60" sort="6"/>
+    <ReportTemplate name="Report Template" type="89" value="Normal" sort="6"/>
+    <RightMargin name="Right Margin" type="90" value="0,635cm" sort="6"/>
+    <RowLimit name="Row Limit" type="91" value="10000" sort="6"/>
+    <RunPermissions name="Run Permissions" type="92" value="1" sort="6"/>
+    <SaveLoginandPassword name="Save Login and Password" type="93" value="0" sort="6"/>
+    <SelectionBehavior name="Selection Behavior" type="94" value="0" sort="6"/>
+    <SGST name="SGST" type="95" value="0;150;140;580;370" sort="6"/>
+    <ShowAnimations name="Show Animations" type="96" value="-1" sort="6"/>
+    <ShowConditionsColumn name="Show Conditions Column" type="97" value="0" sort="6"/>
+    <ShowGrid name="Show Grid" type="98" value="-1" sort="6"/>
+    <ShowHiddenObjects name="Show Hidden Objects" type="99" value="0" sort="6"/>
+    <ShowMacroNamesColumn name="Show Macro Names Column" type="100" value="0" sort="6"/>
+    <ShowNewObjectShortcuts name="Show New Object Shortcuts" type="101" value="-1" sort="6"/>
+    <ShowRuler name="Show Ruler" type="102" value="-1" sort="6"/>
+    <ShowStartupDialogBox name="Show Startup Dialog Box" type="103" value="-1" sort="6"/>
+    <ShowStatusBar name="Show Status Bar" type="104" value="-1" sort="6"/>
+    <ShowSystemObjects name="Show System Objects" type="105" value="0" sort="6"/>
+    <ShowTableNames name="Show Table Names" type="106" value="-1" sort="6"/>
+    <ShowValuesinIndexed name="Show Values in Indexed" type="107" value="-1" sort="6"/>
+    <ShowValuesinNonIndexed name="Show Values in Non-Indexed" type="108" value="-1" sort="6"/>
+    <ShowValuesinRemote name="Show Values in Remote" type="109" value="0" sort="6"/>
+    <ShowValuesinServer name="Show Values in Server" type="110" value="0" sort="6"/>
+    <ShowValuesinSnapshot name="Show Values in Snapshot" type="111" value="-1" sort="6"/>
+    <ShowValuesLimit name="Show Values Limit" type="112" value="1000" sort="6"/>
+    <ShowWindowsInTaskbar name="ShowWindowsInTaskbar" type="113" value="-1" sort="6"/>
+    <SizeofMRUFileList name="Size of MRU File List" type="114" value="7" sort="6"/>
+    <SubstituteFontName name="Substitute Font Name" type="115" value="Arial" sort="6"/>
+    <SyntaxChecking name="Syntax Checking" type="116" value="0" sort="6"/>
+    <TopMargin name="Top Margin" type="117" value="0,635cm" sort="6"/>
+    <TrackNameAutoCorrectInfo name="Track Name AutoCorrect Info" type="118" value="-1" sort="6"/>
+    <UnderlineHyperlinks name="Underline Hyperlinks" type="119" value="-1" sort="6"/>
+    <UpdateRetryIntervalmsec name="Update Retry Interval (msec)" type="120" value="250" sort="6"/>
+    <UseDefaultPrinterSetup name="Use Default Printer Setup" type="121" value="0" sort="6"/>
+    <UseRowLevelLocking name="Use Row Level Locking" type="122" value="-1" sort="6"/>
+    <UserName name="User Name" type="123" value="" sort="6"/>
+    <WarnWidth name="Warn Width" type="124" value="-1" sort="6"/>
+  </GetOptions>
+  <References context="6">
+    <Reference>
+      <Name value="ADODB 2.8"/>
+      <FullPath value="%CommonProgramFiles%\System\ado\msado28.tlb"/>
+      <Position value="5"/>
+      <GUID value="{2A75196C-D9EB-4129-B803-931327F72D5C}"/>
+      <Major value="2"/>
+      <Minor value="8"/>
+    </Reference>
+    <Reference>
+      <Name value="DAO 12.0"/>
+      <FullPath value="%CommonProgramFiles%\Microsoft Shared\Office16\ACEDAO.DLL"/>
+      <Position value="4"/>
+      <GUID value="{4AC9E1DA-5BAD-4AC7-86E3-24F4CDCECA28}"/>
+      <Major value="12"/>
+      <Minor value="0"/>
+    </Reference>
+    <Reference>
+      <Name value="Excel 1.9"/>
+      <FullPath value="%ProgramFiles%\Microsoft Office\root\Office16\EXCEL.EXE"/>
+      <Position value="9"/>
+      <GUID value="{00020813-0000-0000-C000-000000000046}"/>
+      <Major value="1"/>
+      <Minor value="9"/>
+    </Reference>
+    <Reference>
+      <Name value="IWshRuntimeLibrary 1.0"/>
+      <FullPath value="C:\Windows\System32\wshom.ocx"/>
+      <Position value="7"/>
+      <GUID value="{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}"/>
+      <Major value="1"/>
+      <Minor value="0"/>
+    </Reference>
+    <Reference>
+      <Name value="Office 2.8"/>
+      <FullPath value="%CommonProgramFiles%\Microsoft Shared\Office16\MSO.DLL"/>
+      <Position value="11"/>
+      <GUID value="{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}"/>
+      <Major value="2"/>
+      <Minor value="8"/>
+    </Reference>
+    <Reference>
+      <Name value="Scripting 1.0"/>
+      <FullPath value="C:\Windows\System32\scrrun.dll"/>
+      <Position value="6"/>
+      <GUID value="{420B2830-E718-11CF-893D-00A0C9054228}"/>
+      <Major value="1"/>
+      <Minor value="0"/>
+    </Reference>
+    <Reference>
+      <Name value="stdole 2.0"/>
+      <FullPath value="C:\Windows\System32\stdole2.tlb"/>
+      <Position value="3"/>
+      <GUID value="{00020430-0000-0000-C000-000000000046}"/>
+      <Major value="2"/>
+      <Minor value="0"/>
+    </Reference>
+    <Reference>
+      <Name value="VBIDE 5.3"/>
+      <FullPath value="%CommonProgramFiles(x86)%\Microsoft Shared\VBA\VBA6\VBE6EXT.OLB"/>
+      <Position value="10"/>
+      <GUID value="{0002E157-0000-0000-C000-000000000046}"/>
+      <Major value="5"/>
+      <Minor value="3"/>
+    </Reference>
+    <Reference>
+      <Name value="Word 8.7"/>
+      <FullPath value="%ProgramFiles%\Microsoft Office\root\Office16\MSWORD.OLB"/>
+      <Position value="8"/>
+      <GUID value="{00020905-0000-0000-C000-000000000046}"/>
+      <Major value="8"/>
+      <Minor value="7"/>
+    </Reference>
+  </References>
+</Properties>

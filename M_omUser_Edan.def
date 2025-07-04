@@ -10,7 +10,7 @@ Private cmdLoginById As New ADODB.Command
 
 Public Id As Long
 Public Name As String
-Public UserRole As New UserRole
+Public UserRole As New omUserRole
 Public Sub LoginById(UserId As Long, Password As String)
 Dim rs As ADODB.Recordset
 
@@ -50,10 +50,10 @@ Dim rs As ADODB.Recordset
 End Sub
 Private Sub Class_Initialize()
     cmdLoginByName.commandText = "SELECT * FROM Users WHERE User_Login=? AND User_Password=?"
-    cmdLoginByName.ActiveConnection = CurrentProject.Connection
+    cmdLoginByName.ActiveConnection = CurrentProject.connection
     cmdLoginByName.Parameters.Refresh
     cmdLoginById.commandText = "SELECT * FROM Users WHERE User_ID=? AND User_Password=?"
-    cmdLoginById.ActiveConnection = CurrentProject.Connection
+    cmdLoginById.ActiveConnection = CurrentProject.connection
     cmdLoginById.Parameters.Refresh
 End Sub
 

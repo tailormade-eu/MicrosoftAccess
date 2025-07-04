@@ -73,7 +73,7 @@ Dim containsArray() As String
 End Function
 Public Function StringArrayContains(stringArray() As String, Value As String) As Boolean
 
-    StringArrayContains = (UBound(Filter(stringArray, Value, True)) > -1)
+    StringArrayContains = (UBound(filter(stringArray, Value, True)) > -1)
     
 End Function
 Public Function StringArrayDoesNotContain(stringArray() As String, Value As String) As Boolean

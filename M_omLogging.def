@@ -6,8 +6,8 @@ Option Compare Database
 Option Explicit
 
 Public Enabled As Boolean
-Public startDate As Date
-Public endDate As Date
+Public StartDate As Date
+Public EndDate As Date
 Public PreviousDate As Date
 Public PreviousDescription As String
 Public CurrentDescription As String
@@ -41,14 +41,14 @@ Public Property Let currentdate(ByVal vNewValue As Date)
     previousTicks = currentTicks
     dtCurrent = vNewValue
     currentTicks = omKernalFunctions.GetTickCount()
-    If startDate = 0 Then
-        startDate = dtCurrent
+    If StartDate = 0 Then
+        StartDate = dtCurrent
         PreviousDate = dtCurrent
         startTicks = currentTicks
         previousTicks = currentTicks
     End If
-    If endDate < dtCurrent Then
-        endDate = dtCurrent
+    If EndDate < dtCurrent Then
+        EndDate = dtCurrent
         endTicks = currentTicks
     End If
 End Property
@@ -75,10 +75,10 @@ Public Function ToString(Optional diffOnly As String = "y", Optional updateCurre
         ToString = "Description: " & Description & vbCrLf
     End If
     If diffOnly = "n" Then
-        ToString = ToString & "StartDate: " & startDate & vbCrLf
+        ToString = ToString & "StartDate: " & StartDate & vbCrLf
         ToString = ToString & "PreviousDate: " & PreviousDate & vbCrLf
         ToString = ToString & "CurrentDate: " & currentdate & vbCrLf
-        ToString = ToString & "EndDate: " & endDate & vbCrLf
+        ToString = ToString & "EndDate: " & EndDate & vbCrLf
         ToString = ToString & "StartTicks: " & startTicks & vbCrLf
         ToString = ToString & "PreviousTicks: " & previousTicks & vbCrLf
         ToString = ToString & "CurrentTicks: " & currentTicks & vbCrLf
@@ -96,10 +96,10 @@ End Function
 
 Public Sub Reset()
     Me.Enabled = False
-    startDate = 0
+    StartDate = 0
     PreviousDate = 0
     currentdate = 0
-    endDate = 0
+    EndDate = 0
     startTicks = 0
     previousTicks = 0
     currentTicks = 0

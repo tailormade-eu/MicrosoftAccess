@@ -18,14 +18,14 @@ Public Function CreateRandomEAN13() As String
 Dim cnt As Long
 Dim i As Long
 Dim seed As String
-Dim S As String
+Dim s As String
 
     seed = CreateGuid() & CreateGuid & CreateGuid() & CreateGuid
     i = 1
     While cnt < 13
-        S = Mid(seed, i, 1)
-        If IsNumeric(S) Then
-            CreateRandomEAN13 = CreateRandomEAN13 & S
+        s = Mid(seed, i, 1)
+        If IsNumeric(s) Then
+            CreateRandomEAN13 = CreateRandomEAN13 & s
             cnt = cnt + 1
         End If
         i = i + 1

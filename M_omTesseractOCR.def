@@ -5,23 +5,23 @@ Option Explicit
 
 Const ocrExe = "c:\tesseract-ocr\tesseract.exe"
 Const ocrPath = "c:\tesseract-ocr\"
-Public Function GetTxtFromImage(fileName As String) As String
-Dim o As New IWshRuntimeLibrary.WshShell
+Public Function GetTxtFromImage(filename As String) As String
+Dim O As New IWshRuntimeLibrary.WshShell
 Dim cmd As String
 Dim tmpFile As String
 Dim ts As Scripting.TextStream
 
     tmpFile = ocrPath & "ocrtemp"
-    cmd = Chr(34) & ocrExe & Chr(34) & " " & Chr(34) & fileName & Chr(34) & " " & Chr(34) & tmpFile & Chr(34)
-    o.Run cmd, vbMinimizedNoFocus, 1
+    cmd = Chr(34) & ocrExe & Chr(34) & " " & Chr(34) & filename & Chr(34) & " " & Chr(34) & tmpFile & Chr(34)
+    O.Run cmd, vbMinimizedNoFocus, 1
     tmpFile = tmpFile + ".txt"
-    If gFSO.FileExists(tmpFile) Then
-        Set ts = gFSO.OpenTextFile(tmpFile, ForReading)
+    If gFso.FileExists(tmpFile) Then
+        Set ts = gFso.OpenTextFile(tmpFile, ForReading)
         GetTxtFromImage = ts.ReadAll
         ts.Close
         Set ts = Nothing
     End If
-    Set o = Nothing
+    Set O = Nothing
 End Function
 
 Public Sub GetTxtFromImageTest()

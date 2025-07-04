@@ -21,7 +21,7 @@ Private lSupplierId As Long
 Private lContractId As Long
 Private lContractPeriodId As Long
 Private strDBDocument As String
-Private FSO As New FileSystemObject
+Private fso As New FileSystemObject
 Private WShell As New WshShell
 Private bAutoOpen As Boolean
 Private strFileDestination As String
@@ -33,14 +33,14 @@ Public Property Get MyDocuments() As Boolean
 End Property
 Public Property Let MyDocuments(Value As Boolean)
     bMyDocuments = Value
-    strTemplatePath = GetDefaultValue("Templates")
+    strTemplatePath = omDefaultFunctions.GetDefault("Templates")
     If bMyDocuments Then
-        strExportPath = FSO.BuildPath(WShell.SpecialFolders("MyDocuments"), "DBExports")
-        If Not FSO.FolderExists(strExportPath) Then
-            FSO.createFolder strExportPath
+        strExportPath = fso.BuildPath(WShell.SpecialFolders("MyDocuments"), "DBExports")
+        If Not fso.FolderExists(strExportPath) Then
+            fso.createFolder strExportPath
         End If
     Else
-        strExportPath = GetDefaultValue("ExportPath")
+        strExportPath = omDefaultFunctions.GetDefault("ExportPath")
     End If
 End Property
 Public Property Get AppendDate() As Boolean
@@ -81,10 +81,10 @@ Public Property Let TemplatePath(Value As String)
     strTemplatePath = Value
 End Property
 
-Public Property Get ExportPath() As String
-    ExportPath = strExportPath
+Public Property Get exportPath() As String
+    exportPath = strExportPath
 End Property
-Public Property Let ExportPath(Value As String)
+Public Property Let exportPath(Value As String)
     strExportPath = Value
 End Property
 Public Property Get ExportType() As Integer
@@ -125,81 +125,82 @@ Public Property Let dbDocument(Value As String)
     strDBDocument = Value
 End Property
 
-Public Sub Export()
-Dim strFileSource As String
-Dim strSupplierName As String
-Dim rs As New ADODB.Recordset
-
-    If bAppendName Then
-        rs.Open "SELECT DISTINCT Supplier_LastName, Supplier_FirstName FROM (Suppliers LEFT JOIN Contracts ON Suppliers.Supplier_ID = Contracts.Contract_Supplier_ID) LEFT JOIN ContractPeriods ON Contracts.Contract_ID = ContractPeriods.ContractPeriod_Contract_ID WHERE Supplier_ID=" & lSupplierId & " OR Contract_ID=" & lContractId & " OR ContractPeriod_ID=" & lContractPeriodId, CurrentProject.Connection, adOpenForwardOnly, adLockReadOnly
-        If Not rs.EOF Then
-            strSupplierName = MakeFilenameSafe(rs("Supplier_LastName") & "_" & rs("Supplier_FirstName"))
-            strExportName = strExportName & "_" & strSupplierName
-        End If
-        rs.Close
-        Set rs = Nothing
-    End If
-    If bAppendDate Then
-        strExportName = strExportName & Format(Now, "_YYYYMMDD_hhmm")
-    End If
-    Select Case iExportType
-        Case emExcel
-            If Not gFSO.FolderExists("c:\DBExports") Then
-                gFSO.createFolder "c:\dbexports"
-            End If
-            strFileSource = FSO.BuildPath("c:\dbexports", strExportName & ".xls")
-            If lPhysicalDocumentTypeId <> 0 And lSupplierId <> 0 Then
-                strExportPath = gSupplierPhysicalDocument.GetPhysicalDocumentFolderByType(lSupplierId, lPhysicalDocumentTypeId)
-            End If
-            strFileDestination = FSO.BuildPath(strExportPath, strExportName & ".xls")
-            If FSO.FileExists(strFileSource) Then
-                FSO.DeleteFile strFileSource
-            End If
-            If FSO.FileExists(strFileDestination) Then
-                FSO.DeleteFile strFileDestination
-            End If
-            DoCmd.TransferSpreadsheet acExport, acSpreadsheetTypeExcel9, strDBDocument, strFileSource
-        Case emWord
-            If Len(Template) > 0 Then
-                If lPhysicalDocumentTypeId <> 0 And lSupplierId <> 0 Then
-                    strExportPath = gSupplierPhysicalDocument.GetPhysicalDocumentFolderByType(lSupplierId, lPhysicalDocumentTypeId)
-                End If
-                strFileDestination = FSO.BuildPath(strExportPath, strExportName & ".doc")
-                If gFSO.FileExists(gFSO.BuildPath(strTemplatePath, strTemplate)) Then
-                    gWordEngine.Translate gFSO.BuildPath(strTemplatePath, strTemplate), strFileDestination, strDBDocument
-                End If
-            Else
-                strFileSource = FSO.BuildPath("C:\", strExportName & ".doc")
-                strFileDestination = FSO.BuildPath(strExportPath, strExportName & ".doc")
-                If FSO.FileExists(strFileSource) Then
-                    FSO.DeleteFile strFileSource
-                End If
-                If FSO.FileExists(strFileDestination) Then
-                    FSO.DeleteFile strFileDestination
-                End If
-                If ReportExists(strDBDocument) Then
-                    DoCmd.OutputTo acOutputReport, strDBDocument, acFormatRTF, strFileSource
-                ElseIf QueryExists(strDBDocument) Then
-                    DoCmd.OutputTo acOutputQuery, strDBDocument, acFormatRTF, strFileSource
-                End If
-            End If
-        Case emPDF
-            If Len(Template) > 0 Then
-                If lPhysicalDocumentTypeId <> 0 And lSupplierId <> 0 Then
-                    strExportPath = gSupplierPhysicalDocument.GetPhysicalDocumentFolderByType(lSupplierId, lPhysicalDocumentTypeId)
-                End If
-                strFileDestination = FSO.BuildPath(strExportPath, strExportName & ".pdf")
-                strTemplateFilename = gFSO.BuildPath(strTemplatePath, strTemplate)
-                If gFSO.FileExists(strTemplateFilename) Then
-                    PDFForm.PDFFormFilling strTemplateFilename, strFileDestination, strDBDocument, "", "", "", "", "_", "."
-                End If
-            End If
-            
-    End Select
-    If FSO.FileExists(strFileSource) Then
-        FSO.moveFile strFileSource, strFileDestination
-    End If
-    If bAutoOpen Then
-        WShell.Run Chr(34) & strFileDestination & Chr(34)
-    End If
-End Sub
+' Example implementation
+'Public Sub Export()
+'Dim strFileSource As String
+'Dim strSupplierName As String
+'Dim rs As New ADODB.Recordset
+'
+'    If bAppendName Then
+'        rs.Open "SELECT DISTINCT Supplier_LastName, Supplier_FirstName FROM (Suppliers LEFT JOIN Contracts ON Suppliers.Supplier_ID = Contracts.Contract_Supplier_ID) LEFT JOIN ContractPeriods ON Contracts.Contract_ID = ContractPeriods.ContractPeriod_Contract_ID WHERE Supplier_ID=" & lSupplierId & " OR Contract_ID=" & lContractId & " OR ContractPeriod_ID=" & lContractPeriodId, CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
+'        If Not rs.EOF Then
+'            strSupplierName = MakeFilenameSafe(rs("Supplier_LastName") & "_" & rs("Supplier_FirstName"))
+'            strExportName = strExportName & "_" & strSupplierName
+'        End If
+'        rs.Close
+'        Set rs = Nothing
+'    End If
+'    If bAppendDate Then
+'        strExportName = strExportName & format(Now, "_YYYYMMDD_hhmm")
+'    End If
+'    Select Case iExportType
+'        Case emExcel
+'            If Not gFso.FolderExists("c:\DBExports") Then
+'                gFso.createFolder "c:\dbexports"
+'            End If
+'            strFileSource = fso.BuildPath("c:\dbexports", strExportName & ".xls")
+'            If lPhysicalDocumentTypeId <> 0 And lSupplierId <> 0 Then
+'                strExportPath = gSupplierPhysicalDocument.GetPhysicalDocumentFolderByType(lSupplierId, lPhysicalDocumentTypeId)
+'            End If
+'            strFileDestination = fso.BuildPath(strExportPath, strExportName & ".xls")
+'            If fso.FileExists(strFileSource) Then
+'                fso.DeleteFile strFileSource
+'            End If
+'            If fso.FileExists(strFileDestination) Then
+'                fso.DeleteFile strFileDestination
+'            End If
+'            DoCmd.TransferSpreadsheet acExport, acSpreadsheetTypeExcel9, strDBDocument, strFileSource
+'        Case emWord
+'            If Len(Template) > 0 Then
+'                If lPhysicalDocumentTypeId <> 0 And lSupplierId <> 0 Then
+'                    strExportPath = gSupplierPhysicalDocument.GetPhysicalDocumentFolderByType(lSupplierId, lPhysicalDocumentTypeId)
+'                End If
+'                strFileDestination = fso.BuildPath(strExportPath, strExportName & ".doc")
+'                If gFso.FileExists(gFso.BuildPath(strTemplatePath, strTemplate)) Then
+'                    gWordEngine.Translate gFso.BuildPath(strTemplatePath, strTemplate), strFileDestination, strDBDocument
+'                End If
+'            Else
+'                strFileSource = fso.BuildPath("C:\", strExportName & ".doc")
+'                strFileDestination = fso.BuildPath(strExportPath, strExportName & ".doc")
+'                If fso.FileExists(strFileSource) Then
+'                    fso.DeleteFile strFileSource
+'                End If
+'                If fso.FileExists(strFileDestination) Then
+'                    fso.DeleteFile strFileDestination
+'                End If
+'                If ReportExists(strDBDocument) Then
+'                    DoCmd.OutputTo acOutputReport, strDBDocument, acFormatRTF, strFileSource
+'                ElseIf QueryExists(strDBDocument) Then
+'                    DoCmd.OutputTo acOutputQuery, strDBDocument, acFormatRTF, strFileSource
+'                End If
+'            End If
+'        Case emPDF
+'            If Len(Template) > 0 Then
+'                If lPhysicalDocumentTypeId <> 0 And lSupplierId <> 0 Then
+'                    strExportPath = gSupplierPhysicalDocument.GetPhysicalDocumentFolderByType(lSupplierId, lPhysicalDocumentTypeId)
+'                End If
+'                strFileDestination = fso.BuildPath(strExportPath, strExportName & ".pdf")
+'                strTemplateFilename = gFso.BuildPath(strTemplatePath, strTemplate)
+'                If gFso.FileExists(strTemplateFilename) Then
+'                    PDFForm.PDFFormFilling strTemplateFilename, strFileDestination, strDBDocument, "", "", "", "", "_", "."
+'                End If
+'            End If
+'
+'    End Select
+'    If fso.FileExists(strFileSource) Then
+'        fso.moveFile strFileSource, strFileDestination
+'    End If
+'    If bAutoOpen Then
+'        WShell.Run Chr(34) & strFileDestination & Chr(34)
+'    End If
+'End Sub

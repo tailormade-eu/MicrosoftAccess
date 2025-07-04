@@ -1,8 +1,8 @@
 Option Compare Database
 Option Explicit
 
-Private Declare Function SHGetSpecialFolderLocation Lib "shell32" (ByVal hwnd As Long, ByVal nFolder As Long, Pidl As Long) As Long
-Private Declare Function SHGetPathFromIDList Lib "shell32" (ByVal Pidl As Long, ByVal folderPath As String) As Long
+Private Declare PtrSafe Function SHGetSpecialFolderLocation Lib "shell32" (ByVal hwnd As Long, ByVal nFolder As Long, Pidl As Long) As Long
+Private Declare PtrSafe Function SHGetPathFromIDList Lib "shell32" (ByVal Pidl As Long, ByVal folderPath As String) As Long
 
  Enum SpecialFolderConst
  sfAppData = 26

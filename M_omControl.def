@@ -57,7 +57,7 @@ Dim newName As String
             End If
         End If
     End If
-    rs.Filter = "ControlTypeId=" & Me.ControlTypeId & " AND Name='" & Me.Name & "'"
+    rs.filter = "ControlTypeId=" & Me.ControlTypeId & " AND Name='" & Me.Name & "'"
     If rs.EOF Then
         rs.AddNew
         rs("ControlTypeId") = Me.ControlTypeId
@@ -86,7 +86,7 @@ Load_Error:
 End Sub
 
 Private Sub Class_Initialize()
-    rs.Open "omControls", CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    rs.Open "omControls", CurrentProject.connection, adOpenDynamic, adLockOptimistic
 End Sub
 
 Private Sub Class_Terminate()

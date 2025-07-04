@@ -6,7 +6,7 @@ Option Compare Database
 Option Explicit
 
 Public Enum ResponseFormat
-    Text
+    text
     json
 End Enum
 Private pResponseText As String
@@ -27,9 +27,9 @@ Public Function request(url As String, Optional postParameters As String = "", O
     xml.setRequestHeader "Content-Type", "application/json"
     xml.setRequestHeader "Accept", "application/json"
     If postParameters <> "" Then
-        xml.send (postParameters)
+        xml.Send (postParameters)
     Else
-        xml.send
+        xml.Send
     End If
     pResponseText = xml.ResponseText
     request = pResponseText

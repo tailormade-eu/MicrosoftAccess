@@ -5,23 +5,23 @@ Option Explicit
 ' Date Craeted : 201112
 
 Public Function Main(Optional linkLocal As Boolean = False) As Integer
-Dim FormName As String
+Dim formName As String
 
     omUserFunctions.AuthenticateUser
     'omUserFunctions.UserLock
     omMSAccessFunctions.MinimizeNavigationPane
 
     'Stop
-    FormName = "Flow"
+    formName = "Flow"
     If NotIsNullOrEmpty(Command()) Then
         If omStringFunctions.ParseValue(Trim(Command()), "OpenScreen") = "magazijn" Then
-            FormName = "StockCheck_List"
+            formName = "StockCheck_List"
         End If
     End If
     If gUser.UserRole.Name = "User" Then
-            FormName = "Project_List"
+            formName = "Project_List"
     End If
-    DoCmd.OpenForm FormName
+    DoCmd.OpenForm formName
 End Function
 
 Public Function LinkAccessDatabase() As Variant

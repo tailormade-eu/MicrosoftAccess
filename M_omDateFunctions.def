@@ -67,7 +67,7 @@ End Function
 Public Function GetTimeStamp(Optional ts As Date = 0) As String
 
     If ts = 0 Then ts = Now
-    GetTimeStamp = Format(Now, "yyyyMMdd_hhmmss")
+    GetTimeStamp = format(Now, "yyyyMMdd_hhmmss")
 End Function
 
 Public Function YYYYMM_Offset(lMonthTemp As Long, lMonthOffset As Long) As Long
@@ -100,7 +100,7 @@ End Function
 Public Function YYYYWW(ByVal dateTemp As Variant) As Long
 
     If IsDate(dateTemp) Then
-        YYYYWW = year(dateTemp) * 100 + Format(dateTemp, "ww", vbMonday)
+        YYYYWW = year(dateTemp) * 100 + format(dateTemp, "ww", vbMonday)
     Else
         YYYYWW = 0
     End If
@@ -241,12 +241,12 @@ Public Function IsPeriod(Period As Variant, Optional yearDelta = 100) As Boolean
     IsPeriod = IsPeriod And ((Period Mod 100) > 0) And ((Period Mod 100) < 13)
 End Function
 
-Public Function AddToDate(dt As Date, Optional addYear As Long = 0, Optional addMonth As Long = 0, Optional addDay As Long = 0, Optional endOfMonth As Boolean = False) As Date
+Public Function AddToDate(dt As Date, Optional addYear As Long = 0, Optional addMonth As Long = 0, Optional addDay As Long = 0, Optional EndOfMonth As Boolean = False) As Date
     AddToDate = dt
     AddToDate = DateAdd("yyyy", addYear, AddToDate)
     AddToDate = DateAdd("m", addMonth, AddToDate)
     AddToDate = DateAdd("d", addDay, AddToDate)
-    If endOfMonth Then
+    If EndOfMonth Then
         AddToDate = GetDateMonthEndDate(AddToDate)
     End If
 End Function
@@ -274,7 +274,7 @@ End Function
 
 Public Function NumberToDHMS(t As Double) As String
 
-    NumberToDHMS = Int(t) & "d " & Format(t - Int(t), "hh:nn:ss")
+    NumberToDHMS = Int(t) & "d " & format(t - Int(t), "hh:nn:ss")
 End Function
 
 Public Function GetTimeBetween(StartDate As Date, EndDate As Date, excludeWeekends As Boolean)

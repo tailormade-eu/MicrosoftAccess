@@ -5,5 +5,5 @@ Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
 
-Public Key As Variant
+Public key As Variant
 Public obj As Object

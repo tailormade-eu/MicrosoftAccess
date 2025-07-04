@@ -10,11 +10,11 @@ Public SQLFrom As String
 Public sqlWhere As String
 Public SQLOrderBy As String
 
-Public Sub SplitSQL(sql As String)
-    SQLSelect = omSQLFunctions.GetSelect(sql)
-    SQLFrom = omSQLFunctions.GetFrom(sql)
-    sqlWhere = omSQLFunctions.GetWhere(sql)
-    SQLOrderBy = omSQLFunctions.GetOrderBy(sql)
+Public Sub SplitSQL(SQL As String)
+    SQLSelect = omSQLFunctions.GetSelect(SQL)
+    SQLFrom = omSQLFunctions.GetFrom(SQL)
+    sqlWhere = omSQLFunctions.GetWhere(SQL)
+    SQLOrderBy = omSQLFunctions.GetOrderBy(SQL)
 End Sub
 
 Public Function BuildSQL(Optional selectClause As Variant = Null, Optional fromClause As Variant = Null, Optional whereClause As Variant = Null, Optional orderByClause As Variant = Null) As String

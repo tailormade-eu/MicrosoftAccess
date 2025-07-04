@@ -39,13 +39,13 @@ Public Function GetList(SQL As String, Optional ColumnDelimiter As String = ", "
 
 Const PROCNAME = "GetList"
 'Const adClipString = 2
-Dim oConn As ADODB.Connection
+Dim oConn As ADODB.connection
 Dim oRS As ADODB.Recordset
 Dim sResult As String
 
 On Error GoTo ProcErr
 
-Set oConn = CurrentProject.Connection
+Set oConn = CurrentProject.connection
 Set oRS = oConn.Execute(SQL)
 
 sResult = oRS.GetString(adClipString, -1, ColumnDelimiter, RowDelimiter)

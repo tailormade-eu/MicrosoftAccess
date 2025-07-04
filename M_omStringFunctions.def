@@ -12,7 +12,7 @@ End Enum
 '    Nz = IIf(IsNull(Value), valueifnull, Value)
 'End Function
 Public Function CleanString(Value As Variant) As String
-    If IsNull(Value) or IsEmpty(Value) Then
+    If IsNull(Value) Or IsEmpty(Value) Then
         CleanString = ""
     Else
         CleanString = Trim(Value)
@@ -275,33 +275,33 @@ Public Function CleanStringUsingPattern(ByVal Value As Variant, Optional findPat
         CleanStringUsingPattern = Value
     End If
 End Function
-Public Function StringPadLeft(S As String, totalLength As Long, paddingChar As String) As String
-    StringPadLeft = StringPad(S, totalLength, paddingChar, PadLeft)
+Public Function StringPadLeft(s As String, totalLength As Long, paddingChar As String) As String
+    StringPadLeft = StringPad(s, totalLength, paddingChar, PadLeft)
 End Function
-Public Function StringPadRight(S As String, totalLength As Long, paddingChar As String) As String
-    StringPadRight = StringPad(S, totalLength, paddingChar, PadRight)
+Public Function StringPadRight(s As String, totalLength As Long, paddingChar As String) As String
+    StringPadRight = StringPad(s, totalLength, paddingChar, PadRight)
 End Function
 
-Public Function StringPad(S As String, totalLength As Long, paddingChar As String, paddingMode As StringPaddingMode) As String
+Public Function StringPad(s As String, totalLength As Long, paddingChar As String, paddingMode As StringPaddingMode) As String
 Dim result As String
 
     result = strings.String(totalLength, paddingChar)
     If paddingMode = StringPaddingMode.PadLeft Then
-        result = result & Nz(S, "")
+        result = result & Nz(s, "")
         result = Right(result, totalLength)
     Else
-        result = Nz(S, "") & result
+        result = Nz(s, "") & result
         result = Left(result, totalLength)
     End If
     StringPad = result
 End Function
 
-Public Function ContainsCharFromPattern(S As String, pattern As String) As Boolean
+Public Function ContainsCharFromPattern(s As String, pattern As String) As Boolean
 Dim c As String
 Dim i As Long
                 For i = 1 To Len(pattern)
                         c = Mid(pattern, i, 1)
-                        If InStr(1, S, c) > 0 Then
+                        If InStr(1, s, c) > 0 Then
                                 ContainsCharFromPattern = True
                                 Exit Function
                         End If
@@ -356,22 +356,22 @@ End Function
 
 Public Function ByteArrayToHexString(ba() As Byte) As String
 Dim i As Long
-Dim S As String
+Dim s As String
 
     For i = 0 To UBound(ba)
-        S = S & Right("00" & Hex$(ba(i)), 2)
+        s = s & Right("00" & Hex$(ba(i)), 2)
     Next
-    ByteArrayToHexString = "0x" & S
+    ByteArrayToHexString = "0x" & s
 End Function
 
 Public Function ByteArrayToString(ba() As Byte) As String
 Dim i As Long
-Dim S As Double
+Dim s As Double
 
     For i = 0 To UBound(ba)
-        S = S * 256 + ba(i)
+        s = s * 256 + ba(i)
     Next
-    ByteArrayToString = S
+    ByteArrayToString = s
 End Function
 
 Public Function CheckIllegalCharInString(strCheck As String) As String
