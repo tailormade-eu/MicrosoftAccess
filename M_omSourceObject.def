@@ -17,7 +17,7 @@ Public Sub Load(obj As Object, Optional objType As AcObjectType = 0)
         objType = IIf(Left(TypeName(obj), 5) = "Form_", AcObjectType.acForm, AcObjectType.acReport)
     End If
     Me.ObjectTypeId = objType
-    rs.Filter = "ObjectTypeId=" & objType & " AND Name='" & obj.Name & "'"
+    rs.filter = "ObjectTypeId=" & objType & " AND Name='" & obj.Name & "'"
     If rs.EOF Then
         rs.AddNew
         rs("ObjectTypeId") = objType
@@ -31,7 +31,7 @@ Public Sub Load(obj As Object, Optional objType As AcObjectType = 0)
 End Sub
 
 Private Sub Class_Initialize()
-    rs.Open "omSourceObjects", CurrentProject.Connection, adOpenDynamic, adLockOptimistic
+    rs.Open "omSourceObjects", CurrentProject.connection, adOpenDynamic, adLockOptimistic
 End Sub
 
 Private Sub Class_Terminate()

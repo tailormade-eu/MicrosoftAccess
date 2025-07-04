@@ -2,7 +2,7 @@ Option Compare Database
 Option Explicit
 
 Public Function GetPrimaryKeyScript(tableName As String) As String
-Dim db As Database
+Dim db As dao.Database
 Dim tblDef As TableDef
 Dim i As Long
 Dim idx As index
@@ -12,7 +12,7 @@ Dim str As String
     Set db = CurrentDb
     Set tblDef = db.TableDefs(tableName)
     For Each idx In tblDef.Indexes
-        If idx.primary Then
+        If idx.Primary Then
             str = "ALTER TABLE " & tableName & " ADD CONSTRAINT "
             str = str & idx.Name & " PRIMARY KEY CLUSTERED (" 'NONCLUSTERED
             For Each fld In idx.Fields
@@ -35,9 +35,9 @@ End Function
 ' http://www.everythingaccess.com/tutorials.asp?ID=Field-type-names-%28JET%2C-DDL%2C-DAO-and-ADOX%29
 ' http://www.w3schools.com/asp/ado_datatypes.asp
 
-Public Function TableCreateDDL(TableDef As DAO.TableDef) As String
+Public Function TableCreateDDL(TableDef As dao.TableDef) As String
 
-         Dim fldDef As DAO.Field
+         Dim fldDef As dao.Field
          Dim FieldIndex As Integer
          Dim fldName As String, fldDataInfo As String
          Dim DDL As String
@@ -50,50 +50,50 @@ Public Function TableCreateDDL(TableDef As DAO.TableDef) As String
          pkScript = GetPrimaryKeyScript(tableName)
          DDL = "create table " & tableName & "(" & vbCrLf
          With TableDef
-            For FieldIndex = 0 To .Fields.count - 1
+            For FieldIndex = 0 To .Fields.Count - 1
                 Set fldDef = .Fields(FieldIndex)
                 With fldDef
                     fldName = .Name
                     fldName = Replace(fldName, " ", "_")
                     Select Case .Type
                         'Case DAO.DataTypeEnum.dbAttachment
-                        Case DAO.DataTypeEnum.dbBigInt
+                        Case dao.DataTypeEnum.dbBigInt
                            fldDataInfo = "BIGINT"
-                        Case DAO.DataTypeEnum.dbBinary
+                        Case dao.DataTypeEnum.dbBinary
                            fldDataInfo = "BINARY"
-                        Case DAO.DataTypeEnum.dbBoolean
+                        Case dao.DataTypeEnum.dbBoolean
                            fldDataInfo = "BIT"
-                        Case DAO.DataTypeEnum.dbByte
+                        Case dao.DataTypeEnum.dbByte
                            fldDataInfo = "TINYINT"
-                        Case DAO.DataTypeEnum.dbChar
+                        Case dao.DataTypeEnum.dbChar
                            fldDataInfo = "CHAR"
-                        Case DAO.DataTypeEnum.dbCurrency
+                        Case dao.DataTypeEnum.dbCurrency
                            fldDataInfo = "MONEY"
-                        Case DAO.DataTypeEnum.dbDate
+                        Case dao.DataTypeEnum.dbDate
                            fldDataInfo = "DATETIME"
-                        Case DAO.DataTypeEnum.dbDecimal
+                        Case dao.DataTypeEnum.dbDecimal
                            fldDataInfo = "FLOAT"
-                        Case DAO.DataTypeEnum.dbDouble
+                        Case dao.DataTypeEnum.dbDouble
                            fldDataInfo = "FLOAT"
-                        Case DAO.DataTypeEnum.dbFloat
+                        Case dao.DataTypeEnum.dbFloat
                            fldDataInfo = "FLOAT"
-                        Case DAO.DataTypeEnum.dbGUID
+                        Case dao.DataTypeEnum.dbGUID
                            fldDataInfo = "uniqueidentifier"
-                        Case DAO.DataTypeEnum.dbInteger
+                        Case dao.DataTypeEnum.dbInteger
                            fldDataInfo = "smallint"
-                        Case DAO.DataTypeEnum.dbLong
+                        Case dao.DataTypeEnum.dbLong
                            fldDataInfo = "int"
                         'Case DAO.DataTypeEnum.dbLongBinary
-                        Case DAO.DataTypeEnum.dbMemo
+                        Case dao.DataTypeEnum.dbMemo
                            fldDataInfo = "VARCHAR(MAX)"
                         'Case DAO.DataTypeEnum.dbNumeric
-                        Case DAO.DataTypeEnum.dbSingle
+                        Case dao.DataTypeEnum.dbSingle
                            fldDataInfo = "REAL"
-                        Case DAO.DataTypeEnum.dbText
+                        Case dao.DataTypeEnum.dbText
                            fldDataInfo = "VARCHAR(" & .Size & ")"
                         'Case DAO.DataTypeEnum.dbTime
                         'Case DAO.DataTypeEnum.dbTimeStamp
-                        Case DAO.DataTypeEnum.dbVarBinary
+                        Case dao.DataTypeEnum.dbVarBinary
                            fldDataInfo = "VARBINARY(MAX)"
                     End Select
                     If .Required Or InStr(1, pkScript, .Name) > 1 Then
@@ -116,7 +116,7 @@ End Function
 Sub ExportAllTableCreateDDL()
 
     Dim lTbl As Long
-    Dim dBase As Database
+    Dim dBase As dao.Database
     Dim Handle As Integer
 
     Set dBase = CurrentDb
@@ -125,7 +125,7 @@ Sub ExportAllTableCreateDDL()
 
     Open GetDesktopFolder & "\TableCreateDDL.txt" For Output Access Write As #Handle
 
-    For lTbl = 0 To dBase.TableDefs.count - 1
+    For lTbl = 0 To dBase.TableDefs.Count - 1
          'If the table name is a temporary or system table then ignore it
         If Left(dBase.TableDefs(lTbl).Name, 1) = "~" Or _
         Left(dBase.TableDefs(lTbl).Name, 4) = "MSYS" Then
@@ -148,7 +148,7 @@ End Sub
 Public Sub ExecuteScript()
 Dim cmd As New ADODB.Command
 
-    cmd.CommandText = "ALTER TABLE dbo.PriceLists ADD IsVisibleInSO bit NOT NULL CONSTRAINT DF_PriceLists_Test DEFAULT 0"
+    cmd.commandText = "ALTER TABLE dbo.PriceLists ADD IsVisibleInSO bit NOT NULL CONSTRAINT DF_PriceLists_Test DEFAULT 0"
     cmd.ActiveConnection = GetConnectionStringByProperty(tableName:="PriceLists", ODBCConnection:=False)
     cmd.Execute
         

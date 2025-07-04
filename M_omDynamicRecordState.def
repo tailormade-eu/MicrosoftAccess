@@ -34,7 +34,7 @@ Dim i As Long
         On Error Resume Next
         Set fld = rsSrc.Fields(fieldName)
         If (fld Is Nothing) = False Then
-            rs.Fields.Append fld.name, fld.Type, fld.DefinedSize
+            rs.Fields.Append fld.Name, fld.Type, fld.DefinedSize
             If fld.Type = adDBTimeStamp Then
                 timestampField = fieldName
             End If
@@ -112,7 +112,7 @@ Dim fld As ADODB.Field
     rec.Update
     For Each fld In rec.Fields
         On Error Resume Next
-        rec(fld.name) = rsSrc(fld.name)
+        rec(fld.Name) = rsSrc(fld.Name)
     Next
     rec.Update
 End Sub
@@ -126,10 +126,10 @@ Dim fld As ADODB.Field
         End If
     End If
     For Each fld In rsOriginal.Fields
-        If fld.name <> "omDynamicRecordState" And fld.name <> timestampField And Nz(rsOriginal(fld.name), "0") <> Nz(rsDatabase(fld.name), "0") Then
+        If fld.Name <> "omDynamicRecordState" And fld.Name <> timestampField And Nz(rsOriginal(fld.Name), "0") <> Nz(rsDatabase(fld.Name), "0") Then
             TimestampChanged = True
             rsChangedFields.AddNew
-            rsChangedFields("FieldName") = fld.name
+            rsChangedFields("FieldName") = fld.Name
             rsChangedFields.Update
         End If
     Next

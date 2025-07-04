@@ -48,8 +48,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="10"/>
-      <VisibleValue name="VisibleValue" type="10"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="10" value="1033"/>
+      <Scale name="Scale" type="10" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="1935"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -83,8 +85,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="10"/>
-      <VisibleValue name="VisibleValue" type="10"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="10" value="1033"/>
+      <Scale name="Scale" type="10" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="-1"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -118,8 +122,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="10"/>
-      <VisibleValue name="VisibleValue" type="10"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="10" value="1033"/>
+      <Scale name="Scale" type="10" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="-1"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -153,8 +159,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="10"/>
-      <VisibleValue name="VisibleValue" type="10"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="10" value="1033"/>
+      <Scale name="Scale" type="10" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="-1"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -188,8 +196,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="10"/>
-      <VisibleValue name="VisibleValue" type="10"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="10" value="1033"/>
+      <Scale name="Scale" type="10" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="-1"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -223,8 +233,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="10"/>
-      <VisibleValue name="VisibleValue" type="10"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="10" value="1033"/>
+      <Scale name="Scale" type="10" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="-1"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -258,8 +270,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="10"/>
-      <VisibleValue name="VisibleValue" type="10"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="10" value="1033"/>
+      <Scale name="Scale" type="10" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="-1"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -293,8 +307,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="10"/>
-      <VisibleValue name="VisibleValue" type="10"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="10" value="1033"/>
+      <Scale name="Scale" type="10" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="3480"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -328,8 +344,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="10"/>
-      <VisibleValue name="VisibleValue" type="10"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="10" value="1033"/>
+      <Scale name="Scale" type="10" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="3480"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -363,8 +381,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="10"/>
-      <VisibleValue name="VisibleValue" type="10"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="10" value="1033"/>
+      <Scale name="Scale" type="10" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="1935"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -398,8 +418,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="10"/>
-      <VisibleValue name="VisibleValue" type="10"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="10" value="1033"/>
+      <Scale name="Scale" type="10" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="-1"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -433,8 +455,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="7"/>
-      <VisibleValue name="VisibleValue" type="7"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="7" value="0"/>
+      <Scale name="Scale" type="7" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="-1"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -448,7 +472,7 @@
     <Field_12 name="ConnectionString">
       <Value name="Value" type="12"/>
       <Attributes name="Attributes" type="4" value="2"/>
-      <CollatingOrder name="CollatingOrder" type="3" value="1033"/>
+      <CollatingOrder name="CollatingOrder" type="3" value="1024"/>
       <Type name="Type" type="3" value="12"/>
       <Name name="Name" type="12" value="ConnectionString"/>
       <OrdinalPosition name="OrdinalPosition" type="3" value="12"/>
@@ -466,8 +490,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="12"/>
-      <VisibleValue name="VisibleValue" type="12"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="12" value="0"/>
+      <Scale name="Scale" type="12" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="3585"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -501,8 +527,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="10"/>
-      <VisibleValue name="VisibleValue" type="10"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="10" value="1033"/>
+      <Scale name="Scale" type="10" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="-1"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -536,8 +564,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="1"/>
-      <VisibleValue name="VisibleValue" type="1"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="1" value="0"/>
+      <Scale name="Scale" type="1" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="-1"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -571,6 +601,8 @@
       <FieldSize name="FieldSize" type="4"/>
       <OriginalValue name="OriginalValue" type="4"/>
       <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="4" value="0"/>
+      <Scale name="Scale" type="4" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="-1"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -594,4 +626,5 @@
       <CurrencyLCID name="CurrencyLCID" type="4" value="0"/>
     </Field_15>
   </FieldDefs>
+  <Rows/>
 </TableDef>

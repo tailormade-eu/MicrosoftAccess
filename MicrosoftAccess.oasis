@@ -1,0 +1,85 @@
+<?xml version="1.0" standalone="yes"?>
+<OASIS>
+	<ProjectSettings>
+		<AdditionalFolders/>
+		<DataTables>
+			<Table0 TableName="*"/>
+		</DataTables>
+		<BOM value="false"/>
+		<CompatibilityMode value="false"/>
+		<ConvertUTF8 value="true"/>
+		<EnableODBCScan value="false"/>
+		<ExportData value="true"/>
+		<ExportIndexes value="true"/>
+		<ExportLinked value="false"/>
+		<HTMLLogging value="false"/>
+		<KeyboardHookRetry value="0"/>
+		<KillCTI value="true"/>
+		<LocalPath value="D:\source\repos\Github\tailormade.eu\MicrosoftAccess\"/>
+		<MaxRecords value="0"/>
+		<MaxRecordsLinked value="0"/>
+		<MethodBeforeImport value=""/>
+		<MethodExportName value=""/>
+		<MethodExportAsk value="false"/>
+		<MethodImportName value=""/>
+		<MethodImportAsk value="false"/>
+		<MethodImportOnDialog value="false"/>
+		<MethodImportOnBuild value="false"/>
+		<MethodMDEName value=""/>
+		<NamingPreference value="0"/>
+		<NoRepositoryInfo value="false"/>
+		<SanitizeFiles value="0"/>
+		<SelectObjects value="0"/>
+		<SelectProperties value="false"/>
+		<SeparateData value="false"/>
+		<SeparateDataLinked value="true"/>
+		<SplitFormsFiles value="true"/>
+		<SplitReportFiles value="true"/>
+		<StructureOnly value="false"/>
+		<TableProperties value="Description|RowHeight|SubdatasheetName"/>
+		<UseProjectPath value="false"/>
+		<ValidObjects value="131071"/>
+		<ValidSystemObjects value=""/>
+		<Version value="20"/>
+		<VersionRequired value="20"/>
+		<VersioningSystem value="-1"/>
+		<ExportFilters>
+			<Filter Index="0"/>
+			<Filter Index="1"/>
+			<Filter Index="2"/>
+			<Filter Index="3"/>
+			<Filter Index="4"/>
+			<Filter Index="5"/>
+			<Filter Index="6"/>
+			<Filter Index="7"/>
+			<Filter Index="8"/>
+			<Filter Index="9"/>
+			<Filter Index="10"/>
+			<Filter Index="11"/>
+			<Filter Index="12"/>
+			<Filter Index="13"/>
+			<Filter Index="14"/>
+			<Filter Index="15"/>
+			<Filter Index="16"/>
+		</ExportFilters>
+		<ImportFilters>
+			<Filter Index="0"/>
+			<Filter Index="1"/>
+			<Filter Index="2"/>
+			<Filter Index="3"/>
+			<Filter Index="4"/>
+			<Filter Index="5"/>
+			<Filter Index="6"/>
+			<Filter Index="7"/>
+			<Filter Index="8"/>
+			<Filter Index="9"/>
+			<Filter Index="10"/>
+			<Filter Index="11"/>
+			<Filter Index="12"/>
+			<Filter Index="13"/>
+			<Filter Index="14"/>
+			<Filter Index="15"/>
+			<Filter Index="16"/>
+		</ImportFilters>
+	</ProjectSettings>
+</OASIS>

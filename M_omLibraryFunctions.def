@@ -2,7 +2,7 @@ Option Compare Database
 Option Explicit
 
 Private Function InternalGetTimeStamp(Optional prefix As String = "_") As String
-    InternalGetTimeStamp = prefix & Format(Now, "yyyymmdd_hhnnss")
+    InternalGetTimeStamp = prefix & format(Now, "yyyymmdd_hhnnss")
 End Function
 Public Function ExportLibrary(Optional createFolder As Boolean = False, Optional startsWith As String = "om", Optional filenameWithTimestamp As Boolean = False) As String
 Dim c As VBComponent
@@ -53,7 +53,7 @@ Dim OType As AcObjectType
     If useUpdatesFolder Then
         path = gFso.BuildPath(path, "Updates")
         If Not gFso.FolderExists(path) Then
-            msgbox "Updates Folder does not exist: " & path
+            MsgBox "Updates Folder does not exist: " & path
             Exit Sub
         End If
     End If
@@ -91,7 +91,7 @@ End Sub
 ' RemoveEqualFiles "C:\Users\JaRa\OneDrive\Shared\Kybucs\LibraryCompare\","C:\Users\JaRa\OneDrive\Shared\Kybucs\Library\"
 
 Public Sub RemoveEqualFiles(sourcePath As String, destinationPath As String, Optional moveFile As Boolean = False)
-Dim sFolder As Scripting.Folder
+Dim sFolder As Scripting.folder
 Dim sf As File
 Dim DF As File
 Dim sourceFound As Boolean
@@ -131,7 +131,7 @@ Public Sub LoadFromText(objectType As AcObjectType, objectName As String, filena
 End Sub
 Public Sub LoadAsAXL(objectType As AcObjectType, objectName As String, filename As String)
     'Application.LoadFromText AcObjectType.acModule, "omLibraryFunctions", "\\sql01\data\ACenter\2007\ACenter_9002_JaRa_Updates\omLibraryFunctions.bas"
-    msgbox "Does not exist in version 2007"
+    MsgBox "Does not exist in version 2007"
     'Application.LoadAsAXL objectType, objectName, fileName
 End Sub
 
@@ -141,11 +141,11 @@ Public Sub SaveAsText(objectType As AcObjectType, objectName As String, filename
 End Sub
 Public Sub SaveAsAXL(objectType As AcObjectType, objectName As String, filename As String)
     'Application.SaveAsText  AcObjectType.acModule, "omLibraryFunctions", "\\sql01\data\ACenter\2007\ACenter_9002_JaRa_Updates\omLibraryFunctions.bas"
-    msgbox "Does not exist in version 2007"
+    MsgBox "Does not exist in version 2007"
     'Application.SaveAsAXL objectType, objectName, fileName
 End Sub
 
-Public Sub ExportFormControlProperties(FormName As String, Optional WriteToFile As Boolean = False, Optional controlEscaped As Boolean = False)
+Public Sub ExportFormControlProperties(formName As String, Optional WriteToFile As Boolean = False, Optional controlEscaped As Boolean = False)
 Dim F As Form
 Dim c As Control
 Dim S1 As String
@@ -158,17 +158,17 @@ Dim cName As String
         cEscapedStart = "Controls(" & Chr(34)
         cEscapedEnd = Chr(34) & ")"
     End If
-    DoCmd.OpenForm FormName, acDesign, , , , acHidden
-    Set F = Forms(FormName)
+    DoCmd.OpenForm formName, acDesign, , , , acHidden
+    Set F = Forms(formName)
     S1 = "Public Sub SetDefaultControlProperties()" & vbCrLf
     S2 = "Public Sub SetMinimumControlProperties(minTop as long, minLeft as long, minWidth as long, minHeight as long)" & vbCrLf
     For Each c In F.Controls
         S1 = S1 & "' ------ " & c.Name & vbCrLf
         cName = cEscapedStart & c.Name & cEscapedEnd
-        S1 = S1 & "me." & cName & ".Visible=" & c.Visible & vbCrLf
+        S1 = S1 & "me." & cName & ".Visible=" & c.visible & vbCrLf
         S1 = S1 & "me." & cName & ".Top=" & c.Top & vbCrLf
         S1 = S1 & "me." & cName & ".Left=" & c.Left & vbCrLf
-        S1 = S1 & "me." & cName & ".Width=" & c.Width & vbCrLf
+        S1 = S1 & "me." & cName & ".Width=" & c.width & vbCrLf
         S1 = S1 & "me." & cName & ".Height=" & c.height & vbCrLf
         
         S2 = S2 & "' ------ " & c.Name & vbCrLf
@@ -181,11 +181,11 @@ Dim cName As String
     S1 = S1 & "End Sub" & vbCrLf
     S2 = S2 & "End Sub" & vbCrLf
     If WriteToFile Then
-        omFileFunctions.WriteStringToFile gFso.BuildPath(CurrentProject.path, "ExportFormControlProperties_" & FormName & InternalGetTimeStamp()) & ".txt", S1 & vbCrLf & S2
+        omFileFunctions.WriteStringToFile gFso.BuildPath(CurrentProject.path, "ExportFormControlProperties_" & formName & InternalGetTimeStamp()) & ".txt", S1 & vbCrLf & S2
     Else
         Debug.Print S1 & vbCrLf & S2
     End If
-    DoCmd.Close acForm, FormName, acSaveNo
+    DoCmd.Close acForm, formName, acSaveNo
 End Sub
 
 Public Sub Dump(Optional objectType As AcObjectType = AcObjectType.acDefault, Optional silentMode As Boolean = True, Optional destinationPath As String, Optional addTimeStamp As Boolean = True)
@@ -211,7 +211,7 @@ Dim rs As New ADODB.Recordset
         omFileFunctions.CreateFolderPath currentPath
         rs.Open "SELECT T.Name FROM MSysObjects T WHERE T.Type=1 AND T.Flags=0", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
         While Not rs.EOF
-            Application.ExportXml acExportTable, Rs("Name"), gFso.BuildPath(currentPath, Rs("Name") & ".xml"), gFso.BuildPath(currentPath, Rs("Name") & "_Schema.xml"), , , , acExportAllTableAndFieldProperties + acEmbedSchema
+            Application.ExportXML acExportTable, rs("Name"), gFso.BuildPath(currentPath, rs("Name") & ".xml"), gFso.BuildPath(currentPath, rs("Name") & "_Schema.xml"), , , , acExportAllTableAndFieldProperties + acEmbedSchema
             rs.MoveNext
         Wend
         rs.Close
@@ -264,7 +264,7 @@ Dim rs As New ADODB.Recordset
     End If
     
     If Not silentMode Then
-        msgbox "Completed", vbOKOnly
+        MsgBox "Completed", vbOKOnly
     End If
 End Sub
 
@@ -295,7 +295,7 @@ Dim tableName As String
                     tableName = Left(F.Name, Len(F.Name) - 4)
                     For i = 0 To CurrentData.AllTables.Count - 1
                         If CurrentData.AllTables(i).Name = tableName Then
-                            DoCmd.Rename tableName & "_" & Format(Now, "yyyymmdd_hhnnss"), acTable, tableName
+                            DoCmd.Rename tableName & "_" & format(Now, "yyyymmdd_hhnnss"), acTable, tableName
                         End If
                     Next
                     Application.ImportXML F.path, acStructureAndData
@@ -350,7 +350,7 @@ Dim tableName As String
             Next
     End Select
     If Not silentMode Then
-        msgbox "Completed", vbOKOnly
+        MsgBox "Completed", vbOKOnly
     End If
 End Sub
 
@@ -398,7 +398,7 @@ End Sub
 Public Sub VBACountModules()
 Dim cnt As Long
     cnt = VBE.ActiveVBProject.VBComponents.Count
-    msgbox "Access Project contains #" & cnt & " modules.", vbOKOnly
+    MsgBox "Access Project contains #" & cnt & " modules.", vbOKOnly
     ' 20200512 : 1176 modules
 End Sub
 
@@ -410,21 +410,21 @@ Dim F As VBIDE.VBComponent
     For Each F In VBE.ActiveVBProject.VBComponents
         cnt = cnt + F.CodeModule.CountOfLines
     Next
-    msgbox "Access Project contains #" & cnt & " lines.", vbOKOnly
+    MsgBox "Access Project contains #" & cnt & " lines.", vbOKOnly
 End Sub
 Public Sub VBAFindReplace(findString As String, replaceString As String, Optional silentMode As Boolean = True)
 Dim c As VBIDE.VBComponent
 Dim i As Long
-Dim S As String
+Dim s As String
     
     For Each c In VBE.ActiveVBProject.VBComponents
         For i = 1 To c.CodeModule.CountOfLines
-            S = c.CodeModule.Lines(i, 1)
-            If InStr(1, S, findString) > 0 Then
+            s = c.CodeModule.Lines(i, 1)
+            If InStr(1, s, findString) > 0 Then
                 If Not silentMode Then
-                    Debug.Print "In module: " & c.Name & " -> replaced: " & S
+                    Debug.Print "In module: " & c.Name & " -> replaced: " & s
                 End If
-                c.CodeModule.ReplaceLine i, Replace(S, findString, replaceString)
+                c.CodeModule.ReplaceLine i, Replace(s, findString, replaceString)
             End If
         Next i
     Next
@@ -442,7 +442,7 @@ End Sub
 
 Public Sub RemoveModulesWithoutLines(Optional silentMode As Boolean = True)
 Dim F As VBIDE.VBComponent
-Dim S As String
+Dim s As String
 Dim i As Long
 Dim msg As String
 Dim msgBoxResult As VbMsgBoxResult
@@ -457,7 +457,7 @@ Dim msgBoxResult As VbMsgBoxResult
             'Debug.Print msg
             
             If Not silentMode Then
-                msgBoxResult = msgbox(msg & vbCrLf & vbCrLf & "Delete CodeModule for " & F.Name, vbYesNo)
+                msgBoxResult = MsgBox(msg & vbCrLf & vbCrLf & "Delete CodeModule for " & F.Name, vbYesNo)
             Else
                 msgBoxResult = vbYes
             End If
@@ -465,15 +465,15 @@ Dim msgBoxResult As VbMsgBoxResult
                 If F.Type = vbext_ct_ClassModule Or F.Type = vbext_ct_StdModule Then
                     VBE.ActiveVBProject.VBComponents.Remove F
                 ElseIf Left(F.Name, Len("Report_")) = "Report_" Then
-                    S = Mid(F.Name, Len("Report_") + 1)
-                    DoCmd.OpenReport S, acDesign
-                    Reports(S).HasModule = False
-                    DoCmd.Close acReport, S, acSaveYes
+                    s = Mid(F.Name, Len("Report_") + 1)
+                    DoCmd.OpenReport s, acDesign
+                    Reports(s).HasModule = False
+                    DoCmd.Close acReport, s, acSaveYes
                 ElseIf Left(F.Name, Len("Form_")) = "Form_" Then
-                    S = Mid(F.Name, Len("Form_") + 1)
-                    DoCmd.OpenForm S, acDesign
-                    Forms(S).HasModule = False
-                    DoCmd.Close acForm, S, acSaveYes
+                    s = Mid(F.Name, Len("Form_") + 1)
+                    DoCmd.OpenForm s, acDesign
+                    Forms(s).HasModule = False
+                    DoCmd.Close acForm, s, acSaveYes
                 End If
             End If
         End If
@@ -491,7 +491,7 @@ End Sub
 Public Sub CommitAndPush(repositoryPath As String)
 Dim path As String
 Dim fn As String
-Dim S As String
+Dim s As String
 Dim commitMessage As String
 Dim gitFolder As String
 
@@ -506,16 +506,16 @@ Dim gitFolder As String
     End If
     fn = gFso.BuildPath(repositoryPath, ".git\COMMITMESSAGE")
     omFileFunctions.WriteStringToFile fn, commitMessage
-    S = "cd '{{repositoryPath}}'"
-    S = S & vbCrLf & "'{{GitFolder}}bin\git.exe' add -A"
-    S = S & vbCrLf & "'{{GitFolder}}bin\git.exe' commit -F '{{FilenameCommitMessage}}'"
-    S = S & vbCrLf & "'{{GitFolder}}bin\git.exe' push"
-    S = Replace(S, "{{repositoryPath}}", repositoryPath)
-    S = Replace(S, "{{GitFolder}}", gitFolder)
-    S = Replace(S, "{{FilenameCommitMessage}}", fn)
-    S = Replace(S, "'", Chr(34))
+    s = "cd '{{repositoryPath}}'"
+    s = s & vbCrLf & "'{{GitFolder}}bin\git.exe' add -A"
+    s = s & vbCrLf & "'{{GitFolder}}bin\git.exe' commit -F '{{FilenameCommitMessage}}'"
+    s = s & vbCrLf & "'{{GitFolder}}bin\git.exe' push"
+    s = Replace(s, "{{repositoryPath}}", repositoryPath)
+    s = Replace(s, "{{GitFolder}}", gitFolder)
+    s = Replace(s, "{{FilenameCommitMessage}}", fn)
+    s = Replace(s, "'", Chr(34))
     fn = gFso.BuildPath(CurrentProject.path, CurrentProject.Name & "_CommitAndPush.bat")
-    omFileFunctions.WriteStringToFile fn, S
+    omFileFunctions.WriteStringToFile fn, s
     Shell fn
 End Sub
 
@@ -562,8 +562,8 @@ End Sub
 
 Public Sub CreateBinaryColumns()
 
-    Dim td As DAO.TableDef
-    Dim db As DAO.Database
+    Dim td As dao.TableDef
+    Dim db As dao.Database
     Dim fd As Field
 
     Set db = CurrentDb
@@ -584,8 +584,8 @@ Public Function GenerateDataMacroAfterInsert(tableName As String) As String
 Dim s As String
 Dim statementActionTemplate As String
 Dim statements As String
-Dim f As Field
-Dim cdb As Database
+Dim F As Field
+Dim cdb As dao.Database
 
     statementActionTemplate = "<Action Name='SetField'>" & vbCrLf
     statementActionTemplate = statementActionTemplate + "<Argument Name='Field'><!FieldName!></Argument>" & vbCrLf
@@ -611,8 +611,8 @@ Dim cdb As Database
     s = Replace(s, "'", Chr(34))
     s = Replace(s, "<!TableName!>", tableName)
     Set cdb = CurrentDb
-    For Each f In cdb.TableDefs(tableName).Fields
-        statements = statements + Replace(Replace(statementActionTemplate, "<!FieldName!>", f.Name), "<!TableName!>", tableName) & vbCrLf
+    For Each F In cdb.TableDefs(tableName).Fields
+        statements = statements + Replace(Replace(statementActionTemplate, "<!FieldName!>", F.Name), "<!TableName!>", tableName) & vbCrLf
     Next
     
     GenerateDataMacroAfterInsert = Replace(s, "<!Statements!>", statements)
@@ -621,8 +621,8 @@ Public Function GenerateDataMacroAfterUpdate(tableName As String) As String
 Dim s As String
 Dim statementActionTemplate As String
 Dim statements As String
-Dim f As Field
-Dim cdb As Database
+Dim F As Field
+Dim cdb As dao.Database
 
     statementActionTemplate = "<Action Name='SetField'>" & vbCrLf
     statementActionTemplate = statementActionTemplate + "<Argument Name='Field'><!FieldName!></Argument>" & vbCrLf
@@ -648,10 +648,9 @@ Dim cdb As Database
     s = Replace(s, "'", Chr(34))
     s = Replace(s, "<!TableName!>", tableName)
     Set cdb = CurrentDb
-    For Each f In cdb.TableDefs(tableName).Fields
-        statements = statements + Replace(Replace(statementActionTemplate, "<!FieldName!>", f.Name), "<!TableName!>", tableName) & vbCrLf
+    For Each F In cdb.TableDefs(tableName).Fields
+        statements = statements + Replace(Replace(statementActionTemplate, "<!FieldName!>", F.Name), "<!TableName!>", tableName) & vbCrLf
     Next
     
     GenerateDataMacroAfterUpdate = Replace(s, "<!Statements!>", statements)
 End Function
-

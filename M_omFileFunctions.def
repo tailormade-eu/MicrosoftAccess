@@ -48,13 +48,13 @@ Public Sub CreateDatebase(filename As String)
     If gFso.FileExists(filename) Then
         gFso.DeleteFile filename
     End If
-    DBEngine.CreateDatabase filename, dbLangGeneral, dbVersion30
+    DBEngine.CreateDataBase filename, dbLangGeneral, dbVersion30
 End Sub
 Public Sub DeleteFile(filename As String, Optional force As Boolean = False)
-    If gFso.FileExists(filename)=false Then
-		Exit Sub
-	End If
-	gFso.DeleteFile filename, force
+    If gFso.FileExists(filename) = False Then
+                Exit Sub
+        End If
+        gFso.DeleteFile filename, force
 End Sub
 Public Sub DeleteFolder(folderName As String, Optional force As Boolean = False)
     If omFileFunctions.FolderExists(folderName) Then
@@ -77,7 +77,7 @@ Dim lBackupCount As Long
     If Not IsNull(strNewName) Then
         lBackupCount = 1
 FileRename_Backup:
-        strBackupName = Left(strNewName, Len(strNewName) - 2) & Format(lBackupCount, "0#")
+        strBackupName = Left(strNewName, Len(strNewName) - 2) & format(lBackupCount, "0#")
         Name strNewName As strBackupName
 FileRename_Rename:
         Name strOldName As strNewName
@@ -93,7 +93,7 @@ FileRename_Error:
             lBackupCount = lBackupCount + 1
             Resume FileRename_Backup
         Case Else
-            msgbox "Error"
+            MsgBox "Error"
             'DoCmd.SetWarnings True
             'ErrorBox.Module = "Module : File Functions"
             'ErrorBox.Procedure = "Procedure : FileRename"
@@ -189,10 +189,10 @@ Public Function FileLocked(strFileName As String, Optional displayError As Boole
    Open strFileName For Binary Access Read Write Lock Read Write As #1
    Close #1
    ' If an error occurs, the document is currently open.
-   If Err.Number <> 0 Then
+   If Err.number <> 0 Then
       ' Display the error number and description.
       If displayError Then
-        msgbox "Error #" & str(Err.Number) & " - " & Err.description
+        MsgBox "Error #" & str(Err.number) & " - " & Err.Description
       End If
       FileLocked = True
       Err.Clear
@@ -218,19 +218,11 @@ Public Sub PrintFile(filename As String)
     CreateObject("Shell.Application").NameSpace(0).ParseName(filename).InvokeVerb ("Print")
 End Sub
 
-Public Sub WriteStringToFile(filename As String, S As String, Optional unicode As Boolean = False)
+Public Sub WriteStringToFile(filename As String, s As String, Optional unicode As Boolean = False)
 Dim ts As TextStream
 
     Set ts = gFso.CreateTextFile(filename, True, unicode)
-    ts.Write S
+    ts.Write s
     ts.Close
     Set ts = Nothing
 End Sub
-
-Public Function ReadFileToString(filename As String) As String
-Dim ts As TextStream
-    Set ts = gFso.OpenTextFile(filename, ForReading, False, TristateUseDefault)
-    ReadFileToString = ts.ReadAll
-    ts.Close
-    Set ts = Nothing
-End Function

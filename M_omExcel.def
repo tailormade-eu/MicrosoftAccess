@@ -49,8 +49,8 @@ Dim i As Long
     Next
 End Sub
 Public Sub SetHeaderBold()
-    xlWb.ActiveSheet.Rows(1).Select
-    xlWb.Application.Selection.Font.bold = True
+    xlWb.ActiveSheet.rows(1).Select
+    xlWb.Application.Selection.font.bold = True
 End Sub
 
 Public Sub AutoFit()
@@ -58,7 +58,7 @@ Public Sub AutoFit()
     omExcelFunctions.AutoFitRows xlWb.ActiveSheet
 End Sub
 Public Sub SelectionUpdateBold(bold As Boolean)
-    UpdateFontOnSelection xlWB.ActiveSheet, bold
+    UpdateFontOnSelection xlWb.ActiveSheet, bold
 End Sub
 Private Sub Class_Terminate()
     Set xlWb = Nothing

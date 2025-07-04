@@ -7,7 +7,7 @@ Dim fld As ADODB.Field
 
     ADODBCreateCopyRecord = 0
     rsDst.AddNew
-        ADODBCopyRecord rssr, rsDst, PrimaryKeyName, LinkName, LinkId, ignoreFields
+        ADODBCopyRecord rsSrc, rsDst, PrimaryKeyName, LinkName, LinkId, ignoreFields
     If Len(PrimaryKeyName) > 0 Then
         ADODBCreateCopyRecord = rsDst(PrimaryKeyName).Value
     End If
@@ -16,7 +16,7 @@ End Function
 Public Sub ADODBCopyRecord(rsSrc As ADODB.Recordset, rsDst As ADODB.Recordset, Optional PrimaryKeyName As String = "", Optional LinkName As String = "", Optional LinkId As Long = 0, Optional ignoreFields As String)
 Dim fld As ADODB.Field
 
-        ignoreFields = PrimaryKeyName & "," & nz(ignoreFields)
+        ignoreFields = PrimaryKeyName & "," & Nz(ignoreFields)
     For Each fld In rsSrc.Fields
         If Not omStringFunctions.ContainsString(ignoreFields, fld.Name, ",") Then
             If fld.Name = LinkName And LinkId <> 0 Then
@@ -31,4 +31,4 @@ Dim fld As ADODB.Field
         End If
     Next
     rsDst.Update
-End Function
+End Sub

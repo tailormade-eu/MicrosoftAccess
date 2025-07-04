@@ -6,7 +6,7 @@ Dim drec As New omDynamicRecordState
 Public Sub Test()
 Dim rsSrc As New ADODB.Recordset
 
-    rsSrc.Open "T_Auto", CurrentProject.Connection, adOpenForwardOnly, adLockReadOnly
+    rsSrc.Open "T_Auto", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
     drec.SetupFieldsFromRecordset rsSrc, "ID_Auto,DAflevering,SAflevering,upsize_ts"
     
     drec.SetupFields
@@ -40,11 +40,11 @@ Public Sub TestFromRecordset()
 Dim rsSrc As New ADODB.Recordset
 Dim rs As ADODB.Recordset
 
-    rsSrc.Open "T_Auto", CurrentProject.Connection, adOpenForwardOnly, adLockReadOnly
+    rsSrc.Open "T_Auto", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
     drec.SetupFieldsFromRecordset rsSrc, "ID_Auto,DAflevering,SAflevering,upsize_ts"
     rsSrc.Close
     
-    rsSrc.Open "T_Auto", CurrentProject.Connection, adOpenForwardOnly, adLockReadOnly
+    rsSrc.Open "T_Auto", CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
     drec.SetDatabaseRecord rsSrc
     rsSrc.Close
 ' geef verschillen

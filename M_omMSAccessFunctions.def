@@ -1,10 +1,10 @@
 Option Compare Database
 Option Explicit
 
-Public Function FormExists(FormName As String) As Boolean
+Public Function FormExists(formName As String) As Boolean
     FormExists = False
     On Error Resume Next
-    FormExists = (CurrentProject.AllForms(FormName).Name = FormName)
+    FormExists = (CurrentProject.AllForms(formName).Name = formName)
 End Function
 
 Public Function ReportExists(ReportName As String) As Boolean
@@ -31,19 +31,19 @@ Public Sub DeleteQuery(queryName As String)
     CurrentDb.QueryDefs.Delete queryName
   End If
 End Sub
-Public Sub CreatePassthroughQuery(queryName As String, sql As String, connection As String)
+Public Sub CreatePassthroughQuery(queryName As String, SQL As String, connection As String)
 Dim qd As QueryDef
 
   DeleteQuery queryName
   Set qd = CurrentDb.CreateQueryDef(queryName)
   qd.Connect = connection
-  qd.sql = sql
+  qd.SQL = SQL
   CurrentDb.QueryDefs.Refresh
 End Sub
 
 Public Function GetQuerySQL(queryName As String) As String
   On Error Resume Next
-  GetQuerySQL = CurrentDb.QueryDefs(queryName).sql
+  GetQuerySQL = CurrentDb.QueryDefs(queryName).SQL
 End Function
 
 Public Sub HideNavigationPane()
@@ -113,8 +113,8 @@ End Sub
 
 Public Sub MakeLinkedTableLocal(tableName As String, Optional structureOnly As Boolean = False)
 Dim tempTableName As String
-Dim tbl As DAO.TableDef
-Dim idx As DAO.index
+Dim tbl As dao.TableDef
+Dim idx As dao.index
 'http://www.geeksengine.com/article/duplicate-access-table.html
 'CurrentProject.Connection.Execute "SELECT * INTO T_Accounts FROM Accounts"
 'DoCmd.CopyObject , "T_Accounts", acTable, "Accounts"
@@ -153,9 +153,9 @@ Public Sub DropIndexUsingDAO(tableName As String, indexName As String)
 End Sub
 
 Public Sub CreateIndexUsingDAO(tableName As String, indexName As String, fieldNames As String, Optional setPrimary As Boolean = False, Optional setUnique As Boolean = False, Optional setDisallowNull As Boolean = False)
-Dim tbl As DAO.TableDef
-Dim idx As DAO.index
-Dim fld As DAO.Field
+Dim tbl As dao.TableDef
+Dim idx As dao.index
+Dim fld As dao.Field
 Dim fldNames() As String
 Dim fldName As Variant
 
@@ -178,17 +178,17 @@ Public Sub DropIndexUsingSQL(tableName As String, indexName As String)
 End Sub
 
 Public Sub CreateIndexUsingSQL(tableName As String, indexName As String, fieldNames As String, Optional setPrimary As Boolean = False, Optional setUnique As Boolean = False, Optional setDisallowNull As Boolean = False)
-Dim sql As String
+Dim SQL As String
     
-    sql = StringFormat("CREATE" & IIf(setPrimary Or setUnique, " UNIQUE", "") & " INDEX [{0}] ON {1} ({2})", indexName, tableName, fieldNames)
+    SQL = StringFormat("CREATE" & IIf(setPrimary Or setUnique, " UNIQUE", "") & " INDEX [{0}] ON {1} ({2})", indexName, tableName, fieldNames)
     If setPrimary Then
-        sql = sql & " WITH PRIMARY"
+        SQL = SQL & " WITH PRIMARY"
     ElseIf setDisallowNull Then
-        sql = sql & " WITH DISALLOW NULL"
+        SQL = SQL & " WITH DISALLOW NULL"
     End If
     DropIndexUsingSQL tableName, indexName
     gLogging.WriteToFile Description:="CreateIndexUsingSQL > DropIndexUsingSQL tableName, indexName"
-    CurrentProject.connection.Execute sql
+    CurrentProject.connection.Execute SQL
     gLogging.WriteToFile Description:="CreateIndexUsingSQL > CurrentProject.Connection.Execute sql"
 End Sub
 
@@ -202,8 +202,8 @@ Dim i As Long
     Next i
 End Sub
 
-Public Sub SetAccessProperty(propertyName As String, Value As Variant, Optional propertyType As DAO.DataTypeEnum = dbText)
-Dim prp As DAO.Property
+Public Sub SetAccessProperty(propertyName As String, Value As Variant, Optional propertyType As dao.DataTypeEnum = dbText)
+Dim prp As dao.Property
     On Error Resume Next
     Set prp = CurrentDb.CreateProperty(propertyName, propertyType, Value)
     CurrentDb.Properties.Append prp
@@ -356,10 +356,10 @@ End Function
     
 
 Public Sub TruncateMSAccessTable(tableName As String)
-Dim strSql As String
+Dim strSQL As String
 
-    strSql = "DELETE FROM [" & tableName & "]"
-    CurrentProject.connection.Execute strSql
-    strSql = "ALTER TABLE [" & tableName & "] ALTER COLUMN id COUNTER (1, 1);"
-    CurrentProject.connection.Execute strSql
+    strSQL = "DELETE FROM [" & tableName & "]"
+    CurrentProject.connection.Execute strSQL
+    strSQL = "ALTER TABLE [" & tableName & "] ALTER COLUMN id COUNTER (1, 1);"
+    CurrentProject.connection.Execute strSQL
 End Sub

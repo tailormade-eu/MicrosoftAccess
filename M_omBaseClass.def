@@ -33,7 +33,7 @@ End Sub
 Private Sub Class_Initialize()
     Me.Clear
     cmdLoad.commandText = "SELECT * FROM Countries WHERE Id=?"
-    cmdLoad.ActiveConnection = CurrentProject.Connection
+    cmdLoad.ActiveConnection = CurrentProject.connection
     cmdLoad.Parameters.Refresh
 End Sub
 Public Sub Clear()

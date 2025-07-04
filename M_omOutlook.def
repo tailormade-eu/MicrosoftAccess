@@ -84,7 +84,7 @@ Dim mailbox As Object
 
 
 Dim i As Integer
-Dim fileName As String
+Dim filename As String
 Dim bodyFilenameMissing As String
 Dim address() As String
 Dim signature As String
@@ -151,11 +151,11 @@ Dim bodyEnd As Long
             bodyFilenameMissing = bodyFilenameMissing & attachments(i) & vbCrLf
         Next i
         For i = 0 To omArrayFunctions.StringArrayCount(attachments) - 1
-            fileName = attachments(i)
-            If gFso.FileExists(fileName) Then
-                .attachments.Add fileName
+            filename = attachments(i)
+            If gFso.FileExists(filename) Then
+                .attachments.Add filename
             Else
-                MsgBox fileName & " is missing.", vbCritical
+                MsgBox filename & " is missing.", vbCritical
                 'gOpmaatMessaging.Save "accounts1@itecs.nl", "carole@itecs.nl", "File does not exist and did not get attached: " & filename, bodyFilenameMissing, olImportanceHigh
             End If
         Next i

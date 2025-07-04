@@ -16,7 +16,7 @@ Dim ctrl As Control
 
     For Each ctrl In Form.Controls
         If omStringFunctions.NotIsNullOrEmpty(ctrl.tag) And (InStr(1, delimiter & ctrl.tag & delimiter, delimiter & tag & delimiter) > 0 Or omStringFunctions.IsNullOrEmpty(tag)) Then
-            ctrl.Visible = state
+            ctrl.visible = state
         End If
     Next
 End Sub
@@ -40,7 +40,7 @@ Dim frm As Form
     Next
 End Sub
 
-Public Sub OpenEditScreen(parentForm As Form, FormName As String, Optional keyName As String = "Id", Optional windowMode As AcWindowMode = acDialog, Optional Requery As Boolean = True)
+Public Sub OpenEditScreen(parentForm As Form, formName As String, Optional keyName As String = "Id", Optional windowMode As AcWindowMode = acDialog, Optional Requery As Boolean = True)
 Dim Id As String
 
     If parentForm.CurrentRecord <> -1 Then
@@ -49,7 +49,7 @@ Dim Id As String
         Else
             Id = parentForm.Recordset.Fields(keyName).Value
         End If
-        DoCmd.OpenForm FormName, datamode:=acFormEdit, windowMode:=windowMode, whereCondition:=keyName & " =" & Id
+        DoCmd.OpenForm formName, datamode:=acFormEdit, windowMode:=windowMode, whereCondition:=keyName & " =" & Id
         If Requery Then
             parentForm.Requery
         End If

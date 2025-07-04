@@ -45,7 +45,7 @@ End Enum
 
 Public Sub ParseByTableName(Name As String)
 Dim arr() As String
-Dim S As Variant
+Dim s As Variant
 
     If (tableName <> Name) Then
         Class_Initialize
@@ -67,22 +67,22 @@ End Sub
 
 Private Sub Parse(Value As String)
 Dim arr() As String
-Dim S As Variant
+Dim s As Variant
 
     arr = Split(Value, ";")
-    For Each S In arr
+    For Each s In arr
         'Debug.Print s
-        If S = "ODBC" Then IsODBC = True
-        If InStr(1, S, "driver=") > 0 Then Driver = Mid(S, 8)
-        If InStr(1, S, "server=") > 0 Then Server = Mid(S, 8)
-        If InStr(1, S, "port=") > 0 Then port = Mid(S, 6)
-        If InStr(1, S, "APP=") > 0 Then APP = Mid(S, 5)
-        If InStr(1, S, "database=") > 0 Then Database = Mid(S, 10)
-        If InStr(1, S, "DSN=") > 0 Then DSN = Mid(S, 5)
-        If InStr(1, S, "Provider=") > 0 Then Provider = Mid(S, 10)
-        If InStr(1, S, "UID=") > 0 Then UID = Mid(S, 5)
-        If InStr(1, S, "PWD=") > 0 Then PWD = Mid(S, 5)
-        If S = "Trusted_Connection=yes" Then HasTrustedConnection = True
+        If s = "ODBC" Then IsODBC = True
+        If InStr(1, s, "driver=") > 0 Then Driver = Mid(s, 8)
+        If InStr(1, s, "server=") > 0 Then Server = Mid(s, 8)
+        If InStr(1, s, "port=") > 0 Then port = Mid(s, 6)
+        If InStr(1, s, "APP=") > 0 Then APP = Mid(s, 5)
+        If InStr(1, s, "database=") > 0 Then Database = Mid(s, 10)
+        If InStr(1, s, "DSN=") > 0 Then DSN = Mid(s, 5)
+        If InStr(1, s, "Provider=") > 0 Then Provider = Mid(s, 10)
+        If InStr(1, s, "UID=") > 0 Then UID = Mid(s, 5)
+        If InStr(1, s, "PWD=") > 0 Then PWD = Mid(s, 5)
+        If s = "Trusted_Connection=yes" Then HasTrustedConnection = True
     Next
 End Sub
 Private Sub Class_Initialize()
@@ -169,10 +169,10 @@ Public Property Let Driver(ByVal vNewValue As String)
     End If
 End Property
 
-Public Function GetConnectionString(databaseName As String, serverName As String, ODBCConnection As Boolean, Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional DSN As Variant = "", Optional login As Variant = "", Optional Password As Variant = "", Optional GroupName As String = "", Optional portNr As Variant = "", Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional) As String
+Public Function GetConnectionString(databaseName As String, serverName As String, ODBCConnection As Boolean, Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional DSN As Variant = "", Optional Login As Variant = "", Optional Password As Variant = "", Optional GroupName As String = "", Optional portNr As Variant = "", Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional) As String
     If Not (GroupName = "") And GroupName = Me.Group Then
         GetConnectionString = Me.CurrentConnectionString
-    ElseIf databaseName = Me.Database And serverName = Me.Server And ODBCConnection = Me.IsODBC And ConnectionType = Me.CurrentConnectionType And DSN = Me.DSN And login = Me.UID And Password = Me.PWD Then
+    ElseIf databaseName = Me.Database And serverName = Me.Server And ODBCConnection = Me.IsODBC And ConnectionType = Me.CurrentConnectionType And DSN = Me.DSN And Login = Me.UID And Password = Me.PWD Then
         GetConnectionString = Me.CurrentConnectionString
     Else
         Class_Initialize
@@ -182,7 +182,7 @@ Public Function GetConnectionString(databaseName As String, serverName As String
         Me.IsODBC = ODBCConnection
         Me.CurrentConnectionType = ConnectionType
         Me.DSN = Nz(DSN, "")
-        Me.UID = Nz(login, "")
+        Me.UID = Nz(Login, "")
         Me.PWD = Nz(Password, "")
         Me.port = Nz(portNr, "")
         GetConnectionString = Me.GetCurrentConnectionStringForType(Me.IsODBC, Me.CurrentConnectionType, encryptType)

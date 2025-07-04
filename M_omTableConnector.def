@@ -13,7 +13,7 @@ Option Explicit
 
 
 Public DataFilename As String
-Private m_DB As DAO.Database
+Private m_DB As dao.Database
 Private Const prefixLocalTemp = "T_"
 
 Public Enum omTableConnectionType
@@ -207,9 +207,9 @@ End Function
 '
 
 Private Function Link(ConnectionType As omTableConnectionType, Optional ReconnectAll As Boolean = True) As Boolean
-Dim rsToConnect As DAO.Recordset
-Dim rsConnected As DAO.Recordset
-Dim rsRemoteTables As DAO.Recordset
+Dim rsToConnect As dao.Recordset
+Dim rsConnected As dao.Recordset
+Dim rsRemoteTables As dao.Recordset
 Dim varReturn As Variant
 
     On Error GoTo Link_Error

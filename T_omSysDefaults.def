@@ -18,7 +18,7 @@
     <Field_0 name="Id">
       <Value name="Value" type="4"/>
       <Attributes name="Attributes" type="4" value="17"/>
-      <CollatingOrder name="CollatingOrder" type="3" value="1033"/>
+      <CollatingOrder name="CollatingOrder" type="3" value="1024"/>
       <Type name="Type" type="3" value="4"/>
       <Name name="Name" type="12" value="Id"/>
       <OrdinalPosition name="OrdinalPosition" type="3" value="0"/>
@@ -38,6 +38,8 @@
       <FieldSize name="FieldSize" type="4"/>
       <OriginalValue name="OriginalValue" type="4"/>
       <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="4" value="0"/>
+      <Scale name="Scale" type="4" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="-1"/>
       <ColumnOrder name="ColumnOrder" type="3" value="1"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -67,8 +69,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="10"/>
-      <VisibleValue name="VisibleValue" type="10"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="10" value="1033"/>
+      <Scale name="Scale" type="10" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="-1"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -84,7 +88,7 @@
     <Field_2 name="Value">
       <Value name="Value" type="12"/>
       <Attributes name="Attributes" type="4" value="2"/>
-      <CollatingOrder name="CollatingOrder" type="3" value="1033"/>
+      <CollatingOrder name="CollatingOrder" type="3" value="1024"/>
       <Type name="Type" type="3" value="12"/>
       <Name name="Name" type="12" value="Value"/>
       <OrdinalPosition name="OrdinalPosition" type="3" value="2"/>
@@ -102,8 +106,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="12"/>
-      <VisibleValue name="VisibleValue" type="12"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="12" value="0"/>
+      <Scale name="Scale" type="12" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="4035"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -119,7 +125,7 @@
     <Field_3 name="ModifyDate">
       <Value name="Value" type="8"/>
       <Attributes name="Attributes" type="4" value="1"/>
-      <CollatingOrder name="CollatingOrder" type="3" value="1033"/>
+      <CollatingOrder name="CollatingOrder" type="3" value="1024"/>
       <Type name="Type" type="3" value="8"/>
       <Name name="Name" type="12" value="ModifyDate"/>
       <OrdinalPosition name="OrdinalPosition" type="3" value="3"/>
@@ -137,8 +143,10 @@
       <AppendOnly name="AppendOnly" type="1" value="False"/>
       <Expression name="Expression" type="12" value=""/>
       <FieldSize name="FieldSize" type="4"/>
-      <OriginalValue name="OriginalValue" type="8"/>
-      <VisibleValue name="VisibleValue" type="8"/>
+      <OriginalValue name="OriginalValue" type="4"/>
+      <VisibleValue name="VisibleValue" type="4"/>
+      <Precision name="Precision" type="8" value="0"/>
+      <Scale name="Scale" type="8" value="0"/>
       <ColumnWidth name="ColumnWidth" type="3" value="-1"/>
       <ColumnOrder name="ColumnOrder" type="3" value="0"/>
       <ColumnHidden name="ColumnHidden" type="1" value="False"/>
@@ -177,4 +185,5 @@
       </Fields>
     </Index_1>
   </Indexes>
+  <Rows/>
 </TableDef>

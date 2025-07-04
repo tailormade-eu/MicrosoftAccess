@@ -48,12 +48,12 @@ Dim s As String
     ToJson = s
 End Function
 
-Private Function AddTemplate(name As String, value As String, Optional formatted As Boolean = False) As String
+Private Function AddTemplate(Name As String, Value As String, Optional formatted As Boolean = False) As String
 Dim t As String
     
     t = Chr(34) & "{0}" & Chr(34) & ": " & Chr(34) & "{1}" & Chr(34) & "," & IIf(formatted, vbCrLf, "")
-    If Trim(Nz(value, "")) <> "" Then
-        AddTemplate = Replace(Replace(t, "{0}", name), "{1}", value)
+    If Trim(Nz(Value, "")) <> "" Then
+        AddTemplate = Replace(Replace(t, "{0}", Name), "{1}", Value)
     End If
 End Function
 

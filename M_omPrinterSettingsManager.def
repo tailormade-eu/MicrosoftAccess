@@ -9,12 +9,12 @@ Public DeviceName As String
 Public PaperBin As Long
 
 Public Sub GetSettings()
-Dim reportName As String
+Dim ReportName As String
 Dim rpt As Report
 
-  reportName = "omPrinterSettings"
+  ReportName = "omPrinterSettings"
 
-  DoCmd.OpenReport reportName, acViewPreview, WindowMode:=acDialog
+  DoCmd.OpenReport ReportName, acViewPreview, windowMode:=acDialog
   'DoCmd.OpenReport reportName, acViewPreview
   
   'Set rpt = Reports(reportName)

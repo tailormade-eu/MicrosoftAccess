@@ -25,11 +25,11 @@ Public Function ZipFolder(ByVal folderName As String, Optional filenameZip As St
 
     Set oApp = CreateObject("Shell.Application")
     'Copy the files to the compressed folder
-    oApp.Namespace(CVar(filenameZip)).CopyHere oApp.Namespace(CVar(folderName)).Items
+    oApp.NameSpace(CVar(filenameZip)).CopyHere oApp.NameSpace(CVar(folderName)).Items
     
     'Keep script waiting until Compressing is done
     On Error Resume Next
-    Do Until oApp.Namespace(CVar(filenameZip)).Items.Count = oApp.Namespace(CVar(folderName)).Items.Count
+    Do Until oApp.NameSpace(CVar(filenameZip)).Items.Count = oApp.NameSpace(CVar(folderName)).Items.Count
        omKernalFunctions.Sleep 1000
     Loop
     On Error GoTo 0
@@ -46,7 +46,7 @@ Public Function UnzipToFolder(ByVal zipFileName As String, Optional fileNameFold
     omFileFunctions.CreateFolderPath fileNameFolder
     
     Set oApp = CreateObject("Shell.Application")
-    oApp.Namespace(CVar(fileNameFolder)).CopyHere oApp.Namespace(CVar(zipFileName)).Items
+    oApp.NameSpace(CVar(fileNameFolder)).CopyHere oApp.NameSpace(CVar(zipFileName)).Items
 
     On Error Resume Next
     gFso.DeleteFolder Environ("Temp") & "\Temporary Directory*", True

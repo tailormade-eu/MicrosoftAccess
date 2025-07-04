@@ -191,39 +191,39 @@ Public Function GetSQLServerWeekFunction()
 End Function
 
 Public Function GetSQLClausePos(ByVal SQL As String, clause As String, Optional startPos As Long = 1) As Long
-Dim Pos As Long
+Dim pos As Long
 
     SQL = NormalizeSQL(SQL)
-    Pos = InStr(startPos, SQL, " " & clause & " ")
-    If Pos = 0 Then
-        Pos = InStr(startPos, SQL, clause & " ")
+    pos = InStr(startPos, SQL, " " & clause & " ")
+    If pos = 0 Then
+        pos = InStr(startPos, SQL, clause & " ")
     End If
 
-    GetSQLClausePos = Pos
+    GetSQLClausePos = pos
 End Function
 
 Public Function ReplaceSQLClause(ByVal SQL As String, clause As String, Optional replaceString As String = "", Optional startPos As Long = 0) As String
-Dim Pos As Long
+Dim pos As Long
 Dim posEnd As Long
-Dim Result As String
+Dim result As String
 
     SQL = NormalizeSQL(SQL)
     If startPos = 0 Then
-        Pos = GetSQLClausePos(SQL, clause)
+        pos = GetSQLClausePos(SQL, clause)
     Else
-        Pos = startPos
+        pos = startPos
     End If
-    If Pos <> 0 Then
-        posEnd = InStr(Pos + Len(clause) - 1, SQL, " ")
+    If pos <> 0 Then
+        posEnd = InStr(pos + Len(clause) - 1, SQL, " ")
         If posEnd = 0 Then
-            posEnd = InStr(Pos, SQL, vbCrLf)
+            posEnd = InStr(pos, SQL, vbCrLf)
         End If
         If posEnd = 0 Then
-            posEnd = InStr(Pos, SQL, vbCr)
+            posEnd = InStr(pos, SQL, vbCr)
         End If
-        Result = Mid(SQL, posEnd)
+        result = Mid(SQL, posEnd)
     End If
-    ReplaceSQLClause = Trim(Result)
+    ReplaceSQLClause = Trim(result)
 End Function
 Public Function NormalizeSQL(ByVal SQL As String) As String
 

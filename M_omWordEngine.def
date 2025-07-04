@@ -12,7 +12,7 @@ Dim rs As New ADODB.Recordset
 Dim i As Integer
 Dim wrd  As New Word.Application
 
-    rs.Open "SELECT * FROM [" & RecordSource & "]", CurrentProject.Connection, adOpenForwardOnly, adLockOptimistic
+    rs.Open "SELECT * FROM [" & RecordSource & "]", CurrentProject.connection, adOpenForwardOnly, adLockOptimistic
     If Not rs.EOF Then
         Set doc = wrd.Documents.Open(Template)
         'For i = 0 To rs.Fields.Count - 1
@@ -114,7 +114,7 @@ Dim tbl As Word.Table
                 .Replacement.text = ""
                 .Forward = True
                 .Wrap = wdFindContinue
-                .Format = False
+                .format = False
                 .MatchCase = False
                 .MatchWholeWord = False
                 .MatchWildcards = False
@@ -130,7 +130,7 @@ Dim tbl As Word.Table
         rowCount = 1
         For colCount = 0 To rs.Fields.Count - 1
             tbl.Cell(rowCount, colCount + 1).Select
-            tbl.Application.Selection.font.Bold = True
+            tbl.Application.Selection.font.bold = True
             tbl.Application.Selection.font.Size = 10
             tbl.Application.Selection.TypeText rs.Fields(colCount).Name
         Next
@@ -174,7 +174,7 @@ Public Sub FindReplaceAll(wd As Word.Document, findtext As String, replaceText A
             .Replacement.text = replaceText
             .Forward = True
             .Wrap = wdFindAsk
-            .Format = False
+            .format = False
             .MatchCase = False
             .MatchWholeWord = False
             .MatchWildcards = False
@@ -278,7 +278,7 @@ Public Sub SearchAndReplaceInStory(ByVal rngStory As Word.range, ByVal strSearch
 End Sub
 
 Public Sub ToggleBold(wd As Word.Document)
-    wd.Application.Selection.font.Bold = wdToggle
+    wd.Application.Selection.font.bold = wdToggle
 End Sub
 Public Sub TypeNewLine(wd As Word.Document)
     Me.TypeText wd, Chr(11)
@@ -305,10 +305,6 @@ Public Sub ToggleUnderline(wd As Word.Document)
     End With
 End Sub
 
-
-Private Sub Class_Initialize()
-
-End Sub
 
 Private Sub Class_Terminate()
     Set doc = Nothing

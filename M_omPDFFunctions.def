@@ -1,8 +1,8 @@
 Option Compare Database
 Option Explicit
 
-Public Sub SaveReportAsPDF(reportName As String, fileName As String, Optional whereCondition As String = "")
-    DoCmd.OpenReport reportName, acViewPreview, whereCondition:=whereCondition
-    DoCmd.OutputTo acOutputReport, reportName, acFormatPDF, fileName, False
-    DoCmd.Close acReport, reportName
+Public Sub SaveReportAsPDF(ReportName As String, filename As String, Optional whereCondition As String = "")
+    DoCmd.OpenReport ReportName, acViewPreview, whereCondition:=whereCondition
+    DoCmd.OutputTo acOutputReport, ReportName, acFormatPDF, filename, False
+    DoCmd.Close acReport, ReportName
 End Sub

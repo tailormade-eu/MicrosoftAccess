@@ -4,18 +4,18 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
-Public Connection As New ADODB.Connection
+Public connection As New ADODB.connection
 
-Public Sub spExecuteNonQuery(StoredProcedureName As String, Optional Parameter1 As Variant = Null, Optional Parameter2 As Variant = Null, Optional Parameter3 As Variant = Null, Optional Parameter4 As Variant = Null, Optional Parameter5 As Variant = Null, Optional Parameter6 As Variant = Null)
+Public Sub spExecuteNonQuery(storedProcedureName As String, Optional Parameter1 As Variant = Null, Optional Parameter2 As Variant = Null, Optional Parameter3 As Variant = Null, Optional Parameter4 As Variant = Null, Optional parameter5 As Variant = Null, Optional parameter6 As Variant = Null)
 Dim cmd As New ADODB.Command
 Dim i As Long
 
     cmd.CommandType = adCmdStoredProc
-    cmd.CommandText = StoredProcedureName
-    If Connection.State = 0 Then
-        Connection.Open
+    cmd.commandText = storedProcedureName
+    If connection.state = 0 Then
+        connection.Open
     End If
-    Set cmd.ActiveConnection = Connection
+    Set cmd.ActiveConnection = connection
     cmd.Parameters.Refresh
     ' Load Parameters
     For i = 1 To cmd.Parameters.Count - 1
@@ -29,26 +29,26 @@ Dim i As Long
             Case 4
                 cmd.Parameters(i) = Parameter4
             Case 5
-                cmd.Parameters(i) = Parameter5
+                cmd.Parameters(i) = parameter5
             Case 6
-                cmd.Parameters(i) = Parameter6
+                cmd.Parameters(i) = parameter6
         End Select
     Next
     cmd.Execute
-    Connection.Close
+    connection.Close
     Set cmd = Nothing
 End Sub
-Public Function spExecuteScalar(StoredProcedureName As String, Optional Parameter1 As Variant = Null, Optional Parameter2 As Variant = Null, Optional Parameter3 As Variant = Null, Optional Parameter4 As Variant = Null, Optional Parameter5 As Variant = Null, Optional Parameter6 As Variant = Null, Optional defaultValue As Variant = Null) As Variant
+Public Function spExecuteScalar(storedProcedureName As String, Optional Parameter1 As Variant = Null, Optional Parameter2 As Variant = Null, Optional Parameter3 As Variant = Null, Optional Parameter4 As Variant = Null, Optional parameter5 As Variant = Null, Optional parameter6 As Variant = Null, Optional defaultValue As Variant = Null) As Variant
 Dim cmd As New ADODB.Command
 Dim rs As ADODB.Recordset
 Dim i As Long
 
     cmd.CommandType = adCmdStoredProc
-    cmd.CommandText = StoredProcedureName
-    If Connection.State = 0 Then
-        Connection.Open
+    cmd.commandText = storedProcedureName
+    If connection.state = 0 Then
+        connection.Open
     End If
-    Set cmd.ActiveConnection = Connection
+    Set cmd.ActiveConnection = connection
     cmd.Parameters.Refresh
     ' Load Parameters
     For i = 1 To cmd.Parameters.Count - 1
@@ -62,9 +62,9 @@ Dim i As Long
             Case 4
                 cmd.Parameters(i) = Parameter4
             Case 5
-                cmd.Parameters(i) = Parameter5
+                cmd.Parameters(i) = parameter5
             Case 6
-                cmd.Parameters(i) = Parameter6
+                cmd.Parameters(i) = parameter6
         End Select
     Next
     Set rs = cmd.Execute
@@ -75,18 +75,18 @@ Dim i As Long
     End If
     rs.Close
     Set rs = Nothing
-    Connection.Close
+    connection.Close
     Set cmd = Nothing
 End Function
 Public Function sqlOpenRecordset(SQLStatement As String) As ADODB.Recordset
 Dim cmd As New ADODB.Command
 
     cmd.CommandType = adCmdText
-    cmd.CommandText = SQLStatement
-    If Connection.State = 0 Then
-        Connection.Open
+    cmd.commandText = SQLStatement
+    If connection.state = 0 Then
+        connection.Open
     End If
-    Set cmd.ActiveConnection = Connection
+    Set cmd.ActiveConnection = connection
     Set sqlOpenRecordset = cmd.Execute
     Set cmd = Nothing
 End Function
@@ -94,17 +94,17 @@ Public Sub sqlExecute(SQLStatement As String)
 Dim cmd As New ADODB.Command
 
     cmd.CommandType = adCmdText
-    cmd.CommandText = SQLStatement
-    If Connection.State = 0 Then
-        Connection.Open
+    cmd.commandText = SQLStatement
+    If connection.state = 0 Then
+        connection.Open
     End If
-    Set cmd.ActiveConnection = Connection
+    Set cmd.ActiveConnection = connection
     cmd.Execute
-    Connection.Close
+    connection.Close
     Set cmd = Nothing
 End Sub
 Public Sub CloseConnection()
-    Connection.Close
+    connection.Close
 End Sub
 Private Sub Class_Initialize()
 Dim strDatabaseName As String
@@ -119,10 +119,10 @@ Dim strDatabaseName As String
     Else
         strDatabaseName = strDatabaseName & "Trusted_Connection=yes;"
     End If
-    Connection.ConnectionString = strDatabaseName
-    Connection.ConnectionTimeout = 0
+    connection.ConnectionString = strDatabaseName
+    connection.ConnectionTimeout = 0
 End Sub
 
 Private Sub Class_Terminate()
-    Set Me.Connection = Nothing
+    Set Me.connection = Nothing
 End Sub
