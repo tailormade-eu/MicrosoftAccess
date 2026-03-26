@@ -108,11 +108,26 @@ Private Sub SetFields(rs As ADODB.Recordset)
         End If
         Me.Active = Nz(rs("Active"), False)
         Me.UserRole.LoadById rs("UserRoleId")
+        UpdateLastLogin Me.Id
     Else
         ClearFields
     End If
     rs.Close
     Set rs = Nothing
+End Sub
+
+Private Sub UpdateLastLogin(UserId As Variant)
+    If Nz(UserId, 0) = 0 Then Exit Sub
+    On Error Resume Next
+    Dim cmd As New ADODB.Command
+    cmd.ActiveConnection = CurrentProject.Connection
+    cmd.CommandText = "UPDATE Users SET LastLoginDate=?, LastLoginPC=? WHERE Id=?"
+    cmd.Parameters.Refresh
+    cmd.Parameters(0) = Now
+    cmd.Parameters(1) = Environ$("computername")
+    cmd.Parameters(2) = UserId
+    cmd.Execute
+    Set cmd = Nothing
 End Sub
 Private Sub ClearFields()
     Me.Id = Null

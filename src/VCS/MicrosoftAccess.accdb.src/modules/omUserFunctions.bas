@@ -72,3 +72,7 @@ End Sub
 Public Function GetUserId() As Long
     GetUserId = Nz(gUser.Id, 0)
 End Function
+
+Public Function HasRole(roleCode As String) As Boolean
+    HasRole = (UCase(Nz(gUser.UserRole.Code, "")) = UCase(roleCode))
+End Function

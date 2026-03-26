@@ -14,5 +14,7 @@
   [CreateDate] DATETIME,
   [CreateUserId] LONG,
   [ModifyDate] DATETIME,
-  [ModifyUserId] LONG
+  [ModifyUserId] LONG,
+  [LastLoginDate] DATETIME,
+  [LastLoginPC] VARCHAR (255)
 )
