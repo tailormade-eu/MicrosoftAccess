@@ -43,6 +43,20 @@ Call LinkUsingSSMA()
 - `M_omBankAccountFunctions.def` – IBAN validation and formatting utilities
 - Other `.def` files – Additional utilities and helpers
 
+## Module index
+
+Zie [MODULE-INDEX.md](MODULE-INDEX.md) voor een overzicht van alle modules met hun publieke functies/subs. Check deze index (of het bronbestand zelf) vóór je een nieuwe hulpfunctie schrijft — de kans is groot dat ze al bestaat.
+
+## Doel — deze library blijft groeien
+
+Dit is een levende, actief onderhouden library, geen archief. Bedoeling:
+- **Verder opbouwen** — nieuwe herbruikbare functies komen hier terecht, niet als losse/dubbele kopie in een klantproject.
+- **Committen** — wijzigingen hier horen gecommit te worden, ook als ze vanuit een klantproject-sessie ontstaan (zoals `ClearMultiValueField`, toegevoegd 2026-07-28 vanuit client Cards).
+- **Verbeteren** — bestaande functies mogen gerefactored/uitgebreid worden zodra een project een tekortkoming blootlegt.
+- **Index onderhouden** — `MODULE-INDEX.md` moet meebewegen bij elke nieuwe/gewijzigde functie, anders wordt hij snel stale en onbetrouwbaar.
+
+Klantprojecten importeren enkel wat ze nodig hebben (individuele functies of modules, geen automatische volledige clone) — zie de losse module-dependencies vóór je een heel bestand kopieert (bv. `omFormFunctions.bas` hangt af van `omStringFunctions`/`omUserFunctions` voor sommige functies, niet voor allemaal).
+
 ## Contributing
 
 Contributions are welcome! Please submit issues or pull requests for bug fixes and improvements.

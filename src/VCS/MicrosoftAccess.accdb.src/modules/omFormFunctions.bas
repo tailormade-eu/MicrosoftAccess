@@ -84,6 +84,36 @@ Public Sub UpdateCreateTracking(frm As Form, Optional UpdateModify = True)
         UpdateModifyTracking frm
     End If
 End Sub
+Public Sub ClearMultiValueField(frm As Form, fieldName As String, Optional whereClause As String = "", Optional Requery As Boolean = True)
+' Multi-Value (complex-type) velden kunnen niet gewist worden via UPDATE-SQL of .Value=Null
+' (error 3032, "operation must use an updateable query") -- zitten achter een verborgen
+' junction-tabel. Moet via de DAO ComplexType/Recordset2-API: het veld als geneste
+' recordset openen en de rijen daarin verwijderen.
+Dim rsMain As DAO.Recordset2
+Dim rsMV As DAO.Recordset2
+
+    Set rsMain = frm.RecordsetClone
+    If whereClause <> "" Then
+        rsMain.FindFirst whereClause
+    Else
+        rsMain.MoveFirst
+    End If
+    Do While Not rsMain.EOF
+        Set rsMV = rsMain.Fields(fieldName).Value
+        Do While Not rsMV.EOF
+            rsMV.Delete
+            rsMV.MoveNext
+        Loop
+        rsMV.Close
+        If whereClause <> "" Then Exit Do
+        rsMain.MoveNext
+    Loop
+    Set rsMV = Nothing
+    Set rsMain = Nothing
+
+    If Requery Then frm.Requery
+End Sub
+
 Public Sub ListFormFields(formName As String)
     Dim frm As Form
     Dim ctl As Control
