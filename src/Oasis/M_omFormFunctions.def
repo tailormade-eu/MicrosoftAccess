@@ -31,11 +31,15 @@ Public Function OpenForm(Name As String, Optional view As AcFormView = AcFormVie
     DoCmd.OpenForm Name, view
 End Function
 
+Public Sub CloseForm(frm As Form, Optional save As AcCloseSave = acSaveNo)
+    DoCmd.Close acForm, frm.Name, save
+End Sub
+
 Public Sub CloseForms(Optional keepOpen As String = "flow")
 Dim frm As Form
     For Each frm In Forms
         If frm.Name <> keepOpen Then
-            DoCmd.Close acForm, frm.Name, acSaveNo
+            CloseForm frm
         End If
     Next
 End Sub
