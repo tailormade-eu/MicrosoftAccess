@@ -113,8 +113,8 @@ End Sub
 
 Public Sub MakeLinkedTableLocal(tableName As String, Optional structureOnly As Boolean = False)
 Dim tempTableName As String
-Dim tbl As dao.TableDef
-Dim idx As dao.index
+Dim tbl As DAO.TableDef
+Dim idx As DAO.index
 'http://www.geeksengine.com/article/duplicate-access-table.html
 'CurrentProject.Connection.Execute "SELECT * INTO T_Accounts FROM Accounts"
 'DoCmd.CopyObject , "T_Accounts", acTable, "Accounts"
@@ -153,9 +153,9 @@ Public Sub DropIndexUsingDAO(tableName As String, indexName As String)
 End Sub
 
 Public Sub CreateIndexUsingDAO(tableName As String, indexName As String, fieldNames As String, Optional setPrimary As Boolean = False, Optional setUnique As Boolean = False, Optional setDisallowNull As Boolean = False)
-Dim tbl As dao.TableDef
-Dim idx As dao.index
-Dim fld As dao.Field
+Dim tbl As DAO.TableDef
+Dim idx As DAO.index
+Dim fld As DAO.Field
 Dim fldNames() As String
 Dim fldName As Variant
 
@@ -202,8 +202,8 @@ Dim i As Long
     Next i
 End Sub
 
-Public Sub SetAccessProperty(propertyName As String, Value As Variant, Optional propertyType As dao.DataTypeEnum = dbText)
-Dim prp As dao.Property
+Public Sub SetAccessProperty(propertyName As String, Value As Variant, Optional propertyType As DAO.DataTypeEnum = dbText)
+Dim prp As DAO.Property
     On Error Resume Next
     Set prp = CurrentDb.CreateProperty(propertyName, propertyType, Value)
     CurrentDb.Properties.Append prp
