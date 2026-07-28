@@ -1,0 +1,1705 @@
+Version =21
+VersionRequired =20
+Checksum =398326270
+Begin Form
+    RecordSelectors = NotDefault
+    AutoCenter = NotDefault
+    NavigationButtons = NotDefault
+    PictureTiling = NotDefault
+    DividingLines = NotDefault
+    AllowDesignChanges = NotDefault
+    DefaultView =0
+    ScrollBars =0
+    TabularFamily =7
+    BorderStyle =1
+    PictureAlignment =5
+    DatasheetGridlinesBehavior =3
+    GridY =10
+    Width =13056
+    DatasheetFontHeight =10
+    ItemSuffix =194
+    Right =16410
+    Bottom =11865
+    DatasheetGridlinesColor =12632256
+    PaintPalette = Begin
+        0x00030100ffffff0000000000
+    End
+    RecSrcDt = Begin
+        0xcedb75a55a62e640
+    End
+    GUID = Begin
+        0xad33bf6f05499c4b9d2a5a2563db7e8a
+    End
+    RecordSource ="firma"
+    Caption ="Firma"
+    DatasheetFontName ="Arial"
+    PrtMip = Begin
+        0x6801000068010000680100006801000000000000201c0000e010000001000000 ,
+        0x010000006801000000000000a10700000100000001000000
+    End
+    PrtDevNames = Begin
+        0x08001f0036000100000000000000000000000000000000000000000000000000 ,
+        0x00000000000000000000000000000000000000000000504f525450524f4d5054 ,
+        0x3a00
+    End
+    FilterOnLoad =255
+    DatasheetGridlinesColor12 =12632256
+    PrtDevModeW = Begin
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x74006f0020005000440046000000000000000000000000000000000000000000 ,
+        0x01040306dc005814030f0100010009009a0b3408640001000700580202000100 ,
+        0x58020300010070d46f3c7e000000b05aca26cb010000d0db17030000000060aa ,
+        0xea00000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000010000000000000001000000 ,
+        0x0200000001000000ffffffff4749533400000000000000000000000044494e55 ,
+        0x2200d0002c032c11e25e8d530000000000000000000000000000000000000000 ,
+        0x0000000000000000050000000000190001000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000100000000000000000000000000000000000000 ,
+        0x000000000000000000000000000000000000000000000000d0000000534d544a ,
+        0x000000001000c0007b00300038003400460030003100460041002d0045003600 ,
+        0x330034002d0034004400370037002d0038003300450045002d00300037003400 ,
+        0x3800310037004300300033003500380031007d000000524553444c4c00556e69 ,
+        0x726573444c4c00506170657253697a65004134004f7269656e746174696f6e00 ,
+        0x504f525452414954005265736f6c7574696f6e005265734f7074696f6e310043 ,
+        0x6f6c6f724d6f646500436f6c6f72000000000000000000000000000000000000 ,
+        0x00000000000000002c1100005634444d01000000000000009c0a70221c000000 ,
+        0xec00000003000000fa014f0834e6774d83ee074817c03581d00000004c000000 ,
+        0x0300000000080000000000000000000003000000000800002a00000000080000 ,
+        0x0300000040000000560000000010000044006f00630075006d0065006e007400 ,
+        0x5500730065007200500061007300730077006f0072006400000044006f006300 ,
+        0x75006d0065006e0074004f0077006e0065007200500061007300730077006f00 ,
+        0x72006400000044006f00630075006d0065006e00740043007200790070007400 ,
+        0x5300650063007500720069007400790000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000
+    End
+    PrtDevNamesW = Begin
+        0x04001b0032000100000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+        0x0000000050004f0052005400500052004f004d00500054003a000000
+    End
+    NoSaveCTIWhenDisabled =1
+    Begin
+        Begin Label
+            SpecialEffect =1
+            FontWeight =700
+            BackColor =12632256
+            ForeColor =128
+            FontName ="Arial"
+        End
+        Begin Rectangle
+            BackStyle =0
+            BorderLineStyle =0
+            Width =850
+            Height =850
+            BorderColor =8421376
+        End
+        Begin Line
+            BorderLineStyle =0
+            SpecialEffect =3
+            Width =1701
+            BorderColor =8388608
+        End
+        Begin Image
+            SpecialEffect =3
+            BackStyle =0
+            OldBorderStyle =0
+            BorderLineStyle =0
+            PictureAlignment =2
+            Width =1701
+            Height =1701
+        End
+        Begin CommandButton
+            Width =1701
+            Height =283
+            FontSize =8
+            ForeColor =128
+            FontName ="Arial"
+            BorderLineStyle =0
+        End
+        Begin OptionButton
+            SpecialEffect =3
+            BorderWidth =3
+            BorderLineStyle =0
+            LabelX =230
+            LabelY =-30
+            BorderColor =8421376
+        End
+        Begin CheckBox
+            SpecialEffect =3
+            BorderWidth =3
+            BorderLineStyle =0
+            LabelX =230
+            LabelY =-30
+            BorderColor =8421376
+        End
+        Begin OptionGroup
+            SpecialEffect =3
+            BackStyle =1
+            BorderWidth =3
+            BorderLineStyle =0
+            Width =1701
+            Height =1701
+            BackColor =12632256
+            BorderColor =8421376
+        End
+        Begin BoundObjectFrame
+            SpecialEffect =3
+            BorderLineStyle =0
+            Width =4536
+            Height =2835
+            LabelX =-1701
+            BorderColor =12632256
+            BackColor =12632256
+        End
+        Begin TextBox
+            FELineBreak = NotDefault
+            SpecialEffect =3
+            BorderWidth =3
+            BorderLineStyle =0
+            Width =1701
+            LabelX =-1701
+            BackColor =12632256
+            BorderColor =8421376
+            FontName ="Arial"
+            AsianLineBreak =255
+        End
+        Begin ListBox
+            SpecialEffect =3
+            BorderWidth =3
+            BorderLineStyle =0
+            Width =1701
+            Height =1417
+            LabelX =-1701
+            BackColor =12632256
+            BorderColor =8421376
+            FontName ="Arial"
+        End
+        Begin ComboBox
+            SpecialEffect =3
+            BorderWidth =3
+            BorderLineStyle =0
+            Width =1701
+            LabelX =-1701
+            BackColor =12632256
+            BorderColor =8421376
+            FontName ="Arial"
+        End
+        Begin Subform
+            SpecialEffect =3
+            BorderWidth =3
+            BorderLineStyle =0
+            Width =1701
+            Height =1701
+            BorderColor =8421376
+        End
+        Begin UnboundObjectFrame
+            SpecialEffect =3
+            BackStyle =0
+            OldBorderStyle =1
+            BorderWidth =3
+            Width =4536
+            Height =2835
+            BorderColor =8421376
+        End
+        Begin ToggleButton
+            Width =283
+            Height =283
+            FontSize =8
+            FontWeight =400
+            ForeColor =128
+            FontName ="Arial"
+            BorderLineStyle =0
+        End
+        Begin Tab
+            BackStyle =0
+            Width =5103
+            Height =3402
+            FontWeight =700
+            FontName ="Arial"
+            BorderLineStyle =0
+        End
+        Begin Page
+            Width =1701
+            Height =1701
+            BorderColor =10921638
+            GridlineColor =10921638
+            BorderThemeColorIndex =1
+            BorderShade =65.0
+            GridlineThemeColorIndex =1
+            GridlineShade =65.0
+        End
+        Begin FormHeader
+            Height =0
+            BackColor =-2147483633
+            Name ="FormHeader"
+            GUID = Begin
+                0x474bbbe2f5a6d311a2db00e0ed018dec
+            End
+        End
+        Begin Section
+            CanGrow = NotDefault
+            Height =9300
+            Name ="Detail"
+            GUID = Begin
+                0x484bbbe2f5a6d311a2db00e0ed018dec
+            End
+            Begin
+                Begin TextBox
+                    OverlapFlags =85
+                    TextAlign =2
+                    BackStyle =0
+                    Left =453
+                    Top =1247
+                    Width =516
+                    Height =270
+                    ColumnWidth =1701
+                    TabIndex =23
+                    Name ="firma_ID"
+                    ControlSource ="firma_ID"
+                    GUID = Begin
+                        0x4a4bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                End
+                Begin TextBox
+                    SpecialEffect =5
+                    BorderWidth =0
+                    OverlapFlags =85
+                    BackStyle =0
+                    Left =453
+                    Top =793
+                    Width =3015
+                    Height =345
+                    ColumnWidth =2310
+                    FontSize =11
+                    FontWeight =700
+                    BackColor =16777215
+                    Name ="firma"
+                    ControlSource ="firma"
+                    ControlTipText ="Firma"
+                    GUID = Begin
+                        0x4d4bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                End
+                Begin TextBox
+                    EnterKeyBehavior = NotDefault
+                    ScrollBars =2
+                    SpecialEffect =5
+                    BorderWidth =0
+                    OverlapFlags =85
+                    BackStyle =0
+                    Left =453
+                    Top =1814
+                    Width =10320
+                    Height =285
+                    ColumnWidth =3000
+                    TabIndex =5
+                    BackColor =16777215
+                    BorderColor =0
+                    Name ="omschrijving"
+                    ControlSource ="omschrijving"
+                    ControlTipText ="Ommschrijving"
+                    GUID = Begin
+                        0x4e4bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                End
+                Begin TextBox
+                    SpecialEffect =5
+                    BorderWidth =0
+                    OverlapFlags =93
+                    BackStyle =0
+                    Left =1544
+                    Top =2664
+                    Width =2175
+                    Height =270
+                    ColumnWidth =2310
+                    TabIndex =6
+                    BackColor =16777215
+                    BorderColor =0
+                    Name ="straat"
+                    ControlSource ="straat"
+                    GUID = Begin
+                        0x504bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =575
+                            Top =2664
+                            Width =906
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="straat_Label"
+                            Caption ="Straat"
+                            GUID = Begin
+                                0x4f4bbbe2f5a6d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin TextBox
+                    SpecialEffect =5
+                    BorderWidth =0
+                    OverlapFlags =95
+                    BackStyle =0
+                    Left =1544
+                    Top =2947
+                    Width =2175
+                    Height =270
+                    ColumnWidth =1185
+                    TabIndex =7
+                    BackColor =16777215
+                    BorderColor =0
+                    Name ="bus"
+                    ControlSource ="bus"
+                    GUID = Begin
+                        0x524bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =575
+                            Top =2949
+                            Width =906
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="bus_Label"
+                            Caption ="Bus"
+                            GUID = Begin
+                                0x514bbbe2f5a6d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin TextBox
+                    SpecialEffect =5
+                    BorderWidth =0
+                    OverlapFlags =95
+                    BackStyle =0
+                    Left =1544
+                    Top =3231
+                    Width =2175
+                    Height =270
+                    ColumnWidth =960
+                    TabIndex =8
+                    BackColor =16777215
+                    Name ="postcode"
+                    ControlSource ="postcode"
+                    GUID = Begin
+                        0x544bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =575
+                            Top =3235
+                            Width =906
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="postcode_Label"
+                            Caption ="Postcode"
+                            GUID = Begin
+                                0x534bbbe2f5a6d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin TextBox
+                    SpecialEffect =5
+                    BorderWidth =0
+                    OverlapFlags =87
+                    BackStyle =0
+                    Left =1537
+                    Top =3514
+                    Width =2175
+                    Height =270
+                    ColumnWidth =2310
+                    TabIndex =9
+                    BackColor =16777215
+                    BorderColor =0
+                    Name ="gemeente"
+                    ControlSource ="gemeente"
+                    GUID = Begin
+                        0x564bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =575
+                            Top =3527
+                            Width =915
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="gemeente_Label"
+                            Caption ="Gemeente"
+                            GUID = Begin
+                                0x554bbbe2f5a6d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin TextBox
+                    SpecialEffect =5
+                    BorderWidth =0
+                    OverlapFlags =93
+                    BackStyle =0
+                    Left =4993
+                    Top =3233
+                    Width =1470
+                    Height =270
+                    ColumnWidth =1560
+                    TabIndex =12
+                    BackColor =16777215
+                    BorderColor =0
+                    Name ="telefoon1"
+                    ControlSource ="telefoon1"
+                    GUID = Begin
+                        0x5c4bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =4204
+                            Top =3231
+                            Width =690
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="telefoon1_Label"
+                            Caption ="Tel 1"
+                            GUID = Begin
+                                0x5b4bbbe2f5a6d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin TextBox
+                    SpecialEffect =5
+                    BorderWidth =0
+                    OverlapFlags =87
+                    BackStyle =0
+                    Left =4993
+                    Top =3514
+                    Width =1470
+                    Height =270
+                    ColumnWidth =1560
+                    TabIndex =13
+                    BackColor =16777215
+                    BorderColor =0
+                    Name ="telefoon2"
+                    ControlSource ="telefoon2"
+                    GUID = Begin
+                        0x5e4bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =4204
+                            Top =3517
+                            Width =690
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="telefoon2_Label"
+                            Caption ="Tel 2"
+                            GUID = Begin
+                                0x5d4bbbe2f5a6d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin TextBox
+                    SpecialEffect =5
+                    BorderWidth =0
+                    OverlapFlags =93
+                    BackStyle =0
+                    Left =8169
+                    Top =2664
+                    Width =2595
+                    Height =270
+                    ColumnWidth =1560
+                    TabIndex =14
+                    BackColor =16777215
+                    BorderColor =0
+                    Name ="fax"
+                    ControlSource ="fax"
+                    GUID = Begin
+                        0x604bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =7379
+                            Top =2668
+                            Width =681
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="fax_Label"
+                            Caption ="Fax"
+                            GUID = Begin
+                                0x5f4bbbe2f5a6d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin TextBox
+                    SpecialEffect =5
+                    BorderWidth =0
+                    OverlapFlags =85
+                    BackStyle =0
+                    Left =8160
+                    Top =3514
+                    Width =2610
+                    Height =270
+                    ColumnWidth =2310
+                    TabIndex =15
+                    BackColor =16777215
+                    BorderColor =0
+                    Name ="emailadres"
+                    ControlSource ="emailadres"
+                    GUID = Begin
+                        0x624bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =7370
+                            Top =3520
+                            Width =681
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="emailadres_Label"
+                            Caption ="e-mail"
+                            GUID = Begin
+                                0x614bbbe2f5a6d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin Label
+                    FontUnderline = NotDefault
+                    SpecialEffect =0
+                    BackStyle =0
+                    OverlapFlags =85
+                    Left =165
+                    Top =120
+                    Width =2295
+                    Height =450
+                    FontSize =14
+                    ForeColor =0
+                    Name ="Label40"
+                    Caption ="Firma algemeen"
+                    GUID = Begin
+                        0x634bbbe2f5a6d311a2db00e0ed018dec
+                    End
+                End
+                Begin CommandButton
+                    OverlapFlags =93
+                    Left =9921
+                    Top =4251
+                    Width =337
+                    Height =276
+                    TabIndex =24
+                    Name ="knop contact openen"
+                    Caption ="Contact"
+                    OnClick ="firma"
+                    PictureData = Begin
+                        0x2800000010000000100000000100040000000000800000000000000000000000 ,
+                        0x0000000000000000000000000000800000800000008080008000000080008000 ,
+                        0x8080000080808000c0c0c0000000ff00c0c0c00000ffff00ff000000c0c0c000 ,
+                        0xffff0000ffffff00dadadadadadadadaadadadadadadadaddadadadadadadada ,
+                        0xa000adad000dadad08e80ad08e80dada0e8e0da0e8e0adad0fe80ad0fe80dada ,
+                        0x0efe0da0efe0adad7000d00a0007dadaa0adadadada0ada0da0ada0adada0ad0 ,
+                        0xada0ad0dadada0a0dada0a0adadada0aadada0adadadadaddadadadadadadada ,
+                        0xadadadadadadadad000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x00000000
+                    End
+                    ObjectPalette = Begin
+                        0x000301000000000000000000
+                    End
+                    EventProcPrefix ="knop_contact_openen"
+                    ControlTipText ="Formulier contact openen"
+                    GUID = Begin
+                        0x644bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                    LayoutCachedLeft =9921
+                    LayoutCachedTop =4251
+                    LayoutCachedWidth =10258
+                    LayoutCachedHeight =4527
+                    WebImagePaddingLeft =2
+                    WebImagePaddingTop =2
+                    WebImagePaddingRight =1
+                    WebImagePaddingBottom =1
+                    Overlaps =1
+                End
+                Begin TextBox
+                    EnterKeyBehavior = NotDefault
+                    ScrollBars =2
+                    SpecialEffect =5
+                    OldBorderStyle =0
+                    BorderWidth =0
+                    OverlapFlags =223
+                    BackStyle =0
+                    Left =1712
+                    Top =4024
+                    Width =9057
+                    Height =285
+                    ColumnWidth =3000
+                    TabIndex =18
+                    BackColor =16777215
+                    Name ="Opmerkingen"
+                    ControlSource ="Opmerkingen"
+                    ControlTipText ="Algemene opmerkingen"
+                    GUID = Begin
+                        0x654bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                End
+                Begin Label
+                    FontUnderline = NotDefault
+                    SpecialEffect =0
+                    BackStyle =0
+                    OverlapFlags =85
+                    Left =7370
+                    Top =113
+                    Width =2295
+                    Height =450
+                    FontSize =14
+                    ForeColor =0
+                    Name ="Label52"
+                    Caption ="Firma algemeen"
+                    GUID = Begin
+                        0x684bbbe2f5a6d311a2db00e0ed018dec
+                    End
+                End
+                Begin Label
+                    FontUnderline = NotDefault
+                    SpecialEffect =0
+                    OverlapFlags =85
+                    Left =3628
+                    Top =113
+                    Width =2295
+                    Height =450
+                    FontSize =14
+                    BackColor =16777215
+                    BorderColor =4210752
+                    ForeColor =8421504
+                    Name ="Label53"
+                    Caption ="Firma algemeen"
+                    GUID = Begin
+                        0x694bbbe2f5a6d311a2db00e0ed018dec
+                    End
+                End
+                Begin TextBox
+                    SpecialEffect =5
+                    OldBorderStyle =0
+                    BorderWidth =0
+                    OverlapFlags =87
+                    BackStyle =0
+                    Left =8160
+                    Top =2948
+                    Width =2616
+                    TabIndex =16
+                    BackColor =16777215
+                    Name ="btw_nummer"
+                    ControlSource ="btw_nummer"
+                    GUID = Begin
+                        0x724bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =93
+                            Left =7370
+                            Top =2948
+                            Width =690
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="Label56"
+                            Caption ="BTW nr"
+                            GUID = Begin
+                                0x734bbbe2f5a6d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin TextBox
+                    SpecialEffect =5
+                    OldBorderStyle =0
+                    BorderWidth =0
+                    OverlapFlags =85
+                    BackStyle =0
+                    Left =8159
+                    Top =3232
+                    Width =2616
+                    TabIndex =17
+                    BackColor =16777215
+                    Name ="banknummer"
+                    ControlSource ="internet"
+                    GUID = Begin
+                        0x744bbbe2f5a6d311a2db00e0ed018dec
+                    End
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =87
+                            Left =7370
+                            Top =3231
+                            Width =735
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="Label57"
+                            Caption ="Internet"
+                            GUID = Begin
+                                0x754bbbe2f5a6d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin Label
+                    SpecialEffect =0
+                    OverlapFlags =87
+                    Left =575
+                    Top =4024
+                    Width =1124
+                    Height =283
+                    BackColor =16777215
+                    ForeColor =0
+                    Name ="Label63"
+                    Caption ="Opmerking"
+                    GUID = Begin
+                        0x7c4bbbe2f5a6d311a2db00e0ed018dec
+                    End
+                End
+                Begin ComboBox
+                    SpecialEffect =5
+                    BorderWidth =0
+                    OverlapFlags =85
+                    BackStyle =0
+                    ColumnCount =2
+                    ListWidth =1440
+                    Left =4988
+                    Top =850
+                    Width =1536
+                    Height =286
+                    FontSize =10
+                    TabIndex =1
+                    BackColor =16777215
+                    BorderColor =0
+                    ColumnInfo ="\"\";\"\";\"\";\"\";\"10\";\"40\""
+                    GUID = Begin
+                        0x7d4bbbe2f5a6d311a2db00e0ed018dec
+                    End
+                    Name ="Combo64"
+                    ControlSource ="status"
+                    RowSourceType ="Table/Query"
+                    RowSource ="SELECT Z_status.Status_ID, Z_status.Status FROM Z_status; "
+                    ColumnWidths ="0;1440"
+                    BaseInfo ="\"SELECT Z_status.Status_ID, Z_status.Status FROM Z_status; \";\"Z_status\";\"\""
+                        ";\"Status_ID\";\"Status\";\"Z_status$PrimaryKey\""
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =4195
+                            Top =850
+                            Width =690
+                            Height =270
+                            FontSize =10
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="cbb_status_Label"
+                            Caption ="Status"
+                            GUID = Begin
+                                0x7e4bbbe2f5a6d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin ComboBox
+                    SpecialEffect =5
+                    OldBorderStyle =0
+                    OverlapFlags =85
+                    BackStyle =0
+                    ColumnCount =2
+                    ListWidth =2250
+                    Left =1823
+                    Top =4647
+                    Width =2154
+                    Height =280
+                    TabIndex =19
+                    BackColor =16777215
+                    ColumnInfo ="\"\";\"\";\"\";\"\";\"10\";\"100\""
+                    GUID = Begin
+                        0x43a15cd0bfa7d311a2db00e0ed018dec
+                    End
+                    Name ="Combo81"
+                    ControlSource ="Systeem1"
+                    RowSourceType ="Table/Query"
+                    RowSource ="Systeem_Select"
+                    ColumnWidths ="0;2250"
+                    BaseInfo ="\"Systeem_Select\";\"Z_systeem\";\"\";\"systeem\";\"omschrijving\";\"Z_systeem$P"
+                        "rimaryKey\""
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =575
+                            Top =4647
+                            Width =960
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="cmbb_systeem1_Label"
+                            Caption ="Systeem 1"
+                            GUID = Begin
+                                0x44a15cd0bfa7d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin ComboBox
+                    SpecialEffect =5
+                    OldBorderStyle =0
+                    OverlapFlags =85
+                    BackStyle =0
+                    ColumnCount =2
+                    ListWidth =2085
+                    Left =1816
+                    Top =5044
+                    Width =2154
+                    Height =280
+                    TabIndex =20
+                    BackColor =16777215
+                    ColumnInfo ="\"\";\"\";\"\";\"\";\"10\";\"100\""
+                    GUID = Begin
+                        0x56a15cd0bfa7d311a2db00e0ed018dec
+                    End
+                    Name ="Combo83"
+                    ControlSource ="Systeem2"
+                    RowSourceType ="Table/Query"
+                    RowSource ="Systeem_Select"
+                    ColumnWidths ="0;2085"
+                    BaseInfo ="\"Systeem_Select\";\"Z_systeem\";\"\";\"systeem\";\"omschrijving\";\"Z_systeem$P"
+                        "rimaryKey\""
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =575
+                            Top =5044
+                            Width =960
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="cmbb_systeem2_Label"
+                            Caption ="Systeem 2"
+                            GUID = Begin
+                                0x57a15cd0bfa7d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin ComboBox
+                    SpecialEffect =5
+                    OldBorderStyle =0
+                    OverlapFlags =85
+                    BackStyle =0
+                    ColumnCount =2
+                    ListWidth =1950
+                    Left =1816
+                    Top =5441
+                    Width =2154
+                    Height =280
+                    TabIndex =21
+                    BackColor =16777215
+                    ColumnInfo ="\"\";\"\";\"\";\"\";\"10\";\"100\""
+                    GUID = Begin
+                        0x58a15cd0bfa7d311a2db00e0ed018dec
+                    End
+                    Name ="Combo85"
+                    ControlSource ="Systeem3"
+                    RowSourceType ="Table/Query"
+                    RowSource ="Systeem_Select"
+                    ColumnWidths ="0;1950"
+                    BaseInfo ="\"Systeem_Select\";\"Z_systeem\";\"\";\"systeem\";\"omschrijving\";\"Z_systeem$P"
+                        "rimaryKey\""
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =575
+                            Top =5441
+                            Width =960
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="cmbb_systeem3_Label"
+                            Caption ="Systeem 3"
+                            GUID = Begin
+                                0x59a15cd0bfa7d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin CommandButton
+                    OverlapFlags =85
+                    Left =10658
+                    Top =56
+                    Width =576
+                    Height =336
+                    TabIndex =22
+                    Name ="cmdCloseForm"
+                    Caption ="Stop"
+                    OnClick ="[Event Procedure]"
+                    PictureData = Begin
+                        0x2800000020000000200000000100080000000000000400000000000000000000 ,
+                        0x0000000000000000000000000000bf0000bf000000bfbf00bf000000bf00bf00 ,
+                        0xbfbf0000c0c0c000c0dcc000f0c8a40000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0xf0fbff00a4a0a000808080000000ff0000ff000000ffff00ff000000ff00ff00 ,
+                        0xffff0000ffffff00070707070707070707070707070707070707070707070707 ,
+                        0x0707070707070707070707070707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f907 ,
+                        0x07070707070707070707070707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0x070707070707070707070707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0xf907070707070707070707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0xf9f90707070707070707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0xf9f9f9070707070707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0xf9f9f9f907070707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0xf9f9f9f9f90707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0xf9f9f9f9f9f9070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0xf9f9f9f9f9f9f90707f9f9f9f9fffffffff9f9f9fffff9f9f9fffffffff9f9ff ,
+                        0xfff9f9f9f9f9f90707f9f9f9fffff9f9fffff9f9fffff9f9fffff9f9fffff9ff ,
+                        0xfff9f9f9f9f9f90707f9f9f9fffff9f9fffff9f9fffff9f9fffff9f9fffff9ff ,
+                        0xfff9f9f9f9f9f90707f9f9f9f9f9f9f9fffff9f9fffff9f9fffff9f9fffff9ff ,
+                        0xfff9f9f9f9f9f90707f9f9f9f9f9f9fffffff9f9fffff9f9fffff9f9fffff9ff ,
+                        0xfff9f9f9f9f9f90707f9f9f9f9f9fffffff9f9f9fffff9f9fffff9f9fffff9ff ,
+                        0xfffffffff9f9f90707f9f9f9f9fffffff9f9f9f9fffff9f9fffff9f9fffff9ff ,
+                        0xfff9f9fffff9f90707f9f9f9fffffff9f9f9f9f9fffff9f9fffff9f9fffff9ff ,
+                        0xfff9f9fffff9f90707f9f9f9fffff9f9f9f9f9f9fffff9f9fffff9f9fffff9ff ,
+                        0xfff9f9fffff9f90707f9f9f9fffff9f9fffff9f9fffff9f9fffff9f9fffff9ff ,
+                        0xfff9f9fffff9f90707f9f9f9fffff9f9fffff9f9fffff9f9fffff9f9fffff9ff ,
+                        0xfff9f9fffff9f90707f9f9f9f9fffffffff9fffffffffffff9fffffffff9f9ff ,
+                        0xfffffffff9f9f90707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0xf9f9f9f9f9f9f9070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0xf9f9f9f9f9f90707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0xf9f9f9f9f907070707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0xf9f9f9f9070707070707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0xf9f9f90707070707070707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0xf9f907070707070707070707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0xf9070707070707070707070707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9 ,
+                        0x0707070707070707070707070707070707f9f9f9f9f9f9f9f9f9f9f9f9f9f907 ,
+                        0x0707070707070707070707070707070707070707070707070707070707070707 ,
+                        0x0707070707070707000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000
+                    End
+                    ObjectPalette = Begin
+                        0x000301000000000000000000
+                    End
+                    ControlTipText ="Formulier sluiten"
+                    GUID = Begin
+                        0x5ca15cd0bfa7d311a2db00e0ed018dec
+                    End
+
+                    LayoutCachedLeft =10658
+                    LayoutCachedTop =56
+                    LayoutCachedWidth =11234
+                    LayoutCachedHeight =392
+                    WebImagePaddingLeft =2
+                    WebImagePaddingTop =2
+                    WebImagePaddingRight =1
+                    WebImagePaddingBottom =1
+                End
+                Begin ComboBox
+                    SpecialEffect =5
+                    OldBorderStyle =0
+                    OverlapFlags =93
+                    BackStyle =0
+                    ColumnCount =2
+                    ListWidth =1440
+                    Left =4941
+                    Top =2664
+                    Width =1661
+                    Height =272
+                    TabIndex =10
+                    BackColor =16777215
+                    ColumnInfo ="\"\";\"\";\"\";\"\";\"10\";\"60\""
+                    GUID = Begin
+                        0x87a15cd0bfa7d311a2db00e0ed018dec
+                    End
+                    Name ="cmbb_land"
+                    ControlSource ="land"
+                    RowSourceType ="Table/Query"
+                    RowSource ="Land_Select"
+                    ColumnWidths ="0;1440"
+                    DefaultValue ="1"
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =93
+                            Left =4204
+                            Top =2664
+                            Width =675
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="cmbb_land_Label"
+                            Caption ="Land"
+                            GUID = Begin
+                                0x88a15cd0bfa7d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin ComboBox
+                    SpecialEffect =5
+                    OldBorderStyle =0
+                    OverlapFlags =87
+                    BackStyle =0
+                    ColumnCount =2
+                    ListWidth =1440
+                    Left =4941
+                    Top =2947
+                    Width =1665
+                    Height =271
+                    TabIndex =11
+                    BackColor =16777215
+                    ColumnInfo ="\"\";\"\";\"\";\"\";\"10\";\"60\""
+                    GUID = Begin
+                        0x89a15cd0bfa7d311a2db00e0ed018dec
+                    End
+                    Name ="Combo90"
+                    ControlSource ="taal"
+                    RowSourceType ="Table/Query"
+                    RowSource ="Taal_Select"
+                    ColumnWidths ="0;1440"
+                    DefaultValue ="1"
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =87
+                            Left =4204
+                            Top =2947
+                            Width =675
+                            Height =270
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="Taal_Label"
+                            Caption ="Taal"
+                            GUID = Begin
+                                0x8aa15cd0bfa7d311a2db00e0ed018dec
+                            End
+                        End
+                    End
+                End
+                Begin TextBox
+                    SpecialEffect =5
+                    OverlapFlags =85
+                    TextAlign =2
+                    Left =8333
+                    Top =623
+                    Width =1986
+                    TabIndex =2
+                    BackColor =16777215
+                    Name ="Datum"
+                    ControlSource ="Datum"
+                    Format ="Short Date"
+                    StatusBarText ="Datum aanmaak steekkart"
+                    DefaultValue ="=Now()"
+                    GUID = Begin
+                        0xf88f2ba245b1d311a69efb8024b6e77f
+                    End
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =7426
+                            Top =623
+                            Width =735
+                            Height =210
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="Bijschrift92"
+                            Caption ="Datum"
+                            GUID = Begin
+                                0xfa8f2ba245b1d311a69efb8024b6e77f
+                            End
+                        End
+                    End
+                End
+                Begin ComboBox
+                    SpecialEffect =5
+                    OverlapFlags =85
+                    ColumnCount =2
+                    ListWidth =1440
+                    Left =8339
+                    Top =963
+                    Width =1974
+                    Height =226
+                    TabIndex =3
+                    BackColor =16777215
+                    ColumnInfo ="\"\";\"\";\"\";\"\";\"10\";\"50\""
+                    GUID = Begin
+                        0x10902ba245b1d311a69efb8024b6e77f
+                    End
+                    Name ="Keuzelijst met invoervak94"
+                    ControlSource ="categorie"
+                    RowSourceType ="Table/Query"
+                    RowSource ="Categorie_Select"
+                    ColumnWidths ="0;1440"
+                    EventProcPrefix ="Keuzelijst_met_invoervak94"
+                    BaseInfo ="\"Categorie_Select\";\"Z_categorie\";\"\";\"Categorie\";\"Omschrijving\";\"Z_cat"
+                        "egorie$PrimaryKey\""
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =7426
+                            Top =963
+                            Width =855
+                            Height =210
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="cmbb_categorie_Etiket"
+                            Caption ="Categorie"
+                            GUID = Begin
+                                0x11902ba245b1d311a69efb8024b6e77f
+                            End
+                        End
+                    End
+                End
+                Begin CommandButton
+                    OverlapFlags =85
+                    Left =4045
+                    Top =4648
+                    Width =336
+                    Height =291
+                    TabIndex =25
+                    Name ="Knop112"
+                    Caption ="Knop112"
+                    OnClick ="algemeen.tabel systeem openen"
+                    PictureData = Begin
+                        0x2800000010000000100000000100040000000000800000000000000000000000 ,
+                        0x0000000000000000000000000000800000800000008080008000000080008000 ,
+                        0x8080000080808000c0c0c0000000ff00c0c0c00000ffff00ff000000c0c0c000 ,
+                        0xffff0000ffffff00dadadadadadadadaadadadadadadadaddadadadadadadada ,
+                        0xa000adad000dadad08e80ad08e80dada0e8e0da0e8e0adad0fe80ad0fe80dada ,
+                        0x0efe0da0efe0adad7000d00a0007dadaa0adadadada0ada0da0ada0adada0ad0 ,
+                        0xada0ad0dadada0a0dada0a0adadada0aadada0adadadadaddadadadadadadada ,
+                        0xadadadadadadadad000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x00000000
+                    End
+                    ObjectPalette = Begin
+                        0x000301000000000000000000
+                    End
+                    ControlTipText ="tabel systeem openen"
+                    GUID = Begin
+                        0xf5d2d95e14b2d311a69eaf122ae67172
+                    End
+
+                    WebImagePaddingLeft =2
+                    WebImagePaddingTop =2
+                    WebImagePaddingRight =1
+                    WebImagePaddingBottom =1
+                End
+                Begin CommandButton
+                    OverlapFlags =85
+                    Left =10431
+                    Top =1303
+                    Width =337
+                    Height =277
+                    TabIndex =26
+                    Name ="Knop113"
+                    Caption ="Knop113"
+                    OnClick ="algemeen.tabel bron openen"
+                    PictureData = Begin
+                        0x2800000010000000100000000100040000000000800000000000000000000000 ,
+                        0x0000000000000000000000000000800000800000008080008000000080008000 ,
+                        0x8080000080808000c0c0c0000000ff00c0c0c00000ffff00ff000000c0c0c000 ,
+                        0xffff0000ffffff00dadadadadadadadaadadadadadadadaddadadadadadadada ,
+                        0xa000adad000dadad08e80ad08e80dada0e8e0da0e8e0adad0fe80ad0fe80dada ,
+                        0x0efe0da0efe0adad7000d00a0007dadaa0adadadada0ada0da0ada0adada0ad0 ,
+                        0xada0ad0dadada0a0dada0a0adadada0aadada0adadadadaddadadadadadadada ,
+                        0xadadadadadadadad000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x00000000000000000000000000000000000000000000000000000000
+                    End
+                    ObjectPalette = Begin
+                        0x000301000000000000000000
+                    End
+                    GUID = Begin
+                        0x05d3d95e14b2d311a69eaf122ae67172
+                    End
+
+                    WebImagePaddingLeft =2
+                    WebImagePaddingTop =2
+                    WebImagePaddingRight =1
+                    WebImagePaddingBottom =1
+                End
+                Begin CommandButton
+                    OverlapFlags =85
+                    Left =10431
+                    Top =907
+                    Width =337
+                    Height =277
+                    TabIndex =27
+                    Name ="Knop114"
+                    Caption ="Knop114"
+                    OnClick ="algemeen.tabel categorie openen"
+                    PictureData = Begin
+                        0x2800000010000000100000000100040000000000800000000000000000000000 ,
+                        0x0000000000000000000000000000800000800000008080008000000080008000 ,
+                        0x8080000080808000c0c0c0000000ff00c0c0c00000ffff00ff000000c0c0c000 ,
+                        0xffff0000ffffff00dadadadadadadadaadadadadadadadaddadadadadadadada ,
+                        0xa000adad000dadad08e80ad08e80dada0e8e0da0e8e0adad0fe80ad0fe80dada ,
+                        0x0efe0da0efe0adad7000d00a0007dadaa0adadadada0ada0da0ada0adada0ad0 ,
+                        0xada0ad0dadada0a0dada0a0adadada0aadada0adadadadaddadadadadadadada ,
+                        0xadadadadadadadad000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x0000000000000000000000000000000000000000000000000000000000000000 ,
+                        0x00000000
+                    End
+                    ObjectPalette = Begin
+                        0x000301000000000000000000
+                    End
+                    ControlTipText ="Tabel categorie openen"
+                    GUID = Begin
+                        0x07d3d95e14b2d311a69eaf122ae67172
+                    End
+
+                    WebImagePaddingLeft =2
+                    WebImagePaddingTop =2
+                    WebImagePaddingRight =1
+                    WebImagePaddingBottom =1
+                End
+                Begin ComboBox
+                    SpecialEffect =5
+                    OldBorderStyle =0
+                    OverlapFlags =85
+                    BackStyle =0
+                    ColumnCount =2
+                    ListWidth =1440
+                    Left =8330
+                    Top =1314
+                    Width =1984
+                    Height =226
+                    TabIndex =4
+                    BackColor =16777215
+                    ColumnInfo ="\"\";\"\";\"\";\"\";\"10\";\"100\""
+                    GUID = Begin
+                        0x12d3d95e14b2d311a69eaf122ae67172
+                    End
+                    Name ="Keuzelijst met invoervak115"
+                    ControlSource ="bron"
+                    RowSourceType ="Table/Query"
+                    RowSource ="Bron_Select"
+                    ColumnWidths ="0;1440"
+                    EventProcPrefix ="Keuzelijst_met_invoervak115"
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            OverlapFlags =85
+                            Left =7426
+                            Top =1303
+                            Width =840
+                            Height =240
+                            BackColor =16777215
+                            ForeColor =0
+                            Name ="Bron_Etiket"
+                            Caption ="Bron"
+                            GUID = Begin
+                                0x13d3d95e14b2d311a69eaf122ae67172
+                            End
+                        End
+                    End
+                End
+                Begin TextBox
+                    SpecialEffect =5
+                    OldBorderStyle =0
+                    BorderWidth =0
+                    OverlapFlags =85
+                    BackStyle =0
+                    Left =5045
+                    Top =1190
+                    Width =1476
+                    Height =300
+                    FontSize =10
+                    TabIndex =28
+                    Name ="sleutelwoord"
+                    ControlSource ="sleutelwoord"
+                    StatusBarText ="Sleutelwoord laat toe om firmas op te zoeken geklasseerd per type"
+                    GUID = Begin
+                        0x2fbba22bcc13724da749a375d7ad01f7
+                    End
+
+                    Begin
+                        Begin Label
+                            SpecialEffect =0
+                            BackStyle =0
+                            OverlapFlags =85
+                            Left =4195
+                            Top =1247
+                            Width =795
+                            Height =270
+                            FontSize =10
+                            ForeColor =0
+                            Name ="Bijschrift189"
+                            Caption ="Sleutel"
+                            GUID = Begin
+                                0x0ad1da30810214488f4e324e837f1d20
+                            End
+                        End
+                    End
+                End
+                Begin Tab
+                    OverlapFlags =85
+                    Left =564
+                    Top =5892
+                    Width =12186
+                    Height =3408
+                    TabIndex =29
+                    Name ="tabPages"
+                    GUID = Begin
+                        0xa586d137b352aa4ea13658bfa59d4767
+                    End
+
+                    LayoutCachedLeft =564
+                    LayoutCachedTop =5892
+                    LayoutCachedWidth =12750
+                    LayoutCachedHeight =9300
+                    Begin
+                        Begin Page
+                            OverlapFlags =87
+                            Left =705
+                            Top =6315
+                            Width =11910
+                            Height =2850
+                            Name ="pagContacts"
+                            Caption ="Contacten"
+                            GUID = Begin
+                                0x820da8e35cfbaf4da68db18e4f4a9b41
+                            End
+                            LayoutCachedLeft =705
+                            LayoutCachedTop =6315
+                            LayoutCachedWidth =12615
+                            LayoutCachedHeight =9165
+                            WebImagePaddingLeft =2
+                            WebImagePaddingTop =2
+                            WebImagePaddingRight =2
+                            WebImagePaddingBottom =2
+                            Begin
+                                Begin Subform
+                                    OverlapFlags =215
+                                    Left =752
+                                    Top =6332
+                                    Width =11711
+                                    Height =2677
+                                    Name ="subContacts"
+                                    SourceObject ="Form.Firma_Edit_Contacts"
+                                    LinkChildFields ="firma_ID"
+                                    LinkMasterFields ="firma_ID"
+                                    GUID = Begin
+                                        0xf1aebabe1ea6c044beb234c22f7f71f3
+                                    End
+
+                                    LayoutCachedLeft =752
+                                    LayoutCachedTop =6332
+                                    LayoutCachedWidth =12463
+                                    LayoutCachedHeight =9009
+                                End
+                            End
+                        End
+                        Begin Page
+                            OverlapFlags =215
+                            Left =705
+                            Top =6315
+                            Width =11910
+                            Height =2850
+                            Name ="pagFaktuurUit"
+                            Caption ="Faktuur Uit"
+                            GUID = Begin
+                                0x00e131d8f938c54e94bd47bc1dff7024
+                            End
+                            LayoutCachedLeft =705
+                            LayoutCachedTop =6315
+                            LayoutCachedWidth =12615
+                            LayoutCachedHeight =9165
+                            WebImagePaddingLeft =2
+                            WebImagePaddingTop =2
+                            WebImagePaddingRight =2
+                            WebImagePaddingBottom =2
+                            Begin
+                                Begin Subform
+                                    OverlapFlags =247
+                                    Left =752
+                                    Top =6332
+                                    Width =11711
+                                    Height =2677
+                                    Name ="subFaktuurUit"
+                                    SourceObject ="Form.Firma_Edit_FaktuurUits"
+                                    LinkChildFields ="firma_ID"
+                                    LinkMasterFields ="firma_ID"
+                                    GUID = Begin
+                                        0x9407fd9fdf60d244a2a20a1bfb7e2751
+                                    End
+
+                                    LayoutCachedLeft =752
+                                    LayoutCachedTop =6332
+                                    LayoutCachedWidth =12463
+                                    LayoutCachedHeight =9009
+                                End
+                            End
+                        End
+                    End
+                End
+            End
+        End
+        Begin FormFooter
+            Height =0
+            BackColor =-2147483633
+            Name ="FormFooter"
+            GUID = Begin
+                0x6b4bbbe2f5a6d311a2db00e0ed018dec
+            End
+        End
+    End
+End

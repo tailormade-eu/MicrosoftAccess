@@ -1,0 +1,78 @@
+CodeBehindForm
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Private Sub Detail_Print(Cancel As Integer, PrintCount As Integer)
+    'If Me.CalculationTypeId = 1 Then
+    '    Me.subLines.Report.txtLineAmount.ControlSource = "=[Quantity]/100*[SalesPrice]"
+    'End If
+End Sub
+
+Private Sub PageHeaderSection_Format(Cancel As Integer, FormatCount As Integer)
+    Me.boxCompany.BackColor = HexToAccessColor(Color1)
+    Me.boxHeader.BackColor = HexToAccessColor(Color2)
+    Me.boxAmount.BackColor = HexToAccessColor(Color2)
+    Me.subLines.Report.Section("Detail").AlternateBackColor = HexToAccessColor(Color1)
+    Me.InvoiceMemo.visible = Not omStringFunctions.IsNullOrEmpty(Me.InvoiceMemo)
+    Me.ReferalInvoiceNumber.visible = Not omStringFunctions.IsNullOrEmpty(Me.ReferalInvoiceNumber)
+End Sub
+
+Private Sub Report_Current()
+    If Me.Surcharge2 = 0 Then
+        Me.lblExtraCharge.visible = False
+        Me.txtExtraCharge.visible = False
+    Else
+        Me.lblExtraCharge.visible = True
+        Me.txtExtraCharge.visible = True
+        If Me.Surcharge2CalculationTypeId = 6 Then
+            Me.lblExtraCharge.Caption = Me.Surcharge2Name & " (" & [txtTotalQuantity] & "/100x" & Format([Surcharge2], "0.00") & ")"
+            Me.txtExtraCharge.ControlSource = "=[txtTotalQuantity]/100*[Surcharge2]"
+        Else
+            Me.lblExtraCharge.Caption = "ExtraCharge"
+            Me.txtExtraCharge.ControlSource = ""
+        End If
+    End If
+End Sub
+
+Private Sub Report_Load()
+    'If Me.CalculationTypeId = 1 Then
+    '    Me.subLines.Report.txtLineAmount.ControlSource = "=[Quantity]/100*[SalesPrice]"
+    'End If
+End Sub
+
+Private Sub Report_Open(Cancel As Integer)
+    'If Me.CalculationTypeId = 1 Then
+    '    Me.subLines.Report.txtLineAmount.ControlSource = "=[Quantity]/100*[SalesPrice]"
+    'End If
+End Sub
+
+Function HexToAccessColor(hexColor As String) As Long
+    Dim r As Integer, g As Integer, b As Integer
+    
+    ' Strip leading # if present
+    If Left(hexColor, 1) = "#" Then hexColor = Mid(hexColor, 2)
+    
+    ' Extract components
+    r = CInt("&H" & Mid(hexColor, 1, 2))
+    g = CInt("&H" & Mid(hexColor, 3, 2))
+    b = CInt("&H" & Mid(hexColor, 5, 2))
+    
+    ' Return as Access BackColor
+    HexToAccessColor = RGB(r, g, b)
+End Function
+
+Private Sub ReportFooter_Format(Cancel As Integer, FormatCount As Integer)
+Dim sVisible As Boolean
+    sVisible = Nz(Me.Surcharge1, 0) <> 0
+    Me.Surcharge1Name.visible = sVisible
+    Me.Surcharge1.visible = sVisible
+    Me.Surcharge1CalculationTypeCode.visible = sVisible
+    sVisible = Nz(Me.Surcharge2, 0) <> 0
+    Me.Surcharge2Name.visible = sVisible
+    Me.Surcharge2.visible = sVisible
+    Me.Surcharge2CalculationTypeCode.visible = sVisible
+End Sub

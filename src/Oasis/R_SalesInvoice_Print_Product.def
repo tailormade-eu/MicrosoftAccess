@@ -1,0 +1,52 @@
+CodeBehindForm
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Private Sub Detail_Print(Cancel As Integer, PrintCount As Integer)
+    'If Me.CalculationTypeId = 1 Then
+    '    Me.subLines.Report.txtLineAmount.ControlSource = "=[Quantity]/100*[SalesPrice]"
+    'End If
+End Sub
+
+Private Sub PageHeaderSection_Format(Cancel As Integer, FormatCount As Integer)
+    Me.boxCompany.BackColor = HexToAccessColor(Color1)
+    Me.boxHeader.BackColor = HexToAccessColor(Color2)
+    Me.subLines.Report.Section("Detail").AlternateBackColor = HexToAccessColor(Color1)
+    Me.InvoiceMemo.visible = Not omStringFunctions.IsNullOrEmpty(Me.InvoiceMemo)
+    Me.ReferalInvoiceNumber.visible = Not omStringFunctions.IsNullOrEmpty(Me.ReferalInvoiceNumber)
+End Sub
+
+Private Sub Report_Load()
+    'If Me.CalculationTypeId = 1 Then
+    '    Me.subLines.Report.txtLineAmount.ControlSource = "=[Quantity]/100*[SalesPrice]"
+    'End If
+End Sub
+
+Private Sub Report_Open(Cancel As Integer)
+    'If Me.CalculationTypeId = 1 Then
+    '    Me.subLines.Report.txtLineAmount.ControlSource = "=[Quantity]/100*[SalesPrice]"
+    'End If
+End Sub
+
+Function HexToAccessColor(hexColor As String) As Long
+    Dim r As Integer, g As Integer, b As Integer
+    
+    ' Strip leading # if present
+    If Left(hexColor, 1) = "#" Then hexColor = Mid(hexColor, 2)
+    
+    ' Extract components
+    r = CInt("&H" & Mid(hexColor, 1, 2))
+    g = CInt("&H" & Mid(hexColor, 3, 2))
+    b = CInt("&H" & Mid(hexColor, 5, 2))
+    
+    ' Return as Access BackColor
+    HexToAccessColor = RGB(r, g, b)
+End Function
+
+Private Sub ReportFooter_Format(Cancel As Integer, FormatCount As Integer)
+    Me.txtCalculationTypeName.visible = False
+End Sub

@@ -1,0 +1,81 @@
+CodeBehindForm
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Private Sub cmbSysteem_AfterUpdate()
+    Form_Search
+End Sub
+
+Private Sub cmbSysteemClear_Click()
+    Me.cmbSysteem = Null
+    Form_Search
+End Sub
+
+Private Sub cmbTypeBuiging_AfterUpdate()
+    Form_Search
+End Sub
+
+Private Sub cmbTypeBuigingClear_Click()
+    Me.cmbTypeBuiging = Null
+    Form_Search
+End Sub
+
+Private Sub cmdNew_Click()
+    DoCmd.OpenForm "Profiel_Edit", datamode:=acFormAdd, windowMode:=acDialog
+    Form_Search
+End Sub
+
+Private Sub Form_Load()
+    Form_Search
+End Sub
+
+Private Sub Form_Open(Cancel As Integer)
+    Form_Search
+End Sub
+
+Private Sub Form_Search()
+Dim strWhere As String
+Dim strSql As String
+
+    'If omStringFunctions.NotIsNullOrEmpty(Me.txtSearch) Then
+    '    strWhere = Replace("(p.[profielnummer] LIKE '*" & txtSearch & "' OR p.[omschrijving] LIKE '*" & txtSearch & "')", "'", Chr(34))
+    'End If
+    'If omStringFunctions.NotIsIdNullOrZero(Me.cmbTypeBuiging) Then
+    '    strWhere = omSQLFunctions.WhereAnd(strWhere, "p.[type buiging]=" & Me.cmbTypeBuiging)
+    'End If
+    'If omStringFunctions.NotIsIdNullOrZero(Me.cmbSysteem) Then
+    '    strWhere = omSQLFunctions.WhereAnd(strWhere, "p.[systeem]=" & Me.cmbSysteem)
+    'End If
+    'strSql = "SELECT p.profiel_ID, p.Datum, p.profielnummer, p.[type buiging], z_type_buiging.omschrijving AS TypeBuigingOmschrijving, p.Gammist, p.Reeks, p.systeem, Z_systeem.omschrijving AS Systeemomschrijving, p.Bouwdiepte, p.Hoogte, p.omschrijving, p.tekening, p.prijs, p.Lengte, p.datum_tarief, p.bovenrol, rol_boven.code AS bovenrolCode, p.onderrol, rol_onder.code AS onderrolCode, p.[Tangent point], p.[maximum buiging], p.[steunstrook boven], p.[steunstrook onder], p.[opmerkingen systeem 1], p.[Tangent point 2], p.[maximum buiging 2], p.[steunstrook boven 2], p.[steunstrook onder 2], p.[opmerkingen systeem 2], p.[flens bovenrol buiten], p.[flens bovenrol binnen], p.[flens onderrol buiten], p.[flens onderrol binnen], p.[flens bovenrol buiten 2], p.[flens bovenrol binnen 2], p.[flens onderrol buiten 2], p.[flens onderrol binnen 2], p.[bovenrol 2], p.[onderrol 2] "
+    'strSql = strSql & "FROM (((profielen AS p LEFT JOIN z_type_buiging ON p.[type buiging] = z_type_buiging.nummer) LEFT JOIN Z_systeem ON p.systeem = Z_systeem.systeem) LEFT JOIN rol_boven ON p.bovenrol = rol_boven.ID_bovenrol) LEFT JOIN rol_onder ON p.onderrol = rol_onder.ID_onderrol "
+    'If omStringFunctions.NotIsNullOrEmpty(strWhere) Then
+    '    strSql = strSql & "WHERE " & strWhere & " "
+    'End If
+    'strSql = strSql & "ORDER BY p.profielnummer, p.Gammist"
+    'CurrentDb.QueryDefs("Profiel_List_Search").SQL = strSql
+    'CurrentDb.QueryDefs.Refresh
+    Me.subSearch.Requery
+End Sub
+
+Private Sub cmdClearSearch_Click()
+    Me.txtSearch = Null
+    Form_Search
+End Sub
+
+Private Sub imgProfile_DblClick(Cancel As Integer)
+    If Me.imgProfile.Picture = "(none)" Then
+        Exit Sub
+    End If
+End Sub
+
+Private Sub txtSearch_AfterUpdate()
+    Form_Search
+End Sub
+
+Public Sub UpdatePicture(profielId As Long)
+    Me.imgProfile.Picture = ProfielFunctions.GetProfielPicturePath(profielId)
+End Sub

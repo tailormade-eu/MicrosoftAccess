@@ -1,0 +1,20 @@
+Option Compare Database
+Option Explicit
+
+Public Function GetSalesInvoiceFilename(SalesInvoiceId As Long) As String
+Dim path As String
+Dim rs As New ADODB.Recordset
+
+    rs.Open "SELECT * FROM SalesInvoice_Print WHERE Id=" & SalesInvoiceId, CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
+    If Not rs.EOF Then
+        path = omDefaultFunctions.GetSystemDefault("InvoicePath")
+        path = gFso.BuildPath(path, rs("OrganisationName"))
+        path = gFso.BuildPath(path, year(rs("InvoiceDate")))
+        path = omFileFunctions.MakeFilenameSafe(path)
+        omFileFunctions.CreateFolderPath (path)
+        path = gFso.BuildPath(path, SalesInvoiceId & ".pdf")
+    End If
+    rs.Close
+    Set rs = Nothing
+    GetSalesInvoiceFilename = path
+End Function

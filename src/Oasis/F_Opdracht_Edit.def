@@ -1,0 +1,97 @@
+CodeBehindForm
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+Private Sub knp_rptopdracht_Click()
+On Error GoTo Err_knp_rptopdracht_Click
+
+    Dim stDocName As String
+
+    stDocName = "rpt_planning"
+    DoCmd.OpenReport stDocName, acPreview
+
+Exit_knp_rptopdracht_Click:
+    Exit Sub
+
+Err_knp_rptopdracht_Click:
+    MsgBox Err.Description
+    Resume Exit_knp_rptopdracht_Click
+    
+End Sub
+
+Private Sub cmdStop_Click()
+    omFormFunctions.CloseForm Me
+End Sub
+
+Private Sub knp_planning_Click()
+On Error GoTo Err_knp_planning_Click
+
+    Dim stDocName As String
+
+    stDocName = "rpt_pl4_nieuw"
+    DoCmd.OpenReport stDocName, acPreview
+
+Exit_knp_planning_Click:
+    Exit Sub
+
+Err_knp_planning_Click:
+    MsgBox Err.Description
+    Resume Exit_knp_planning_Click
+    
+End Sub
+Private Sub Knop88_Click()
+On Error GoTo Err_Knop88_Click
+
+    Dim stDocName As String
+    Dim stLinkCriteria As String
+
+    stDocName = "frm_eigen_referentie"
+    
+    stLinkCriteria = "[firma_ID]=" & Me![firma_ID]
+    DoCmd.OpenForm stDocName, , , stLinkCriteria
+
+Exit_Knop88_Click:
+    Exit Sub
+
+Err_Knop88_Click:
+    MsgBox Err.Description
+    Resume Exit_Knop88_Click
+    
+End Sub
+
+Private Sub Map_Selecteren_Click()
+
+On Error GoTo Map_Selecteren_Err
+   
+   Dim strFilter As String
+   Dim lngflags As Long
+   Dim varFileName As Variant
+
+   strFilter = "pdf-bestanden (*.pdf)" & vbNullChar & "*.pdf"
+    
+   lngflags = tscFNPathMustExist Or tscFNFileMustExist Or tscFNHideReadOnly
+   
+   varFileName = tsGetFileFromUser( _
+   fOpenFile:=True, _
+   strFilter:=strFilter, _
+   rlngflags:=lngflags, _
+   strDialogTitle:="Selecteer een pdf-bestand ...")
+   
+   If IsNull(varFileName) Then
+    Else
+      Me![PDF bestand] = varFileName & "#" & varFileName & "#"
+   End If
+
+Map_Selecteren_End:
+   On Error GoTo 0
+   Exit Sub
+
+Map_Selecteren_Err:
+   Beep
+   MsgBox Err.Description, , "Error: " & Err.Number & " in file"
+   Resume Map_Selecteren_End
+
+End Sub

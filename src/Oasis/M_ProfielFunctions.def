@@ -1,0 +1,21 @@
+Option Compare Database
+Option Explicit
+
+Public Function GetProfielPicturePath(profielId As Long) As String
+Dim path As String
+Dim rs As New ADODB.Recordset
+Dim file As String
+
+    path = omDefaultFunctions.GetSystemDefault("ProfielPictures")
+    rs.Open "SELECT ProfielNummer FROM Profielen WHERE profiel_ID=" & profielId, CurrentProject.connection, adOpenForwardOnly, adLockReadOnly
+    If Not rs.EOF Then
+        file = Nz(rs("ProfielNummer"), "")
+    End If
+    rs.Close
+    Set rs = Nothing
+    file = gFso.BuildPath(path, file & ".jpg")
+    If gFso.FileExists(file) = False Then
+        file = "(none)"
+    End If
+    GetProfielPicturePath = file
+End Function

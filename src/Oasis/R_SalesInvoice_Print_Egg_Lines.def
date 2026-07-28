@@ -1,0 +1,18 @@
+CodeBehindForm
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+Private Sub Report_Open(Cancel As Integer)
+    If Me.Parent.Report.CalculationTypeId = 1 Then
+        Me.txtLineAmount.ControlSource = "=[Quantity]/100*[SalesPrice]"
+        Me.txtTotalAmount.ControlSource = "=SUM([Quantity]/100*[SalesPrice])"
+    Else
+        Me.txtLineAmount.ControlSource = "=[TotalWeight]*[SalesPrice]"
+        Me.txtTotalAmount.ControlSource = "=SUM([TotalWeight]*[SalesPrice])"
+        'Me.txtLineAmount.ControlSource = "LineAmount"
+        'Me.txtTotalAmount.ControlSource = "=SUM([LineAmount])"
+    End If
+End Sub

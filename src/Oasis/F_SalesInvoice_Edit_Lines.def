@@ -1,0 +1,101 @@
+CodeBehindForm
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Compare Database
+Option Explicit
+
+Private Sub Quantity_AfterUpdate()
+    omControlFunctions.SetDefaultValue Me.Quantity
+    UpdateFields
+End Sub
+
+Private Sub SalesPrice_AfterUpdate()
+    omControlFunctions.SetDefaultValue Me.SalesPrice
+End Sub
+
+Private Sub TotalWeight_AfterUpdate()
+    omControlFunctions.SetDefaultValue Me.TotalWeight
+    UpdateFields
+End Sub
+
+Private Sub UpdateFields()
+Dim lCalculationTypeId As Long
+Dim lCalculationType1Id As Long
+Dim lCalculationType2Id As Long
+Dim lProductGroupId As Long
+Dim dblAverageWeight As Double
+Dim lYearWeek As Long
+Dim dblSalesPrice As Double
+Dim dblLineAmount As Double
+Dim iRound As Integer
+
+    If Me.Quantity = 0 Then
+        Me.AverageWeight = 0
+    ElseIf Me.Parent.Form.ProductTypeId = 1 Then
+        lCalculationTypeId = Me.Parent.Form.CalculationTypeId
+        lCalculationType1Id = Nz(Me.Parent.Form.Surcharge1CalculationTypeId, 0)
+        If lCalculationTypeId <> lCalculationType1Id Then
+            MsgBox "CalculationTypes are not ok", vbExclamation
+            Exit Sub
+        End If
+        lCalculationType2Id = Nz(Me.Parent.Form.Surcharge2CalculationTypeId, 0)
+        lProductGroupId = IIf(omStringFunctions.IsNullOrEmpty(Me.ProductId.Column(2)), 0, Me.ProductId.Column(2))
+        dblAverageWeight = Me.TotalWeight / Me.Quantity * 1000
+        lYearWeek = year(Me.Parent.Form.InvoiceDate) * 100 + Nz(Me.Parent.Form.WeekNumber, 0)
+        dblAverageWeight = dblAverageWeight
+        dblSalesPrice = GetPrice(lCalculationTypeId, lProductGroupId, lYearWeek, dblAverageWeight)
+        If lCalculationTypeId = 1 Then
+            dblSalesPrice = dblSalesPrice + Nz(Me.Parent.Form.Surcharge1, 0)
+            If lCalculationType2Id = 1 Then
+                dblSalesPrice = dblSalesPrice + Nz(Me.Parent.Form.Surcharge2, 0)
+            End If
+            iRound = 2
+        ElseIf lCalculationTypeId = 2 And Me.TotalWeight <> 0 Then
+            dblSalesPrice = dblSalesPrice + Nz(Me.Parent.Form.Surcharge1, 0)
+            'dblLineAmount = (dblSalesPrice * Me.TotalWeight + (Me.Quantity / 100 * Nz(Me.Parent.Form.Surcharge2, 0)))
+            'dblSalesPrice = dblLineAmount / Me.TotalWeight
+            iRound = 2
+        End If
+        'If AverageWeight = 0 Then
+            Me.AverageWeight = Round(dblAverageWeight, 2)
+            Me.SalesPrice = Round(dblSalesPrice, iRound)
+            'Me.LineAmount = Round(dblLineAmount, 2)
+        'End If
+    End If
+End Sub
+
+Private Function GetPrice(CalculationTypeId As Long, ProductGroupId, YearWeek As Long, AverageWeight As Double) As Double
+Dim Id As Long
+Dim rsP As New ADODB.Recordset
+Dim rsPDB As New ADODB.Recordset
+Dim rsPDA As New ADODB.Recordset
+Dim sizeDiff As Double
+Dim priceDiff As Double
+
+    rsP.Open "SELECT * FROM CalculationTypePrices WHERE CalculationTypeId=" & CalculationTypeId & " AND ProductGroupId=" & ProductGroupId & " AND YearWeek=" & YearWeek, CurrentProject.connection, adOpenForwardOnly
+    If Not rsP.EOF Then
+        If CalculationTypeId = 2 Then
+            GetPrice = rsP("SalesPrice")
+        ElseIf CalculationTypeId = 1 Then
+            rsPDB.Open "SELECT * FROM CalculationTypePriceDetails WHERE CalculationTypePriceId=" & rsP("Id") & " AND Size<=" & Replace(CStr(AverageWeight), ",", ".") & " ORDER BY Size DESC", CurrentProject.connection, adOpenForwardOnly
+            rsPDA.Open "SELECT * FROM CalculationTypePriceDetails WHERE CalculationTypePriceId=" & rsP("Id") & " AND Size>=" & Replace(CStr(AverageWeight), ",", ".") & " ORDER BY Size ASC", CurrentProject.connection, adOpenForwardOnly
+            If rsPDB.EOF Then
+                GetPrice = rsPDA("SalesPrice")
+            ElseIf rsPDA.EOF Then
+                GetPrice = rsPDB("SalesPrice")
+            Else
+                sizeDiff = rsPDA("Size") - rsPDB("Size")
+                priceDiff = rsPDA("SalesPrice") - rsPDB("SalesPrice")
+                GetPrice = rsPDB("SalesPrice") + (priceDiff / sizeDiff * (AverageWeight - rsPDB("Size")))
+            End If
+            rsPDA.Close
+            Set rsPDA = Nothing
+            rsPDB.Close
+            Set rsPDB = Nothing
+        End If
+    End If
+    rsP.Close
+    Set rsP = Nothing
+End Function
