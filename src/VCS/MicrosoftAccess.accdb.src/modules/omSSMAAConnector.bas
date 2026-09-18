@@ -14,6 +14,11 @@ Dim omCSLastUsed As New omConnectionString
 Dim m_ServerCon_ODBC As String
 Dim m_ServerCon As String
 Const cSSMAABAckup = "SSMAA_Backup_"
+' Een database-object voor de hele koppelronde (LinkUsingSSMA). Elke CurrentDb maakt een nieuw
+' object en leest de tabellenlijst opnieuw in; per tabel meermaals = bijna kwadratisch bij
+' ~1000 tabellen. Idee overgenomen van client (omSSMAAConnector, Dirk 16/09/2026: 50 s -> 5 s).
+Dim mDbKoppelen As dao.Database
+
 
 ' Module Name   SSMAAConnector
 '
@@ -25,6 +30,19 @@ Const cSSMAABAckup = "SSMAA_Backup_"
 ' Description
 '   the function Link will relink all tables which are defined in the table SSMAA_ODBC_Tables
 '   the function CreateTable will create the tabel SSMAA_ODBC_Tables
+
+Private Function KoppelDb() As dao.Database
+    If mDbKoppelen Is Nothing Then
+        Set KoppelDb = CurrentDb
+    Else
+        Set KoppelDb = mDbKoppelen
+    End If
+End Function
+
+Private Function KoppelTabelBestaat(tableName As String) As Boolean
+    On Error Resume Next
+    KoppelTabelBestaat = (KoppelDb.TableDefs(tableName).Name = tableName)
+End Function
 
 Public Function LocalCon() As ADODB.connection
   Set LocalCon = CurrentProject.connection
@@ -52,6 +70,12 @@ Dim rs As New ADODB.Recordset
 Dim rsODBC As New ADODB.Recordset
 Dim strSQLTable As String
 Dim strDatabaseName As String
+Dim sngStart As Single
+Dim lngAantal As Long
+
+    On Error GoTo Opruimen
+    Set mDbKoppelen = CurrentDb
+    sngStart = Timer
 
     'If IsNullOrEmptyOrZero(GetSQLNCLIVersion()) And ConnectionType = ConnectionTypes.SQLNCLI Then
     '    MsgBox "No SQL Server Native driver is installed"
@@ -78,15 +102,15 @@ Dim strDatabaseName As String
         rs.filter = "Name='" & rsODBC("ODBCTable") & "'"
         If Not rs.EOF Then
             If rs("Type") = 1 Then
-                DoCmd.Rename cSSMAABAckup & rsODBC("ODBCTable"), acTable, rsODBC("ODBCTable")
+                mDbKoppelen.TableDefs(rsODBC("ODBCTable")).Name = cSSMAABAckup & rsODBC("ODBCTable")
             ElseIf Not alwaysUpdate Then
                 omCSTest.ParseByTableName rsODBC("ODBCTable")
                 If Not (omCSTest.HasPasswordSaved Or omCSTest.HasTrustedConnection) Or (omCSTest.Server <> rsODBC("SQLServer")) Or (omCSTest.Database <> rsODBC("SQLDatabase")) Or (omCSTest.IsSQLNCLIConnection And omCSTest.SQLNCLIVersion <> GetSQLNCLIVersion) Then
-                    DoCmd.DeleteObject acTable, rsODBC("ODBCTable")
+                    mDbKoppelen.TableDefs.Delete rsODBC("ODBCTable")
                 End If
             End If
         End If
-        If Not omMSAccessFunctions.TableExists(rsODBC("ODBCTable")) Then
+        If Not KoppelTabelBestaat(rsODBC("ODBCTable")) Then
             strSQLTable = "[SQLTableOwner][SQLTable]"
             strSQLTable = Replace(strSQLTable, "[SQLTableOwner]", IIf(Len(rsODBC("SQLTableOwner")) > 0, rsODBC("SQLTableOwner") & ".", ""))
             strSQLTable = Replace(strSQLTable, "[SQLTable]", rsODBC("SQLTable"))
@@ -99,6 +123,7 @@ Dim strDatabaseName As String
                 strDatabaseName = "ODBC;" & strDatabaseName
             End If
             AttachTable strDatabaseName, strSQLTable, rsODBC("ODBCTable"), SavePassword:=SavePassword, primaryKey:=Nz(rsODBC("PrimaryKey"), "")
+            lngAantal = lngAantal + 1
         End If
         'Debug.Print Now
         DoEvents
@@ -110,7 +135,10 @@ Dim strDatabaseName As String
     rs.Close
     Set rsODBC = Nothing
     Set rs = Nothing
-    Debug.Print Now
+    Debug.Print Now; " LinkUsingSSMA: "; lngAantal; " tabellen gekoppeld in "; Format(Timer - sngStart, "0.0"); " s"
+Opruimen:
+    Set mDbKoppelen = Nothing
+    If Err.Number <> 0 Then Err.Raise Err.Number, Err.Source, Err.Description
 End Function
 
 Public Sub LinkTableViewUsingSSMA(existingTableName As String, toLinkName As String, Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional)
@@ -162,10 +190,12 @@ End Sub
 'Sub AttachedTable(ConnectionString As String, sourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False)
 Sub AttachTable(ConnectionString As String, SourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False, Optional primaryKey As String = "")
 Dim tbl As dao.TableDef
+Dim db As dao.Database
 
     On Error Resume Next
+    Set db = KoppelDb
     'Create a new TableDef object.
-    Set tbl = CurrentDb.CreateTableDef(DestinationTable)
+    Set tbl = db.CreateTableDef(DestinationTable)
     'Set the properties to create the link
     tbl.Connect = ConnectionString
     tbl.SourceTableName = SourceTable
@@ -174,12 +204,12 @@ Dim tbl As dao.TableDef
         tbl.Attributes = tbl.Attributes + dbAttachSavePWD
     End If
     'Add the new table to the database.
-    CurrentDb.TableDefs.Append tbl
+    db.TableDefs.Append tbl
     Set tbl = Nothing
 
     If NotIsNullOrEmpty(primaryKey) Then
-        CurrentDb.TableDefs.Refresh
-        CurrentDb.Execute "CREATE UNIQUE INDEX PK_" & DestinationTable & " ON " & DestinationTable & " (" & primaryKey & ") WITH PRIMARY"
+        db.TableDefs.Refresh
+        db.Execute "CREATE UNIQUE INDEX PK_" & DestinationTable & " ON " & DestinationTable & " (" & primaryKey & ") WITH PRIMARY"
     End If
 End Sub
 
@@ -463,14 +493,14 @@ Dim td As TableDef
     strWhere = omSQLFunctions.WhereAnd(strWhere, IIf(AttachOnly, "[Attach] = True", ""))
     rsODBC.Open omSQLFunctions.BuildSQL("SELECT * FROM SSMAA_ODBC_Tables", whereClause:=strWhere), LocalCon, adOpenForwardOnly
     Do Until rsODBC.EOF
-        If CurrentDb.TableDefs(rsODBC("ODBCTable")).Connect <> "" Then
-            CurrentDb.TableDefs.Delete rsODBC("ODBCTable")
+        If KoppelDb.TableDefs(rsODBC("ODBCTable")).Connect <> "" Then
+            KoppelDb.TableDefs.Delete rsODBC("ODBCTable")
         End If
         rsODBC.MoveNext
     Loop
     rsODBC.Close
     Set rsODBC = Nothing
-    CurrentDb.TableDefs.Refresh
+    KoppelDb.TableDefs.Refresh
     'Debug.Print Now
 End Sub
 
