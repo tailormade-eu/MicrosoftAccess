@@ -99,6 +99,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `CopyTable(databaseFilename As String, TableSource As String, TableDestination As String) As Variant` — Copy table between Access databases
 
 ## omDateFunctions.bas
+- `IsDateInPast(dt As Variant) As Boolean` — Empty/Null = False; otherwise Date > dt (day-granularity, no time-of-day)
 - `GetMonthYearEndDate(ByVal Month As Long, ByVal year As Long) As Date` — Get last day of month/year
 - `GetPeriodEndDate(ByVal Period As Long) As Date` — Get end date from YYYYMM period
 - `GetMonthYearStartDate(ByVal Month As Long, ByVal year As Long) As Date` — Get first day of month/year

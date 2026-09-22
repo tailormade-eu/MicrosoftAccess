@@ -2,6 +2,17 @@
 Option Compare Database
 Option Explicit
 
+' Leeg (Null/Empty) = niet voorbij, geeft False. Vergelijking op dagdatum (Date), geen tijdstip.
+' Let op: VBA's And is niet kortsluitend zoals C#'s && — daarom de Null-check apart, niet in
+' één samengestelde And-uitdrukking (zie CM-guideline implementation/vba).
+Public Function IsDateInPast(dt As Variant) As Boolean
+    If omStringFunctions.NotIsNullOrEmpty(dt) Then
+        IsDateInPast = (Date > dt)
+    Else
+        IsDateInPast = False
+    End If
+End Function
+
 Public Function GetMonthYearEndDate(ByVal Month As Long, ByVal year As Long) As Date
     GetMonthYearEndDate = DateAdd("m", 1, GetMonthYearStartDate(Month, year)) - 1
 End Function
