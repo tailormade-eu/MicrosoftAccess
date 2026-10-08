@@ -13,6 +13,7 @@ Public queryName As String
 Public tableName As String
 Public IsODBC As Boolean
 Private m_Driver As String
+Private m_EncryptType As EncryptTypes   ' encrypt type the cached connection string was built for
 Public IsSQLNCLIConnection As Boolean
 Public SQLNCLIVersion As Integer
 Public IsSQLODBCConnection As Boolean
@@ -39,6 +40,7 @@ Public Enum ConnectionTypes
     SQLODBC_Deprecated = 3
     MySQL = 4
     SQLODBC = 5
+    SQLAuto = 6     ' newest installed ODBC driver, then older ones, then Native Client, then the legacy "SQL Server" driver
 End Enum
 Public Enum EncryptTypes
     EncryptOptional = 0
@@ -89,6 +91,11 @@ Dim s As Variant
         If InStr(1, s, "PWD=") > 0 Then PWD = Mid(s, 5)
         If s = "Trusted_Connection=yes" Then HasTrustedConnection = True
     Next
+    ' SERVER=host,port: tested, this is the only form every SQL Server driver honours (PORT= is ignored)
+    If InStr(1, Server, ",") > 0 Then
+        If Len(port) = 0 Then port = Mid(Server, InStr(1, Server, ",") + 1)
+        Server = Left(Server, InStr(1, Server, ",") - 1)
+    End If
 End Sub
 Private Sub Class_Initialize()
     queryName = ""
@@ -108,6 +115,7 @@ Private Sub Class_Initialize()
     Description = ""
     Group = ""
     CurrentConnectionType = ConnectionTypes.SQLNCLI
+    m_EncryptType = EncryptTypes.EncryptOptional
 End Sub
 Public Function GetValue(Name As String) As Variant
     Select Case Name
@@ -175,9 +183,9 @@ Public Property Let Driver(ByVal vNewValue As String)
 End Property
 
 Public Function GetConnectionString(databaseName As String, serverName As String, ODBCConnection As Boolean, Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional DSN As Variant = "", Optional Login As Variant = "", Optional Password As Variant = "", Optional GroupName As String = "", Optional portNr As Variant = "", Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional) As String
-    If Not (GroupName = "") And GroupName = Me.Group Then
+    If Not (GroupName = "") And GroupName = Me.Group And encryptType = m_EncryptType Then
         GetConnectionString = Me.CurrentConnectionString
-    ElseIf databaseName = Me.Database And serverName = Me.Server And ODBCConnection = Me.IsODBC And ConnectionType = Me.CurrentConnectionType And DSN = Me.DSN And Login = Me.UID And Password = Me.PWD Then
+    ElseIf databaseName = Me.Database And serverName = Me.Server And ODBCConnection = Me.IsODBC And ConnectionType = Me.CurrentConnectionType And DSN = Me.DSN And Login = Me.UID And Password = Me.PWD And Nz(portNr, "") = Me.port And encryptType = m_EncryptType Then
         GetConnectionString = Me.CurrentConnectionString
     Else
         Class_Initialize
@@ -190,11 +198,14 @@ Public Function GetConnectionString(databaseName As String, serverName As String
         Me.UID = Nz(Login, "")
         Me.PWD = Nz(Password, "")
         Me.port = Nz(portNr, "")
+        m_EncryptType = encryptType
         GetConnectionString = Me.GetCurrentConnectionStringForType(Me.IsODBC, Me.CurrentConnectionType, encryptType)
     End If
 End Function
 
 Public Function GetCurrentConnectionStringForType(ODBCConnection As Boolean, Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional) As String
+    Dim autoDriver As String
+    Dim serverText As String
 
     ' Default we will  use SQLOBDC if SQLNCLI is installed then it will be overwritten
     CurrentConnectionString = "DRIVER=SQL Server;SERVER=[SQLServer];DATABASE=[SQLDatabase];"
@@ -205,6 +216,13 @@ Public Function GetCurrentConnectionStringForType(ODBCConnection As Boolean, Opt
         CurrentConnectionString = "Driver={MySQL ODBC 3.51 Driver};SERVER=[SQLServer];DATABASE=[SQLDatabase];"
     ElseIf ConnectionType = ConnectionTypes.LocalDSN Then
         CurrentConnectionString = "DSN=[DSN];"
+    ElseIf ConnectionType = ConnectionTypes.SQLAuto Then
+        ' newest installed driver (registry), probed once per server/database/login, then older ones, then the legacy driver
+        autoDriver = omSSMAAConnector.GetAutoDriver(Me.Server, Me.Database, Me.UID, Me.PWD, Me.port, encryptType)
+        If Len(autoDriver) = 0 Then
+            Err.Raise vbObjectError + 513, "omConnectionString", "No installed SQL Server driver can provide the requested encryption (type " & encryptType & ") for server " & Me.Server
+        End If
+        CurrentConnectionString = "DRIVER={" & autoDriver & "};SERVER=[SQLServer];DATABASE=[SQLDatabase];" & GetEncryptStringForDriver(autoDriver, encryptType)
     ElseIf GetSQLODBCVersion <> 0 And ConnectionType = SQLODBC Then
         If Not ODBCConnection Then
           CurrentConnectionString = "DRIVER=ODBC Driver " & cSQLODBCVersion & " for SQL Server;SERVER=[SQLServer];DATABASE=[SQLDatabase];" & GetEncryptString(encryptType)
@@ -212,7 +230,7 @@ Public Function GetCurrentConnectionStringForType(ODBCConnection As Boolean, Opt
           'CurrentConnectionString = "Provider=msodbcsql" & cSQLODBCVersion & ";SERVER=[SQLServer];DATABASE=[SQLDatabase];" & GetEncryptString(encryptType)
           CurrentConnectionString = "DRIVER=ODBC Driver " & cSQLODBCVersion & " for SQL Server;SERVER=[SQLServer];DATABASE=[SQLDatabase];" & GetEncryptString(encryptType)
         End If
-    ElseIf GetSQLNCLIVersion <> 0 And ConnectionType = Default Then
+    ElseIf GetSQLNCLIVersion <> 0 And ConnectionType = SQLNCLI Then
         If Not ODBCConnection Then
           CurrentConnectionString = "DRIVER={SQL Server Native Client " & cSQLNCLIVersion & ".0};SERVER=[SQLServer];DATABASE=[SQLDatabase];"
         Else
@@ -220,10 +238,14 @@ Public Function GetCurrentConnectionStringForType(ODBCConnection As Boolean, Opt
         End If
     End If
 
-    CurrentConnectionString = Replace(CurrentConnectionString, "[SQLServer]", Me.Server)
+    ' Tested on SQL Server, ODBC Driver 17 and 18: PORT= is ignored (a wrong port still connects to 1433), SERVER=host,port is honoured.
+    ' Only the MySQL driver takes PORT=.
+    serverText = Me.Server
+    If NotIsNullOrEmpty(Me.port) And ConnectionType <> MySQL And InStr(1, Me.Server, ",") = 0 Then serverText = serverText & "," & Me.port
+    CurrentConnectionString = Replace(CurrentConnectionString, "[SQLServer]", serverText)
     CurrentConnectionString = Replace(CurrentConnectionString, "[SQLDatabase]", Me.Database)
     CurrentConnectionString = Replace(CurrentConnectionString, "[DSN]", Nz(DSN, ""))
-    If NotIsNullOrEmpty(Me.port) Then
+    If NotIsNullOrEmpty(Me.port) And ConnectionType = MySQL Then
         CurrentConnectionString = CurrentConnectionString & "PORT=" & Me.port & ";"
     End If
     If NotIsNullOrEmpty(Me.UID) Then
@@ -238,15 +260,9 @@ Public Function GetCurrentConnectionStringForType(ODBCConnection As Boolean, Opt
 End Function
 
 Public Static Function GetEncryptString(encrypType As EncryptTypes) As String
-    Select Case encrypType
-        Case EncryptTypes.EncryptOptional
-            GetEncryptString = "Encrypt=optional;"
-        Case EncryptTypes.EncryptMandatory
-            GetEncryptString = "Encrypt=yes;TrustServerCertificate=yes;"
-        Case EncryptTypes.EncryptStrict
-            GetEncryptString = "Encrypt=strict;"
-        Case Else
-            ' Optional: handle unexpected values
-            GetEncryptString = "Encrypt=optional;" ' or raise an error
-    End Select
+    GetEncryptString = omSSMAAConnector.EncryptTextForType(encrypType)
+End Function
+
+Public Function GetEncryptStringForDriver(ByVal driverName As String, ByVal encryptType As EncryptTypes) As String
+    GetEncryptStringForDriver = omSSMAAConnector.EncryptTextForDriver(driverName, encryptType)
 End Function

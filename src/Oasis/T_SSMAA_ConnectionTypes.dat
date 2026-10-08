@@ -25,5 +25,9 @@
       <field_0 name="Id" binary="false" null="false" value="5"/>
       <field_1 name="Name" binary="false" null="false">SQLODBC</field_1>
     </Row_6>
+    <Row_7>
+      <field_0 name="Id" binary="false" null="false" value="6"/>
+      <field_1 name="Name" binary="false" null="false">SQLAuto</field_1>
+    </Row_7>
   </Rows>
 </TableData>
