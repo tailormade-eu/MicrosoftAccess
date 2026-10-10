@@ -1,6 +1,6 @@
-Attribute VB_Name = "omExcelApplicationFunctions"
+﻿Attribute VB_Name = "omExcelApplicationFunctions"
 Option Explicit
-'@lib 2026-10-10 sha=f3ca7335
+'@lib 2026-10-10 sha=369439da
 
 ' Switch the Excel application settings off for a fast macro and back on afterwards, plus a full recalculation and SheetExists.
 
@@ -43,6 +43,12 @@ End Sub
 Public Sub ResetStatusBar()
     Application.DisplayStatusBar = True
     Application.StatusBar = False
+End Sub
+
+' Screen updating and events on (enabled = True) or off (enabled = False), nothing else; the light version of Disable/EnableAllApplicationEvents.
+Public Sub ApplicationEventMode(enabled As Boolean)
+    Application.ScreenUpdating = enabled
+    Application.EnableEvents = enabled
 End Sub
 
 ' Automatic calculation, waits for asynchronous queries (for example CUBEVALUE) and recalculates everything.
