@@ -1,1 +1,4 @@
 omExcelApplicationFunctions;2026-10-10;f3ca7335
+omExcelRecordsetFunctions;2026-10-10;867eba45
+omExcelVBAFunctions;2026-10-10;058187aa
+omOnedriveFunctions;2026-10-10;9ecdfb19
