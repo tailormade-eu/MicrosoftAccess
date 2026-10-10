@@ -182,18 +182,6 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `AllFormsDisableDialog()` — Disable dialog mode on all forms
 - `AllFormsDisablePopUp()` — Disable popup on all forms
 
-## omDynamicRecordState.cls
-- `SetupFieldsFromRecordset(rsSrc As ADODB.Recordset, fieldNames As String)` — Initialize tracking from recordset fields
-- `SetupFields()` — Initialize field tracking
-- `SetOriginalRecord(rsSrc As ADODB.Recordset)` — Store original record state
-- `SetDatabaseRecord(rsSrc As ADODB.Recordset)` — Store database record state
-- `Compare()` — Compare record states
-
-## omDynamicRecordStateTest.bas
-- `Test()` — Test dynamic record state tracking
-- `TestFromRecordset()` — Test setup from recordset
-- `TestAutoClass()` — Test automatic class setup
-
 ## omExcel.cls
 - `LoadWB(filename As String)` — Open Excel workbook
 - `CloseWB(Optional saveChanges As Boolean = True, Optional filename As String = "")` — Close workbook with save option
@@ -257,23 +245,6 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omExportFunctions.bas
 - `ExportQuery(queryName As String, Optional exportPath As String = "", Optional filename As String, Optional withTimestamp As Boolean = False) As String` — Export query results to Excel
 
-## omExportManager.cls
-- `destinationFilename` (get/let) — destination file path
-- `MyDocuments` (get/let) — use My Documents folder
-- `AppendDate` (get/let) — append date to filename
-- `AppendName` (get/let) — append name to filename
-- `ExportName` (get/let) — export name
-- `AutoOpen` (get/let) — auto-open after export
-- `Template` (get/let) — template file
-- `TemplatePath` (get/let) — template folder
-- `exportPath` (get/let) — export folder
-- `ExportType` (get/let) — export type ID
-- `PhysicalDocumentTypeId` (get/let) — document type ID
-- `SupplierId` (get/let) — supplier ID
-- `ContractId` (get/let) — contract ID
-- `ContractPeriodId` (get/let) — contract period ID
-- `dbDocument` (get/let) — database document reference
-
 ## omFileFunctions.bas
 - `BuildPathFileExists(path As String, filename As String) As String` — Build and verify file path exists
 - `FolderExists(path As String) As Boolean` — Check if folder exists
@@ -332,18 +303,6 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omHashAlgorithmsFunctions.bas
 - `MD5(sIn As String, Optional bB64 As Boolean) As String` — Module-level wrapper around omHashAlgorithms, also SHA1, SHA256, SHA384, SHA512
 - `ConvToBase64String(vIn As Variant) As Variant` — Bytes to base64 string
-
-## omHTML.bas
-- `Run()` — Main entry point for HTML generation
-- `GenerateDomain(DomainName As String, DomainFolder As String, DefaultCount As Long)` — Generate HTML domain structure
-- `GenerateTemplate()` — Generate HTML template from database
-- `GeneratePage(filename As String, Title As String, source As String, Keywords As String, Menu As String, UrlGroup As String)` — Generate HTML page file
-- `GenerateMenu(DomainName As String, DomainFolder As String, UrlGroupId As Long) As String` — Generate HTML menu markup
-- `GenerateMenuBlock(DomainName As String, DomainFolder As String, UrlGroupId As Long, UrlGroup) As String` — Generate HTML menu block for URL group
-- `GenerateFooter() As String` — Generate HTML footer markup
-- `SaveFile(filename As String, text As String)` — Save text to file
-- `ReadFile(filename As String) As String` — Read text from file
-- `GetAnchor(ByVal HRef As String, ByVal text As String, Optional CheckHttp As Boolean = False, Optional TargetBlank As Boolean = True) As String` — Generate HTML anchor tag
 
 ## omHTMLExport.bas
 - `OutputHTMLRaw(sql As String, title As String, filename As String)` — Write the result of a SELECT as an HTML table to a UTF-8 file (values are HTML-encoded)
@@ -532,13 +491,6 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omSQLConnectorFunctions.bas
 - `ConnectorTest()` — Test SQL connector with parameterized update commands
 
-## omSQLDataAdapter.cls
-- `spExecuteNonQuery(storedProcedureName As String, Optional Parameter1..N As Variant = Null)` — Execute stored procedure without returning results
-- `spExecuteScalar(storedProcedureName As String, Optional Parameter1..N As Variant = Null) As Variant` — Execute stored procedure and return first scalar value
-- `sqlOpenRecordset(SQLStatement As String) As ADODB.Recordset` — Execute SQL query and return recordset
-- `sqlExecute(SQLStatement As String)` — Execute SQL command without returning results
-- `CloseConnection()` — Close database connection
-
 ## omSQLFunctions.bas
 - `WhereAnd(whereClause1 As String, whereClause2 As String, Optional embraceWhereClause1 = False, Optional embraceWhereClause2 = False)` — Combine two WHERE clauses with AND
 - `WhereOr(whereClause1 As String, whereClause2 As String, Optional embraceWhereClause1 = False, Optional embraceWhereClause2 = False)` — Combine two WHERE clauses with OR
@@ -593,20 +545,10 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `DeleteSSMAATables(Optional Group As String = "")` — Delete SSMA configuration records for a group
 - `LinkMSAccess(Optional linkLocal As Boolean = False)` — Link local Access tables or database
 
-## omSSMAConnector_Test.bas
-- `ChangeDatabase(GroupName As String, sourceDatabase As String, destinationDatabase As String)` — Swap source/destination database in SSMA configuration and relink tables
-- `LinkMySQL()` — Link clientOnlineNW group with password saving enabled
-- `GetCurrentConnectedDatabase(Optional tableName As String = "T_Medewerkers") As String` — Extract connected database name from linked table properties
-- `GetCurrentConnectedServer(Optional tableName As String = "T_Medewerkers") As String` — Extract connected server name from linked table properties
-- `HerlinkACenter()` — Relink ACenter_client group using SQLODBC connection type
-- `ChangeServer(sourceServer As String, destinationServer As String)` — Swap source/destination server in SSMAA configuration
-- `TestAdodbRecordsetConnectionstringEncrypt()` — Test ADODB recordset with encrypted connection string
-
 ## omStartup.bas
-- `Main(Optional linkLocal As Boolean = False) As Integer` — Opens application startup form based on user role
-- `LinkAccessDatabase() As Variant` — Links to local MS Access database
-- `LinkSSMADatabase() As Variant` — Links to SSMA database with SQL authentication
-- `LinkSSMADatabaseSQLODBC() As Variant` — Links to SSMA database via SQL ODBC connection
+- `LinkAccessDatabase() As Variant` — Link the back-end Access tables
+- `LinkSSMADatabase() As Variant` — Link the SQL Server tables (SSMA), saves the password, always updates
+- `LinkSSMADatabaseSQLODBC() As Variant` — Same with the older SQL ODBC driver
 
 ## omStringFunctions.bas
 - `CleanString(Value As Variant) As String` — Trims null/empty values to empty string
@@ -714,10 +656,6 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `Name` (get/let) — role name
 - `Code` (get/let) — role code
 - `LoadById(Id As Long)` — Loads role data by ID
-
-## omUser_Edan.cls
-- `LoginById(UserId As Long, Password As String)` — Logs in by user ID and password
-- `LoginByName(LoginName As String, Password As String)` — Logs in by name and password
 
 ## omVATFunctions.bas
 - `OpenBEVATNumberLookupWebsite(VATNumber As Variant)` — Open the KBO public search for a Belgian VAT number

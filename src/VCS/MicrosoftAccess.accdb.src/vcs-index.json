@@ -11,14 +11,6 @@
     "OptionsHash": "749b2e4",
     "LastMergedCommit": "",
     "Components": {
-      "CommandBars": {
-        "OASIS-Logger.json": {
-          "FileHash": "26e2edd",
-          "ExportDate": "2025-07-04T13:13:55.000Z",
-          "SourceModified": null,
-          "FilePropertiesHash": "a8bd234"
-        }
-      },
       "DB Connections": {
         "db-connection.json": {
         }
@@ -299,20 +291,6 @@
           "SourceModified": null,
           "FilePropertiesHash": "52443fd"
         },
-        "omDynamicRecordState.cls": {
-          "FileHash": "a5a264d",
-          "OtherHash": "c6ce10c",
-          "ExportDate": "2025-07-04T13:13:55.000Z",
-          "SourceModified": null,
-          "FilePropertiesHash": "c5f971f"
-        },
-        "omDynamicRecordStateTest.bas": {
-          "FileHash": "670d77e",
-          "OtherHash": "13eee16",
-          "ExportDate": "2025-07-04T13:13:55.000Z",
-          "SourceModified": null,
-          "FilePropertiesHash": "6c91ae2"
-        },
         "omExcel.cls": {
           "FileHash": "cc74e92",
           "OtherHash": "2404451",
@@ -340,13 +318,6 @@
           "ExportDate": "2025-07-04T13:13:54.000Z",
           "SourceModified": null,
           "FilePropertiesHash": "cac9c75"
-        },
-        "omExportManager.cls": {
-          "FileHash": "1fcd004",
-          "OtherHash": "c3e6df1",
-          "ExportDate": "2025-07-04T13:13:55.000Z",
-          "SourceModified": null,
-          "FilePropertiesHash": "8c6c8e5"
         },
         "omFileFunctions.bas": {
           "FileHash": "88f0ad4",
@@ -382,13 +353,6 @@
           "ExportDate": "2025-07-04T13:13:55.000Z",
           "SourceModified": null,
           "FilePropertiesHash": "b4809ed"
-        },
-        "omHTML.bas": {
-          "FileHash": "e476d4b",
-          "OtherHash": "87ca6f9",
-          "ExportDate": "2025-07-04T13:13:55.000Z",
-          "SourceModified": null,
-          "FilePropertiesHash": "5cf31eb"
         },
         "omInvoiceFunctions.bas": {
           "FileHash": "43c873b",
@@ -565,13 +529,6 @@
           "SourceModified": null,
           "FilePropertiesHash": "50e5c72"
         },
-        "omSQLDataAdapter.cls": {
-          "FileHash": "b9319c9",
-          "OtherHash": "72a4ad8",
-          "ExportDate": "2025-07-04T13:13:54.000Z",
-          "SourceModified": null,
-          "FilePropertiesHash": "03c142f"
-        },
         "omSQLFunctions.bas": {
           "FileHash": "47e7f31",
           "OtherHash": "7ce6783",
@@ -599,13 +556,6 @@
           "ExportDate": "2025-07-04T13:13:55.000Z",
           "SourceModified": null,
           "FilePropertiesHash": "6ed0e05"
-        },
-        "omSSMAConnector_Test.bas": {
-          "FileHash": "ea384d6",
-          "OtherHash": "b27e64a",
-          "ExportDate": "2025-07-04T13:13:55.000Z",
-          "SourceModified": null,
-          "FilePropertiesHash": "557ccb3"
         },
         "omStartup.bas": {
           "FileHash": "901e426",
@@ -683,13 +633,6 @@
           "ExportDate": "2025-07-04T13:13:55.000Z",
           "SourceModified": null,
           "FilePropertiesHash": "372c25b"
-        },
-        "omUser_Edan.cls": {
-          "FileHash": "92773d1",
-          "OtherHash": "a0951fb",
-          "ExportDate": "2025-07-04T13:13:55.000Z",
-          "SourceModified": null,
-          "FilePropertiesHash": "405c667"
         },
         "omUserFunctions.bas": {
           "FileHash": "d39a060",
