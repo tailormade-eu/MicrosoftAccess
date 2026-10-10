@@ -2,15 +2,16 @@
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "omBaseClass"
+Attribute VB_Name = "exCountry"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=0c869550
 
+' EXAMPLE, not part of the library (no om prefix): a small class that loads one row of a table Countries (Id, Code, Name)
+' with a parameter query. Copy it into a project and adapt the table and the fields.
 Dim cmdLoad As New ADODB.Command
 
 

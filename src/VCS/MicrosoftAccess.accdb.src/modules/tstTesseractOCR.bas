@@ -1,9 +1,8 @@
-﻿Attribute VB_Name = "omTesseractOCR_Tests"
+﻿Attribute VB_Name = "tstTesseractOCR"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=5dba9e13
 
-' Tests of omTesseractOCR. Run in the immediate window:  ?omTesseractOCR_Tests.RunAll
+' Tests of omTesseractOCR. Run in the immediate window:  ?tstTesseractOCR.RunAll
 ' Answer: "OK (n tests)", "FAILED: <what>" or "SKIPPED: <why>" (no Tesseract, or the sample image is missing).
 ' The sample image is tests\ocr-sample.png of the library (the text HELLO OCR 123); give its path, or put a
 ' copy named ocr-sample.png next to the database.

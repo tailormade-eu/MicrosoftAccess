@@ -1,12 +1,17 @@
 ﻿Attribute VB_Name = "omTranslationEngineFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=321ecc26
+'@lib 2026-10-10 sha=c33fb324
 
 Global omTE As New omTranslationEngine
 
+' The language id that the translate code in forms and reports uses (omTE.Translate Me, GetCurrentLanguage()).
+' Set it at startup and whenever the user changes language:  omTranslationEngineFunctions.CurrentLanguageId = 2
+' 0 (not set) means language 1.
+Public CurrentLanguageId As Long
+
 Public Function GetCurrentLanguage() As Long
-  GetCurrentLanguage = Nz(Forms("frmLicentie").Form.txtUserTaalId, 1)
+    GetCurrentLanguage = IIf(CurrentLanguageId > 0, CurrentLanguageId, 1)
 End Function
 
 Public Sub UpdateTranslations()

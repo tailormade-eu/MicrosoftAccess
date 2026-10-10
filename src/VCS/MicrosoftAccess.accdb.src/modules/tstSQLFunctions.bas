@@ -1,10 +1,9 @@
-﻿Attribute VB_Name = "omSQLFunctions_Test"
+﻿Attribute VB_Name = "tstSQLFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=34be62a5
 
 ' Tests for the clause helpers in omSQLFunctions.
-' Run from the Immediate window:  ?omSQLFunctions_Test.RunAll
+' Run from the Immediate window:  ?tstSQLFunctions.RunAll
 ' Returns "OK (n tests)" or one line per failing case.
 
 Private mFailures As String

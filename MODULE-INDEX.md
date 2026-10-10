@@ -47,10 +47,6 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `IsAlphaNum(ByVal psText As String) As Boolean` — Check if string contains only alphanumeric characters
 - `ValidateBelgianAccountNumber(IBAN As String) As Boolean` — Validate Belgian IBAN account number checksum
 
-## omBaseClass.cls
-- `Load(CountryId As Long)` — Load country record by ID
-- `Clear()` — Clear all properties to null/empty
-
 ## omByteArrayFunctions.bas
 - `ByteArrayToHexString(ba() As Byte) As String` — Convert byte array to hexadecimal string with 0x prefix
 - `ByteArrayToString(ba() As Byte) As String` — The bytes as one big-endian number, as text (exact up to 12 bytes)
@@ -605,9 +601,6 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `FindTesseractExe() As String` — Full path of tesseract.exe, or "" when not installed
 - `GetTxtFromImage(filename As String) As String` — Extracts text from image using Tesseract OCR ("" when it cannot be read)
 
-## omTesseractOCR_Tests.bas
-- `RunAll(Optional imagePath As String) As String` — Tests of omTesseractOCR: "OK (n tests)", "FAILED: ..." or "SKIPPED: ..."
-
 ## omTimeRange.cls
 - `StartTime` (get/let) As Date — start time
 - `EndTime` (get/let) As Date — end time
@@ -624,7 +617,8 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `InsertTranslateCode(Optional TranslationClassName As String)` — Injects translation code into form/report Open events
 
 ## omTranslationEngineFunctions.bas
-- `GetCurrentLanguage() As Long` — Returns current selected language ID
+- `CurrentLanguageId As Long` — Public setting: the language id for the generated translate code; set it at startup and when the user changes language (0 = not set = language 1)
+- `GetCurrentLanguage() As Long` — The language id used by the generated translate code: CurrentLanguageId, or 1 when not set
 - `UpdateTranslations()` — Updates all translations via IndexAll
 - `ClearTranslations()` — Clears all translations via ClearAll
 - `InjectCodeInFormsAndReports()` — Injects translation code into all forms and reports
@@ -672,3 +666,8 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 
 Coverage: 79/79 bestanden verwerkt (51 .bas + 28 .cls). Vier bestanden bevatten geen Public members (`omGlobalDeclarations.bas`, `omKernalAPIFunctions.bas`, `omKeyObject.cls`, `omKeyValue.cls`, `omSystemProcessFunctions.bas`) — expliciet zo gemarkeerd i.p.v. overgeslagen.
 </content>
+
+## Not part of the library (no om prefix, do not copy into customer databases)
+- `tstSQLFunctions.bas` — Tests of omSQLFunctions: `?tstSQLFunctions.RunAll` gives "OK (n tests)" or the failures
+- `tstTesseractOCR.bas` — Tests of omTesseractOCR (needs Tesseract and tests/ocr-sample.png): `?tstTesseractOCR.RunAll` gives "OK (n tests)", "FAILED: ..." or "SKIPPED: ..."
+- `exCountry.cls` — Example class that loads one row of a table Countries with a parameter query (copy and adapt)

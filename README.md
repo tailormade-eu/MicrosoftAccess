@@ -35,12 +35,12 @@ Call LinkUsingSSMA()
 
 ## Folder Structure
 
-- `src/VCS/MicrosoftAccess.accdb.src/modules/` – The modules (`.bas`/`.cls`), mostly named `om*`
+- `src/VCS/MicrosoftAccess.accdb.src/modules/` – The modules (`.bas`/`.cls`). **`om*` = the library** (stamped, copied into customer databases); `tst*` = tests and `ex*` = examples live next to them but are not part of the library and have no stamp
 - `omSSMAAConnector.bas` – Main module for table linking and connection management
 - `omStringFunctions.bas` – String utility functions
 - `omBankAccountFunctions.bas` – IBAN validation and formatting utilities
 - `databases/` – Example databases
-- `tests/` – Sample files that the `*_Tests` modules need (for example `ocr-sample.png` for `omTesseractOCR_Tests`)
+- `tests/` – Sample files that the `tst*` modules need (for example `ocr-sample.png` for `tstTesseractOCR`)
 - `scripts/` – `libstamp.py`, the tool that writes the module stamps
 
 ## Module stamps
