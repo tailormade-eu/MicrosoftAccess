@@ -1,0 +1,25 @@
+# ROADMAP — MicrosoftAccess bibliotheek
+
+Open punten van de bibliotheek. Gedaan = regel weg (de geschiedenis staat in `git log`).
+Besluit Raoul 2026-10-10: deze lijst woont hier, niet in CM of Customers.
+
+## Open
+
+| Punt | Wat | Opmerking |
+|---|---|---|
+| Excel-bibliotheek | Map `MicrosoftExcel` naast `MicrosoftAccess`; 8 modules uit client/SBDInc | Eerst plan: mapstructuur, stempels (`libstamp.py` met mapargument), referenties ADODB/VBIDE/Scripting |
+| Wachtwoord client | Staat in de git-historie van de oude `omSQLDataAdapter` | Roteren; niet kopiëren |
+| `databases\MicrosoftAccess.accdb` | Datum 2025, nog oude modules | Vervangen door verse build of herstellen uit git |
+| Optimalisatie-audit | `omOutlook` Sender-voorwaarde (omgekeerd?), PK-substring in `TableCreateDDL`, `VBAFindReplace` en `omMSAccessFunctions` DMax-lus | Elk met test; `omOutlook` kan alleen met Outlook |
+| Kandidaten pc-zoektocht | 19 Access- en 5 Excel/Outlook-kandidaten beoordelen | client en client alleen lezen |
+| Klantcode client | `omFile`/`omFolder` vervangen door `DeleteFile`/`RenameFile`/`ReadFilesIntoTable`/`SetFilesSelected`; `hbPrinterFunctions` op `omPrinterFunctions`; `hbReportColors` in de `.mdb` bouwen | Raakt de klantrepo: eerst met Raoul |
+| Klantcode client | `GetWerkgebied` vervangen door `GetWorkArea` | |
+| `omKernalFunctions` | Oudere variant in 8 klanten (Sleep/GetTickCount/RunExeAndWait/RunExeAndGetPID) | Geen actieve aanroepers; per klant opruimen |
+| Git-hook voor stempels | `libstamp.py apply` automatisch | Nieuwe config: eerst voorleggen (wat/waarom/default/wie/wanneer weg) |
+| Niet getest | `ConnectorTest` foutpad, `savePictEMF`, `omOutlook`, echte SFTP/Seq, volledige `LinkUsingSSMA` | Hebben een echte server of Outlook nodig |
+
+## Besluiten
+
+- client en client: niets wijzigen, alleen overnemen wat bruikbaar is.
+- Naamgeving: `om*` = bibliotheek (gestempeld), `tst*` = tests, `ex*` = voorbeelden.
+- Een functie die een tabel nodig heeft, beheert die tabel zelf (`omPrinters`, `omFiles`).

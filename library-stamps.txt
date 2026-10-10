@@ -1,4 +1,4 @@
-omADODBFunctions;2026-10-10;276cc214
+omADODBFunctions;2026-10-10;878adaa6
 omAPI32FileFunctions;2026-10-10;9f705da6
 omAPIClipboard;2026-10-10;e3a76075
 omAPISpecialFolders;2026-10-10;d461cf8e

@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omADODBFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=276cc214
+'@lib 2026-10-10 sha=878adaa6
 
 
 Public Function ADODBCreateCopyRecord(rsSrc As ADODB.Recordset, rsDst As ADODB.Recordset, Optional PrimaryKeyName As String = "", Optional LinkName As String = "", Optional LinkId As Long = 0, Optional ignoreFields As String) As Long
@@ -33,4 +33,13 @@ Dim fld As ADODB.Field
         End If
     Next
     rsDst.Update
+End Sub
+
+' Closes the recordset when it is open (also when it is at EOF) and sets the variable to Nothing; safe to call when it is already Nothing.
+Public Sub SetRecordsetNothing(ByRef rs As ADODB.Recordset)
+    If rs Is Nothing Then Exit Sub
+    On Error Resume Next
+    If rs.State <> adStateClosed Then rs.Close
+    On Error GoTo 0
+    Set rs = Nothing
 End Sub
