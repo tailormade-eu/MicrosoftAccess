@@ -31,7 +31,6 @@ omHashAlgorithms;2026-10-10;14dfec6b
 omHashAlgorithmsFunctions;2026-10-10;392fa529
 omHTMLExport;2026-10-10;63d69791
 omInvoiceFunctions;2026-10-10;015f119d
-omJSON;2026-10-10;64807d38
 omJsonConverter;2026-10-10;28c545e7
 omKernalAPIFunctions;2026-10-10;2df70616
 omKeyObject;2026-10-10;bac7552d
@@ -51,8 +50,8 @@ omRecordsetFunctions;2026-10-10;ff6cfa39
 omReferenceFunctions;2026-10-10;5adc5c3e
 omReportFunctions;2026-10-10;aca15372
 omResult;2026-10-10;1df6e90d
-omSeqFunctions;2026-10-10;fb480d24
-omSeqItem;2026-10-10;4db77703
+omSeqFunctions;2026-10-10;c580750b
+omSeqItem;2026-10-10;47848f0d
 omSFTP;2026-10-10;d67279c5
 omSourceObject;2026-10-10;bc20693f
 omSourceObjectControl;2026-10-10;5f2f221a

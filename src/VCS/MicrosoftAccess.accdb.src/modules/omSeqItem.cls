@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=4db77703
+'@lib 2026-10-10 sha=47848f0d
 
 Public Action As String
 Public Step As String
@@ -32,35 +32,57 @@ Public Exception As String '@e
 Public Function ToJson(Optional formatted As Boolean = False) As String
 Dim s As String
 
-    s = s & AddTemplate("@t", DtAccessToIso(Now, GetUtcDateTime()))
-    s = s & AddTemplate("@mt", MessageTemplate)
-    s = s & AddTemplate("@l", omSeqItemLevelToString(Level))
+    AddTemplate s, formatted, "@t", DtAccessToIso(Now, GetUtcDateTime())
+    AddTemplate s, formatted, "@mt", MessageTemplate
+    AddTemplate s, formatted, "@l", omSeqItemLevelToString(Level)
 
-    s = s & AddTemplate("Action", Action)
-    s = s & AddTemplate("Step", Step)
-    s = s & AddTemplate("Parameters", Parameters)
-    s = s & AddTemplate("SourceContext", SourceContext)
-    s = s & AddTemplate("EnvironmentUserName", EnvironmentUserName)
-    s = s & AddTemplate("MachineName", MachineName)
-    s = s & AddTemplate("ProcessId", ProcessId)
-    s = s & AddTemplate("ProcessName", ProcessName)
-    s = s & AddTemplate("ThreadId", ThreadId)
-    s = s & AddTemplate("ApplicationName", ApplicationName)
-    s = s & AddTemplate("ApplicationVersion", ApplicationVersion)
-    s = s & AddTemplate("ErrorMessage", ErrorMessage)
+    AddTemplate s, formatted, "Action", Action
+    AddTemplate s, formatted, "Step", Step
+    AddTemplate s, formatted, "Parameters", Parameters
+    AddTemplate s, formatted, "SourceContext", SourceContext
+    AddTemplate s, formatted, "EnvironmentUserName", EnvironmentUserName
+    AddTemplate s, formatted, "MachineName", MachineName
+    AddTemplate s, formatted, "ProcessId", ProcessId
+    AddTemplate s, formatted, "ProcessName", ProcessName
+    AddTemplate s, formatted, "ThreadId", ThreadId
+    AddTemplate s, formatted, "ApplicationName", ApplicationName
+    AddTemplate s, formatted, "ApplicationVersion", ApplicationVersion
+    AddTemplate s, formatted, "ErrorMessage", ErrorMessage
 
-    s = "{" & IIf(formatted, vbCrLf, "") & s & IIf(formatted, vbCrLf, "") & "}"
-
-    ToJson = s
+    ToJson = "{" & IIf(formatted, vbCrLf, "") & s & IIf(formatted, vbCrLf, "") & "}"
 End Function
 
-Private Function AddTemplate(Name As String, Value As String, Optional formatted As Boolean = False) As String
-Dim t As String
+' Adds  "name": "value"  to the JSON text in json (a comma between the pairs, none after the last one).
+' An empty value is skipped.
+Private Sub AddTemplate(ByRef json As String, formatted As Boolean, Name As String, Value As String)
+    If Trim(Nz(Value, "")) = "" Then Exit Sub
+    If Len(json) > 0 Then json = json & "," & IIf(formatted, vbCrLf, "")
+    json = json & Chr(34) & Name & Chr(34) & ": " & Chr(34) & JsonEscape(Value) & Chr(34)
+End Sub
 
-    t = Chr(34) & "{0}" & Chr(34) & ": " & Chr(34) & "{1}" & Chr(34) & "," & IIf(formatted, vbCrLf, "")
-    If Trim(Nz(Value, "")) <> "" Then
-        AddTemplate = Replace(Replace(t, "{0}", Name), "{1}", Value)
-    End If
+' Escapes backslash, double quote and the control characters that are not allowed in a JSON string.
+Private Function JsonEscape(ByVal Value As String) As String
+Dim i As Long
+Dim c As Long
+Dim result As String
+Dim bs As String
+
+    bs = Chr(92)
+    Value = Replace(Value, bs, bs & bs)
+    Value = Replace(Value, Chr(34), bs & Chr(34))
+    Value = Replace(Value, vbCrLf, bs & "n")
+    Value = Replace(Value, vbCr, bs & "n")
+    Value = Replace(Value, vbLf, bs & "n")
+    Value = Replace(Value, vbTab, bs & "t")
+    For i = 1 To Len(Value)
+        c = AscW(Mid(Value, i, 1))
+        If c >= 0 And c < 32 Then
+            result = result & bs & "u" & Right("0000" & Hex(c), 4)
+        Else
+            result = result & Mid(Value, i, 1)
+        End If
+    Next i
+    JsonEscape = result
 End Function
 
 

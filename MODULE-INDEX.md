@@ -310,16 +310,6 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omInvoiceFunctions.bas
 - `GetStructuredPaymentReference(number As Long, Optional alignLeft As Boolean = True) As String` — Generate structured payment reference number
 
-## omJSON.cls
-- `request(url As String, Optional postParameters As String = "", Optional format As ResponseFormat = json) As String` — Send HTTP request and parse JSON response
-- `setJsonRoot(rootPath As String)` — Set root path for JSON object navigation
-- `getJsonObjectCount()` — Get count of objects in JSON
-- `getJsonObjectValue(path As String)` — Get value from JSON object by path
-- `getJsonArrayValue(index, key As String)` — Get value from JSON array by index and key
-- `ResponseText` (get) — raw response text from HTTP request
-- `ResponseJson` (get) — parsed JSON response object
-- `ScriptControl` (get) — script control object for JSON processing
-
 ## omJsonConverter.bas
 - `ParseJson(ByVal JsonString As String) As Object` — Parse JSON string to object
 - `ConvertToJson(ByVal JsonValue As Variant, Optional Whitespace As Variant, Optional json_CurrentIndentation As Long = 0) As String` — Convert value to JSON string
@@ -465,6 +455,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `GetUtcDateTime()` — Get current UTC date/time from system
 - `DtIsoToAccess(myisodate As String) As Date` — Convert ISO format date string to Access date
 - `DtAccessToIso(myaccdate As Date, Optional myUtcDate As Date = 0) As String` — Convert Access date to ISO format string with timezone
+- `HttpPostText(url As String, body As String) As String` — POST a text (JSON) body and return the answer; raises the request error
 
 ## omSeqItem.cls
 - `ToJson(Optional formatted As Boolean = False) As String` — Serialize logging item to JSON format

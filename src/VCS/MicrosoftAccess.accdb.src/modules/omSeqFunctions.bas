@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omSeqFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=fb480d24
+'@lib 2026-10-10 sha=c580750b
 
 Const seqUrl = "http://seq.domainmmvii.local:5341/"
 
@@ -24,7 +24,6 @@ Public Function omSeqItemLevelToString(Value As omSeqItemLevel) As String
 End Function
 
 Public Sub SendSeqItem(Optional seqItem As omSeqItem) 'item As omSeqItem)
-Dim json As New omJSON
 Dim result As String
 
     If omObjectFunctions.IsNothing(seqItem) Then
@@ -36,12 +35,25 @@ Dim result As String
             .Step = "self test"
         End With
     End If
-    result = json.request(seqUrl & "api/events/raw?clef", seqItem.ToJson(), text)
+    result = HttpPostText(seqUrl & "api/events/raw?clef", seqItem.ToJson())
     seqItem.Step = ""
     seqItem.Level = DebugSeqLevel
     seqItem.Exception = ""
     seqItem.Parameters = ""
 End Sub
+
+' POST a text body (JSON) to an address and return the answer as text. The error of the request
+' (unknown host, no connection) is raised to the caller.
+Public Function HttpPostText(url As String, body As String) As String
+Dim xml As Object
+
+    Set xml = CreateObject("MSXML2.XMLHTTP")
+    xml.Open "POST", url, False
+    xml.setRequestHeader "Content-Type", "application/json"
+    xml.setRequestHeader "Accept", "application/json"
+    xml.Send body
+    HttpPostText = xml.ResponseText
+End Function
 
 Public Sub OpenSeq(Optional filter As String = "")
     omFileFunctions.OpenUrl seqUrl & IIf(NotIsNullOrEmpty(filter), "#/events?filter=" & filter, "")
@@ -64,6 +76,6 @@ End Function
 Public Function DtAccessToIso(myaccdate As Date, Optional myUtcDate As Date = 0) As String
 Dim dtDiff As Long
     myUtcDate = IIf(myUtcDate = 0, myaccdate, myUtcDate)
-    dtDiff = DateDiff("h", myUtcDate, myaccdate)
-    DtAccessToIso = format(myaccdate, "yyyy-mm-dd\Thh:nn:ss.000" & IIf(dtDiff = 0, "z", format(dtDiff, "+00") & ":00"))
+    dtDiff = DateDiff("n", myUtcDate, myaccdate) ' offset to UTC in minutes
+    DtAccessToIso = format(myaccdate, "yyyy-mm-dd\Thh:nn:ss.000") & IIf(dtDiff = 0, "z", IIf(dtDiff < 0, "-", "+") & format(Int(Abs(dtDiff) / 60), "00") & ":" & format(Abs(dtDiff) Mod 60, "00"))
 End Function
