@@ -498,6 +498,11 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omSeqItem.cls
 - `ToJson(Optional formatted As Boolean = False) As String` — Serialize logging item to JSON format
 
+## omSFTP.bas
+- `SftpPut(host As String, user As String, localFile As String, remotePath As String, Optional password As String, Optional privateKeyFile As String, Optional hostKey As String, Optional port As Long, Optional winscpPath As String) As String` — Upload a file over SFTP with WinSCP (password or key) or OpenSSH sftp.exe (key); returns "" when it worked, otherwise the reason
+- `SftpFindWinScp(Optional winscpPath As String) As String` — Full path of WinSCP.com, or "" when not found
+- `SftpBuildWinScpScript(host As String, user As String, localFile As String, remotePath As String, password As String, privateKeyFile As String, hostKey As String, port As Long) As String` — The WinSCP script text (public for tests; contains the password)
+
 ## omSourceObject.cls
 - `Load(obj As Object, Optional objType As AcObjectType = 0)` — Load and track form or report object metadata
 
