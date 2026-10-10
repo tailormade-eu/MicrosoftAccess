@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=5405f498
+'@lib 2026-10-10 sha=52ea821a
 Public queryName As String
 Public tableName As String
 Public IsODBC As Boolean
@@ -161,7 +161,7 @@ Public Function GetValue(Name As String) As Variant
     End Select
 End Function
 Public Function ToString() As String
-    ToString = omStringFunctions.StringFormat("TableName={0};IsODBC={1};Driver={2};Server={3};App={4};Database={5};DSN={6};Provider={7};UID={8},PWD={9}", tableName, IsODBC, Driver, Server, APP, Database, DSN, Provider, UID, PWD)
+    ToString = omStringFunctions.StringFormat("TableName={0};IsODBC={1};Driver={2};Server={3};App={4};Database={5};DSN={6};Provider={7};UID={8};PWD={9}", tableName, IsODBC, Driver, Server, APP, Database, DSN, Provider, UID, IIf(Len(PWD) > 0, "***", ""))
 End Function
 
 Public Property Get Driver() As String
@@ -173,7 +173,7 @@ Public Property Let Driver(ByVal vNewValue As String)
     m_Driver = Replace(Replace(vNewValue, "{", ""), "}", "")
     If InStr(1, m_Driver, "SQL Server Native Client") > 0 Then
         IsSQLNCLIConnection = True
-        SQLNCLIVersion = CInt(Replace(m_Driver, "SQL Server Native Client", "")) / 10
+        SQLNCLIVersion = CInt(Val(Replace(m_Driver, "SQL Server Native Client", ""))) ' "11.0" gives 11, like GetSQLNCLIVersion
     ElseIf InStr(1, m_Driver, "ODBC Driver ") > 0 And InStr(1, m_Driver, " for SQL Server") > 0 Then
         IsSQLODBCConnection = True
         SQLODBCVersion = CInt(Replace(Replace(m_Driver, "ODBC Driver ", ""), " for SQL Server", ""))

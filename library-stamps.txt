@@ -9,7 +9,7 @@ omBaseClass;2026-10-10;0c869550
 omByteArrayFunctions;2026-10-10;7e869dd4
 omCollectionFunctions;2026-10-10;c3424d4c
 omCommandBarFunctions;2026-10-10;c652d140
-omConnectionString;2026-10-10;5405f498
+omConnectionString;2026-10-10;52ea821a
 omControl;2026-10-10;21b9968f
 omControlFunctions;2026-10-10;93b29458
 omDAOFunctions;2026-10-10;0464061d
@@ -20,7 +20,7 @@ omDefaults;2026-10-10;f6a71559
 omDevelopmentFunctions;2026-10-10;9c0a970f
 omExcel;2026-10-10;d5d158ea
 omExcelEngine;2026-10-10;96be6635
-omExcelFunctions;2026-10-10;8699d55c
+omExcelFunctions;2026-10-10;5f76d3bb
 omExportFunctions;2026-10-10;54933c61
 omFileFunctions;2026-10-10;c4a450fd
 omFormFunctions;2026-10-10;9d2b95fd
@@ -36,18 +36,18 @@ omJsonConverter;2026-10-10;28c545e7
 omKernalAPIFunctions;2026-10-10;2df70616
 omKeyObject;2026-10-10;bac7552d
 omKeyValue;2026-10-10;131f8a9c
-omLibraryFunctions;2026-10-10;9c15ddbb
+omLibraryFunctions;2026-10-10;fd435743
 omLibraryStamp;2026-10-10;fbb7efab
-omLogging;2026-10-10;cbf04369
+omLogging;2026-10-10;f43e937b
 omLoggingFunctions;2026-10-10;ab3961d6
 omMSAccessFunctions;2026-10-10;402639fe
 omObjectFunctions;2026-10-10;10932fe2
 omOutlook;2026-10-10;a08d9a05
 omPDFFunctions;2026-10-10;a181c183
-omPictureFunctions;2026-10-10;d4e2eb58
+omPictureFunctions;2026-10-10;7008312a
 omPrinterSettingsManager;2026-10-10;3107be75
 omPrinterSettingsManagerFunctions;2026-10-10;db1d8002
-omRecordsetFunctions;2026-10-10;8b752bf2
+omRecordsetFunctions;2026-10-10;ff6cfa39
 omReferenceFunctions;2026-10-10;5adc5c3e
 omReportFunctions;2026-10-10;aca15372
 omResult;2026-10-10;1df6e90d
@@ -61,7 +61,7 @@ omSQLConnectorFunctions;2026-10-10;7be74e71
 omSQLFunctions;2026-10-10;85c05af6
 omSQLFunctions_Test;2026-10-10;34be62a5
 omSQLObject;2026-10-10;30a48cc2
-omSQLServerFunctions;2026-10-10;faf4588e
+omSQLServerFunctions;2026-10-10;5c8873cb
 omSSMAAConnector;2026-10-10;9e4b29ae
 omStartup;2026-10-10;b79bf44a
 omStringFunctions;2026-10-10;c863000a
@@ -79,4 +79,4 @@ omUserRole;2026-10-10;436890ff
 omVATFunctions;2026-10-10;9a830f31
 omWinSpoolFunctions;2026-10-10;1b9b4863
 omWordEngine;2026-10-10;0f3fafd0
-omZipFunctions;2026-10-10;cbc01142
+omZipFunctions;2026-10-10;338a33c5

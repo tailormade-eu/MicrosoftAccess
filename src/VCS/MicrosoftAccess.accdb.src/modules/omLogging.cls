@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=cbf04369
+'@lib 2026-10-10 sha=f43e937b
 
 Public Enabled As Boolean
 Public StartDate As Date
@@ -64,10 +64,11 @@ Public Function WriteToFile(Optional diffOnly As String = "y", Optional updateCu
     If Not Enabled Then
         Exit Function
     End If
-    'Set ts = gFso.OpenTextFile(filename, ForAppending, True)
+    If ts Is Nothing Then
+        Exit Function
+    End If
+    ' the file stays open: closing it here made every second call fail with error 91
     ts.WriteLine ToString(diffOnly, updateCurrentDate, Description)
-    ts.Close
-    Set ts = Nothing
 End Function
 
 Public Function ToString(Optional diffOnly As String = "y", Optional updateCurrentDate As Boolean = True, Optional Description As String = "") As String
@@ -115,6 +116,8 @@ Public Sub Reset()
 End Sub
 
 Private Sub Class_Terminate()
-  ts.Close
-  Set ts = Nothing
+    If Not ts Is Nothing Then
+        ts.Close
+        Set ts = Nothing
+    End If
 End Sub

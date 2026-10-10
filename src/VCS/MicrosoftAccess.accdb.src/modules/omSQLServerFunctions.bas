@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omSQLServerFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=faf4588e
+'@lib 2026-10-10 sha=5c8873cb
 
 Public Function GetPrimaryKeyScript(tableName As String) As String
 Dim db As dao.Database
@@ -57,6 +57,7 @@ Public Function TableCreateDDL(TableDef As dao.TableDef) As String
                 With fldDef
                     fldName = .Name
                     fldName = Replace(fldName, " ", "_")
+                    fldDataInfo = "" ' never carry the type of the previous field over
                     Select Case .Type
                         'Case DAO.DataTypeEnum.dbAttachment
                         Case dao.DataTypeEnum.dbBigInt
@@ -97,6 +98,10 @@ Public Function TableCreateDDL(TableDef As dao.TableDef) As String
                         'Case DAO.DataTypeEnum.dbTimeStamp
                         Case dao.DataTypeEnum.dbVarBinary
                            fldDataInfo = "VARBINARY(MAX)"
+                        Case dao.DataTypeEnum.dbLongBinary
+                           fldDataInfo = "VARBINARY(MAX)"
+                        Case Else
+                           fldDataInfo = "VARCHAR(MAX) /* no mapping for DAO type " & .Type & " */"
                     End Select
                     If .Required Or InStr(1, pkScript, .Name) > 1 Then
                         fldDataInfo = fldDataInfo & " NOT NULL"

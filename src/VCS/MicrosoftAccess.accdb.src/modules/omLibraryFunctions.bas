@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omLibraryFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=9c15ddbb
+'@lib 2026-10-10 sha=fd435743
 
 Private Function InternalGetTimeStamp(Optional prefix As String = "_") As String
     InternalGetTimeStamp = prefix & format(Now, "yyyymmdd_hhnnss")
@@ -110,10 +110,12 @@ Dim dString As String
 
         For Each sf In sFolder.Files
             If InStr(1, sf.Name, destinationFilename) = 1 Then
-                'dString = omFileFunctions.ReadFileToString(DF.path)
-                'sString = omFileFunctions.ReadFileToString(sf.path)
-                'sString = LCase(omStringFunctions.CleanStringUsingPattern(sString))
-                'dString = LCase(omStringFunctions.CleanStringUsingPattern(dString))
+                ' only a file with the same content (ignoring case and blanks) is removed; with the
+                ' comparison commented out both strings were empty and every match was deleted
+                dString = omFileFunctions.ReadFileToString(DF.path)
+                sString = omFileFunctions.ReadFileToString(sf.path)
+                sString = LCase(omStringFunctions.CleanStringUsingPattern(sString))
+                dString = LCase(omStringFunctions.CleanStringUsingPattern(dString))
                 If dString = sString Then
                     sf.Delete
                 Else

@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omPictureFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=d4e2eb58
+'@lib 2026-10-10 sha=7008312a
 
 Public Function savePict(pImage As Access.Image)
     Dim fname As String 'The name of the file to save the picture to
@@ -33,7 +33,7 @@ Public Function savePictEMF(pImage As Access.Image)
     ReDim cArray(LenB(pImage.PictureData) - (1 + 8))
     ' Copy to our array
     bArray = pImage.PictureData
-    For lngRet = 8 To UBound(cArray)
+    For lngRet = 8 To UBound(bArray)
         cArray(lngRet - 8) = bArray(lngRet)
     Next
 

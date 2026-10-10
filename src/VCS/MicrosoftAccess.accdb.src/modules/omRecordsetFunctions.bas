@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omRecordsetFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=8b752bf2
+'@lib 2026-10-10 sha=ff6cfa39
 
 
 Public Function CopyRecord(rsSrc As ADODB.Recordset, rsDst As ADODB.Recordset, Optional PrimaryKeyName As String = "", Optional LinkName As String = "", Optional LinkId As Long = 0) As Long
@@ -58,7 +58,7 @@ End If
 
 GetList = sResult
 oRS.Close
-oConn.Close
+' oConn is CurrentProject.Connection, the connection of the application itself: do not close it
 
 CleanUp:
     Set oRS = Nothing

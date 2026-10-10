@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omExcelFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=8699d55c
+'@lib 2026-10-10 sha=5f76d3bb
 
 Public Function ReplaceFirst(sh As Excel.Worksheet, findValue As String, replaceValue As String)
 Dim rng As Excel.range
@@ -28,7 +28,7 @@ FindFirst_NotFound:
 End Function
 
 Public Sub DeleteRow(sh As Excel.Worksheet, rowIndex As Long)
-    sh.Application.rows(rowIndex).Delete
+    sh.Rows(rowIndex).Delete ' sh.Application.Rows would be the ACTIVE sheet
 End Sub
 Public Sub DeleteSheet(sh As Excel.Worksheet)
 Dim ap As Excel.Application
@@ -40,12 +40,12 @@ Dim ap As Excel.Application
 End Sub
 Public Sub HideRow(sh As Excel.Worksheet, rowIndex As Long)
     If rowIndex <> 0 Then
-        sh.Application.rows(rowIndex).Hidden = True
+        sh.Rows(rowIndex).Hidden = True
     End If
 End Sub
 Public Sub ShowRow(sh As Excel.Worksheet, rowIndex As Long)
     If rowIndex <> 0 Then
-        sh.Application.rows(rowIndex).Hidden = False
+        sh.Rows(rowIndex).Hidden = False
     End If
 End Sub
 Public Sub SelectRow(sh As Excel.Worksheet, rowIndex As Long)
@@ -55,18 +55,17 @@ Public Sub SelectRow(sh As Excel.Worksheet, rowIndex As Long)
 End Sub
 Public Sub FormatRow(sh As Excel.Worksheet, rowIndex As Long, numberFormat As String)
     If rowIndex <> 0 Then
-        sh.Columns(rowIndex).Select
-        sh.Application.Selection.numberFormat = numberFormat ' "#,##0.00" - "0.00%"
+        sh.Rows(rowIndex).numberFormat = numberFormat ' "#,##0.00" - "0.00%"
     End If
 End Sub
 Public Sub HideColumn(sh As Excel.Worksheet, columnIndex As Long)
     If columnIndex <> 0 Then
-        sh.Application.Columns(columnIndex).Hidden = True
+        sh.Columns(columnIndex).Hidden = True
     End If
 End Sub
 Public Sub ShowColumn(sh As Excel.Worksheet, columnIndex As Long)
     If columnIndex <> 0 Then
-        sh.Application.Columns(columnIndex).Hidden = False
+        sh.Columns(columnIndex).Hidden = False
     End If
 End Sub
 Public Sub SelectColumn(sh As Excel.Worksheet, columnIndex As Long)
@@ -126,7 +125,7 @@ Public Function GetCurrentRow(sh As Excel.Worksheet) As Long
 End Function
 
 Public Function GetCurrentColumn(sh As Excel.Worksheet) As Long
-    GetCurrentColumn = sh.Application.ActiveCell.row
+    GetCurrentColumn = sh.Application.ActiveCell.Column
 End Function
 
 Public Function NextRowHasValue(sh As Excel.Worksheet) As Boolean
@@ -219,6 +218,10 @@ RenameSheet_Retry:
 
 RenameSheet_Error:
     cnt = cnt + 1
+    If cnt > 50 Then ' the name is not valid (too long or illegal characters), not just taken: give up
+        RenameSheet = sh.Name
+        Exit Function
+    End If
     RenameSheet = omStringFunctions.StringFormat("{0} ({1})", newName, cnt)
     Resume RenameSheet_Retry
 End Function

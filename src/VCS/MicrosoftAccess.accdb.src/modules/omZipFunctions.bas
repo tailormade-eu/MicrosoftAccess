@@ -1,7 +1,8 @@
 ﻿Attribute VB_Name = "omZipFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=cbc01142
+'@lib 2026-10-10 sha=338a33c5
+Private Const MAX_WAIT_SECONDS As Long = 120 ' longest wait for the background copy of the shell
 
 Sub NewZip(sPath)
 'Create empty Zip File
@@ -14,6 +15,7 @@ End Sub
 
 Public Function ZipFolder(ByVal folderName As String, Optional filenameZip As String = "") As String
     Dim oApp As Object
+    Dim waitStart As Single
 
     If IsNullOrEmpty(filenameZip) Then
         While Right(folderName, 1) = "\"
@@ -31,8 +33,10 @@ Public Function ZipFolder(ByVal folderName As String, Optional filenameZip As St
 
     'Keep script waiting until Compressing is done
     On Error Resume Next
+    waitStart = Timer
     Do Until oApp.NameSpace(CVar(filenameZip)).Items.Count = oApp.NameSpace(CVar(folderName)).Items.Count
        omKernalAPIFunctions.Sleep 1000
+       If Timer < waitStart Or Timer - waitStart > MAX_WAIT_SECONDS Then Exit Do ' locked file or error: do not wait forever
     Loop
     On Error GoTo 0
 
@@ -41,16 +45,23 @@ End Function
 
 Public Function UnzipToFolder(ByVal zipFileName As String, Optional fileNameFolder As String = "") As String
     Dim oApp As Object
+    Dim waitStart As Single
 
     If IsNullOrEmpty(fileNameFolder) Then
-        fileNameFolder = Replace(zipFileName, ".zip", "")
+        fileNameFolder = Left(zipFileName, Len(zipFileName) - 4) ' remove the .zip at the end, not one inside a path
     End If
     omFileFunctions.CreateFolderPath fileNameFolder
 
     Set oApp = CreateObject("Shell.Application")
     oApp.NameSpace(CVar(fileNameFolder)).CopyHere oApp.NameSpace(CVar(zipFileName)).Items
 
+    ' CopyHere works in the background: wait until all items are there before the temp folders are removed
     On Error Resume Next
+    waitStart = Timer
+    Do Until oApp.NameSpace(CVar(fileNameFolder)).Items.Count >= oApp.NameSpace(CVar(zipFileName)).Items.Count
+        omKernalAPIFunctions.Sleep 250
+        If Timer < waitStart Or Timer - waitStart > MAX_WAIT_SECONDS Then Exit Do
+    Loop
     gFso.DeleteFolder Environ("Temp") & "\Temporary Directory*", True
 
     UnzipToFolder = fileNameFolder
