@@ -318,6 +318,15 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `CreateGuid() As String` — Generate GUID
 - `CreateRandomEAN13() As String` — Generate random EAN13 barcode
 
+## omHashAlgorithms.cls
+- `MD5(sIn As String, Optional bB64 As Boolean) As String` — MD5 hash of text (hex or base64), also SHA1, SHA256, SHA384, SHA512 with the same signature
+- `ConvToBase64String(vIn As Variant) As Variant` — Bytes to base64 string
+- `ConvToHexString(vIn As Variant) As Variant` — Bytes to hex string
+
+## omHashAlgorithmsFunctions.bas
+- `MD5(sIn As String, Optional bB64 As Boolean) As String` — Module-level wrapper around omHashAlgorithms, also SHA1, SHA256, SHA384, SHA512
+- `ConvToBase64String(vIn As Variant) As Variant` — Bytes to base64 string
+
 ## omHTML.bas
 - `Run()` — Main entry point for HTML generation
 - `GenerateDomain(DomainName As String, DomainFolder As String, DefaultCount As Long)` — Generate HTML domain structure
@@ -329,6 +338,9 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `SaveFile(filename As String, text As String)` — Save text to file
 - `ReadFile(filename As String) As String` — Read text from file
 - `GetAnchor(ByVal HRef As String, ByVal text As String, Optional CheckHttp As Boolean = False, Optional TargetBlank As Boolean = True) As String` — Generate HTML anchor tag
+
+## omHTMLExport.bas
+- `OutputHTMLRaw(sql As String, title As String, filename As String)` — Write the result of a SELECT as an HTML table to a UTF-8 file (values are HTML-encoded)
 
 ## omInvoiceFunctions.bas
 - `GetStructuredPaymentReference(number As Long, Optional alignLeft As Boolean = True) As String` — Generate structured payment reference number
@@ -468,6 +480,12 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omReportFunctions.bas
 - `ExportToPDF(ReportName As String, filename As String, Optional whereCondition As String, Optional windowMode As AcWindowMode = acWindowNormal, Optional outputQuality As AcExportQuality = acExportQualityPrint)` — Export report to PDF file with optional filtering and quality settings
 - `UpdateVisibleByTag(Report As Report, tag As String, state As Boolean)` — Set control visibility based on tag value
+
+## omResult.cls
+- `Ok(Optional reason As String)` — Mark result as successful
+- `Failed(Optional reason As String)` — Mark result as failed (also the state of a new object)
+- `IsSuccess() As Boolean` — True after Ok
+- `IsFailed() As Boolean` — True until Ok is called
 
 ## omSeqFunctions.bas
 - `omSeqItemLevelToString(Value As omSeqItemLevel) As String` — Convert omSeqItemLevel enum to string representation
@@ -683,6 +701,17 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omUser_Edan.cls
 - `LoginById(UserId As Long, Password As String)` — Logs in by user ID and password
 - `LoginByName(LoginName As String, Password As String)` — Logs in by name and password
+
+## omVATFunctions.bas
+- `OpenBEVATNumberLookupWebsite(VATNumber As Variant)` — Open the KBO public search for a Belgian VAT number
+- `CleanBEVatNumber(VATNumber As Variant) As String` — Digits only (removes spaces, dots, commas, BE)
+- `IsValidBEVatNumber(VATNumber As Variant) As Boolean` — BE prefix, 10 digits and Mod 97 check
+- `FormatBEVatNumber(VATNumber As Variant, Optional formatString As String) As String` — Format a valid number, e.g. BE 0123.456.789
+
+## omWinSpoolFunctions.bas
+- `GetPaperListText() As String` — Paper number and name of every paper of the default printer, one per line
+- `GetPaperList()` — Show that list in a message box
+- `GetPaperSize(paperName As String) As Long` — Paper number of a paper name on the default printer (-1 = not found)
 
 ## omZipFunctions.bas
 - `ZipFolder(ByVal folderName As String, Optional filenameZip As String) As String` — Creates ZIP file from folder
