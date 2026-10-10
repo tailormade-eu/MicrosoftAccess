@@ -2,8 +2,13 @@
 Option Compare Database
 Option Explicit
 
-Private Declare PtrSafe Function SHGetSpecialFolderLocation Lib "shell32" (ByVal hwnd As Long, ByVal nFolder As Long, Pidl As Long) As Long
-Private Declare PtrSafe Function SHGetPathFromIDList Lib "shell32" (ByVal Pidl As Long, ByVal folderPath As String) As Long
+#If VBA7 Then
+    Private Declare PtrSafe Function SHGetSpecialFolderLocation Lib "shell32" (ByVal hwnd As LongPtr, ByVal nFolder As Long, Pidl As LongPtr) As Long
+    Private Declare PtrSafe Function SHGetPathFromIDList Lib "shell32" (ByVal Pidl As LongPtr, ByVal folderPath As String) As Long
+#Else
+    Private Declare Function SHGetSpecialFolderLocation Lib "shell32" (ByVal hwnd As Long, ByVal nFolder As Long, Pidl As Long) As Long
+    Private Declare Function SHGetPathFromIDList Lib "shell32" (ByVal Pidl As Long, ByVal folderPath As String) As Long
+#End If
 
  Enum SpecialFolderConst
  sfAppData = 26
@@ -34,7 +39,11 @@ Private Declare PtrSafe Function SHGetPathFromIDList Lib "shell32" (ByVal Pidl A
  End Enum
 
  Public Function SpecialFolder(ByVal SFConst As SpecialFolderConst) As String
+#If VBA7 Then
+ Dim Pidl As LongPtr
+#Else
  Dim Pidl As Long
+#End If
  Dim s As String * 260
  Dim l As Long
  l = SHGetSpecialFolderLocation(0, SFConst, Pidl)
@@ -42,7 +51,7 @@ Private Declare PtrSafe Function SHGetPathFromIDList Lib "shell32" (ByVal Pidl A
  If l = 0 Then
  l = SHGetPathFromIDList(Pidl, s)
  If l = 1 Then
- s = Left(Trim(s), InStr(s, Chr(0)) - 1)
+ s = Left$(s, InStr(s, vbNullChar) - 1)
  SpecialFolder = Trim(s)
  End If
  End If

@@ -455,3 +455,12 @@ Public Function CalculatePayDate(dt As Date, Days As Integer, EndOfMonth As Bool
     dt = DateAdd("d", ExtraDays, dt)
     CalculatePayDate = dt
 End Function
+
+Public Function GetFiscalYear(ByVal d As Date, _
+        Optional ByVal startMonth As Integer = 1, _
+        Optional ByVal offset As Integer = 0) As Integer
+    Dim baseYear As Integer
+    baseYear = year(d)
+    If Month(d) < startMonth Then baseYear = baseYear - 1
+    GetFiscalYear = baseYear + offset
+End Function

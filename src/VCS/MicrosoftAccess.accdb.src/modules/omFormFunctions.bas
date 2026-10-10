@@ -21,6 +21,28 @@ Dim ctrl As Control
         End If
     Next
 End Sub
+Public Sub UpdateLockedByTag(Form As Form, Tag As String, state As Boolean, Optional delimiter = ",")
+Dim ctrl As Control
+
+    For Each ctrl In Form.Controls
+        If omStringFunctions.NotIsNullOrEmpty(ctrl.Tag) And (InStr(1, delimiter & ctrl.Tag & delimiter, delimiter & Tag & delimiter) > 0 Or omStringFunctions.IsNullOrEmpty(Tag)) Then
+            ctrl.Locked = state
+        End If
+    Next
+End Sub
+Public Sub UpdateBackColorByTag(Form As Form, Tag As String, trueColor As Long, falseColor As Long, state As Boolean, Optional delimiter = ",")
+Dim ctrl As Control
+
+    For Each ctrl In Form.Controls
+        If omStringFunctions.NotIsNullOrEmpty(ctrl.Tag) And (InStr(1, delimiter & ctrl.Tag & delimiter, delimiter & Tag & delimiter) > 0 Or omStringFunctions.IsNullOrEmpty(Tag)) Then
+            If state Then
+                ctrl.BackColor = trueColor
+            Else
+                ctrl.BackColor = falseColor
+            End If
+        End If
+    Next
+End Sub
 Public Function OpenForm(Name As String, Optional view As AcFormView = AcFormView.acFormDS) As Variant
     Name = Replace(Name, "cmd", "")
     If InStr(1, Name, "listsearch") <> 0 Then
