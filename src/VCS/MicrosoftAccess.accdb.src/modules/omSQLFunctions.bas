@@ -86,24 +86,27 @@ Public Function BuildSQL(ByVal selectClause As String, Optional ByVal fromClause
 End Function
 
 
-Public Function GetSelect(SQL As String) As String
+Public Function GetSelect(sql As String, Optional skipnormalization As Boolean = False) As String
 Dim posFrom As Long
 
-    posFrom = GetSQLClausePos(SQL, "FROM")
-    GetSelect = ReplaceSQLClause(Mid(SQL, 1, posFrom - 1), "SELECT", "")
+    If skipnormalization = False Then
+        sql = NormalizeSQL(sql)
+    End If
+    posFrom = GetSQLClausePos(sql, "FROM", skipnormalization:=skipnormalization)
+    GetSelect = ReplaceSQLClause(Mid(sql, 1, posFrom - 1), "SELECT", "", skipnormalization:=skipnormalization)
 
 End Function
-Public Function GetFrom(SQL As String) As String
+Public Function GetFrom(sql As String, Optional skipnormalization As Boolean = False) As String
 Dim posFrom As Long
 Dim poswhere As Long
 Dim posOrderBy As Long
 Dim posGroupBy As Long
 Dim posUse As Long
 
-    posFrom = GetSQLClausePos(SQL, "FROM")
-    poswhere = GetSQLClausePos(SQL, "WHERE")
-    posOrderBy = GetSQLClausePos(SQL, "ORDER BY", poswhere + 1)
-    posGroupBy = GetSQLClausePos(SQL, "GROUP BY", poswhere + 1)
+    posFrom = GetSQLClausePos(sql, "FROM", skipnormalization:=skipnormalization)
+    poswhere = GetSQLClausePos(sql, "WHERE", skipnormalization:=skipnormalization)
+    posOrderBy = GetSQLClausePos(sql, "ORDER BY", poswhere + 1, skipnormalization:=skipnormalization)
+    posGroupBy = GetSQLClausePos(sql, "GROUP BY", poswhere + 1, skipnormalization:=skipnormalization)
     If poswhere <> 0 Or posOrderBy <> 0 Or posGroupBy <> 0 Then
         If poswhere <> 0 Then
             posUse = poswhere
@@ -116,9 +119,9 @@ Dim posUse As Long
         End If
     End If
     If posUse = 0 Then
-        posUse = Len(SQL) + 1
+        posUse = Len(sql) + 1
     End If
-    GetFrom = ReplaceSQLClause(Mid(SQL, posFrom, posUse - (posFrom - 1)), "FROM", "")
+    GetFrom = ReplaceSQLClause(Mid(sql, posFrom, posUse - (posFrom - 1)), "FROM", "", skipnormalization:=skipnormalization)
 
 
 End Function
@@ -151,7 +154,7 @@ Dim posUse As Long
 
 End Function
 
-Public Function GetOrderBy(ByVal SQL As String) As String
+Public Function GetOrderBy(ByVal sql As String, Optional skipnormalization As Boolean = False) As String
 Dim posOrderBy As Long
 
 
@@ -161,10 +164,12 @@ Dim posOrderBy As Long
 'GROUP BY Course.Course_ID, Course.Course_Year
 'HAVING (((Course.Course_Year) = [1]))
 'ORDER BY Course.Course_Year;
-    SQL = NormalizeSQL(SQL)
-    posOrderBy = GetSQLClausePos(SQL, "ORDER BY")
+    If skipnormalization = False Then
+        sql = NormalizeSQL(sql)
+    End If
+    posOrderBy = GetSQLClausePos(sql, "ORDER BY", skipnormalization:=skipnormalization)
     If posOrderBy <> 0 Then
-        GetOrderBy = ReplaceSQLClause(Mid(SQL, posOrderBy + 1, Len(SQL) - (posOrderBy - 1)), "ORDER BY", "")
+        GetOrderBy = ReplaceSQLClause(Mid(sql, posOrderBy + 1, Len(sql) - (posOrderBy - 1)), "ORDER BY", "", skipnormalization:=skipnormalization)
     End If
 
 
@@ -191,38 +196,42 @@ Public Function GetSQLServerWeekFunction()
     GetSQLServerWeekFunction = "datepart(wk,<<Value>>)"
 End Function
 
-Public Function GetSQLClausePos(ByVal SQL As String, clause As String, Optional startPos As Long = 1) As Long
+Public Function GetSQLClausePos(ByVal sql As String, clause As String, Optional startPos As Long = 1, Optional skipnormalization As Boolean = False) As Long
 Dim pos As Long
 
-    SQL = NormalizeSQL(SQL)
-    pos = InStr(startPos, SQL, " " & clause & " ")
+    If skipnormalization = False Then
+        sql = NormalizeSQL(sql)
+    End If
+    pos = InStr(startPos, sql, " " & clause & " ")
     If pos = 0 Then
-        pos = InStr(startPos, SQL, clause & " ")
+        pos = InStr(startPos, sql, clause & " ")
     End If
 
     GetSQLClausePos = pos
 End Function
 
-Public Function ReplaceSQLClause(ByVal SQL As String, clause As String, Optional replaceString As String = "", Optional startPos As Long = 0) As String
+Public Function ReplaceSQLClause(ByVal sql As String, clause As String, Optional replaceString As String = "", Optional startPos As Long = 0, Optional skipnormalization As Boolean = False) As String
 Dim pos As Long
 Dim posEnd As Long
 Dim result As String
 
-    SQL = NormalizeSQL(SQL)
+    If skipnormalization = False Then
+        sql = NormalizeSQL(sql)
+    End If
     If startPos = 0 Then
-        pos = GetSQLClausePos(SQL, clause)
+        pos = GetSQLClausePos(sql, clause)
     Else
         pos = startPos
     End If
     If pos <> 0 Then
-        posEnd = InStr(pos + Len(clause) - 1, SQL, " ")
+        posEnd = InStr(pos + Len(clause) - 1, sql, " ")
         If posEnd = 0 Then
-            posEnd = InStr(pos, SQL, vbCrLf)
+            posEnd = InStr(pos, sql, vbCrLf)
         End If
         If posEnd = 0 Then
-            posEnd = InStr(pos, SQL, vbCr)
+            posEnd = InStr(pos, sql, vbCr)
         End If
-        result = Mid(SQL, posEnd)
+        result = Mid(sql, posEnd)
     End If
     ReplaceSQLClause = Trim(result)
 End Function
