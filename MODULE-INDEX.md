@@ -259,7 +259,10 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `GetExtension(filename As String) As String` — Get file extension
 - `MakeFilenameSafe(filename As String) As String` — Remove invalid characters from filename
 - `CreateFolderPath(strPath As String, Optional OpenFolderInExplorer As Boolean = False)` — Create folder hierarchy
-- `ReadFilesIntoTable(folderPath As String, tableName As String, Optional pattern As String, Optional nameField As String, Optional pathField As String, Optional extensionField As String)` — Empty a table and fill it with the files of a folder; works with any table that has a text field for the name (Name, Filename and Extension are filled when the table has them)
+- `FILES_TABLE` — Constant: the table omFiles that this module creates and maintains for ReadFilesIntoTable
+- `ReadFilesIntoTable(folderPath As String, Optional tableName As String, Optional pattern As String, Optional nameField As String, Optional pathField As String, Optional extensionField As String)` — Empty a table and fill it with the files of a folder; without tableName the table omFiles is used (created when missing); with your own table the name goes to the name field or the first text field, and path and extension are filled when the table has them
+- `EnsureFilesTable()` — Create omFiles (Name, Filename, Extension, Selected) when missing; add Selected to an older omFiles
+- `SetFilesSelected(selected As Boolean, Optional tableName As String)` — Set Selected of every row of the file table (omFiles by default)
 - `FileLocked(strFileName As String, Optional displayError As Boolean = False) As Boolean` — Check if file is open elsewhere
 - `GetDesktopFolder() As String` — Get Desktop folder path
 - `GetUserRootFolder() As String` — Get user home folder path
@@ -415,6 +418,13 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omPictureFunctions.bas
 - `savePict(pImage As Access.Image)` — Save image control to JPG file
 - `savePictEMF(pImage As Access.Image)` — Save image control to EMF file
+
+## omPrinterFunctions.bas
+- `PRINTER_TABLE` — Constant: the name of the table this module creates and maintains (omPrinters)
+- `EnsurePrinterTable()` — Create the table omPrinters (Id, Name, IsDefault) when missing; add IsDefault to an older table
+- `LoadPrinters(Optional flagField As String, Optional flagText As String)` — Empty the table and fill it with the printers of Application.Printers; optionally set a yes/no field of your own for printers whose name contains flagText
+- `GetPrinterId(namePart As String, Optional preferredId As Variant) As Variant` — Id of the first printer whose name contains namePart (the preferred Id when it matches too); Null when none
+- `GetDefaultPrinterName() As String` — Device name of the Windows default printer, or ""
 
 ## omPrinterSettingsManager.cls
 - `GetSettings()` — Retrieve current printer settings

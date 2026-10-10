@@ -1,5 +1,5 @@
 ﻿Attribute VB_Name = "omFileFunctions"
-'@lib 2026-10-10 sha=0954bc5b
+'@lib 2026-10-10 sha=07372a2d
 ' Last updated by Raoul Jacobs on 20130619_1115
 
 Option Compare Database
@@ -15,6 +15,10 @@ End Enum
 ' Private variable to store WScript.Shell instance
 Private wsh As Object
 Public gFso As New Scripting.FileSystemObject
+
+' The table that ReadFilesIntoTable fills when you do not give a table of your own. It belongs to this module: EnsureFilesTable
+' creates it (Name, Filename, Extension, Selected) when it is missing.
+Public Const FILES_TABLE As String = "omFiles"
 
 Public Function BuildPathFileExists(path As String, filename As String) As String
     BuildPathFileExists = gFso.BuildPath(path, filename)
@@ -189,14 +193,15 @@ Public Sub CreateFolderPath(strPath As String, Optional OpenFolderInExplorer As 
     End If
 End Sub
 
-' Empties the table and fills it with the files (not the sub folders) of a folder. File names that contain "~" are skipped;
+' Empties a table and fills it with the files (not the sub folders) of a folder. File names that contain "~" are skipped;
 ' pattern (optional) keeps only the file names that contain that text.
-' The table decides what is written, so a table like T_Files (a text field with the file name and a Selected yes/no)
-' works as well as a table with Name, Filename and Extension:
+' tableName (optional): your own table. Without it the table omFiles of this module is used, and created when it is missing
+' (see EnsureFilesTable). Your own table decides what is written, so a table like T_Files (a text field with the file name and
+' a Selected yes/no) works as well as a table with Name, Filename and Extension:
 '   nameField      : field for the file name; when the table has no such field, the first text field is used
 '   pathField      : field for the full path, written only when the table has it ("" = never)
 '   extensionField : field for the extension, written only when the table has it ("" = never)
-Public Sub ReadFilesIntoTable(folderPath As String, tableName As String, Optional pattern As String = "", _
+Public Sub ReadFilesIntoTable(folderPath As String, Optional tableName As String = "", Optional pattern As String = "", _
         Optional nameField As String = "Name", Optional pathField As String = "Filename", Optional extensionField As String = "Extension")
 Dim rs As New ADODB.Recordset
 Dim F As Scripting.File
@@ -205,6 +210,10 @@ Dim usePath As String
 Dim useExtension As String
 Dim fld As ADODB.Field
 
+    If Len(tableName) = 0 Then
+        tableName = FILES_TABLE
+        EnsureFilesTable
+    End If
     CurrentProject.connection.Execute "DELETE FROM [" & tableName & "]"
     rs.Open tableName, CurrentProject.connection, adOpenForwardOnly, adLockOptimistic
     If RecordsetHasField(rs, nameField) Then
@@ -232,6 +241,36 @@ Dim fld As ADODB.Field
     rs.Close
     Set rs = Nothing
 
+End Sub
+
+' Creates the table omFiles (Name, Filename, Extension, Selected) when it does not exist; adds Selected to an older omFiles without it.
+Public Sub EnsureFilesTable()
+Dim db As DAO.Database
+Dim td As DAO.TableDef
+Dim fld As DAO.Field
+Dim hasSelected As Boolean
+
+    Set db = CurrentDb
+    On Error Resume Next
+    Set td = db.TableDefs(FILES_TABLE)
+    On Error GoTo 0
+    If td Is Nothing Then
+        db.Execute "CREATE TABLE [" & FILES_TABLE & "] (Name TEXT(255), Filename TEXT(255), Extension TEXT(50), Selected YESNO)"
+        Exit Sub
+    End If
+    For Each fld In td.Fields
+        If StrComp(fld.Name, "Selected", vbTextCompare) = 0 Then hasSelected = True
+    Next fld
+    If Not hasSelected Then db.Execute "ALTER TABLE [" & FILES_TABLE & "] ADD COLUMN Selected YESNO"
+End Sub
+
+' Sets the yes/no field Selected of every row of the file table (omFiles when no table is given) to True or False.
+Public Sub SetFilesSelected(selected As Boolean, Optional tableName As String = "")
+    If Len(tableName) = 0 Then
+        tableName = FILES_TABLE
+        EnsureFilesTable
+    End If
+    CurrentProject.connection.Execute "UPDATE [" & tableName & "] SET Selected=" & IIf(selected, "True", "False")
 End Sub
 
 Private Function RecordsetHasField(rs As ADODB.Recordset, fieldName As String) As Boolean
