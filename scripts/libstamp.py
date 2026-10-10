@@ -4,6 +4,8 @@
     python -I scripts/libstamp.py apply      write/refresh the stamps (the date changes only when the hash changes)
     python -I scripts/libstamp.py manifest   write library-stamps.txt (name;date;sha) from the stamps in the modules
 
+Add  excel  as last argument for the Excel library (MicrosoftExcel/src/modules); the default is the Access library.
+
 The hash must be identical to the one omLibraryStamp.bas calculates inside Access, so both sides
 normalize the module text the same way (see normalize): no VERSION/BEGIN/END class header, no
 "Attribute" lines, no stamp line, lower case (the VBA editor rewrites the case of identifiers),
@@ -16,8 +18,12 @@ import sys
 import datetime
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-MODULES = ROOT / 'src' / 'VCS' / 'MicrosoftAccess.accdb.src' / 'modules'
-MANIFEST = ROOT / 'library-stamps.txt'
+LIBRARIES = {
+    'access': (ROOT / 'src' / 'VCS' / 'MicrosoftAccess.accdb.src' / 'modules', ROOT / 'library-stamps.txt'),
+    'excel': (ROOT / 'MicrosoftExcel' / 'src' / 'modules', ROOT / 'MicrosoftExcel' / 'library-stamps.txt'),
+}
+MODULES, MANIFEST = LIBRARIES['access']
+BOM = bytes([0xEF, 0xBB, 0xBF])  # the Access exports have one; Excel imports .bas files as ANSI, so the Excel library has none
 STAMP = re.compile(r"^'@lib (\d{4}-\d{2}-\d{2}) sha=([0-9a-f]{8})\s*$")
 STAMP_PREFIX = "'@lib "
 
@@ -93,7 +99,12 @@ def stamped_text(text, today):
 
 
 def main(argv):
+    global MODULES, MANIFEST, BOM
     mode = argv[1] if len(argv) > 1 else 'check'
+    which = argv[2] if len(argv) > 2 else 'access'
+    MODULES, MANIFEST = LIBRARIES[which]
+    if which == 'excel':
+        BOM = b''
     today = datetime.date.today().isoformat()
     bad = 0
     manifest = []
