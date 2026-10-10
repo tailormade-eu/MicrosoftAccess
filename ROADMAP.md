@@ -7,7 +7,7 @@ Besluit Raoul 2026-10-10: deze lijst woont hier, niet in CM of Customers.
 
 | Punt | Wat | Opmerking |
 |---|---|---|
-| Excel-bibliotheek | Map `MicrosoftExcel` naast `MicrosoftAccess`; 8 modules uit client/SBDInc | Eerst plan: mapstructuur, stempels (`libstamp.py` met mapargument), referenties ADODB/VBIDE/Scripting |
+| Excel-bibliotheek aanvullen | README is er; nog niet in een klantwerkmap geprobeerd. `omHashAlgorithms` voor Excel (zonder `Option Compare Database`) | client-werkmap als eerste proef, na akkoord |
 | Wachtwoord client | Staat in de git-historie van de oude `omSQLDataAdapter` | Roteren; niet kopiëren |
 | `databases\MicrosoftAccess.accdb` | Datum 2025, nog oude modules | Vervangen door verse build of herstellen uit git |
 | Optimalisatie-audit | `omOutlook` Sender-voorwaarde (omgekeerd?), PK-substring in `TableCreateDDL`, `VBAFindReplace` en `omMSAccessFunctions` DMax-lus | Elk met test; `omOutlook` kan alleen met Outlook |
