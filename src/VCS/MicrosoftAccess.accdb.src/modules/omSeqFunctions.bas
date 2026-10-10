@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omSeqFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=fb480d24
 
 Const seqUrl = "http://seq.domainmmvii.local:5341/"
 

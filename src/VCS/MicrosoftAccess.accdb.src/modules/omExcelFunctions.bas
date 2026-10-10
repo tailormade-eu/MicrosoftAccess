@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omExcelFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=8699d55c
 
 Public Function ReplaceFirst(sh As Excel.Worksheet, findValue As String, replaceValue As String)
 Dim rng As Excel.range

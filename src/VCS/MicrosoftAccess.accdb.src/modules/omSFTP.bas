@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omSFTP"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=d67279c5
 
 ' Upload a file over SFTP by starting an existing command line client. Nothing is stored in the
 ' database: the caller passes host, user and password/key (keep those in a secret store, not in code).

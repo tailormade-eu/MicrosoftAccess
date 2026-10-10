@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omStringFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=c863000a
 
 Public Enum StringPaddingMode
     PadLeft = 1

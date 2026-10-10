@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=dc4a910d
 Public connection As New ADODB.connection
 
 Public Sub spExecuteNonQuery(storedProcedureName As String, Optional Parameter1 As Variant = Null, Optional Parameter2 As Variant = Null, Optional Parameter3 As Variant = Null, Optional Parameter4 As Variant = Null, Optional parameter5 As Variant = Null, Optional parameter6 As Variant = Null)

@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omStartup"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=07853617
 ' Code written by Raoul Jacobs
 ' E. author@example.com
 ' Date Craeted : 201112

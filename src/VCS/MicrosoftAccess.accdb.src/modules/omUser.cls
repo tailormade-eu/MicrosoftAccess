@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=88d2a61a
 
 Private cmdLoginByName As New ADODB.Command
 Private cmdLoginById As New ADODB.Command

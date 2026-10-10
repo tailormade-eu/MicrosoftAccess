@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omTesseractOCR"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=49b6b572
 
 'reference Windows Script Host Object Model
 

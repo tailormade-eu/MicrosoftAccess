@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omHashAlgorithmsFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=392fa529
 Private gHashAlgorithms As New omHashAlgorithms
 Public Function MD5(ByVal sIn As String, Optional bB64 As Boolean = 0) As String
     MD5 = gHashAlgorithms.MD5(sIn, bB64)

@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omSQLFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=85c05af6
 
 ' Limits of GetSelect/GetFrom/GetWhere/GetOrderBy/GetSQLClausePos/ReplaceSQLClause:
 ' they cut the SQL text by searching for the keywords FROM, WHERE, GROUP BY, HAVING, ORDER BY and UNION.

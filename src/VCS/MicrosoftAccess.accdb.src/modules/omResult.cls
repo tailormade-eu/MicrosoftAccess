@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=1df6e90d
 
 ' A new object counts as failed until Ok is called.
 Private m_Status As Boolean

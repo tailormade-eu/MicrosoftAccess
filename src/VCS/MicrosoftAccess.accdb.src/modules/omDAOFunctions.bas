@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omDAOFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=0464061d
 
 Public Sub SetQueryDefProperty(queryName As String, propertyName As String, Value As String, Optional propertyType As dao.DataTypeEnum = dbText)
 Dim prp As dao.Property

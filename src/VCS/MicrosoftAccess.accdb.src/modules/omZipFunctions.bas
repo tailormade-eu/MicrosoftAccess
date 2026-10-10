@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omZipFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=cbc01142
 
 Sub NewZip(sPath)
 'Create empty Zip File

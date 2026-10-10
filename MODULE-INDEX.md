@@ -397,6 +397,12 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `GenerateDataMacroAfterInsert(tableName As String) As String` — Generate after-insert data macro
 - `GenerateDataMacroAfterUpdate(tableName As String) As String` — Generate after-update data macro
 
+## omLibraryStamp.bas
+- `LibraryCheck(Optional manifestFile As String, Optional prefix As String) As String` — One line per om* module that needs attention: NO STAMP, CHANGED LOCALLY, LIBRARY NEWER, LOCAL ONLY; empty = all in order
+- `GetModuleHash(moduleName As String) As String` — Calculated hash (8 hex) of a module of the current database
+- `GetModuleStamp(moduleName As String) As String` — The stored stamp line (date and sha) of a module
+- `NormalizeModuleText(text As String) As String` — The text that is hashed (public for tests)
+
 ## omLogging.cls
 - `currentdate` (get/let) — current logging date
 - `SetCurrentDate(Optional dt As Date = 0, Optional Description As String = "")` — Set current date and description

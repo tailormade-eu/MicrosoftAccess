@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=3e02d4df
 
 ' Reference: Microsoft Visual Basic for Applications Extensibility 3.5
 

@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omSQLServerFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=faf4588e
 
 Public Function GetPrimaryKeyScript(tableName As String) As String
 Dim db As dao.Database

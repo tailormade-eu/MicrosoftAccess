@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=96be6635
 
 Public Sub Merge(Template As String, SaveAs As String, rs As ADODB.Recordset, Optional show As Boolean = False)
 Dim i As Integer

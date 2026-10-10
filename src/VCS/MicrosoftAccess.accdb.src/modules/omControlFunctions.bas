@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omControlFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=93b29458
 
 Private Type RECT
     Left As Long

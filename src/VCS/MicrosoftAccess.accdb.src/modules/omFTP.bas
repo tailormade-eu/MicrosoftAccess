@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omFTP"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=9a875f19
 
 Public Function UploadFile(ftpAddress As String, Login As String, Password As String, filename As String, Optional ftpPath As String = "/") As String
 Dim outFilename As String

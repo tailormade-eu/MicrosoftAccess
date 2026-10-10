@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omVATFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=9a830f31
 
 ' Belgian VAT numbers: "BE 0123.456.789" = prefix BE + 10 digits, the last 2 are a check number
 ' (97 - first 8 digits Mod 97).

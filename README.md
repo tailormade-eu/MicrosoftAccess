@@ -41,6 +41,38 @@ Call LinkUsingSSMA()
 - `omBankAccountFunctions.bas` – IBAN validation and formatting utilities
 - `databases/` – Example databases
 
+## Module stamps
+
+Every `om*` module carries one stamp line, right after the `Option` lines:
+
+```vba
+Option Explicit
+'@lib 2026-10-10 sha=3fa91c07
+```
+
+- `sha` is the first 8 hex characters of a SHA-256 hash of the module text. The date is the day the
+  hash last changed (set automatically, no version number to maintain).
+- **How the hash is made** (identical in Python and in VBA): take the module text, drop the class
+  header (`VERSION`/`BEGIN`/`END`), every `Attribute` line and the stamp line itself; make everything
+  lower case (the VBA editor rewrites the case of identifiers, which would otherwise look like a
+  change); remove trailing spaces and tabs; remove leading and trailing blank lines; use LF line
+  ends; hash the UTF-8 bytes.
+- **In the library** run `python -I scripts/libstamp.py apply` before every commit. It adds or
+  refreshes the stamps and writes `library-stamps.txt` (`name;date;sha`). `check` lists modules whose
+  stamp is missing or out of date (exit code 1), `manifest` only rewrites `library-stamps.txt`.
+- **In a customer database** load the library modules (including `omLibraryStamp` and the hash
+  modules `omHashAlgorithms`, `omHashAlgorithmsFunctions`) and run:
+
+  ```vba
+  Debug.Print omLibraryStamp.LibraryCheck("D:\path	o\library-stamps.txt")
+  ```
+
+  It prints one line per module that needs attention: `NO STAMP`, `CHANGED LOCALLY` (the text no
+  longer matches its own stamp), `LIBRARY NEWER` (the library has another hash for that module) or
+  `LOCAL ONLY` (the module is not in the library). Empty output means everything is in order.
+  Without the file name only the local check runs. `GetModuleHash(name)` and `GetModuleStamp(name)`
+  give the calculated hash and the stored stamp of one module.
+
 ## Module index
 
 Zie [MODULE-INDEX.md](MODULE-INDEX.md) voor een overzicht van alle modules met hun publieke functies/subs. Check deze index (of het bronbestand zelf) vóór je een nieuwe hulpfunctie schrijft — de kans is groot dat ze al bestaat.

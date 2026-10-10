@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omSSMAAConnector"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=9e4b29ae
 Global cSQLNCLIVersion As Integer
 Global cSQLNCLIFound As Boolean
 Global cSQLODBCVersion As Integer

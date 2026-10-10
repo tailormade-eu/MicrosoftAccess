@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omArrayFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=f00b40d4
 
 Public Sub ObjectArrayAdd(objectArray() As Object, Value As Object, Optional Clear = False)
     On Error Resume Next

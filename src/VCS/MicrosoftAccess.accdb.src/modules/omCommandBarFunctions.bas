@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omCommandBarFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=c652d140
 
 Public Const omPrintContextMenu = "omPrintContextMenu"
 

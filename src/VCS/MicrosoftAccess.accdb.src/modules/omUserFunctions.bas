@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omUserFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=b83355c5
 
 Public gUser As New omUser
 Public Const UseWindowsAuthentication As Boolean = False

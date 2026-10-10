@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omAPISpecialFolders"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=d461cf8e
 
 #If VBA7 Then
     Private Declare PtrSafe Function SHGetSpecialFolderLocation Lib "shell32" (ByVal hwnd As LongPtr, ByVal nFolder As Long, Pidl As LongPtr) As Long

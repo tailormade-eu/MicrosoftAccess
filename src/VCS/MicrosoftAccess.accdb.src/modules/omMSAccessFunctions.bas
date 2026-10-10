@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omMSAccessFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=402639fe
 
 Public Function FormExists(formName As String) As Boolean
     FormExists = False

@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omHTMLExport"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=63d69791
 
 ' Writes the result of a SELECT as a simple HTML table to a UTF-8 file.
 ' Uses the database connection of the current project (ADODB) and late-bound ADODB.Stream.

@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omReportFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=aca15372
 
 Public Sub ExportToPDF(ReportName As String, filename As String, Optional whereCondition As String, Optional windowMode As AcWindowMode = acWindowNormal, Optional outputQuality As AcExportQuality = AcExportQuality.acExportQualityPrint)
 

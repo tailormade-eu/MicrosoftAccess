@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omExportFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=54933c61
 
 
 

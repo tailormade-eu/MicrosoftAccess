@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omLibraryFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=9c15ddbb
 
 Private Function InternalGetTimeStamp(Optional prefix As String = "_") As String
     InternalGetTimeStamp = prefix & format(Now, "yyyymmdd_hhnnss")

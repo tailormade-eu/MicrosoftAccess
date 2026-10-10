@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omDateFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=035574ed
 
 ' Leeg (Null/Empty) = niet voorbij, geeft False. Vergelijking op dagdatum (Date), geen tijdstip.
 ' Let op: VBA's And is niet kortsluitend zoals C#'s && — daarom de Null-check apart, niet in

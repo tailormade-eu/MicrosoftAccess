@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omHTML"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=2aa24147
 Dim gFso As New Scripting.FileSystemObject
 
 Dim strPathWWW As String

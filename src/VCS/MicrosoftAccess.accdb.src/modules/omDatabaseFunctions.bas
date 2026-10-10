@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omDatabaseFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=61e240e6
 
 Public Sub LinkTable(databaseFilename As String, sourceName As String, destinationName As String)
     UnlinkTable destinationName

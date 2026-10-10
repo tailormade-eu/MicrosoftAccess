@@ -1,4 +1,5 @@
 ﻿Attribute VB_Name = "omFileFunctions"
+'@lib 2026-10-10 sha=890eb339
 ' Last updated by Raoul Jacobs on 20130619_1115
 
 Option Compare Database

@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=caa272c4
 Const emExcel = 1
 Const emWord = 2
 Const emPDF = 3

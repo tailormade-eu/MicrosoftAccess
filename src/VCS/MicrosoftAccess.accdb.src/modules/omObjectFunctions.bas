@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omObjectFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=10932fe2
 
 Public Function IsNothing(obj As Object) As Boolean
     IsNothing = (obj Is Nothing)

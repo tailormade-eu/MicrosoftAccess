@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omDevelopmentFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=9c0a970f
 Public Sub ExportQueries()
 Dim rsQueries As New ADODB.Recordset
 Dim fno As Long

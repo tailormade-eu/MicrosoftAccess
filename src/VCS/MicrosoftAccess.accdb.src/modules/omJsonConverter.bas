@@ -1,4 +1,5 @@
 ﻿Attribute VB_Name = "omJsonConverter"
+'@lib 2026-10-10 sha=28c545e7
 ''
 ' VBA-JSON v2.3.1
 ' (c) Tim Hall - https://github.com/VBA-tools/VBA-JSON

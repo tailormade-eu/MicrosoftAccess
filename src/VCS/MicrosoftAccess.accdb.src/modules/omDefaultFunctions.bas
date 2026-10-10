@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omDefaultFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=cb0aa517
 
 Public gSystemDefaults As New omDefaults
 Public gDefaults As New omDefaults

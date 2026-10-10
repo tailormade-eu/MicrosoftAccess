@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omBankAccountFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=907e2efe
 
 Const COUNTRY_CODE_BE As String = "BE"
 Const MODULO_DIVISOR As Long = 97

@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omFormFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=8c6d7ba7
 
 Public Sub UpdateEnableByTag(Form As Form, tag As String, state As Boolean, Optional delimiter = ",")
 Dim ctrl As Control

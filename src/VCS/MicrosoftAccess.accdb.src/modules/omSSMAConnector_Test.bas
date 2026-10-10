@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omSSMAConnector_Test"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=e748c29c
 
 Public Sub ChangeDatabase(GroupName As String, sourceDatabase As String, destinationDatabase As String)
 Dim rs As New ADODB.Recordset

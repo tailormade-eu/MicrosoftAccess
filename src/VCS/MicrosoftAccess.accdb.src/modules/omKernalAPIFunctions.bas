@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omKernalAPIFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=2df70616
 
 Public Const FILE_ATTRIBUTE_NORMAL = &H80
 Public Const FILE_ATTRIBUTE_ARCHIVE = &H20

@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omPictureFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=d4e2eb58
 
 Public Function savePict(pImage As Access.Image)
     Dim fname As String 'The name of the file to save the picture to

@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omWinSpoolFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=1b9b4863
 
 ' Paper sizes of the default printer, via winspool.drv DeviceCapabilities.
 ' https://docs.microsoft.com/en-us/office/vba/access/concepts/printing/programmatically-retrieve-printer-capabilities

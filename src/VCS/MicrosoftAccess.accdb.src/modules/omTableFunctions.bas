@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omTableFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=3c8904dc
 
 Public Sub TableAddId(tableName As String)
     AddField tableName, "ID", dbLong, True

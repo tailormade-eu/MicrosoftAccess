@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omRecordsetFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=8b752bf2
 
 
 Public Function CopyRecord(rsSrc As ADODB.Recordset, rsDst As ADODB.Recordset, Optional PrimaryKeyName As String = "", Optional LinkName As String = "", Optional LinkId As Long = 0) As Long

@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omSQLConnectorFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=7be74e71
 
 Global gSQLConnector As New omSQLConnector
 

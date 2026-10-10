@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omAPIClipboard"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=e3a76075
 
 ' Clipboard text helpers: Unicode text, works in 32-bit and 64-bit Access (VBA7, Access 2010 or later).
 '   ClipBoard_SetText "text"   -> True when the text is on the clipboard

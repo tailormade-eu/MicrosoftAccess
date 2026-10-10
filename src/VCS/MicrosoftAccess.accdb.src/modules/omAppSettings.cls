@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=ee274e02
 ' Code written by Raoul Jacobs
 ' E. author@example.com
 ' Date Craeted : 200703

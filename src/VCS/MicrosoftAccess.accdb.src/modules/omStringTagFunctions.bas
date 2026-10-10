@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omStringTagFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=525afe1c
 ' Created by Raoul Jacobs - opmaat bvba
 '
 ' Last Modified by : Raoul Jacobs

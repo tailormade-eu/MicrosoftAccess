@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omLoggingFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=ab3961d6
 
 Public gLogging As omLogging
 

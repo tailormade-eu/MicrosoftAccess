@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omInvoiceFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=015f119d
 
 Public Function GetStructuredPaymentReference(number As Long, Optional alignLeft As Boolean = True) As String
 Dim s As String

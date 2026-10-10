@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omAPI32FileFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=9f705da6
 
 ' The generic file API declarations (SetFileAttributes, GetFileAttributes, GetShortPathName, GetTempPath,
 ' GetTempFileName, CreateDirectory, SECURITY_ATTRIBUTES, FILE_ATTRIBUTE_*) live in omKernalAPIFunctions.

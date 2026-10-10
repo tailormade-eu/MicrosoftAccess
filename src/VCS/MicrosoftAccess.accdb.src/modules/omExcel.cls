@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=d5d158ea
 
 Public xlApp As New Excel.Application
 Public xlWb As Excel.Workbook

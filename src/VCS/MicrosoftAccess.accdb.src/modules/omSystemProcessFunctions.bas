@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omSystemProcessFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=e8078cc4
 
 Function IsProcessRunning(strProcess As String, Optional strServer As String = "127.0.0.1") As Boolean
     Dim Process, strObject

@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omDynamicRecordStateTest"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=7ac67512
 Dim drec As New omDynamicRecordState
 
 

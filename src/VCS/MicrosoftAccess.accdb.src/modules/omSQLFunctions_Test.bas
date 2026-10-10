@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omSQLFunctions_Test"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=34be62a5
 
 ' Tests for the clause helpers in omSQLFunctions.
 ' Run from the Immediate window:  ?omSQLFunctions_Test.RunAll

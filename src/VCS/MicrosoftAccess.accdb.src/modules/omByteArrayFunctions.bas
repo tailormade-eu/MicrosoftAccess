@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omByteArrayFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=7e869dd4
 
 Public Function ByteArrayToHexString(ba() As Byte) As String
 Dim i As Long

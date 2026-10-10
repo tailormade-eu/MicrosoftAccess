@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omReferenceFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=5adc5c3e
 
 Public Sub ListReferences()
 Dim R As Reference

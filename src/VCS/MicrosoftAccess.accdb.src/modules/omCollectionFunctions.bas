@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omCollectionFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=c3424d4c
 
 Public Sub SortCollectionTest()
 Dim d As New Collection

@@ -1,6 +1,7 @@
 ﻿Attribute VB_Name = "omGuidFunctions"
 Option Compare Database
 Option Explicit
+'@lib 2026-10-10 sha=b3d5c755
 Private Declare PtrSafe Function CoCreateGuid Lib "ole32" (Id As Any) As Long
 Public Function CreateGuid() As String
     Dim Id(0 To 15) As Byte
