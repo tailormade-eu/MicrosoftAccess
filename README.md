@@ -40,6 +40,8 @@ Call LinkUsingSSMA()
 - `omStringFunctions.bas` – String utility functions
 - `omBankAccountFunctions.bas` – IBAN validation and formatting utilities
 - `databases/` – Example databases
+- `tests/` – Sample files that the `*_Tests` modules need (for example `ocr-sample.png` for `omTesseractOCR_Tests`)
+- `scripts/` – `libstamp.py`, the tool that writes the module stamps
 
 ## Module stamps
 

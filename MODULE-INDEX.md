@@ -175,9 +175,10 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `FormCopy(strForm As String, strFind As String, strReplace As String)` — Copy form with text replacement
 - `FormControlRename(strForm As String, lControlType As Long, strFind As String, strReplace As String, Optional OnlyCaption As Boolean = False, Optional TestRun As Boolean = False)` — Rename form controls by type
 - `DeleteTempObjects()` — Delete temporary database objects
-- `ReportReplaceBackColor(ReportName As String, OldColor As Long, NewColor As Long)` — Replace report background colors
-- `ReportReplaceForeColor(ReportName As String, OldColor As Long, NewColor As Long)` — Replace report text colors
-- `ReportReplaceColors()` — Replace all report colors
+- `ReplaceColorInObject(objectName As String, oldColor As Long, newColor As Long, Optional colorProperties As String, Optional objectType As AcObjectType) As Long` — Replace one colour by another in a report or form (controls and sections, chosen colour properties); returns the number of changes, saves only when something changed
+- `ReplaceColorInAll(oldColor As Long, newColor As Long, Optional colorProperties As String, Optional namePattern As String, Optional objectType As AcObjectType) As Long` — The same for all reports (or forms) whose name matches a Like pattern
+- `ReportReplaceBackColor(ReportName As String, OldColor As Long, NewColor As Long)` — Replace a report's back colour (short form of ReplaceColorInObject)
+- `ReportReplaceForeColor(ReportName As String, OldColor As Long, NewColor As Long)` — Replace a report's text colour (short form of ReplaceColorInObject)
 - `AllFormsReplace(strFind As String, strReplace As String)` — Replace text in all forms
 - `AllFormsDisableDialog()` — Disable dialog mode on all forms
 - `AllFormsDisablePopUp()` — Disable popup on all forms
@@ -481,7 +482,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `ConnectionString` (get/let) — current connection string; setting opens a new connection
 
 ## omSQLConnectorFunctions.bas
-- `ConnectorTest()` — Test SQL connector with parameterized update commands
+- `ConnectorTest(Optional linkedTableName As String, Optional ConnectionType As ConnectionTypes, Optional encryptType As EncryptTypes, Optional explicitConnectionString As String) As String` — Test gSQLConnector with a statement that changes nothing (SELECT 1); "" = works, otherwise the error text
 
 ## omSQLFunctions.bas
 - `WhereAnd(whereClause1 As String, whereClause2 As String, Optional embraceWhereClause1 = False, Optional embraceWhereClause2 = False)` — Combine two WHERE clauses with AND
@@ -601,8 +602,11 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `GenerateUpdate(tableName As String, Optional idFieldName As String, Optional excludeFields As String) As String` — Generates UPDATE statement for table
 
 ## omTesseractOCR.bas
-- `GetTxtFromImage(filename As String) As String` — Extracts text from image using Tesseract OCR
-- `GetTxtFromImageTest()` — Tests OCR extraction (debug function)
+- `FindTesseractExe() As String` — Full path of tesseract.exe, or "" when not installed
+- `GetTxtFromImage(filename As String) As String` — Extracts text from image using Tesseract OCR ("" when it cannot be read)
+
+## omTesseractOCR_Tests.bas
+- `RunAll(Optional imagePath As String) As String` — Tests of omTesseractOCR: "OK (n tests)", "FAILED: ..." or "SKIPPED: ..."
 
 ## omTimeRange.cls
 - `StartTime` (get/let) As Date — start time

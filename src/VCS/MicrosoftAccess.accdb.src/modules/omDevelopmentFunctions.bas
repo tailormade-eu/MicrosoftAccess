@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omDevelopmentFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=9c0a970f
+'@lib 2026-10-10 sha=984ff6b4
 Public Sub ExportQueries()
 Dim rsQueries As New ADODB.Recordset
 Dim fno As Long
@@ -151,124 +151,124 @@ Dim rs As New ADODB.Recordset
     Set rs = Nothing
 End Sub
 
+' Replaces one colour by another in a report or a form (design view, hidden): every control, and every
+' section, whose colour property equals oldColor gets newColor.
+'   colorProperties : the colour properties to look at, comma separated (a control without that property is skipped)
+'   objectType      : acReport (default) or acForm
+' Returns the number of properties that were changed. The object is only saved when something changed.
+' An object that cannot be opened (wrong name, open in another view) raises its error after being closed.
+' Example: ReplaceColorInObject "SInvoice", 1384554, 472939, "BackColor,ForeColor"
+Public Function ReplaceColorInObject(objectName As String, oldColor As Long, newColor As Long, _
+        Optional colorProperties As String = "BackColor,ForeColor,BorderColor", _
+        Optional objectType As AcObjectType = acReport) As Long
+Dim obj As Object
+Dim props() As String
+Dim changed As Long
+Dim errNumber As Long
+Dim errDescription As String
+
+    props = Split(Replace(colorProperties, " ", ""), ",")
+    On Error GoTo ReplaceColorInObject_Error
+    If objectType = acForm Then
+        DoCmd.OpenForm objectName, acDesign, windowMode:=acHidden
+        Set obj = Forms(objectName)
+    Else
+        DoCmd.OpenReport objectName, acViewDesign, windowMode:=acHidden
+        Set obj = Reports(objectName)
+    End If
+    changed = ReplaceColorInControls(obj.Controls, oldColor, newColor, props)
+    changed = changed + ReplaceColorInSections(obj, oldColor, newColor, props)
+    DoCmd.Close objectType, objectName, IIf(changed > 0, acSaveYes, acSaveNo)
+    ReplaceColorInObject = changed
+    Exit Function
+
+ReplaceColorInObject_Error:
+    errNumber = Err.Number
+    errDescription = Err.Description
+    On Error Resume Next
+    DoCmd.Close objectType, objectName, acSaveNo
+    On Error GoTo 0
+    Err.Raise errNumber, "ReplaceColorInObject", errDescription
+End Function
+
+' The same for all reports (or forms) whose name matches namePattern (Like pattern, "*" = all).
+' Returns the total number of properties changed.
+' Example: ReplaceColorInAll 1384554, 472939, "BackColor,ForeColor", "S*_Print"
+Public Function ReplaceColorInAll(oldColor As Long, newColor As Long, _
+        Optional colorProperties As String = "BackColor,ForeColor,BorderColor", _
+        Optional namePattern As String = "*", _
+        Optional objectType As AcObjectType = acReport) As Long
+Dim names As New Collection
+Dim obj As AccessObject
+Dim n As Variant
+
+    If objectType = acForm Then
+        For Each obj In CurrentProject.AllForms
+            If obj.Name Like namePattern Then names.Add obj.Name
+        Next obj
+    Else
+        For Each obj In CurrentProject.AllReports
+            If obj.Name Like namePattern Then names.Add obj.Name
+        Next obj
+    End If
+    For Each n In names
+        ReplaceColorInAll = ReplaceColorInAll + ReplaceColorInObject(CStr(n), oldColor, newColor, colorProperties, objectType)
+    Next n
+End Function
+
+' Short forms kept for existing callers: only the back colour / only the fore colour of a report.
 Public Sub ReportReplaceBackColor(ReportName As String, OldColor As Long, NewColor As Long)
-Dim ctrl As Control
-Dim InvalidProperty As Boolean
-
-' ReportReplaceBackColor "SCreditnote",1384554,472939
-' ReportReplaceBackColor "SCreditnote_ClientProject2002",1384554,472939
-' ReportReplaceBackColor "SCreditnote_ProductCosts",1384554,472939
-' ReportReplaceBackColor "SCreditnote_Sub",1384554,472939
-' ReportReplaceBackColor "SCreditnote_Sub_ClientProject2002",1384554,472939
-' ReportReplaceBackColor "SInvoice",1384554,472939
-' ReportReplaceBackColor "SInvoice_ClientProject2002",1384554,472939
-' ReportReplaceBackColor "SInvoice_ProductCosts",1384554,472939
-' ReportReplaceBackColor "SInvoice_Sub",1384554,472939
-' ReportReplaceBackColor "SInvoice_Sub_ClientProject2002",1384554,472939
-' ReportReplaceBackColor "SOrder_Outstanding",1384554,472939
-' ReportReplaceBackColor "SOrder_Print",1384554,472939
-' ReportReplaceBackColor "SOrder_Print_Ordered",1384554,472939
-' ReportReplaceBackColor "SOrderDetail_Print",1384554,472939
-' ReportReplaceBackColor "SOrderDetail_Print_Ordered",1384554,472939
-' ReportReplaceBackColor "SOrderProduct_Print",1384554,472939
-' ReportReplaceBackColor "SOrderProductCost_Print",1384554,472939
-' ReportReplaceBackColor "SPricelistProduct_Print",1384554,472939
-' ReportReplaceBackColor "SPricelistProductFull_Print",1384554,472939
-' ReportReplaceBackColor "SPricelistProductFullProductCost_Print",1384554,472939
-' ReportReplaceBackColor "SPriceListProductPrice_Print",1384554,472939
-' ReportReplaceBackColor "SPriceListProductPrice2_Print",1384554,472939
-' ReportReplaceBackColor "SPricelistProductProductCost_Print",1384554,472939
-
-    On Error GoTo ReportReplaceBackColor_Error
-    DoCmd.OpenReport ReportName, acViewDesign
-    For Each ctrl In Reports(ReportName).Controls
-        InvalidProperty = False
-        If ctrl.BackColor = OldColor Then
-            If Not InvalidProperty Then
-                ctrl.BackColor = NewColor
-            End If
-        End If
-    Next
-    DoCmd.Close acReport, ReportName, acSaveYes
-    Exit Sub
-ReportReplaceBackColor_Error:
-    InvalidProperty = True
-    Resume Next
+    ReplaceColorInObject ReportName, OldColor, NewColor, "BackColor"
 End Sub
 
 Public Sub ReportReplaceForeColor(ReportName As String, OldColor As Long, NewColor As Long)
+    ReplaceColorInObject ReportName, OldColor, NewColor, "ForeColor"
+End Sub
+
+Private Function ReplaceColorInControls(ctrls As Object, oldColor As Long, newColor As Long, props() As String) As Long
 Dim ctrl As Control
-Dim InvalidProperty As Boolean
 
-' ReportReplaceForeColor "SOrder_Print",1384554,472939
+    For Each ctrl In ctrls
+        ReplaceColorInControls = ReplaceColorInControls + ReplaceColorOfItem(ctrl, oldColor, newColor, props)
+    Next ctrl
+End Function
 
-    On Error GoTo ReportReplaceForeColor_Error
-    DoCmd.OpenReport ReportName, acViewDesign
-    For Each ctrl In Reports(ReportName).Controls
-        InvalidProperty = False
-        If ctrl.ForeColor = OldColor Then
-            If Not InvalidProperty Then
-                ctrl.ForeColor = NewColor
-            End If
+Private Function ReplaceColorInSections(obj As Object, oldColor As Long, newColor As Long, props() As String) As Long
+Dim i As Long
+Dim sec As Object
+
+    ' 0 = detail, 1/2 = header/footer, 3/4 = page header/footer, 5 and up = group levels
+    For i = 0 To 30
+        Set sec = Nothing
+        On Error Resume Next
+        Set sec = obj.Section(i)
+        On Error GoTo 0
+        If Not sec Is Nothing Then
+            ReplaceColorInSections = ReplaceColorInSections + ReplaceColorOfItem(sec, oldColor, newColor, props)
         End If
-    Next
-    DoCmd.Close acReport, ReportName, acSaveYes
-    Exit Sub
-ReportReplaceForeColor_Error:
-    InvalidProperty = True
-    Resume Next
-End Sub
-Public Sub ReportReplaceColors()
+    Next i
+End Function
 
-    ReportReplaceBackColor "SCreditnote", 1384554, 472939
-    ReportReplaceBackColor "SCreditnote_ClientProject2002", 1384554, 472939
-    ReportReplaceBackColor "SCreditnote_ProductCosts", 1384554, 472939
-    ReportReplaceBackColor "SCreditnote_Sub", 1384554, 472939
-    ReportReplaceBackColor "SCreditnote_Sub_ClientProject2002", 1384554, 472939
-    ReportReplaceBackColor "SInvoice", 1384554, 472939
-    ReportReplaceBackColor "SInvoice_ClientProject2002", 1384554, 472939
-    ReportReplaceBackColor "SInvoice_ProductCosts", 1384554, 472939
-    ReportReplaceBackColor "SInvoice_Sub", 1384554, 472939
-    ReportReplaceBackColor "SInvoice_Sub_ClientProject2002", 1384554, 472939
-    ReportReplaceBackColor "SOrder_Outstanding", 1384554, 472939
-    ReportReplaceBackColor "SOrder_Print", 1384554, 472939
-    ReportReplaceBackColor "SOrder_Print_Ordered", 1384554, 472939
-    ReportReplaceBackColor "SOrderDetail_Print", 1384554, 472939
-    ReportReplaceBackColor "SOrderDetail_Print_Ordered", 1384554, 472939
-    ReportReplaceBackColor "SOrderProduct_Print", 1384554, 472939
-    ReportReplaceBackColor "SOrderProductCost_Print", 1384554, 472939
-    ReportReplaceBackColor "SPricelistProduct_Print", 1384554, 472939
-    ReportReplaceBackColor "SPricelistProductFull_Print", 1384554, 472939
-    ReportReplaceBackColor "SPricelistProductFullProductCost_Print", 1384554, 472939
-    ReportReplaceBackColor "SPriceListProductPrice_Print", 1384554, 472939
-    ReportReplaceBackColor "SPriceListProductPrice2_Print", 1384554, 472939
-    ReportReplaceBackColor "SPricelistProductProductCost_Print", 1384554, 472939
+' Sets every listed colour property of a control or section that equals oldColor to newColor.
+Private Function ReplaceColorOfItem(item As Object, oldColor As Long, newColor As Long, props() As String) As Long
+Dim i As Long
+Dim current As Long
 
-    ReportReplaceForeColor "SCreditnote", 1384554, 472939
-    ReportReplaceForeColor "SCreditnote_ClientProject2002", 1384554, 472939
-    ReportReplaceForeColor "SCreditnote_ProductCosts", 1384554, 472939
-    ReportReplaceForeColor "SCreditnote_Sub", 1384554, 472939
-    ReportReplaceForeColor "SCreditnote_Sub_ClientProject2002", 1384554, 472939
-    ReportReplaceForeColor "SInvoice", 1384554, 472939
-    ReportReplaceForeColor "SInvoice_ClientProject2002", 1384554, 472939
-    ReportReplaceForeColor "SInvoice_ProductCosts", 1384554, 472939
-    ReportReplaceForeColor "SInvoice_Sub", 1384554, 472939
-    ReportReplaceForeColor "SInvoice_Sub_ClientProject2002", 1384554, 472939
-    ReportReplaceForeColor "SOrder_Outstanding", 1384554, 472939
-    ReportReplaceForeColor "SOrder_Print", 1384554, 472939
-    ReportReplaceForeColor "SOrder_Print_Ordered", 1384554, 472939
-    ReportReplaceForeColor "SOrderDetail_Print", 1384554, 472939
-    ReportReplaceForeColor "SOrderDetail_Print_Ordered", 1384554, 472939
-    ReportReplaceForeColor "SOrderProduct_Print", 1384554, 472939
-    ReportReplaceForeColor "SOrderProductCost_Print", 1384554, 472939
-    ReportReplaceForeColor "SPricelistProduct_Print", 1384554, 472939
-    ReportReplaceForeColor "SPricelistProductFull_Print", 1384554, 472939
-    ReportReplaceForeColor "SPricelistProductFullProductCost_Print", 1384554, 472939
-    ReportReplaceForeColor "SPriceListProductPrice_Print", 1384554, 472939
-    ReportReplaceForeColor "SPriceListProductPrice2_Print", 1384554, 472939
-    ReportReplaceForeColor "SPricelistProductProductCost_Print", 1384554, 472939
-
-End Sub
+    For i = LBound(props) To UBound(props)
+        If Len(props(i)) > 0 Then
+            Err.Clear
+            On Error Resume Next
+            current = CallByName(item, props(i), VbGet)
+            If Err.Number = 0 Then
+                If current = oldColor Then
+                    CallByName item, props(i), VbLet, newColor
+                    If Err.Number = 0 Then ReplaceColorOfItem = ReplaceColorOfItem + 1
+                End If
+            End If
+            On Error GoTo 0
+        End If
+    Next i
+End Function
 
 Public Sub AllFormsReplace(strFind As String, strReplace As String)
 Dim i As Long

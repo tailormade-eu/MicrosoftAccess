@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omSQLConnectorFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=7be74e71
+'@lib 2026-10-10 sha=17c63d6d
 
 Global gSQLConnector As New omSQLConnector
 
@@ -12,11 +12,24 @@ Public Sub SetSQLConnectorConnectionString(tableName As String, Optional encrypt
 End Sub
 
 
-Public Sub ConnectorTest()
-    'gSQLConnector.ExecuteCommandTextNonQuery "update External_T_Auto set id_uitrsuting=?, ManualMatched=?,HideLine=? where TextClean=?", ID_Uitrsuting, ManualMatched, HideLine, TextClean
-    ' Als tabel gelinked is kan de gewone access connectie gebruikt worden : dit is default
-    gSQLConnector.ExecuteCommandTextNonQuery "UPDATE t_klantenquete SET ID_Taal=? WHERE ID_Enquete=?", 1, 1
-
-    gSQLConnector.ConnectionString = omSSMAAConnector.GetConnectionStringByProperty("T_Auto", ConnectionType:=ConnectionTypes.SQLODBC, encryptType:=EncryptMandatory)
-    gSQLConnector.ExecuteCommandTextNonQuery "UPDATE t_klantenquete SET ID_Taal=? WHERE ID_Enquete=?", 1, 2
-End Sub
+' Tests whether gSQLConnector can reach a server, with a statement that changes nothing (SELECT 1).
+' The connection comes from explicitConnectionString when given, otherwise from the linked table linkedTableName
+' (its server and login, the same way SetSQLConnectorConnectionString does it). Without either, the connection
+' that gSQLConnector already has (or opens by itself) is tested.
+' Returns "" when it works, otherwise the text of the error.
+' Example: Debug.Print ConnectorTest("T_Auto", ConnectionTypes.SQLODBC, EncryptTypes.EncryptMandatory)
+Public Function ConnectorTest(Optional linkedTableName As String = "", _
+        Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLODBC, _
+        Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional, _
+        Optional explicitConnectionString As String = "") As String
+    On Error GoTo ConnectorTest_Error
+    If Len(explicitConnectionString) > 0 Then
+        gSQLConnector.ConnectionString = explicitConnectionString
+    ElseIf Len(linkedTableName) > 0 Then
+        gSQLConnector.ConnectionString = omSSMAAConnector.GetConnectionStringByProperty(linkedTableName, ConnectionType:=ConnectionType, encryptType:=encryptType)
+    End If
+    gSQLConnector.ExecuteCommandTextNonQuery "SELECT 1"
+    Exit Function
+ConnectorTest_Error:
+    ConnectorTest = Err.Description
+End Function
