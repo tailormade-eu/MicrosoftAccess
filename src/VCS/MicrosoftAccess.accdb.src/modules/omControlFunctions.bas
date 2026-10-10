@@ -2,6 +2,30 @@
 Option Compare Database
 Option Explicit
 
+Private Type RECT
+    Left As Long
+    Top As Long
+    Right As Long
+    Bottom As Long
+End Type
+
+#If VBA7 Then
+Private Declare PtrSafe Function FindWindowEx Lib "user32" Alias "FindWindowExA" (ByVal hWndParent As LongPtr, ByVal hWndChildAfter As LongPtr, ByVal lpszClass As String, ByVal lpszWindow As String) As LongPtr
+Private Declare PtrSafe Function GetClientRect Lib "user32" (ByVal hWnd As LongPtr, lpRect As RECT) As Long
+Private Declare PtrSafe Function GetDC Lib "user32" (ByVal hWnd As LongPtr) As LongPtr
+Private Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hWnd As LongPtr, ByVal hDC As LongPtr) As Long
+Private Declare PtrSafe Function GetDeviceCaps Lib "gdi32" (ByVal hDC As LongPtr, ByVal nIndex As Long) As Long
+#Else
+Private Declare Function FindWindowEx Lib "user32" Alias "FindWindowExA" (ByVal hWndParent As Long, ByVal hWndChildAfter As Long, ByVal lpszClass As String, ByVal lpszWindow As String) As Long
+Private Declare Function GetClientRect Lib "user32" (ByVal hWnd As Long, lpRect As RECT) As Long
+Private Declare Function GetDC Lib "user32" (ByVal hWnd As Long) As Long
+Private Declare Function ReleaseDC Lib "user32" (ByVal hWnd As Long, ByVal hDC As Long) As Long
+Private Declare Function GetDeviceCaps Lib "gdi32" (ByVal hDC As Long, ByVal nIndex As Long) As Long
+#End If
+
+Private Const LOGPIXELSX As Long = 88
+Private Const LOGPIXELSY As Long = 90
+
 Public Sub IfNullOrEmpty(ctrl As Control, Optional UseDefaultValue As Boolean = True)
     If omStringFunctions.IsNullOrEmpty(ctrl) Then
         If UseDefaultValue And NotIsNullOrEmpty(ctrl.defaultValue) Then
@@ -23,6 +47,35 @@ Dim vDate As Variant
     ctrl = IIf(IsDate(vDate), vDate, ctrl.defaultValue)
 End Sub
 
+
+' Measures the work area of the Access window (where forms open), in twips.
+' False = measurement failed; the caller then leaves the windows where Access places them.
+Public Function GetWorkArea(ByRef widthTwips As Long, ByRef heightTwips As Long) As Boolean
+#If VBA7 Then
+    Dim hMdi As LongPtr
+    Dim hDC As LongPtr
+#Else
+    Dim hMdi As Long
+    Dim hDC As Long
+#End If
+    Dim rc As RECT
+    Dim dpiX As Long
+    Dim dpiY As Long
+
+    hMdi = FindWindowEx(Application.hWndAccessApp, 0, "MDIClient", vbNullString)
+    If hMdi = 0 Then Exit Function
+    If GetClientRect(hMdi, rc) = 0 Then Exit Function
+
+    hDC = GetDC(0)
+    dpiX = GetDeviceCaps(hDC, LOGPIXELSX)
+    dpiY = GetDeviceCaps(hDC, LOGPIXELSY)
+    ReleaseDC 0, hDC
+    If dpiX = 0 Or dpiY = 0 Then Exit Function
+
+    widthTwips = CLng(rc.Right * 1440# / dpiX)
+    heightTwips = CLng(rc.Bottom * 1440# / dpiY)
+    GetWorkArea = True
+End Function
 
 Public Function IsFormOpen(formName As String) As Boolean
 

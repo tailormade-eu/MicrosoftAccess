@@ -3,6 +3,16 @@
 
 Option Compare Database
 Option Explicit
+' Enum to define window state options
+Public Enum WindowState
+    wsHide = 0
+    wsNormal = 1
+    wsMinimized = 2
+    wsMaximized = 3
+End Enum
+
+' Private variable to store WScript.Shell instance
+Private wsh As Object
 Public gFso As New Scripting.FileSystemObject
 
 Public Function BuildPathFileExists(path As String, filename As String) As String
@@ -32,8 +42,25 @@ Public Sub OpenFile(filename As String)
             Shell "explorer.exe " & filename, vbMaximizedFocus
         End If
 End Sub
-Public Sub OpenUrl(url As String)
-    Shell "explorer.exe " & Chr(34) & url & Chr(34), vbMaximizedFocus
+Public Sub OpenUrl(url As String, Optional newTab As Boolean = True)
+    If Not newTab Then
+        Shell "explorer.exe " & Chr(34) & url & Chr(34), vbMaximizedFocus
+        Exit Sub
+    End If
+    If wsh Is Nothing Then Set wsh = CreateObject("WScript.Shell")
+    Dim progId As String
+    On Error Resume Next
+    progId = wsh.RegRead("HKCU\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice\ProgId")
+    On Error GoTo 0
+    If InStr(LCase(progId), "chrome") > 0 Then
+        wsh.Run "chrome.exe --new-tab """ & url & """"
+    ElseIf InStr(LCase(progId), "edge") > 0 Or InStr(LCase(progId), "msedge") > 0 Then
+        wsh.Run "msedge.exe --new-tab """ & url & """"
+    ElseIf InStr(LCase(progId), "firefox") > 0 Then
+        wsh.Run "firefox.exe -new-tab """ & url & """"
+    Else
+        Shell "explorer.exe " & Chr(34) & url & Chr(34), vbMaximizedFocus
+    End If
 End Sub
 
 Public Sub OpenFolder(path As String, Optional createPath As Boolean = False)
@@ -206,6 +233,26 @@ End Function
 Public Function GetUserRootFolder() As String
     GetUserRootFolder = Environ("USERPROFILE")
 End Function
+Public Function GetTempFilenameInTempPath() As String
+    GetTempFilenameInTempPath = gFso.BuildPath(gFso.GetSpecialFolder(2), gFso.GetTempName)
+End Function
+Public Function GetTempPathInTempPath(Optional autoCreate As Boolean = True) As String
+Dim pos As Long
+    GetTempPathInTempPath = GetTempFilenameInTempPath
+    pos = InStrRev(GetTempPathInTempPath, ".")
+    If pos > 0 Then
+        GetTempPathInTempPath = Left(GetTempPathInTempPath, pos - 1)
+    End If
+    If autoCreate Then
+        omFileFunctions.CreateFolderPath GetTempPathInTempPath
+    End If
+End Function
+Public Function CopyFileToFolder(source As String, path As String, Optional overWriteFiles As Boolean = False) As String
+
+    CopyFileToFolder = gFso.BuildPath(path, gFso.GetFileName(source))
+    gFso.CopyFile source, CopyFileToFolder, overWriteFiles
+
+End Function
 Public Function ReadFileToString(path As String) As String
 Dim ts As TextStream
 
@@ -227,3 +274,37 @@ Dim ts As TextStream
     ts.Close
     Set ts = Nothing
 End Sub
+
+' Function to execute an application with configurable options
+Public Sub ExecuteShell(filename As String, Optional workingDir As String = "", Optional winState As WindowState = wsNormal, Optional wait As Boolean = True)
+    ' Initialize WScript.Shell if not already created
+    If wsh Is Nothing Then Set wsh = CreateObject("WScript.Shell")
+
+    ' Determine working directory
+    If workingDir = "" Then
+        ' Extract directory from file path if none is provided
+        workingDir = gFso.GetParentFolderName(filename)
+    End If
+    If gFso.FolderExists(workingDir) Then
+        wsh.CurrentDirectory = workingDir
+    End If
+
+    ' Run the executable with specified parameters
+    wsh.Run Chr(34) & filename & Chr(34), winState, wait
+End Sub
+
+' Starts an exe with arguments, waits until it finishes and returns the exit code.
+' -1 = Access could not start the exe. ExecuteShell above does not return the exit code.
+Public Function ExecuteShellExitCode(filename As String, Optional args As String = "", Optional winState As WindowState = wsHide) As Long
+    On Error GoTo Fout
+    If wsh Is Nothing Then Set wsh = CreateObject("WScript.Shell")
+    If Not gFso.FileExists(filename) Then
+        ExecuteShellExitCode = -1
+        Exit Function
+    End If
+    wsh.CurrentDirectory = gFso.GetParentFolderName(filename)
+    ExecuteShellExitCode = wsh.Run(Chr(34) & filename & Chr(34) & IIf(args = "", "", " " & args), winState, True)
+    Exit Function
+Fout:
+    ExecuteShellExitCode = -1
+End Function
