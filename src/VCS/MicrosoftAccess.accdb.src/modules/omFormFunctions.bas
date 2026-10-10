@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omFormFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=9d2b95fd
+'@lib 2026-10-10 sha=acbb57ba
 
 Public Sub UpdateEnableByTag(Form As Form, tag As String, state As Boolean, Optional delimiter = ",")
 Dim ctrl As Control
@@ -13,6 +13,9 @@ Dim ctrl As Control
     Next
 End Sub
 
+' Shows or hides the controls of a FORM that have this tag (the tag may be one of a list separated by
+' delimiter). A procedure with the same name exists in omReportFunctions (for reports): call them as
+' omFormFunctions.UpdateVisibleByTag and omReportFunctions.UpdateVisibleByTag.
 Public Sub UpdateVisibleByTag(Form As Form, tag As String, state As Boolean, Optional delimiter = ",")
 Dim ctrl As Control
 

@@ -6,7 +6,7 @@ omAppSettings;2026-10-10;ee274e02
 omArrayFunctions;2026-10-10;b9e75acc
 omBankAccountFunctions;2026-10-10;907e2efe
 omBaseClass;2026-10-10;0c869550
-omByteArrayFunctions;2026-10-10;7e869dd4
+omByteArrayFunctions;2026-10-10;cede54c9
 omCollectionFunctions;2026-10-10;c3424d4c
 omCommandBarFunctions;2026-10-10;c652d140
 omConnectionString;2026-10-10;52ea821a
@@ -23,7 +23,7 @@ omExcelEngine;2026-10-10;96be6635
 omExcelFunctions;2026-10-10;5f76d3bb
 omExportFunctions;2026-10-10;54933c61
 omFileFunctions;2026-10-10;c4a450fd
-omFormFunctions;2026-10-10;9d2b95fd
+omFormFunctions;2026-10-10;acbb57ba
 omFTP;2026-10-10;9a875f19
 omGlobalDeclarations;2026-10-10;83869ce9
 omGuidFunctions;2026-10-10;b3d5c755
@@ -42,13 +42,13 @@ omLoggingFunctions;2026-10-10;ab3961d6
 omMSAccessFunctions;2026-10-10;402639fe
 omObjectFunctions;2026-10-10;10932fe2
 omOutlook;2026-10-10;a08d9a05
-omPDFFunctions;2026-10-10;a181c183
+omPDFFunctions;2026-10-10;2e5c2282
 omPictureFunctions;2026-10-10;7008312a
 omPrinterSettingsManager;2026-10-10;3107be75
 omPrinterSettingsManagerFunctions;2026-10-10;db1d8002
 omRecordsetFunctions;2026-10-10;ff6cfa39
 omReferenceFunctions;2026-10-10;5adc5c3e
-omReportFunctions;2026-10-10;aca15372
+omReportFunctions;2026-10-10;90ab600b
 omResult;2026-10-10;1df6e90d
 omSeqFunctions;2026-10-10;49cd18b6
 omSeqItem;2026-10-10;47848f0d
@@ -63,7 +63,7 @@ omSQLObject;2026-10-10;30a48cc2
 omSQLServerFunctions;2026-10-10;5c8873cb
 omSSMAAConnector;2026-10-10;f3c14a5f
 omStartup;2026-10-10;b79bf44a
-omStringFunctions;2026-10-10;c863000a
+omStringFunctions;2026-10-10;0247d091
 omStringTagFunctions;2026-10-10;525afe1c
 omSystemProcessFunctions;2026-10-10;e8078cc4
 omTableConnector;2026-10-10;3a1e991d

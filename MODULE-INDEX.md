@@ -53,7 +53,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 
 ## omByteArrayFunctions.bas
 - `ByteArrayToHexString(ba() As Byte) As String` — Convert byte array to hexadecimal string with 0x prefix
-- `ByteArrayToString(ba() As Byte) As LongLong` — Convert byte array to numeric value
+- `ByteArrayToString(ba() As Byte) As String` — The bytes as one big-endian number, as text (exact up to 12 bytes)
 - `ByteArrayToHexString_Test()` — Test routine for hex conversion
 - `ByteArrayToString_Test()` — Test routine for numeric conversion
 
@@ -578,7 +578,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `ExtractLong(text As Variant, findtext As String) As Long` — Extracts long integer from text
 - `GetSubstringAfterChar(s As String, Optional c As String, Optional autoTrim As Boolean) As String` — Returns substring after last occurrence of character
 - `ByteArrayToHexString(ba() As Byte) As String` — Converts byte array to hex string
-- `ByteArrayToString(ba() As Byte) As String` — Converts byte array to numeric string
+- `ByteArrayToString(ba() As Byte) As String` — The bytes as one big-endian number, as text (exact up to 12 bytes)
 - `CheckIllegalCharInString(strCheck As String) As String` — Checks for illegal characters in string
 
 ## omStringTagFunctions.bas

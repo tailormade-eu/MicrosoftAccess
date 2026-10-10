@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omByteArrayFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=7e869dd4
+'@lib 2026-10-10 sha=cede54c9
 
 Public Function ByteArrayToHexString(ba() As Byte) As String
 Dim i As Long
@@ -12,14 +12,18 @@ Dim s As String
     Next
     ByteArrayToHexString = "0x" & s
 End Function
-Public Function ByteArrayToString(ba() As Byte) As LongLong
+' The bytes read as ONE big-endian number, returned as text. Exact up to 12 bytes (Decimal); more
+' than 12 bytes raises overflow. The same function exists in omStringFunctions and omByteArrayFunctions
+' (so each module can be copied on its own): keep both in line.
+Public Function ByteArrayToString(ba() As Byte) As String
 Dim i As Long
-Dim s As Double
+Dim s As Variant
 
+    s = CDec(0)
     For i = 0 To UBound(ba)
         s = s * 256 + ba(i)
     Next
-    ByteArrayToString = s
+    ByteArrayToString = CStr(s)
 End Function
 
 Public Sub ByteArrayToHexString_Test()
