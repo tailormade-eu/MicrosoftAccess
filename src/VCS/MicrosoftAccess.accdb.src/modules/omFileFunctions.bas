@@ -1,5 +1,5 @@
 ﻿Attribute VB_Name = "omFileFunctions"
-'@lib 2026-10-10 sha=c4a450fd
+'@lib 2026-10-10 sha=0954bc5b
 ' Last updated by Raoul Jacobs on 20130619_1115
 
 Option Compare Database
@@ -189,20 +189,43 @@ Public Sub CreateFolderPath(strPath As String, Optional OpenFolderInExplorer As 
     End If
 End Sub
 
-Public Sub ReadFilesIntoTable(folderPath As String, tableName As String, Optional pattern As String = "")
+' Empties the table and fills it with the files (not the sub folders) of a folder. File names that contain "~" are skipped;
+' pattern (optional) keeps only the file names that contain that text.
+' The table decides what is written, so a table like T_Files (a text field with the file name and a Selected yes/no)
+' works as well as a table with Name, Filename and Extension:
+'   nameField      : field for the file name; when the table has no such field, the first text field is used
+'   pathField      : field for the full path, written only when the table has it ("" = never)
+'   extensionField : field for the extension, written only when the table has it ("" = never)
+Public Sub ReadFilesIntoTable(folderPath As String, tableName As String, Optional pattern As String = "", _
+        Optional nameField As String = "Name", Optional pathField As String = "Filename", Optional extensionField As String = "Extension")
 Dim rs As New ADODB.Recordset
 Dim F As Scripting.File
+Dim useName As String
+Dim usePath As String
+Dim useExtension As String
+Dim fld As ADODB.Field
 
-    DoCmd.SetWarnings False
-    DoCmd.RunSQL "DELETE * FROM [" & tableName & "]"
-    DoCmd.SetWarnings True
+    CurrentProject.connection.Execute "DELETE FROM [" & tableName & "]"
     rs.Open tableName, CurrentProject.connection, adOpenForwardOnly, adLockOptimistic
+    If RecordsetHasField(rs, nameField) Then
+        useName = nameField
+    Else
+        For Each fld In rs.Fields
+            If fld.Type = adVarWChar Or fld.Type = adWChar Or fld.Type = adLongVarWChar Or fld.Type = adVarChar Or fld.Type = adChar Then
+                useName = fld.Name
+                Exit For
+            End If
+        Next fld
+    End If
+    If RecordsetHasField(rs, pathField) Then usePath = pathField
+    If RecordsetHasField(rs, extensionField) Then useExtension = extensionField
+
     For Each F In gFso.GetFolder(folderPath).Files
         If InStr(1, F.Name, pattern) <> 0 And InStr(1, F.Name, "~") = 0 Then
             rs.AddNew
-            rs("Name") = F.Name
-            rs("Filename") = F.path
-            rs("Extension") = omFileFunctions.GetExtension(F.Name)
+            If Len(useName) > 0 Then rs(useName) = F.Name
+            If Len(usePath) > 0 Then rs(usePath) = F.path
+            If Len(useExtension) > 0 Then rs(useExtension) = omFileFunctions.GetExtension(F.Name)
             rs.Update
         End If
     Next
@@ -210,6 +233,18 @@ Dim F As Scripting.File
     Set rs = Nothing
 
 End Sub
+
+Private Function RecordsetHasField(rs As ADODB.Recordset, fieldName As String) As Boolean
+Dim fld As ADODB.Field
+
+    If Len(fieldName) = 0 Then Exit Function
+    For Each fld In rs.Fields
+        If StrComp(fld.Name, fieldName, vbTextCompare) = 0 Then
+            RecordsetHasField = True
+            Exit Function
+        End If
+    Next fld
+End Function
 Public Function FileLocked(strFileName As String, Optional displayError As Boolean = False) As Boolean
    On Error Resume Next
    ' If the file is already opened by another process,

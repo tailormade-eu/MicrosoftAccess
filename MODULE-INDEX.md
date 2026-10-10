@@ -259,7 +259,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `GetExtension(filename As String) As String` — Get file extension
 - `MakeFilenameSafe(filename As String) As String` — Remove invalid characters from filename
 - `CreateFolderPath(strPath As String, Optional OpenFolderInExplorer As Boolean = False)` — Create folder hierarchy
-- `ReadFilesIntoTable(folderPath As String, tableName As String, Optional pattern As String = "")` — Import file list into table
+- `ReadFilesIntoTable(folderPath As String, tableName As String, Optional pattern As String, Optional nameField As String, Optional pathField As String, Optional extensionField As String)` — Empty a table and fill it with the files of a folder; works with any table that has a text field for the name (Name, Filename and Extension are filled when the table has them)
 - `FileLocked(strFileName As String, Optional displayError As Boolean = False) As Boolean` — Check if file is open elsewhere
 - `GetDesktopFolder() As String` — Get Desktop folder path
 - `GetUserRootFolder() As String` — Get user home folder path
