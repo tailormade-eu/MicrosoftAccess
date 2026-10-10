@@ -2,6 +2,14 @@
 Option Compare Database
 Option Explicit
 
+' Limits of GetSelect/GetFrom/GetWhere/GetOrderBy/GetSQLClausePos/ReplaceSQLClause:
+' they cut the SQL text by searching for the keywords FROM, WHERE, GROUP BY, HAVING, ORDER BY and UNION.
+' Reliable for flat queries only. They do NOT understand:
+' - subqueries: a FROM/WHERE/ORDER BY inside brackets is taken for the outer one
+' - text values: 'GROUP BY' inside a string literal ends the clause too early
+' NormalizeSQL replaces every semicolon and double space, also inside string literals.
+' ReplaceSQLClause only returns the text after the keyword; replaceString is not used yet.
+
 Public Function WhereAnd(whereClause1 As String, whereClause2 As String, Optional embraceWhereClause1 = False, Optional embraceWhereClause2 = False)
     If Len(whereClause1) > 0 And embraceWhereClause1 Then
         whereClause1 = "(" & whereClause1 & ")"
