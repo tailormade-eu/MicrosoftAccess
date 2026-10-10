@@ -86,71 +86,58 @@ Public Function BuildSQL(ByVal selectClause As String, Optional ByVal fromClause
 End Function
 
 
-Public Function GetSelect(sql As String, Optional skipnormalization As Boolean = False) As String
+Public Function GetSelect(ByVal sql As String, Optional skipnormalization As Boolean = False) As String
 Dim posFrom As Long
+
+    ' skipnormalization = True: the caller promises the SQL is already normalized (NormalizeSQL).
+    ' We normalize once here and use skipnormalization:=True for every inner call, so all
+    ' positions refer to the same string.
+    If skipnormalization = False Then
+        sql = NormalizeSQL(sql)
+    End If
+    posFrom = GetSQLClausePos(sql, "FROM", skipnormalization:=True)
+    If posFrom = 0 Then
+        posFrom = Len(sql) + 1
+    End If
+    GetSelect = ReplaceSQLClause(Mid(sql, 1, posFrom - 1), "SELECT", "", skipnormalization:=True)
+
+End Function
+Public Function GetFrom(ByVal sql As String, Optional skipnormalization As Boolean = False) As String
+Dim posFrom As Long
+Dim posEnd As Long
 
     If skipnormalization = False Then
         sql = NormalizeSQL(sql)
     End If
-    posFrom = GetSQLClausePos(sql, "FROM", skipnormalization:=skipnormalization)
-    GetSelect = ReplaceSQLClause(Mid(sql, 1, posFrom - 1), "SELECT", "", skipnormalization:=skipnormalization)
-
-End Function
-Public Function GetFrom(sql As String, Optional skipnormalization As Boolean = False) As String
-Dim posFrom As Long
-Dim poswhere As Long
-Dim posOrderBy As Long
-Dim posGroupBy As Long
-Dim posUse As Long
-
-    posFrom = GetSQLClausePos(sql, "FROM", skipnormalization:=skipnormalization)
-    poswhere = GetSQLClausePos(sql, "WHERE", skipnormalization:=skipnormalization)
-    posOrderBy = GetSQLClausePos(sql, "ORDER BY", poswhere + 1, skipnormalization:=skipnormalization)
-    posGroupBy = GetSQLClausePos(sql, "GROUP BY", poswhere + 1, skipnormalization:=skipnormalization)
-    If poswhere <> 0 Or posOrderBy <> 0 Or posGroupBy <> 0 Then
-        If poswhere <> 0 Then
-            posUse = poswhere
-        End If
-        If posOrderBy <> 0 Then
-            posUse = posOrderBy
-        End If
-        If posGroupBy <> 0 Then
-            posUse = posGroupBy
-        End If
-    End If
-    If posUse = 0 Then
-        posUse = Len(sql) + 1
-    End If
-    GetFrom = ReplaceSQLClause(Mid(sql, posFrom, posUse - (posFrom - 1)), "FROM", "", skipnormalization:=skipnormalization)
-
-
-End Function
-
-Public Function GetWhere(SQL As String) As String
-Dim poswhere As Long
-Dim posOrderBy As Long
-Dim posGroupBy As Long
-Dim posUse As Long
-
-    poswhere = GetSQLClausePos(SQL, "WHERE")
-    If poswhere = 0 Then
+    posFrom = GetSQLClausePos(sql, "FROM", skipnormalization:=True)
+    If posFrom = 0 Then
         Exit Function
     End If
-    posOrderBy = GetSQLClausePos(SQL, "ORDER BY", poswhere)
-    posGroupBy = GetSQLClausePos(SQL, "GROUP BY", poswhere)
-    If posOrderBy <> 0 Or posGroupBy <> 0 Then
-        If posOrderBy <> 0 Then
-            posUse = posOrderBy
-        End If
-        If posUse <> 0 And posGroupBy <> 0 Then
-            posUse = posGroupBy
-        End If
+    ' the FROM clause ends at the FIRST of the clauses that can follow it
+    posEnd = FirstClausePos(sql, posFrom + 1, "WHERE", "GROUP BY", "HAVING", "ORDER BY", "UNION")
+    If posEnd = 0 Then
+        posEnd = Len(sql) + 1
     End If
-    If posUse = 0 Then
-        posUse = Len(SQL) + 1
-    End If
-    GetWhere = ReplaceSQLClause(Mid(SQL, poswhere, posUse - (poswhere - 1)), "WHERE", "")
+    GetFrom = ReplaceSQLClause(Mid(sql, posFrom, posEnd - posFrom), "FROM", "", skipnormalization:=True)
 
+End Function
+
+Public Function GetWhere(ByVal sql As String, Optional skipnormalization As Boolean = False) As String
+Dim posWhere As Long
+Dim posEnd As Long
+
+    If skipnormalization = False Then
+        sql = NormalizeSQL(sql)
+    End If
+    posWhere = GetSQLClausePos(sql, "WHERE", skipnormalization:=True)
+    If posWhere = 0 Then
+        Exit Function
+    End If
+    posEnd = FirstClausePos(sql, posWhere + 1, "GROUP BY", "HAVING", "ORDER BY", "UNION")
+    If posEnd = 0 Then
+        posEnd = Len(sql) + 1
+    End If
+    GetWhere = ReplaceSQLClause(Mid(sql, posWhere, posEnd - posWhere), "WHERE", "", skipnormalization:=True)
 
 End Function
 
@@ -167,9 +154,9 @@ Dim posOrderBy As Long
     If skipnormalization = False Then
         sql = NormalizeSQL(sql)
     End If
-    posOrderBy = GetSQLClausePos(sql, "ORDER BY", skipnormalization:=skipnormalization)
+    posOrderBy = GetSQLClausePos(sql, "ORDER BY", skipnormalization:=True)
     If posOrderBy <> 0 Then
-        GetOrderBy = ReplaceSQLClause(Mid(sql, posOrderBy + 1, Len(sql) - (posOrderBy - 1)), "ORDER BY", "", skipnormalization:=skipnormalization)
+        GetOrderBy = ReplaceSQLClause(Mid(sql, posOrderBy), "ORDER BY", "", skipnormalization:=True)
     End If
 
 
@@ -210,37 +197,56 @@ Dim pos As Long
     GetSQLClausePos = pos
 End Function
 
+' Position of the first of the given clauses at or after startPos (0 = none found).
+' Expects normalized SQL.
+Private Function FirstClausePos(sql As String, startPos As Long, ParamArray clauses() As Variant) As Long
+Dim i As Long
+Dim pos As Long
+
+    For i = LBound(clauses) To UBound(clauses)
+        pos = GetSQLClausePos(sql, CStr(clauses(i)), startPos, True)
+        If pos <> 0 Then
+            If FirstClausePos = 0 Or pos < FirstClausePos Then
+                FirstClausePos = pos
+            End If
+        End If
+    Next i
+End Function
+
 Public Function ReplaceSQLClause(ByVal sql As String, clause As String, Optional replaceString As String = "", Optional startPos As Long = 0, Optional skipnormalization As Boolean = False) As String
 Dim pos As Long
 Dim posEnd As Long
-Dim result As String
 
+    ' Returns the text after the clause keyword (replaceString is not used yet).
     If skipnormalization = False Then
         sql = NormalizeSQL(sql)
     End If
     If startPos = 0 Then
-        pos = GetSQLClausePos(sql, clause)
+        pos = GetSQLClausePos(sql, clause, skipnormalization:=True)
     Else
         pos = startPos
     End If
-    If pos <> 0 Then
-        posEnd = InStr(pos + Len(clause) - 1, sql, " ")
-        If posEnd = 0 Then
-            posEnd = InStr(pos, sql, vbCrLf)
-        End If
-        If posEnd = 0 Then
-            posEnd = InStr(pos, sql, vbCr)
-        End If
-        result = Mid(sql, posEnd)
+    If pos = 0 Then
+        Exit Function
     End If
-    ReplaceSQLClause = Trim(result)
+    posEnd = InStr(pos + Len(clause) - 1, sql, " ")
+    If posEnd = 0 Then
+        Exit Function
+    End If
+    ReplaceSQLClause = Trim(Mid(sql, posEnd))
 End Function
 Public Function NormalizeSQL(ByVal SQL As String) As String
 
     SQL = Replace(SQL, vbCrLf, " ")
     SQL = Replace(SQL, vbCr, " ")
+    SQL = Replace(SQL, vbLf, " ")
+    SQL = Replace(SQL, vbTab, " ")
     SQL = Replace(SQL, ";", " ")
-    SQL = Replace(SQL, "  ", " ")
+    ' repeat until stable: one pass turns three spaces into two, so the result must not depend
+    ' on how many times this function is applied
+    Do While InStr(SQL, "  ") > 0
+        SQL = Replace(SQL, "  ", " ")
+    Loop
     NormalizeSQL = Trim(SQL)
 End Function
 
