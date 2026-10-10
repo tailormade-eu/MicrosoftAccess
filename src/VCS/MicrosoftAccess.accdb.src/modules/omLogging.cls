@@ -45,7 +45,7 @@ Public Property Let currentdate(ByVal vNewValue As Date)
     PreviousDescription = CurrentDescription
     previousTicks = currentTicks
     dtCurrent = vNewValue
-    currentTicks = omKernalFunctions.GetTickCount()
+    currentTicks = omKernalAPIFunctions.GetTickCount()
     If StartDate = 0 Then
         StartDate = dtCurrent
         PreviousDate = dtCurrent

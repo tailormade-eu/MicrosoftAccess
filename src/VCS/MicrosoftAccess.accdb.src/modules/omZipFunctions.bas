@@ -31,7 +31,7 @@ Public Function ZipFolder(ByVal folderName As String, Optional filenameZip As St
     'Keep script waiting until Compressing is done
     On Error Resume Next
     Do Until oApp.NameSpace(CVar(filenameZip)).Items.Count = oApp.NameSpace(CVar(folderName)).Items.Count
-       omKernalFunctions.Sleep 1000
+       omKernalAPIFunctions.Sleep 1000
     Loop
     On Error GoTo 0
 

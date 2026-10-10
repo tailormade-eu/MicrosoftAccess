@@ -2,22 +2,48 @@
 Option Compare Database
 Option Explicit
 
-Public Const FILE_ATTRIBUTE_NORMAL = &H80
-Public Const FILE_ATTRIBUTE_ARCHIVE = &H20
-Public Const FILE_ATTRIBUTE_SYSTEM = &H4
-Public Const FILE_ATTRIBUTE_HIDDEN = &H2
-Public Const FILE_ATTRIBUTE_READONLY = &H1
-
-Type SECURITY_ATTRIBUTES
-        nLength As Long
-        lpSecurityDescriptor As Long
-        bInheritHandle As Long
-End Type
+' The generic file API declarations (SetFileAttributes, GetFileAttributes, GetShortPathName, GetTempPath,
+' GetTempFileName, CreateDirectory, SECURITY_ATTRIBUTES, FILE_ATTRIBUTE_*) live in omKernalAPIFunctions.
+' This module only keeps what is unique to it: ShellWait (CreateProcess) and GetUserName.
 
 Private Const STARTF_USESHOWWINDOW& = &H1
 Private Const NORMAL_PRIORITY_CLASS = &H20&
 Private Const INFINITE = -1&
 
+#If VBA7 Then
+Private Type STARTUPINFO
+    cb As Long
+    lpReserved As String
+    lpDesktop As String
+    lpTitle As String
+    dwX As Long
+    dwY As Long
+    dwXSize As Long
+    dwYSize As Long
+    dwXCountChars As Long
+    dwYCountChars As Long
+    dwFillAttribute As Long
+    dwFlags As Long
+    wShowWindow As Integer
+    cbReserved2 As Integer
+    lpReserved2 As LongPtr
+    hStdInput As LongPtr
+    hStdOutput As LongPtr
+    hStdError As LongPtr
+End Type
+
+Private Type PROCESS_INFORMATION
+    hProcess As LongPtr
+    hThread As LongPtr
+    dwProcessID As Long
+    dwThreadID As Long
+End Type
+
+Declare PtrSafe Function WaitForSingleObject Lib "kernel32" (ByVal hHandle As LongPtr, ByVal dwMilliseconds As Long) As Long
+Declare PtrSafe Function CreateProcessA Lib "kernel32" (ByVal lpApplicationName As LongPtr, ByVal lpCommandLine As String, ByVal lpProcessAttributes As LongPtr, ByVal lpThreadAttributes As LongPtr, ByVal bInheritHandles As Long, ByVal dwCreationFlags As Long, ByVal lpEnvironment As LongPtr, ByVal lpCurrentDirectory As LongPtr, lpStartupInfo As STARTUPINFO, lpProcessInformation As PROCESS_INFORMATION) As Long
+Declare PtrSafe Function CloseHandle Lib "kernel32" (ByVal hObject As LongPtr) As Long
+Declare PtrSafe Function apiGetUserName Lib "advapi32.dll" Alias "GetUserNameA" (ByVal lpBuffer As String, nSize As Long) As Long
+#Else
 Private Type STARTUPINFO
     cb As Long
     lpReserved As String
@@ -46,16 +72,11 @@ Private Type PROCESS_INFORMATION
     dwThreadID As Long
 End Type
 
-Declare PtrSafe Function WaitForSingleObject Lib "kernel32" (ByVal hHandle As Long, ByVal dwMilliseconds As Long) As Long
-Declare PtrSafe Function CreateProcessA Lib "kernel32" (ByVal lpApplicationName As Long, ByVal lpCommandLine As String, ByVal lpProcessAttributes As Long, ByVal lpThreadAttributes As Long, ByVal bInheritHandles As Long, ByVal dwCreationFlags As Long, ByVal lpEnvironment As Long, ByVal lpCurrentDirectory As Long, lpStartupInfo As STARTUPINFO, lpProcessInformation As PROCESS_INFORMATION) As Long
-Declare PtrSafe Function CloseHandle Lib "kernel32" (ByVal hObject As Long) As Long
-Declare PtrSafe Function apiGetUserName Lib "advapi32.dll" Alias "GetUserNameA" (ByVal lpBuffer As String, nSize As Long) As Long
-Declare PtrSafe Function SetFileAttributes Lib "kernel32" Alias "SetFileAttributesA" (ByVal lpFileName As String, ByVal dwFileAttributes As Long) As Long
-Declare PtrSafe Function GetFileAttributes Lib "kernel32" Alias "GetFileAttributesA" (ByVal lpFileName As String) As Long
-Declare PtrSafe Function GetShortPathName Lib "kernel32" Alias "GetShortPathNameA" (ByVal lpszLongPath As String, ByVal lpszShortPath As String, ByVal cchBuffer As Long) As Long
-Declare PtrSafe Function GetTempPath Lib "kernel32" Alias "GetTempPathA" (ByVal nBufferLength As Long, ByVal lpBuffer As String) As Long
-Declare PtrSafe Function GetTempFileName Lib "kernel32" Alias "GetTempFileNameA" (ByVal lpszPath As String, ByVal lpPrefixString As String, ByVal wUnique As Long, ByVal lpTempFileName As String) As Long
-Declare PtrSafe Function CreateDirectory Lib "kernel32" Alias "CreateDirectoryA" (ByVal lpPathName As String, lpSecurityAttributes As SECURITY_ATTRIBUTES) As Long
+Declare Function WaitForSingleObject Lib "kernel32" (ByVal hHandle As Long, ByVal dwMilliseconds As Long) As Long
+Declare Function CreateProcessA Lib "kernel32" (ByVal lpApplicationName As Long, ByVal lpCommandLine As String, ByVal lpProcessAttributes As Long, ByVal lpThreadAttributes As Long, ByVal bInheritHandles As Long, ByVal dwCreationFlags As Long, ByVal lpEnvironment As Long, ByVal lpCurrentDirectory As Long, lpStartupInfo As STARTUPINFO, lpProcessInformation As PROCESS_INFORMATION) As Long
+Declare Function CloseHandle Lib "kernel32" (ByVal hObject As Long) As Long
+Declare Function apiGetUserName Lib "advapi32.dll" Alias "GetUserNameA" (ByVal lpBuffer As String, nSize As Long) As Long
+#End If
 
 Public Function GetShortFileName(sFileName As String) As String
 On Error Resume Next

@@ -571,9 +571,9 @@ Dim cs As String
     conn.ConnectionTimeout = connectionTimout
     conn.Open Options:=adAsyncConnect
 
-    lngStartTime = omKernalFunctions.GetTickCount()
+    lngStartTime = omKernalAPIFunctions.GetTickCount()
 
-    Do While ((omKernalFunctions.GetTickCount() - lngStartTime) < conn.ConnectionTimeout * 1000) And (Not conn.state = adStateOpen)
+    Do While ((omKernalAPIFunctions.GetTickCount() - lngStartTime) < conn.ConnectionTimeout * 1000) And (Not conn.state = adStateOpen)
     Loop
 
     If conn.state = adStateOpen Then

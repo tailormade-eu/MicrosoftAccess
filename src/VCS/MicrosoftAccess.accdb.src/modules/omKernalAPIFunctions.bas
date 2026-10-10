@@ -1,4 +1,4 @@
-﻿Attribute VB_Name = "omKernalFunctions"
+﻿Attribute VB_Name = "omKernalAPIFunctions"
 Option Compare Database
 Option Explicit
 
