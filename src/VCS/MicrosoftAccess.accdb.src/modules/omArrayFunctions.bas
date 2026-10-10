@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omArrayFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=f00b40d4
+'@lib 2026-10-10 sha=b9e75acc
 
 Public Sub ObjectArrayAdd(objectArray() As Object, Value As Object, Optional Clear = False)
     On Error Resume Next
@@ -50,11 +50,11 @@ Dim i As Long
 Dim Length As Long
 Dim containsArray() As String
 
+    StringArrayFind = -1
     Length = StringArrayLength(stringArray)
     If Length = 0 Then
         Exit Function
     End If
-    StringArrayFind = -1
     If includeContains Then
         While i < Length
             If InStr(1, stringArray(i), Value) > 0 Then
@@ -107,4 +107,13 @@ Dim i As Long
             StringArrayAdd StringArrayRemoveEmpty, stringArray(i)
         End If
     Next i
+End Function
+
+' True when the array has been dimensioned (also when it has no elements, like Split("")).
+Public Function IsArrayInitialized(arr As Variant) As Boolean
+Dim lowerBound As Long
+
+    On Error Resume Next
+    lowerBound = LBound(arr)
+    IsArrayInitialized = (Err.Number = 0)
 End Function

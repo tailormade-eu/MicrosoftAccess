@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omTableFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=3c8904dc
+'@lib 2026-10-10 sha=4d40f855
 
 Public Sub TableAddId(tableName As String)
     AddField tableName, "ID", dbLong, True
@@ -73,10 +73,13 @@ Dim exFlds() As String
             End If
         End If
     Next
-    strInsertFields = Left(strInsertFields, Len(strInsertFields) - 1)
-    strInsertValues = Left(strInsertFields, Len(strInsertFields) - 1)
+    If Len(strInsertFields) > 0 Then
+        strInsertFields = Left(strInsertFields, Len(strInsertFields) - 1)
+        strInsertValues = Left(strInsertValues, Len(strInsertValues) - 1)
+    End If
     rs.Close
     Set rs = Nothing
+    If Len(strInsertFields) = 0 Then Exit Function ' every field is the id or excluded
     GenerateInsert = "INSERT INTO [" & tableName & "] (" & strInsertFields & ")"
     If Not excludeValuesPart Then
         GenerateInsert = GenerateInsert & " VALUES (" & strInsertValues & ")"

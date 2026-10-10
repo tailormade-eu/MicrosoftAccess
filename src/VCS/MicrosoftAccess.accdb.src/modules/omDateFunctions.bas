@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omDateFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=035574ed
+'@lib 2026-10-10 sha=6d64cf22
 
 ' Leeg (Null/Empty) = niet voorbij, geeft False. Vergelijking op dagdatum (Date), geen tijdstip.
 ' Let op: VBA's And is niet kortsluitend zoals C#'s && — daarom de Null-check apart, niet in
@@ -439,6 +439,14 @@ End Sub
 
 Public Function DaysBetween(StartDate As Date, EndDate As Date) As Long
     DaysBetween = DateDiff("d", StartDate, EndDate)
+End Function
+
+' Number of whole years between two dates (the age on EndDate of something that started on StartDate).
+Public Function YearsBetween(StartDate As Date, EndDate As Date) As Long
+    YearsBetween = DateDiff("yyyy", StartDate, EndDate)
+    If DateSerial(Year(EndDate), Month(StartDate), Day(StartDate)) > EndDate Then
+        YearsBetween = YearsBetween - 1
+    End If
 End Function
 
 Public Function EOMonth(dt As Date) As Date

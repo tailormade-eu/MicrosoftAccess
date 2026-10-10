@@ -1,5 +1,5 @@
 ﻿Attribute VB_Name = "omFileFunctions"
-'@lib 2026-10-10 sha=890eb339
+'@lib 2026-10-10 sha=c4a450fd
 ' Last updated by Raoul Jacobs on 20130619_1115
 
 Option Compare Database
@@ -97,11 +97,11 @@ Dim lBackupCount As Long
 
     On Error GoTo FileRename_Error
 
-    If NotIsNullOrEmpty(strOldName) Then
+    If IsNullOrEmpty(strOldName) Then
         GoTo FileRename_Exit
     End If
     If NotIsNullOrEmpty(strNewExtension) Then
-        strNewName = Left(strOldName, InStr(1, strOldName, ".")) & strNewExtension
+        strNewName = Left(strOldName, InStrRev(strOldName, ".")) & strNewExtension
     End If
     If Not IsNull(strNewName) Then
         lBackupCount = 1
@@ -253,6 +253,20 @@ Public Function CopyFileToFolder(source As String, path As String, Optional over
     CopyFileToFolder = gFso.BuildPath(path, gFso.GetFileName(source))
     gFso.CopyFile source, CopyFileToFolder, overWriteFiles
 
+End Function
+' Copies a file to the temp folder (same file name, overwrites) and returns the path of the copy.
+' Returns "" when a copy with that name is already there and locked by another program.
+Public Function CopyToLocalTemp(filename As String) As String
+Dim tmpFilename As String
+
+    tmpFilename = gFso.BuildPath(gFso.GetSpecialFolder(2), gFso.GetFileName(filename))
+    If gFso.FileExists(tmpFilename) Then
+        If FileLocked(tmpFilename) Then
+            Exit Function
+        End If
+    End If
+    gFso.CopyFile filename, tmpFilename, True
+    CopyToLocalTemp = tmpFilename
 End Function
 Public Function ReadFileToString(path As String) As String
 Dim ts As TextStream

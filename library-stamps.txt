@@ -3,7 +3,7 @@ omAPI32FileFunctions;2026-10-10;9f705da6
 omAPIClipboard;2026-10-10;e3a76075
 omAPISpecialFolders;2026-10-10;d461cf8e
 omAppSettings;2026-10-10;ee274e02
-omArrayFunctions;2026-10-10;f00b40d4
+omArrayFunctions;2026-10-10;b9e75acc
 omBankAccountFunctions;2026-10-10;907e2efe
 omBaseClass;2026-10-10;0c869550
 omByteArrayFunctions;2026-10-10;7e869dd4
@@ -14,7 +14,7 @@ omControl;2026-10-10;21b9968f
 omControlFunctions;2026-10-10;93b29458
 omDAOFunctions;2026-10-10;0464061d
 omDatabaseFunctions;2026-10-10;61e240e6
-omDateFunctions;2026-10-10;035574ed
+omDateFunctions;2026-10-10;6d64cf22
 omDefaultFunctions;2026-10-10;cb0aa517
 omDefaults;2026-10-10;f6a71559
 omDevelopmentFunctions;2026-10-10;9c0a970f
@@ -25,8 +25,8 @@ omExcelEngine;2026-10-10;96be6635
 omExcelFunctions;2026-10-10;8699d55c
 omExportFunctions;2026-10-10;54933c61
 omExportManager;2026-10-10;caa272c4
-omFileFunctions;2026-10-10;890eb339
-omFormFunctions;2026-10-10;8c6d7ba7
+omFileFunctions;2026-10-10;c4a450fd
+omFormFunctions;2026-10-10;9d2b95fd
 omFTP;2026-10-10;9a875f19
 omGlobalDeclarations;2026-10-10;83869ce9
 omGuidFunctions;2026-10-10;b3d5c755
@@ -74,7 +74,7 @@ omStringFunctions;2026-10-10;c863000a
 omStringTagFunctions;2026-10-10;525afe1c
 omSystemProcessFunctions;2026-10-10;e8078cc4
 omTableConnector;2026-10-10;3a1e991d
-omTableFunctions;2026-10-10;3c8904dc
+omTableFunctions;2026-10-10;4d40f855
 omTesseractOCR;2026-10-10;49b6b572
 omTimeRange;2026-10-10;f6b9ca1e
 omTranslationEngine;2026-10-10;3e02d4df

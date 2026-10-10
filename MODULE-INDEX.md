@@ -37,6 +37,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `StringArrayLength(stringArray() As String) As Long` — Get total length of string array
 - `StringArrayToString(stringArray() As String, Optional delimiter As String, Optional skipNullBlankSpaces As Boolean) As String` — Join array elements with delimiter
 - `StringArrayRemoveEmpty(stringArray() As String) As String()` — Return new array with empty elements filtered out
+- `IsArrayInitialized(arr As Variant) As Boolean` — True when the array has been dimensioned (also with 0 elements)
 
 ## omBankAccountFunctions.bas
 - `ValidateIbanAndFormatBankAccount(ByVal BankNr As Variant) As String` — Validate IBAN checksum and format with spaces
@@ -153,6 +154,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `DaysBetween(StartDate As Date, EndDate As Date) As Long` — Count days between dates
 - `EOMonth(dt As Date) As Date` — Get last day of month
 - `CalculatePayDate(dt As Date, Days As Integer, EndOfMonth As Boolean, ExtraDays As Integer) As Date` — Calculate payment date with offset
+- `YearsBetween(StartDate As Date, EndDate As Date) As Long` — Number of whole years between two dates
 
 ## omDefaultFunctions.bas
 - `GetDefault(Name As String) As Variant` — Retrieve default value by name
@@ -296,6 +298,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `ReadFileToString(path As String) As String` — Read entire file into string
 - `PrintFile(filename As String)` — Print file using default application
 - `WriteStringToFile(filename As String, s As String, Optional unicode As Boolean = False)` — Write string to file
+- `CopyToLocalTemp(filename As String) As String` — Copy a file to the temp folder and return the path of the copy ("" when a locked copy is in the way)
 
 ## omFormFunctions.bas
 - `UpdateEnableByTag(Form As Form, tag As String, state As Boolean, Optional delimiter = ",")` — Enable/disable controls by tag
@@ -307,6 +310,9 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `UpdateCreateTracking(frm As Form, Optional UpdateModify = True)` — Update creation timestamp
 - `ClearMultiValueField(frm As Form, fieldName As String, Optional whereClause As String = "", Optional Requery As Boolean = True)` — Clear multi-value field contents (DAO ComplexType/Recordset2, i.p.v. UPDATE/.Value=Null die error 3032 geeft)
 - `ListFormFields(formName As String)` — Debug: list all form fields
+- `UpdateModifyTrackingDao(rs As DAO.Recordset, Optional isDelete As Boolean)` — Fill create/modify (or delete) date and user fields of a recordset that is being edited
+- `UpdateModifyTrackingADodb(rs As ADODB.Recordset, Optional isDelete As Boolean)` — Same for an ADODB recordset
+- `UpdateLockedWithoutTag(Form As Form, state As Boolean)` — Lock or unlock every control that has no tag
 
 ## omFTP.bas
 - `UploadFile(ftpAddress As String, Login As String, Password As String, filename As String, Optional ftpPath As String = "/") As String` — Upload file to FTP server

@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omFormFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=8c6d7ba7
+'@lib 2026-10-10 sha=9d2b95fd
 
 Public Sub UpdateEnableByTag(Form As Form, tag As String, state As Boolean, Optional delimiter = ",")
 Dim ctrl As Control
@@ -107,6 +107,54 @@ Public Sub UpdateCreateTracking(frm As Form, Optional UpdateModify = True)
         UpdateModifyTracking frm
     End If
 End Sub
+' Same fields as UpdateCreateTracking/UpdateModifyTracking, for a recordset that is being edited
+' (call .Edit before and .Update after): CreateDate, CreateUserId, ModifyDate, ModifyUserId and, when
+' isDelete is True, DeleteDate and DeleteUserId. The create fields are only filled when both are empty.
+' A field that does not exist is skipped.
+Public Sub UpdateModifyTrackingDao(rs As DAO.Recordset, Optional isDelete As Boolean = False)
+    SetRecordsetTracking rs, isDelete
+End Sub
+
+Public Sub UpdateModifyTrackingADodb(rs As ADODB.Recordset, Optional isDelete As Boolean = False)
+    SetRecordsetTracking rs, isDelete
+End Sub
+
+Private Sub SetRecordsetTracking(rs As Object, isDelete As Boolean)
+Dim userId As Variant
+
+    ' No AuthenticateUser here: that can open the login form, and a data routine must not wait for a person.
+    On Error Resume Next
+    If gUser.LoggedIn Then
+        userId = gUser.Id
+    Else
+        userId = gUser.Name
+    End If
+    If isDelete Then
+        rs.Fields("DeleteDate").Value = Now
+        rs.Fields("DeleteUserId").Value = userId
+    Else
+        If omStringFunctions.IsNullOrEmpty(rs.Fields("CreateUserId").Value) And omStringFunctions.IsNullOrEmpty(rs.Fields("CreateDate").Value) Then
+            rs.Fields("CreateDate").Value = Now
+            rs.Fields("CreateUserId").Value = userId
+        End If
+        rs.Fields("ModifyDate").Value = Now
+        rs.Fields("ModifyUserId").Value = userId
+    End If
+End Sub
+
+' Locks (or unlocks) every control that has no tag. Controls that cannot be locked (no Locked
+' property) are skipped.
+Public Sub UpdateLockedWithoutTag(Form As Form, state As Boolean)
+Dim ctrl As Control
+
+    On Error Resume Next
+    For Each ctrl In Form.Controls
+        If omStringFunctions.IsNullOrEmpty(ctrl.Tag) Then
+            ctrl.locked = state
+        End If
+    Next
+End Sub
+
 Public Sub ClearMultiValueField(frm As Form, fieldName As String, Optional whereClause As String = "", Optional Requery As Boolean = True)
 ' Multi-Value (complex-type) velden kunnen niet gewist worden via UPDATE-SQL of .Value=Null
 ' (error 3032, "operation must use an updateable query") -- zitten achter een verborgen
@@ -116,8 +164,10 @@ Dim rsMain As DAO.Recordset2
 Dim rsMV As DAO.Recordset2
 
     Set rsMain = frm.RecordsetClone
+    If rsMain.BOF And rsMain.EOF Then GoTo CleanUp
     If whereClause <> "" Then
         rsMain.FindFirst whereClause
+        If rsMain.NoMatch Then GoTo CleanUp ' no record found: never clear another record
     Else
         rsMain.MoveFirst
     End If
@@ -131,10 +181,10 @@ Dim rsMV As DAO.Recordset2
         If whereClause <> "" Then Exit Do
         rsMain.MoveNext
     Loop
+    If Requery Then frm.Requery
+CleanUp:
     Set rsMV = Nothing
     Set rsMain = Nothing
-
-    If Requery Then frm.Requery
 End Sub
 
 Public Sub ListFormFields(formName As String)
