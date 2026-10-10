@@ -1,9 +1,13 @@
 ﻿Attribute VB_Name = "omSeqFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=c580750b
+'@lib 2026-10-10 sha=49cd18b6
 
-Const seqUrl = "http://seq.domainmmvii.local:5341/"
+Private Const DEFAULT_SEQ_URL As String = "http://seq.domainmmvii.local:5341/"
+
+' Address of the Seq server (with the trailing slash). Empty = the default above.
+' Set it once at startup:  omSeqFunctions.SeqServerUrl = "http://myserver:5341/"
+Public SeqServerUrl As String
 
 Public Enum omSeqItemLevel
     NotDefinedSeqLevel = 0
@@ -11,6 +15,10 @@ Public Enum omSeqItemLevel
     WarningSeqLevel = 2
     ErrorSeqLevel = 3
 End Enum
+
+Private Function seqUrl() As String
+    seqUrl = IIf(Len(SeqServerUrl) > 0, SeqServerUrl, DEFAULT_SEQ_URL)
+End Function
 
 Public Function omSeqItemLevelToString(Value As omSeqItemLevel) As String
     Select Case Value

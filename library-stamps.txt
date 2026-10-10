@@ -50,7 +50,7 @@ omRecordsetFunctions;2026-10-10;ff6cfa39
 omReferenceFunctions;2026-10-10;5adc5c3e
 omReportFunctions;2026-10-10;aca15372
 omResult;2026-10-10;1df6e90d
-omSeqFunctions;2026-10-10;c580750b
+omSeqFunctions;2026-10-10;49cd18b6
 omSeqItem;2026-10-10;47848f0d
 omSFTP;2026-10-10;d67279c5
 omSourceObject;2026-10-10;bc20693f
@@ -61,7 +61,7 @@ omSQLFunctions;2026-10-10;85c05af6
 omSQLFunctions_Test;2026-10-10;34be62a5
 omSQLObject;2026-10-10;30a48cc2
 omSQLServerFunctions;2026-10-10;5c8873cb
-omSSMAAConnector;2026-10-10;9e4b29ae
+omSSMAAConnector;2026-10-10;f3c14a5f
 omStartup;2026-10-10;b79bf44a
 omStringFunctions;2026-10-10;c863000a
 omStringTagFunctions;2026-10-10;525afe1c

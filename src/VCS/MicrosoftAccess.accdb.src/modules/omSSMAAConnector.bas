@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omSSMAAConnector"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=9e4b29ae
+'@lib 2026-10-10 sha=f3c14a5f
 Global cSQLNCLIVersion As Integer
 Global cSQLNCLIFound As Boolean
 Global cSQLODBCVersion As Integer
@@ -87,6 +87,8 @@ Dim strSQLTable As String
 Dim strDatabaseName As String
 Dim sngStart As Single
 Dim lngAantal As Long
+Dim localObjects As Object
+Dim resetAttach As Boolean
 
     On Error GoTo Opruimen
     Set mDbKoppelen = CurrentDb
@@ -112,13 +114,19 @@ Dim lngAantal As Long
 
     UpdateSSMAConnectionString Group, ConnectionType, encryptType
     rs.Open "SELECT Name, Type FROM MSysObjects WHERE Type=1 OR Type=6 OR Type=4", LocalCon, adOpenStatic, adLockReadOnly
+    ' name -> type of the local tables and links, read once: a filter per table scanned the whole list again
+    Set localObjects = CreateObject("Scripting.Dictionary")
+    localObjects.CompareMode = vbTextCompare
+    Do While Not rs.EOF
+        If Not localObjects.Exists(CStr(rs("Name"))) Then localObjects.Add CStr(rs("Name")), CLng(rs("Type"))
+        rs.MoveNext
+    Loop
+    rs.Close
     rsODBC.Open "SELECT * FROM SSMAA_ODBC_Tables" & IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), ""), LocalCon, adOpenForwardOnly, adLockOptimistic
     'rsODBC.Open "SELECT * FROM SSMAA_ODBC_Tables" & IIf(Group <> "", " WHERE [Group] like " & Chr(34) & "%," & Group & ",%" & Chr(34), ""), LocalCon, adOpenForwardOnly, adLockOptimistic
     While Not rsODBC.EOF
-        'rs.Requery
-        rs.filter = "Name='" & rsODBC("ODBCTable") & "'"
-        If Not rs.EOF Then
-            If rs("Type") = 1 Then
+        If localObjects.Exists(CStr(rsODBC("ODBCTable"))) Then
+            If localObjects(CStr(rsODBC("ODBCTable"))) = 1 Then
                 mDbKoppelen.TableDefs(rsODBC("ODBCTable")).Name = cSSMAABAckup & rsODBC("ODBCTable")
             ElseIf Not alwaysUpdate Then
                 omCSTest.ParseByTableName rsODBC("ODBCTable")
@@ -146,12 +154,18 @@ Dim lngAantal As Long
         End If
         'Debug.Print Now
         DoEvents
-        rsODBC("Attach") = 0
-        rsODBC.Update
+        If IsNull(rsODBC("Attach")) Then
+            resetAttach = True
+        Else
+            resetAttach = (rsODBC("Attach") <> 0)
+        End If
+        If resetAttach Then ' only write when there is something to change
+            rsODBC("Attach") = 0
+            rsODBC.Update
+        End If
         rsODBC.MoveNext
     Wend
     rsODBC.Close
-    rs.Close
     Set rsODBC = Nothing
     Set rs = Nothing
     Debug.Print Now; " LinkUsingSSMA: "; lngAantal; " tabellen gekoppeld in "; Format(Timer - sngStart, "0.0"); " s"
@@ -546,13 +560,17 @@ End Sub
 
 Public Sub UpdateSSMAAGroups()
 Dim rs As New ADODB.Recordset
+Dim newGroups As String
 
     EnsureSSMAASchema
     rs.Open "SELECT Groups FROM SSMAA_ODBC_Tables", LocalCon, adOpenForwardOnly, adLockOptimistic
     While Not rs.EOF
         If NotIsNullOrEmpty(rs("Groups")) Then
-            rs("Groups") = Replace("," & rs("Groups") & ",", ",,", ",")
-            rs.Update
+            newGroups = Replace("," & rs("Groups") & ",", ",,", ",")
+            If newGroups <> rs("Groups") Then ' most rows are already in this form after the first run
+                rs("Groups") = newGroups
+                rs.Update
+            End If
         End If
         rs.MoveNext
     Wend
@@ -907,14 +925,12 @@ Private Function SchemaColumns() As Variant
 End Function
 
 Private Function SchemaTableExists(ByVal db As DAO.Database, ByVal tableName As String) As Boolean
-    Dim td As DAO.TableDef
+    Dim tableName2 As String
 
-    For Each td In db.TableDefs
-        If StrComp(td.Name, tableName, vbTextCompare) = 0 Then
-            SchemaTableExists = True
-            Exit Function
-        End If
-    Next td
+    ' direct lookup by name (not case sensitive) instead of a loop over all, possibly 1000+, table definitions
+    On Error Resume Next
+    tableName2 = db.TableDefs(tableName).Name
+    SchemaTableExists = (Err.Number = 0) And (StrComp(tableName2, tableName, vbTextCompare) = 0)
 End Function
 
 Private Function SchemaFieldExists(ByVal td As DAO.TableDef, ByVal fieldName As String) As Boolean

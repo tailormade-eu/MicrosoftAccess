@@ -456,6 +456,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `DtIsoToAccess(myisodate As String) As Date` — Convert ISO format date string to Access date
 - `DtAccessToIso(myaccdate As Date, Optional myUtcDate As Date = 0) As String` — Convert Access date to ISO format string with timezone
 - `HttpPostText(url As String, body As String) As String` — POST a text (JSON) body and return the answer; raises the request error
+- `SeqServerUrl As String` — Public setting: address of the Seq server with trailing slash; empty = the built-in default
 
 ## omSeqItem.cls
 - `ToJson(Optional formatted As Boolean = False) As String` — Serialize logging item to JSON format
