@@ -1,5 +1,5 @@
 ﻿Attribute VB_Name = "omFileFunctions"
-'@lib 2026-10-10 sha=07372a2d
+'@lib 2026-10-11 sha=2911036a
 ' Last updated by Raoul Jacobs on 20130619_1115
 
 Option Compare Database
@@ -93,6 +93,17 @@ Public Sub DeleteFolder(folderName As String, Optional force As Boolean = False)
     If omFileFunctions.FolderExists(folderName) Then
         gFso.DeleteFolder folderName, force
     End If
+End Sub
+
+' Deletes the files in a folder (not the folder itself and not the folders under it). A folder that does not exist is ignored.
+' force: also delete read-only files.
+Public Sub ClearFolder(folderPath As String, Optional force As Boolean = True)
+Dim f As Scripting.File
+
+    If Not gFso.FolderExists(folderPath) Then Exit Sub
+    For Each f In gFso.GetFolder(folderPath).Files
+        gFso.DeleteFile f.Path, force
+    Next f
 End Sub
 
 Public Sub RenameFile(strOldName As String, strNewName As String, Optional strNewExtension As String = "")
