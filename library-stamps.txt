@@ -13,7 +13,7 @@ omControl;2026-10-10;21b9968f
 omControlFunctions;2026-10-10;93b29458
 omDAOFunctions;2026-10-10;0464061d
 omDatabaseFunctions;2026-10-10;61e240e6
-omDateFunctions;2026-10-10;6d64cf22
+omDateFunctions;2026-10-11;4a654d8c
 omDefaultFunctions;2026-10-10;cb0aa517
 omDefaults;2026-10-10;f6a71559
 omDevelopmentFunctions;2026-10-10;984ff6b4
@@ -28,6 +28,7 @@ omGlobalDeclarations;2026-10-10;83869ce9
 omGuidFunctions;2026-10-10;b3d5c755
 omHashAlgorithms;2026-10-10;14dfec6b
 omHashAlgorithmsFunctions;2026-10-10;392fa529
+omHelpFileFunctions;2026-10-11;4505c64b
 omHTMLExport;2026-10-10;63d69791
 omInvoiceFunctions;2026-10-10;015f119d
 omJsonConverter;2026-10-10;28c545e7

@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omDateFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=6d64cf22
+'@lib 2026-10-11 sha=4a654d8c
 
 ' Leeg (Null/Empty) = niet voorbij, geeft False. Vergelijking op dagdatum (Date), geen tijdstip.
 ' Let op: VBA's And is niet kortsluitend zoals C#'s && — daarom de Null-check apart, niet in
@@ -409,11 +409,90 @@ Public Function GetWeekDay(dt As Date, Optional FirstDayOfWeek As VbDayOfWeek = 
     GetWeekDay = DatePart("w", dt, FirstDayOfWeek, FirstWeekOfYear)
 End Function
 
+' The table Calendar (one row per day) belongs to PopulateCalendar: this creates it when there is no table with that name.
+' A table that exists already, also a linked one (for example to SQL Server), is checked: it must have exactly the fields
+' Date, Year, Month, Day, Period, WeekDay, WeekNumber, Quarter, IsWeekend, IsHoliday, Description, each of a type that can hold the value
+' (a whole number field may be wider than needed, for example Long for Year). When it does not match, error vbObjectError + 1 says what is wrong.
+Public Sub CreateCalendar()
+Dim db As DAO.Database
+Dim td As DAO.TableDef
+Dim problems As String
+
+    Set db = CurrentDb
+    On Error Resume Next
+    Set td = db.TableDefs("Calendar")
+    On Error GoTo 0
+    If td Is Nothing Then
+        db.Execute "CREATE TABLE [Calendar] ([Date] DATETIME CONSTRAINT PK_Calendar PRIMARY KEY, [Year] SHORT, [Month] BYTE, [Day] BYTE, [Period] LONG, " & _
+                   "[WeekDay] BYTE, [WeekNumber] BYTE, [Quarter] BYTE, [IsWeekend] YESNO, [IsHoliday] YESNO, [Description] TEXT(255))"
+        Exit Sub
+    End If
+    problems = CalendarLayoutProblems(td)
+    If Len(problems) > 0 Then Err.Raise vbObjectError + 1, "CreateCalendar", "The table Calendar does not have the layout that PopulateCalendar needs: " & problems
+End Sub
+
+' What is different between the table and the layout of the calendar, as text; "" when it matches.
+Private Function CalendarLayoutProblems(td As DAO.TableDef) As String
+Dim names As Variant
+Dim kinds As Variant
+Dim i As Long
+Dim fld As DAO.Field
+Dim found As Boolean
+Dim rank As Long
+Dim needed As Long
+Dim result As String
+
+    names = Array("Date", "Year", "Month", "Day", "Period", "WeekDay", "WeekNumber", "Quarter", "IsWeekend", "IsHoliday", "Description")
+    kinds = Array("D", "2", "1", "1", "3", "1", "1", "1", "B", "B", "T") 'D = date, 1/2/3 = whole number of at least byte/integer/long, B = yes/no, T = text
+    For i = 0 To UBound(names)
+        found = False
+        For Each fld In td.Fields
+            If StrComp(fld.Name, names(i), vbTextCompare) = 0 Then
+                found = True
+                Exit For
+            End If
+        Next fld
+        If Not found Then
+            result = result & "field " & names(i) & " is missing; "
+        Else
+            Select Case kinds(i)
+                Case "D"
+                    If fld.Type <> dbDate Then result = result & names(i) & " must be a date; "
+                Case "B"
+                    If fld.Type <> dbBoolean Then result = result & names(i) & " must be yes/no; "
+                Case "T"
+                    If fld.Type <> dbText And fld.Type <> dbMemo Then result = result & names(i) & " must be text; "
+                Case Else
+                    Select Case fld.Type
+                        Case dbByte: rank = 1
+                        Case dbInteger: rank = 2
+                        Case dbLong: rank = 3
+                        Case dbBigInt: rank = 4
+                        Case Else: rank = 0
+                    End Select
+                    needed = CLng(kinds(i))
+                    If rank < needed Then result = result & names(i) & " must be a whole number" & IIf(needed > 1, " of at least " & IIf(needed = 2, "integer", "long") & " size", "") & "; "
+            End Select
+        End If
+    Next i
+    For Each fld In td.Fields
+        found = False
+        For i = 0 To UBound(names)
+            If StrComp(fld.Name, names(i), vbTextCompare) = 0 Then found = True
+        Next i
+        If Not found Then result = result & "field " & fld.Name & " is not part of the calendar; "
+    Next fld
+    CalendarLayoutProblems = result
+End Function
+
+' Adds the days that are missing in the table Calendar: from the day after the last one (or 1 January 2017) up to the end of next year.
+' Creates the table first when it does not exist (see CreateCalendar).
 Public Sub PopulateCalendar()
 Dim rs As New ADODB.Recordset
 Dim minDate As Date
 Dim maxDate As Date
 
+    CreateCalendar
     minDate = Nz(DMax("Date", "Calendar"), DateSerial(2017, 1, 1) - 1) + 1
     maxDate = DateSerial(year(Now) + 2, 1, 1) - 1
     rs.Open "Calendar", CurrentProject.connection, adOpenForwardOnly, adLockOptimistic
