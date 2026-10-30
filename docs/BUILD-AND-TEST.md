@@ -44,14 +44,26 @@ ends clean in 13 s, without the theme.
 
 ## 3. Compile check
 
-A database that builds is not a database that compiles. Compile it:
+A database that builds is not a database that compiles. Two ways, on a **copy**:
 
-1. keep the database open in a hidden Access: `Start-Process pwsh -ArgumentList '-NoProfile','-File',tools\vcs\Hold-Database.ps1,<db> -WindowStyle Hidden` and wait 30 s
+**3a. In the VBE, with the error position** - [`tools/vcs/Compile-InVbe.ps1`](../tools/vcs/Compile-InVbe.ps1) `-Database <copy>`.
+It opens the copy hidden with Shift held (the startup form, for example a login, does not run), runs *Debug > Compile*, presses
+OK on the error box and prints `ERRORPOS module=... line=...` with the lines around it. No error: the Compile menu item is greyed
+out afterwards (`enabled after: False`) and no position is printed. This is the method to use for a client database.
+
+**3b. With the MCP tool** - for a database without a startup form:
+
+1. keep the database open in a hidden Access: `Start-Process pwsh -ArgumentList '-NoProfile','-File',toolscs\Hold-Database.ps1,'-Database',<db> -WindowStyle Hidden` and wait 30 s
 2. call the MCP tool `vcs_compile_vba(<db>)` (msaccess-vcs-mcp). It returns `success` true/false, no line number
 3. `New-Item <folder>\stop.flag` to let the script close Access
 
-On `false`, open the VBE (*Debug > Compile*): Access jumps to the line. Do the check on a deliberately broken module once, to see
-it fail (`RunCommand(126)` does *not* report a compile error in a hidden Access, so it cannot be used).
+A startup form (a login window) blocks 3b: the hold script never reaches the end and the tool answers `false` without a reason.
+Do the check on a deliberately broken module once, to see it fail (`RunCommand(126)` does *not* report a compile error in a hidden
+Access, so it cannot be used).
+
+**DAO 3.6.** A client `.mdb` may still reference *Microsoft DAO 3.6* instead of the ACE DAO. Types that exist only in the ACE
+DAO (`DAO.Recordset2`, `Field2`) then give *User-defined type not defined*. Library code that has to run in both declares them
+`As Object`.
 
 ## 4. Tests: a hidden Access, text out
 
@@ -81,6 +93,8 @@ hidden, load a small helper module with `LoadFromText`, call it with `$acc.Run`,
 | Excel: `Module1` appears next to the module you replaced | a running macro keeps the old one; replace the code, do not remove and import |
 | `Workbooks.Open(f, Format:=xlCSV)` fails | `Format` is the delimiter argument; leave it out |
 | `robocopy` "failed" in a script | exit codes 0 to 7 are success |
+| the script waits and the windows show a *Login* form | the startup form of the client database: open with Shift held (`AllowBypassKey` in the copy), see `Compile-InVbe.ps1` |
+| `-Db` is refused as a parameter name | it is an alias of PowerShell's `-Debug`; use `-Database` |
 
 ## 5. Compare a live database with the source
 
