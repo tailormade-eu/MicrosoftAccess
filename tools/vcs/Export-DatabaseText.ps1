@@ -16,11 +16,11 @@
   case differences ignored; the library's scripts/libstamp.py normalises text in the same way.
 
 .EXAMPLE
-  .\Export-DatabaseText.ps1 -Db C:\temp\copy.mdb -Out C:\temp\export -AllowBypass
-  .\Export-DatabaseText.ps1 -Db C:\temp\copy.mdb -Out C:\temp\export -What forms -Skip Flow
+  .\Export-DatabaseText.ps1 -Database C:\temp\copy.mdb -Out C:\temp\export -AllowBypass
+  .\Export-DatabaseText.ps1 -Database C:\temp\copy.mdb -Out C:\temp\export -What forms -Skip Flow
 #>
 param(
-    [Parameter(Mandatory)] [string] $Db,
+    [Parameter(Mandatory)] [string] $Database,
     [Parameter(Mandatory)] [string] $Out,
     [ValidateSet('code', 'forms', 'reports')] [string] $What = 'code',
     [string[]] $Skip = @(),
@@ -28,7 +28,7 @@ param(
 )
 if ($AllowBypass) {
     $dbe = New-Object -ComObject DAO.DBEngine.120
-    $d = $dbe.OpenDatabase($Db)
+    $d = $dbe.OpenDatabase($Database)
     try { $d.Properties.Item('AllowBypassKey').Value = $true } catch { $d.Properties.Append($d.CreateProperty('AllowBypassKey', 1, $true)) }
     $d.Close()
 }
@@ -40,7 +40,7 @@ try {
     [KB]::keybd_event(0x10, 0, 0, 0)                      # Shift down
     $acc = New-Object -ComObject Access.Application
     $acc.Visible = $false; $acc.AutomationSecurity = 1
-    try { $acc.OpenCurrentDatabase($Db) } finally { [KB]::keybd_event(0x10, 0, 2, 0) }   # Shift up
+    try { $acc.OpenCurrentDatabase($Database) } finally { [KB]::keybd_event(0x10, 0, 2, 0) }   # Shift up
     function Export-Set($type, $folder, $names) {
         $dir = Join-Path $Out $folder; New-Item -ItemType Directory $dir -Force | Out-Null
         $n = 0

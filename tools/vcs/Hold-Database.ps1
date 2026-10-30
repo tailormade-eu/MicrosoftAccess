@@ -15,13 +15,13 @@
   # ... vcs_compile_vba("C:\temp\MyApp.accdb") ...
   New-Item C:\temp\stop.flag -Force | Out-Null
 #>
-param([Parameter(Mandatory)] [string] $Db, [int] $MaxMinutes = 10)
-$stop = Join-Path (Split-Path $Db) 'stop.flag'
+param([Parameter(Mandatory)] [string] $Database, [int] $MaxMinutes = 10)
+$stop = Join-Path (Split-Path $Database) 'stop.flag'
 if (Test-Path $stop) { Remove-Item $stop -Force }
 $acc = New-Object -ComObject Access.Application
 $acc.Visible = $false
 $acc.AutomationSecurity = 1
-$acc.OpenCurrentDatabase($Db)
+$acc.OpenCurrentDatabase($Database)
 $end = (Get-Date).AddMinutes($MaxMinutes)
 while (-not (Test-Path $stop) -and (Get-Date) -lt $end) { Start-Sleep -Seconds 2 }
 try { $acc.CloseCurrentDatabase() } catch {}

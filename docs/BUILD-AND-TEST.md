@@ -87,9 +87,9 @@ hidden, load a small helper module with `LoadFromText`, call it with `$acc.Run`,
 Opening the live file runs its startup form and AutoExec (a connection error window, a login form). On a **copy**:
 
 ```powershell
-.\tools\vcs\Export-DatabaseText.ps1 -Db C:\temp\copy.mdb -Out C:\temp\live -What code -AllowBypass
-.\tools\vcs\Export-DatabaseText.ps1 -Db C:\temp\copy.mdb -Out C:\temp\live -What forms -Skip BadForm
-.\tools\vcs\Export-DatabaseText.ps1 -Db C:\temp\copy.mdb -Out C:\temp\live -What reports
+.\tools\vcs\Export-DatabaseText.ps1 -Database C:\temp\copy.mdb -Out C:\temp\live -What code -AllowBypass
+.\tools\vcs\Export-DatabaseText.ps1 -Database C:\temp\copy.mdb -Out C:\temp\live -What forms -Skip BadForm
+.\tools\vcs\Export-DatabaseText.ps1 -Database C:\temp\copy.mdb -Out C:\temp\live -What reports
 ```
 
 It holds Shift while opening (bypass), writes `SaveAsText` files, and the library's own normalisation (`scripts/libstamp.py`)

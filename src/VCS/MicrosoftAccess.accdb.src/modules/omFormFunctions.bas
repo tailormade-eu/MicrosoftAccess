@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omFormFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=acbb57ba
+'@lib 2026-10-30 sha=285ccd7c
 
 Public Sub UpdateEnableByTag(Form As Form, tag As String, state As Boolean, Optional delimiter = ",")
 Dim ctrl As Control
@@ -163,8 +163,10 @@ Public Sub ClearMultiValueField(frm As Form, fieldName As String, Optional where
 ' (error 3032, "operation must use an updateable query") -- zitten achter een verborgen
 ' junction-tabel. Moet via de DAO ComplexType/Recordset2-API: het veld als geneste
 ' recordset openen en de rijen daarin verwijderen.
-Dim rsMain As DAO.Recordset2
-Dim rsMV As DAO.Recordset2
+' Late-bound (Object): DAO.Recordset2 exists only in the ACE DAO, so a typed declaration would not compile in
+' a database that still references DAO 3.6 (.mdb).
+Dim rsMain As Object
+Dim rsMV As Object
 
     Set rsMain = frm.RecordsetClone
     If rsMain.BOF And rsMain.EOF Then GoTo CleanUp
