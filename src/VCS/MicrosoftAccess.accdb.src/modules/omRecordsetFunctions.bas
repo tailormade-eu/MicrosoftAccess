@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omRecordsetFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=ff6cfa39
+'@lib 2026-10-30 sha=f4ef88a7
 
 
 Public Function CopyRecord(rsSrc As ADODB.Recordset, rsDst As ADODB.Recordset, Optional PrimaryKeyName As String = "", Optional LinkName As String = "", Optional LinkId As Long = 0) As Long
@@ -70,3 +70,20 @@ ProcErr:
     Resume CleanUp
 
 End Function
+
+' Copies the values of all fields of one record to the same-named fields of another record (both open recordsets; the destination is
+' already in AddNew or edit mode). ignoreFields: field names that are not copied, separated by commas (whole names, not case sensitive).
+' It does not call Update, so the caller can set more fields first. See also ADODBCopyRecord (omADODBFunctions), which copies and updates.
+Public Sub CopyFields(sourceRecord As Variant, destinationRecord As Variant, Optional ignoreFields As String = "")
+Dim i As Long
+Dim fieldName As String
+Dim ignoreList As String
+
+    ignoreList = "," & Replace(ignoreFields, " ", "") & ","
+    For i = 0 To sourceRecord.Fields.Count - 1
+        fieldName = sourceRecord.Fields(i).Name
+        If InStr(1, ignoreList, "," & fieldName & ",", vbTextCompare) = 0 Then
+            destinationRecord(fieldName) = sourceRecord(fieldName)
+        End If
+    Next i
+End Sub

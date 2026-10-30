@@ -1,5 +1,5 @@
 ﻿Attribute VB_Name = "omFileFunctions"
-'@lib 2026-10-11 sha=2911036a
+'@lib 2026-10-30 sha=90bcd275
 ' Last updated by Raoul Jacobs on 20130619_1115
 
 Option Compare Database
@@ -94,6 +94,14 @@ Public Sub DeleteFolder(folderName As String, Optional force As Boolean = False)
         gFso.DeleteFolder folderName, force
     End If
 End Sub
+
+' Moves a file. A file that is already at the destination is replaced. False when the source file does not exist.
+Public Function MoveFile(source As String, destination As String) As Boolean
+    If Not gFso.FileExists(source) Then Exit Function
+    DeleteFile destination, True
+    gFso.MoveFile source, destination
+    MoveFile = True
+End Function
 
 ' Deletes the files in a folder (not the folder itself and not the folders under it). A folder that does not exist is ignored.
 ' force: also delete read-only files.

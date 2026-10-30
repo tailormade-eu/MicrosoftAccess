@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omReportFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-11 sha=c65b31de
+'@lib 2026-10-30 sha=30e3c539
 
 Public Sub ExportToPDF(ReportName As String, filename As String, Optional whereCondition As String, Optional windowMode As AcWindowMode = acWindowNormal, Optional outputQuality As AcExportQuality = AcExportQuality.acExportQualityPrint)
 
@@ -50,4 +50,28 @@ Dim ctrl As Control
             ctrl.visible = state
         End If
     Next
+End Sub
+
+' Sets the paper (by name, as the default printer lists it: see GetPaperSize in omWinSpoolFunctions) and the margins of a REPORT and saves the report.
+' Nothing happens when the printer has no paper with that name. The margins are in the unit of the report (twips).
+Public Sub SetPaperSize(ReportName As String, paperSize As String, Optional bottomMargin As Long = 0, Optional leftMargin As Long = 0, Optional rightMargin As Long = 0, Optional topMargin As Long = 0)
+Dim rep As Report
+Dim reportSizeId As Long
+
+    reportSizeId = GetPaperSize(paperSize)
+    If reportSizeId = -1 Then Exit Sub
+    DoCmd.OpenReport ReportName, acViewDesign, windowMode:=acHidden
+    Set rep = Reports(ReportName)
+    With rep.Printer
+        .paperSize = reportSizeId
+        .bottomMargin = bottomMargin
+        .leftMargin = leftMargin
+        .rightMargin = rightMargin
+        .topMargin = topMargin
+    End With
+    'Flip the default view twice: this makes Access keep the printer settings when the report is saved
+    rep.DefaultView = IIf(rep.DefaultView = 0, 1, 0)
+    rep.DefaultView = IIf(rep.DefaultView = 0, 1, 0)
+    DoCmd.Close acReport, ReportName, acSaveYes
+    Set rep = Nothing
 End Sub
