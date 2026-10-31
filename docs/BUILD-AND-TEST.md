@@ -94,6 +94,7 @@ hidden, load a small helper module with `LoadFromText`, call it with `$acc.Run`,
 | `Workbooks.Open(f, Format:=xlCSV)` fails | `Format` is the delimiter argument; leave it out |
 | `robocopy` "failed" in a script | exit codes 0 to 7 are success |
 | the script waits and the windows show a *Login* form | the startup form of the client database: open with Shift held (`AllowBypassKey` in the copy), see `Compile-InVbe.ps1` |
+| a form is imported but Access will not save it: *changes that are incompatible with the current database format* (error 13122, add-in message *Error while initializing form*) | seen on two forms of a client `.mdb` (format 2002). The form's own text, exported straight from the live database and loaded into a fresh `.mdb`, fails the same way, so it is not the export. Removing the layout properties (`GroupTable`, paddings), the `EmptyCell` controls or the `InputMask` did not help. The form is present in the built database. Cause not found; converting the client database to `.accdb` is the clean way out |
 | `-Db` is refused as a parameter name | it is an alias of PowerShell's `-Debug`; use `-Database` |
 
 ## 5. Compare a live database with the source
