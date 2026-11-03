@@ -132,6 +132,7 @@ hidden, load a small helper module with `LoadFromText`, call it with `$acc.Run`,
 | *Option Compare Database* twice after adding a class module through `VBComponents.Add(2)` | Access puts `Option Compare Database` in a new module itself; do not add it again (compile error on line 3) |
 | `Me.SomeField` does not compile in a form's code, although the field exists | the form was imported before its table existed, so its field list is empty. Re-saving it afterwards does not help (tried, also with a changed property). Create the tables first, see 3c |
 | `New-Object -ComObject Access.Application` scripts leave `MSACCESS.EXE -Embedding` behind | a script that ends on an error before `Quit`. Look with `Get-CimInstance Win32_Process -Filter "Name='MSACCESS.EXE'"` after every series of tests and stop your own `-Embedding` ones |
+| `Build-FromSource.ps1` prints *Done* in the build log but the script itself does not return (seen once, for 30 minutes, after a 3-minute build) | the hidden Access did not quit. Look at the `-Embedding` processes and stop them (`Stop-Process`); the script then carries on. The build log and the database are complete at that point |
 
 ## 5. Compare a live database with the source
 
