@@ -91,7 +91,7 @@ DAO (`DAO.Recordset2`, `Field2`) then give *User-defined type not defined*. Libr
 
 **Tables must exist before the forms and reports are read in.** A form read in without its table has an empty field list, and
 `Me.SomeField` in its code does not compile, although the code is fine. Creating the stand-in tables *after* the build, or
-re-saving the forms afterwards, did not help (tried). What the compile then reports is real: for the client project it found one
+re-saving the forms afterwards, did not help (tried). What the compile then reports is real: for one client project it found one
 dead event handler (`CostPrice_AfterUpdate`) that referred to a control and field that no longer exist; in the real database
 it compiled only because the form kept the old type information.
 
@@ -124,8 +124,14 @@ hidden, load a small helper module with `LoadFromText`, call it with `$acc.Run`,
 | `Workbooks.Open(f, Format:=xlCSV)` fails | `Format` is the delimiter argument; leave it out |
 | `robocopy` "failed" in a script | exit codes 0 to 7 are success |
 | the script waits and the windows show a *Login* form | the startup form of the client database: open with Shift held (`AllowBypassKey` in the copy), see `Compile-InVbe.ps1` |
-| a form is imported but Access will not save it: *changes that are incompatible with the current database format* (error 13122, add-in message *Error while initializing form*) | seen on two forms of a client `.mdb` (format 2002). The form's own text, exported straight from the live database and loaded into a fresh `.mdb`, fails the same way, so it is not the export. Removing the layout properties (`GroupTable`, paddings), the `EmptyCell` controls or the `InputMask` did not help. The form is present in the built database. Cause not found; converting the client database to `.accdb` is the clean way out |
+| a form is imported but Access will not save it: *changes that are incompatible with the current database format* (error 13122, add-in message *Error while initializing form*) | the layout-grid system of Access 2007 and later, in a project of format 2002 (`project.json` `FileFormat` 10). Two things in the form text, and both must go: the layout properties on the controls (`LayoutGroup`, `GroupTable`, `ColumnStart`/`ColumnEnd`, `RowStart`/`RowEnd`, the four paddings) and any real `EmptyCell` control (an empty cell of a layout; the `EmptyCell` block in the defaults at the top is harmless). Removing only the properties, or only the cell, still fails. Found with `tools/vcs/Shrink-FormText.ps1`; in a format-12 `.accdb` the same forms save. The form is imported even when the save fails, but it is unreliable (no controls in design view, or not exportable) |
 | `-Db` is refused as a parameter name | it is an alias of PowerShell's `-Debug`; use `-Database` |
+| PowerShell: `DoCmd.OpenForm($n, 0, '', '', '', 3)` fails with *Cannot convert the "" value of type string to type Object* | pass nothing for an optional COM argument, or `[Type]::Missing`; give only the arguments you need (`OpenForm($n, 1)` for design view) |
+| a test that opens a form in normal view never ends | normal view runs `Form_Open` and the startup logic (a login box, a message): open in design view (`acDesign` = 1) or read the object with `SaveAsText` |
+| `$vbe.VBProjects(1).VBComponents.Item(x).CodeModule.InsertText(...)` fails: *does not contain a method named InsertText* | `InsertText` belongs to the Access `Module` object (`$acc.Modules.Item(x)`); on a VBE `CodeModule` use `AddFromString`. Mind that `DeleteLines` had already run: a failed insert leaves an EMPTY module, and an empty module compiles |
+| *Option Compare Database* twice after adding a class module through `VBComponents.Add(2)` | Access puts `Option Compare Database` in a new module itself; do not add it again (compile error on line 3) |
+| `Me.SomeField` does not compile in a form's code, although the field exists | the form was imported before its table existed, so its field list is empty. Re-saving it afterwards does not help (tried, also with a changed property). Create the tables first, see 3c |
+| `New-Object -ComObject Access.Application` scripts leave `MSACCESS.EXE -Embedding` behind | a script that ends on an error before `Quit`. Look with `Get-CimInstance Win32_Process -Filter "Name='MSACCESS.EXE'"` after every series of tests and stop your own `-Embedding` ones |
 
 ## 5. Compare a live database with the source
 
@@ -157,3 +163,18 @@ folder (*Compressed (zipped) Folders Error: File not found or no read permission
 
 Several Access, Excel and .NET compiler processes at once can fill the memory (a tool may stop a run for that). Run one build at a
 time, and look at what is still running afterwards: `Get-CimInstance Win32_Process -Filter "Name='MSACCESS.EXE'"`.
+
+## 9. Finding why Access refuses an object
+
+When an object imports but will not save, or a build stops on an error that names nothing useful, do not guess: shrink it.
+`tools/vcs/Shrink-FormText.ps1 -FormFile <form text> -Work <folder>` removes lines until the smallest text is left that still
+gets refused. Run it again on the corrected text for a second cause. What worked, in the order we did it:
+
+1. reproduce in a scratch database of the same format (`DBEngine.CreateDatabase(path, locale, 64)` is format 10, 128 is `.accdb`);
+   a control test with a form that is known to be fine proves the test setup itself
+2. try the obvious suspects one at a time (properties, controls) - cheap, but it rules out single causes only
+3. let the shrink tool find the combination; then check the finding with four targeted variants (with/without each part)
+4. only then change the client source, and rebuild the whole project once to confirm
+
+Compile errors after a build from source are usually real findings, not build problems (for example a dead event handler that
+referred to a field that no longer exists; in the original database it compiled because the form kept old type information).
