@@ -65,6 +65,21 @@ Access, so it cannot be used).
 DAO (`DAO.Recordset2`, `Field2`) then give *User-defined type not defined*. Library code that has to run in both declares them
 `As Object`.
 
+**3c. A client project with linked tables (no server on this pc).** Build and compile it in this order:
+
+1. copy the source folder; in the copy set `project.json` `FileFormat` and the file name in `vbe-project.json` / `dbs-properties.json`
+   if you want an `.accdb` (see the trap table: a format-2002 `.mdb` refuses some forms)
+2. `tools\vcs\New-StandInTables.ps1 -Template <copy of the real database> -SourceFolder <the source copy>` writes one
+   `tbldefs\<name>.xml` per linked table: a local table with the same fields
+3. `tools\vcs\Build-FromSource.ps1 -SourceFolder <the source copy> -DatabaseName X.accdb -DropLinkedTables`
+4. `tools\vcs\Compile-InVbe.ps1 -Database <the built file>`
+
+**Tables must exist before the forms and reports are read in.** A form read in without its table has an empty field list, and
+`Me.SomeField` in its code does not compile, although the code is fine. Creating the stand-in tables *after* the build, or
+re-saving the forms afterwards, did not help (tried). What the compile then reports is real: for the client project it found one
+dead event handler (`CostPrice_AfterUpdate`) that referred to a control and field that no longer exist; in the real database
+it compiled only because the form kept the old type information.
+
 ## 4. Tests: a hidden Access, text out
 
 [`tools/test/Test-AccessTemplate.ps1`](../tools/test/Test-AccessTemplate.ps1) is the pattern: copy a built database, open it
