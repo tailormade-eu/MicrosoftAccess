@@ -17,6 +17,14 @@ done on Windows 11 with 64-bit Access 365 and the [MSAccessVCS add-in](https://g
 | Edit a module | edit the file in `modules/`, then build (or import that object) |
 | Module stamp | `python -I scripts/libstamp.py apply` (see README, *Module stamps*); the Excel modules: add `excel` |
 
+The file that is built comes from the source, not from the name you give the script:
+
+- `project.json` `FileFormat`: 10 = Access 2002 `.mdb`, 12 = `.accdb`. A format-2002 database refuses some modern forms (see the traps table).
+- `vbe-project.json` `FileName` and `dbs-properties.json` `Name`: the file name, with its extension. The add-in builds to
+  `<VCS Build Path>\<that name>`. A script that is told another extension ends up with an empty database of that name next
+  to the real build.
+- `vbe-references.json`: the references (library GUID and version) that are added to the VBA project during the build.
+
 Settings that matter, in `vcs-options.json` and `proj-properties.json`:
 
 - **`BreakOnError`** (`true` stops the VBE on every error): fine on your desk, fatal in a hidden Access, where nobody sees the Stop.
@@ -37,6 +45,13 @@ It builds in a copy (`%TEMP%\vcs-build\<name>`), points *VCS Build Path* at that
 presses Cancel on a *Build Name Conflict*, and stops only the Access it started. Read the lines `ERROR` and `CRITICAL` in the
 log it prints; `Error 48 (Error in loading DLL)` while importing *vbe references* means a referenced library is not installed on
 this pc. The build goes on, but code that uses a type from that library will not compile.
+
+To see which reference fails, add the entries of `vbe-references.json` one by one to an empty database
+(`$acc.References.AddFromGuid(guid, major, minor)` in a hidden Access, one `try` per entry). Seen on 64-bit Access: only
+*Microsoft DAO 3.6* (`{00025E01-0000-0000-C000-000000000046}`, 5.0) fails, with *Error in loading DLL*, because `dao360.dll`
+exists only as a 32-bit file and cannot be installed for 64-bit Office. `stdole` answers *Name conflicts with existing module*,
+which is harmless (Access has it already). The fix for a client project is the ACE DAO in `vbe-references.json`
+(`{4AC9E1DA-5BAD-4AC7-86E3-24F4CDCECA28}`, 12.0): the same object model, available in 32 and 64 bit.
 
 If the log shows *Error getting theme file ... Office Theme.thmx* with the *Compressed (zipped) Folders Error* window, the add-in could not
 zip the theme folder in that work folder (seen once in `%TEMP%`, not in another folder; cause unknown). Add `-DropThemes`: the build then
