@@ -83,7 +83,7 @@ Zie [MODULE-INDEX.md](MODULE-INDEX.md) voor een overzicht van alle modules met h
 
 Dit is een levende, actief onderhouden library, geen archief. Bedoeling:
 - **Verder opbouwen** — nieuwe herbruikbare functies komen hier terecht, niet als losse/dubbele kopie in een klantproject.
-- **Committen** — wijzigingen hier horen gecommit te worden, ook als ze vanuit een klantproject-sessie ontstaan (zoals `ClearMultiValueField`, toegevoegd 2026-07-28 vanuit client Cards).
+- **Committen** — wijzigingen hier horen gecommit te worden, ook als ze vanuit een klantproject-sessie ontstaan (zoals `ClearMultiValueField`, toegevoegd 2026-07-28 vanuit een klantproject).
 - **Verbeteren** — bestaande functies mogen gerefactored/uitgebreid worden zodra een project een tekortkoming blootlegt.
 - **Index onderhouden** — `MODULE-INDEX.md` moet meebewegen bij elke nieuwe/gewijzigde functie, anders wordt hij snel stale en onbetrouwbaar.
 

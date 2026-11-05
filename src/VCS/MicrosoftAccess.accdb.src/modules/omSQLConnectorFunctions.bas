@@ -1,12 +1,12 @@
 ﻿Attribute VB_Name = "omSQLConnectorFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=17c63d6d
+'@lib 2026-11-05 sha=77e83819
 
 Global gSQLConnector As New omSQLConnector
 
 
-' Lives here, next to gSQLConnector, so omSSMAAConnector compiles in a database that has no gSQLConnector (e.g. a client project uses CurrentSQL).
+' Lives here, next to gSQLConnector, so omSSMAAConnector compiles in a database that has no gSQLConnector (e.g. a client project that uses its own CurrentSQL).
 Public Sub SetSQLConnectorConnectionString(tableName As String, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional)
     gSQLConnector.ConnectionString = omSSMAAConnector.GetConnectionStringByProperty(tableName, ConnectionType:=SQLOLEDBProvider, encryptType:=encryptType)
 End Sub

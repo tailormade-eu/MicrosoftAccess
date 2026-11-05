@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omSSMAAConnector"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=f3c14a5f
+'@lib 2026-11-05 sha=db5d7c95
 Global cSQLNCLIVersion As Integer
 Global cSQLNCLIFound As Boolean
 Global cSQLODBCVersion As Integer
@@ -17,7 +17,7 @@ Dim m_ServerCon As String
 Const cSSMAABAckup = "SSMAA_Backup_"
 ' Een database-object voor de hele koppelronde (LinkUsingSSMA). Elke CurrentDb maakt een nieuw
 ' object en leest de tabellenlijst opnieuw in; per tabel meermaals = bijna kwadratisch bij
-' ~1000 tabellen. Idee overgenomen van client (omSSMAAConnector, Dirk 16/09/2026: 50 s -> 5 s).
+' ~1000 tabellen. Idee overgenomen van een klantproject (omSSMAAConnector, 16/09/2026: 50 s -> 5 s).
 Dim mDbKoppelen As dao.Database
 ' ==== BEGIN auto driver declarations ====
 Private Const AUTO_DRIVER_ODBC_MAX As Long = 25      ' highest "ODBC Driver n for SQL Server" that is looked for
@@ -664,7 +664,7 @@ End Sub
 ' ==== BEGIN auto driver functions ====
 ' SQLAuto = newest SQL Server ODBC driver that is installed on this PC, then older ones, then SQL Server
 ' Native Client, then the legacy Windows driver "SQL Server".
-' IsOdbcDriverInstalled and GetDriverFromConnectionString come from client (omSSMAAConnector, 28/09/2026),
+' IsOdbcDriverInstalled and GetDriverFromConnectionString come from a client project (omSSMAAConnector, 28/09/2026),
 ' translated to English. The registry check replaces the file check on c:\windows\system32.
 
 Public Function IsOdbcDriverInstalled(ByVal driverName As String) As Boolean
@@ -916,7 +916,7 @@ End Function
 
 ' ==== BEGIN schema functions ====
 Private Function SchemaColumns() As Variant
-    ' "name|type" in the order a new SSMAA_ODBC_Tables is created. Older tables (a client project: 10 columns, "Group" instead of
+    ' "name|type" in the order a new SSMAA_ODBC_Tables is created. Older tables (an older client project: 10 columns, "Group" instead of
     ' "Groups") get the missing ones added; nothing is dropped or renamed, so older code that still reads "Group" keeps working.
     SchemaColumns = Array("DSN|TEXT(255)", "SQLServer|TEXT(255)", "SQLServerPort|TEXT(255)", "SQLDatabase|TEXT(255)", _
         "SQLLogin|TEXT(100)", "SQLPassword|TEXT(100)", "SQLTableOwner|TEXT(100)", "SQLTable|TEXT(255)", "ODBCTable|TEXT(255)", _

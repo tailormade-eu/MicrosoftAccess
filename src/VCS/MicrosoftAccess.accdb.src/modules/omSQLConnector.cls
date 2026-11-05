@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=29c39467
+'@lib 2026-11-05 sha=f7e583ea
 
 Private connection As New ADODB.connection
 Private p_ConnectionString As String
@@ -152,8 +152,8 @@ End Property
 
 Private Sub EnsureConnected()
     ' The connection opens itself on first use. Without a connection string set by the caller it connects to the server of the
-    ' first row in SSMAA_ODBC_Tables with the newest installed driver (SQLAuto); this is what a client project's CurrentSQL always did.
-    ' A caller that sets .ConnectionString first (BRN, Baut, ...) is unaffected: that already opens the connection.
+    ' first row in SSMAA_ODBC_Tables with the newest installed driver (SQLAuto); this is what an older client project's own CurrentSQL always did.
+    ' A caller that sets .ConnectionString first (other client projects) is unaffected: that already opens the connection.
     If connection.state = adStateOpen Then Exit Sub
     If Len(p_ConnectionString) = 0 Then
         Me.ConnectionString = omSSMAAConnector.GetConnectionStringByProperty(ConnectionType:=ConnectionTypes.SQLAuto, ODBCConnection:=False)

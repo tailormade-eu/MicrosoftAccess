@@ -1,7 +1,7 @@
 # Plan — Excel-bibliotheek `MicrosoftExcel`
 
 Besluit Raoul 2026-10-10: eigen map naast `MicrosoftAccess`, omdat `Option Compare Database` in Excel niet geldig is.
-Bron: de 8 algemene `om*`-modules uit client (`Ideeds\client\Src\ExportedVBA`) en SBDInc (`API-EPM`).
+Bron: de 8 algemene `om*`-modules uit twee klantwerkmappen.
 Dit is een plan; er staat nog geen module in deze map.
 
 ## Indeling
@@ -22,7 +22,7 @@ MicrosoftExcel/
 
 | Module | Wat er weg of anders moet |
 |---|---|
-| `omLockingFunctions` | `IsNullOrEmpty` en de globale `gFso` vervangen door `Len()` en een lokale late-bound FileSystemObject. Dan geen afhankelijkheid van client-`omStringFunctions`/`omFileFunctions` en geen naamconflict met onze Access-modules. Testblokken (regels 272-489) weg. |
+| `omLockingFunctions` | `IsNullOrEmpty` en de globale `gFso` vervangen door `Len()` en een lokale late-bound FileSystemObject. Dan geen afhankelijkheid van de `omStringFunctions`/`omFileFunctions` en geen naamconflict met onze Access-modules. Testblokken (regels 272-489) weg. |
 | `omWorksheetFunctions` | A en B samenvoegen. `omArrayFunctions.IsArrayInitialized` en `InitializeStringArrayFromString` inline (met `Split`). Testsub A weg. |
 | `omListObjectFunctions` | Dode code (regels 16-39) weg, `xlPinYin` nakijken, `Integer` → `Long`. |
 
@@ -56,7 +56,7 @@ Zoals bij Access: een verborgen Excel via COM, een tijdelijke werkmap, de `.bas`
 
 - `omCSHA256` en `omCSHA256Functions`: vervallen. `omHashAlgorithms` (Access) doet het in UTF-8. Voor Excel is later een aparte kopie nodig, zonder `Option Compare Database`.
 - `omDataFunctions` en `omDatabaseSync`: SBD-specifiek, blijven bij SBD als `sbd*`.
-- De client- en SBD-werkmappen worden niet aangepast; hun eigen kopieën blijven.
+- De klantwerkmappen worden niet aangepast; hun eigen kopieën blijven.
 
 ## Open vragen voor Raoul
 

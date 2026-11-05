@@ -35,7 +35,7 @@ omJsonConverter;2026-10-10;28c545e7
 omKernalAPIFunctions;2026-10-10;2df70616
 omKeyObject;2026-10-10;bac7552d
 omKeyValue;2026-10-10;131f8a9c
-omLibraryFunctions;2026-10-10;fd435743
+omLibraryFunctions;2026-11-05;6d13c6cd
 omLibraryStamp;2026-10-10;fbb7efab
 omLogging;2026-10-10;f43e937b
 omLoggingFunctions;2026-10-10;ab3961d6
@@ -57,12 +57,12 @@ omSeqItem;2026-10-10;47848f0d
 omSFTP;2026-10-10;d67279c5
 omSourceObject;2026-10-10;bc20693f
 omSourceObjectControl;2026-10-10;5f2f221a
-omSQLConnector;2026-10-10;29c39467
-omSQLConnectorFunctions;2026-10-10;17c63d6d
+omSQLConnector;2026-11-05;f7e583ea
+omSQLConnectorFunctions;2026-11-05;77e83819
 omSQLFunctions;2026-10-10;85c05af6
 omSQLObject;2026-10-10;30a48cc2
 omSQLServerFunctions;2026-10-10;5c8873cb
-omSSMAAConnector;2026-10-10;f3c14a5f
+omSSMAAConnector;2026-11-05;db5d7c95
 omStartup;2026-10-10;b79bf44a
 omStringFunctions;2026-10-10;0247d091
 omStringTagFunctions;2026-10-10;525afe1c

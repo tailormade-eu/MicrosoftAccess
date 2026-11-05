@@ -29,7 +29,7 @@
                 "id": "mssql_database",
                 "type": "promptString",
                 "description": "Enter the MSSQL database name",
-				"default": "ClientProject"
+				"default": ""
             }
         ]
 	}

@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omLibraryFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=fd435743
+'@lib 2026-11-05 sha=6d13c6cd
 
 Private Function InternalGetTimeStamp(Optional prefix As String = "_") As String
     InternalGetTimeStamp = prefix & format(Now, "yyyymmdd_hhnnss")
@@ -90,7 +90,7 @@ Dim OType As AcObjectType
 
 End Sub
 
-' RemoveEqualFiles "C:\Users\JaRa\OneDrive\Shared\client\LibraryCompare\","C:\Users\JaRa\OneDrive\Shared\client\Library\"
+' RemoveEqualFiles "C:\Work\LibraryCompare\","C:\Work\Library\"
 
 Public Sub RemoveEqualFiles(sourcePath As String, destinationPath As String, Optional moveFile As Boolean = False)
 Dim sFolder As Scripting.folder
