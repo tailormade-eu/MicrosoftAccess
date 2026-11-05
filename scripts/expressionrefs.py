@@ -14,8 +14,9 @@ What is read (the add-in source format of a client project: modules, forms, repo
 
 A call is an identifier followed by "(". Not counted: text between quotes, [bracketed names], #dates#, the built-in Access/VBA/SQL
 functions (BUILTINS below) and SQL keywords. What is left is looked up in the modules:
-  RESOLVED        a Public Function (or one without a modifier) in a standard module (.bas), or in the form/report's own module
-  PRIVATE         defined, but Private: an expression cannot call it
+  RESOLVED        a Public Function (or one without a modifier) in a standard module (.bas), or any Function (also Private) in the
+                  form/report's own module: tested, a Private function in the form's own module works in that form's expressions
+  PRIVATE         defined Private in a standard module: not tested here whether Access refuses it, reported as a doubt
   SUB             defined as a Sub: an expression cannot call a Sub
   CLASS           only in a class module: an expression cannot call it
   MISSING         defined nowhere
@@ -162,7 +163,9 @@ def report(root):
     for key, entries in used.items():
         for where, own, name in entries:
             kinds = std.get(key, set()) | own.get(key, set())
-            if 'public-function' in kinds:
+            own_kinds = own.get(key, set())
+            if 'public-function' in kinds or 'private-function' in own_kinds:
+                # measured: a Private function in the form's/report's OWN module is callable from that object's expressions
                 s = 'RESOLVED'
             elif 'private-function' in kinds:
                 s = 'PRIVATE'

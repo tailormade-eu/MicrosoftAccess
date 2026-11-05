@@ -30,6 +30,8 @@ End Function
 FORM_CODE = '''Option Explicit
 Public Function OwnFormFunction() As Long
 End Function
+Private Function OwnPrivateFunction() As Long
+End Function
 '''
 REPORT = '''Version =20
 Begin Report
@@ -53,7 +55,7 @@ Begin Report
             Name ="d"
         End
         Begin TextBox
-            ControlSource ="=OwnFormFunction()"
+            ControlSource ="=OwnFormFunction()+OwnPrivateFunction()"
             Name ="e"
         End
     End
@@ -112,7 +114,7 @@ class ExpressionRefsTests(unittest.TestCase):
 
     def test_does_not_report_what_is_fine(self):
         _, out = run(self.root)
-        for name in ('PublicOne', 'NoModifier', 'DLookup', 'Nz', 'IIf', 'OwnFormFunction', 'Tbl', 'MissingInQuotes'):
+        for name in ('PublicOne', 'NoModifier', 'DLookup', 'Nz', 'IIf', 'OwnFormFunction', 'OwnPrivateFunction', 'Tbl', 'MissingInQuotes'):
             self.assertNotIn(name + ' ', out.replace('(', ' '), name)
 
     def test_continuation_lines_are_joined(self):
