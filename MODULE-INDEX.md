@@ -682,6 +682,7 @@ Coverage: 79/79 bestanden verwerkt (51 .bas + 28 .cls). Vier bestanden bevatten 
 
 ## Not part of the library (no om prefix, do not copy into customer databases)
 - `tstSQLFunctions.bas` — Tests of omSQLFunctions: `?tstSQLFunctions.RunAll` gives "OK (n tests)" or the failures
+- `tstDateFunctions.bas` — Tests of omDateFunctions.GetTimeStamp: `?tstDateFunctions.RunAll` gives "OK (n tests)" or the failures
 - `tstMathFunctions.bas` — Tests of omMathFunctions: `?tstMathFunctions.RunAll` gives "OK (n tests)" or the failures
 - `tstTesseractOCR.bas` — Tests of omTesseractOCR (needs Tesseract and tests/ocr-sample.png): `?tstTesseractOCR.RunAll` gives "OK (n tests)", "FAILED: ..." or "SKIPPED: ..."
 - `exCountry.cls` — Example class that loads one row of a table Countries with a parameter query (copy and adapt)

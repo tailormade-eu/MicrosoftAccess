@@ -13,7 +13,7 @@ omControl;2026-10-10;21b9968f
 omControlFunctions;2026-10-10;93b29458
 omDAOFunctions;2026-10-10;0464061d
 omDatabaseFunctions;2026-10-10;61e240e6
-omDateFunctions;2026-10-11;4a654d8c
+omDateFunctions;2026-11-05;350bf88c
 omDefaultFunctions;2026-10-10;cb0aa517
 omDefaults;2026-10-10;f6a71559
 omDevelopmentFunctions;2026-10-10;984ff6b4

@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omDateFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-11 sha=4a654d8c
+'@lib 2026-11-05 sha=350bf88c
 
 ' Leeg (Null/Empty) = niet voorbij, geeft False. Vergelijking op dagdatum (Date), geen tijdstip.
 ' Let op: VBA's And is niet kortsluitend zoals C#'s && — daarom de Null-check apart, niet in
@@ -80,7 +80,7 @@ End Function
 Public Function GetTimeStamp(Optional ts As Date = 0) As String
 
     If ts = 0 Then ts = Now
-    GetTimeStamp = format(Now, "yyyyMMdd_hhmmss")
+    GetTimeStamp = Format(ts, "yyyymmdd_hhnnss")   ' hh and ss with a leading zero, nn = minutes (mm after hh would also work, nn cannot be mistaken for months)
 End Function
 
 Public Function YYYYMM_Offset(lMonthTemp As Long, lMonthOffset As Long) As Long
