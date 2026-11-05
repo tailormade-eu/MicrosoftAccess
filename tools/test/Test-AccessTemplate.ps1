@@ -72,4 +72,5 @@ if (Wait-Job $job -Timeout 120) { Receive-Job $job } else {
     Stop-Job $job
 }
 Start-Sleep 2
-foreach ($p in @(Get-Process MSACCESS -ErrorAction SilentlyContinue)) { if ($before -notcontains $p.Id) { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue } }
+# stop only what this script started: new since the start AND started through COM (-Embedding). Never another instance of the user.
+foreach ($c in @(Get-CimInstance Win32_Process -Filter "Name='MSACCESS.EXE'")) { if (($before -notcontains $c.ProcessId) -and ($c.CommandLine -match '-Embedding')) { Stop-Process -Id $c.ProcessId -Force -ErrorAction SilentlyContinue } }
