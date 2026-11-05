@@ -33,10 +33,14 @@ param(
     [switch] $KeepBreakOnError
 )
 
-# the installed add-in: %AppData%\MSAccessVCS, or, when AppData is redirected to OneDrive, under %USERPROFILE%OneDriveAppDataRoaming
+# the installed add-in: %AppData%\MSAccessVCS, or, when AppData is redirected to OneDrive, under <OneDrive folder>\AppData\Roaming
 $addin = $null
-foreach ($root in @([Environment]::GetFolderPath('ApplicationData'), (Join-Path $env:USERPROFILE 'OneDrive\AppData\Roaming'), (Join-Path $env:OneDrive 'AppData\Roaming'), (Join-Path $env:OneDriveCommercial 'AppData\Roaming'))) {
-    if ($root -and (Test-Path (Join-Path $root 'MSAccessVCS\Version Control.accda'))) { $addin = Join-Path $root 'MSAccessVCS\Version Control'; break }
+$roots = @([Environment]::GetFolderPath('ApplicationData'))
+foreach ($od in @($env:USERPROFILE, $env:OneDrive, $env:OneDriveCommercial)) {   # a variable can be empty on a pc: skip it
+    if ($od) { $roots += (Join-Path $od 'AppData\Roaming'); $roots += (Join-Path $od 'OneDrive\AppData\Roaming') }
+}
+foreach ($root in $roots) {
+    if (Test-Path (Join-Path $root 'MSAccessVCS\Version Control.accda')) { $addin = Join-Path $root 'MSAccessVCS\Version Control'; break }
 }
 if (-not $addin) { throw 'The VCS add-in (MSAccessVCS\Version Control.accda) was not found under AppData; install it or pass the folder.' }
 if (Test-Path $WorkFolder) { Remove-Item $WorkFolder -Recurse -Force }
