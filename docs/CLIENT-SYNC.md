@@ -38,6 +38,7 @@ Principles (decisions of the owner):
    | Section | Meaning | What you do |
    |---|---|---|
    | IDENTICAL | same as the library | nothing |
+   | IDENTICAL, NO STAMP | same code, but the client copy has no stamp line | `copy` it: with the stamp a later library change shows as CLIENT BEHIND, without it only as NO STAMP, DIFFERS |
    | FORMATTING ONLY | same code, other case of identifiers, other spaces or indentation, other blank lines | nothing, or `copy` to make the hash match again |
    | CLIENT BEHIND | untouched client copy, the library has moved on | update it (`copy`) |
    | CHANGED LOCALLY | the client copy no longer matches its own stamp | read the change: take it into the library, or discard it |
@@ -61,7 +62,7 @@ Principles (decisions of the owner):
    python -I scripts/expressionrefs.py report <client source>
    ```
 
-   It lists the functions that forms, reports, queries and macros call by name and that no module defines (`MISSING`), or
+   It lists the functions that forms, reports, queries (also a SQL `RecordSource`) and macros call by name (and the ones in a conditional format), and that no module defines (`MISSING`), or
    defines in a way an expression cannot call (`PRIVATE`, `SUB`, `CLASS`). Run it on the project before the refresh and after:
    anything new in the second list is something the refresh removed. Findings that were already in the first list are the
    client's own and are not caused by the refresh (still worth telling the owner). Case in point: a refresh replaced a module

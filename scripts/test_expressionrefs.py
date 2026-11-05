@@ -122,6 +122,29 @@ class ExpressionRefsTests(unittest.TestCase):
         _, out = run(self.root)
         self.assertIn('SplitJoined', out)
 
+    def test_reads_sql_record_source_and_conditional_format_blob(self):
+        blob = ('=MissingInBlob([x])').encode('utf-16-le').hex()
+        text = ('Version =20\nBegin Report\n    RecordSource ="SELECT MissingInRecordSource(x)\\015\\012FROM t"\n'
+                '    Begin\n        Begin TextBox\n            ConditionalFormat = Begin\n'
+                '                0x0100000066000000' + blob[:16] + ' ,\n                0x' + blob[16:] + '\n            End\n'
+                '        End\n    End\nEnd\n')
+        (self.root / 'reports' / 'B.report').write_text(text, encoding='utf-8')
+        _, out = run(self.root)
+        self.assertIn('MissingInRecordSource', out)
+        self.assertIn('MissingInBlob', out)
+
+    def test_saved_query_as_record_source_is_not_a_call(self):
+        text = 'Version =20\nBegin Report\n    RecordSource ="SavedQuery(Zip)"\nEnd\n'
+        (self.root / 'reports' / 'S.report').write_text(text, encoding='utf-8')
+        _, out = run(self.root)
+        self.assertNotIn('SavedQuery', out)
+
+    def test_escaped_line_end_does_not_glue_words(self):
+        text = 'Version =20\nBegin Report\n    RecordSource ="SELECT a FROM t WHERE x=1\\015\\012MissingAfterEscape(y)"\nEnd\n'
+        (self.root / 'reports' / 'E.report').write_text(text, encoding='utf-8')
+        _, out = run(self.root)
+        self.assertIn('MissingAfterEscape', out)
+
     def test_clean_project_gives_exit_code_0(self):
         (self.root / 'queries' / 'Q.sql').write_text('SELECT PublicOne(1) FROM t;', encoding='utf-8')
         (self.root / 'macros' / 'M.macro').write_text('Begin\n    Action ="RunCode"\n    Argument ="PublicOne()"\nEnd\n', encoding='utf-8')

@@ -17,6 +17,8 @@ blank lines are ignored; inside string literals nothing is touched, so "A" and "
 
 Situations (a module of the client folder whose name starts with om):
   IDENTICAL          same text as the library (after normalizing): nothing to do
+  IDENTICAL, NO STAMP  same code, but the client copy has no stamp line. Nothing is wrong now; without the stamp a later library
+                     change is reported as NO STAMP, DIFFERS and not as CLIENT BEHIND. `copy` puts the stamped version in
   FORMATTING ONLY    same code, but another case of identifiers, other spaces/indentation or other blank lines.
                      No real difference; `copy` realigns it so the hash matches again
   CLIENT BEHIND      the client copy is untouched (it still matches its own stamp) and the library has moved on: update it
@@ -93,6 +95,10 @@ def classify(client_path, lib_path):
     lsha = libstamp.sha8(ltext)
     if code_form(ctext) == code_form(ltext):
         if csha == lsha:
+            if libstamp.current_stamp(ctext) is None and libstamp.current_stamp(ltext) is not None:
+                # same code, but the client copy has no stamp line: a later library change can then only be reported as
+                # NO STAMP, DIFFERS instead of CLIENT BEHIND. `copy` adds the stamp.
+                return 'IDENTICAL, NO STAMP', 'same code; the stamp line is missing (copy adds it)', None
             return 'IDENTICAL', '', None
         return 'FORMATTING ONLY', 'same code; case, spaces or blank lines differ', None
     own = libstamp.current_stamp(ctext)
@@ -117,14 +123,14 @@ def report(folder):
         seen.add(key)
         kind, detail, _ = classify(p, lib.get(key))
         groups.setdefault(kind, []).append((p.stem, detail))
-    order = ['CHANGED LOCALLY', 'NO STAMP, DIFFERS', 'CLIENT BEHIND', 'LOCAL ONLY', 'FORMATTING ONLY', 'IDENTICAL']
+    order = ['CHANGED LOCALLY', 'NO STAMP, DIFFERS', 'CLIENT BEHIND', 'LOCAL ONLY', 'IDENTICAL, NO STAMP', 'FORMATTING ONLY', 'IDENTICAL']
     attention = 0
     for kind in order:
         items = groups.get(kind, [])
         if not items:
             continue
         print(f'{kind} ({len(items)})')
-        if kind in ('IDENTICAL', 'FORMATTING ONLY'):
+        if kind in ('IDENTICAL', 'FORMATTING ONLY', 'IDENTICAL, NO STAMP'):
             print('   ' + ', '.join(n for n, _ in items))
         else:
             attention += len(items)

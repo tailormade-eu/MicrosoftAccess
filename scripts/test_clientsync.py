@@ -53,6 +53,11 @@ class ClientSyncTests(unittest.TestCase):
                 return
         self.fail('no library module with a string literal found')
 
+    def test_same_code_without_stamp_line_is_reported_apart(self):
+        no_stamp = '\n'.join(l for l in self.text.replace('\r\n', '\n').split('\n') if not l.lstrip(' ').startswith("'@lib "))
+        self.assertNotEqual(no_stamp, self.text)
+        self.assertEqual(kind_for(no_stamp), 'IDENTICAL, NO STAMP')
+
     def test_a_real_code_change_is_not_formatting(self):
         changed = self.text + '\nPublic Sub ExtraProcedure()\nEnd Sub\n'
         self.assertNotIn(kind_for(changed), ('IDENTICAL', 'FORMATTING ONLY'))

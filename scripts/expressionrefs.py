@@ -48,7 +48,7 @@ YESNO BIT DATETIME COUNTER AUTOINCREMENT IDENTITY CHARACTER
 DEFINE = re.compile(r'^\s*(Public\s+|Private\s+|Friend\s+)?(Static\s+)?(Function|Sub)\s+(\w+)', re.I)
 PROP = re.compile(r'^\s*(\w+)\s*=\s*"(.*)"\s*$')
 CONT = re.compile(r'^\s+"(.*)"\s*$')
-EXPR_KEYS = {'defaultvalue', 'validationrule', 'filter', 'orderby', 'rowsource', 'controlsource', 'caption'}
+EXPR_KEYS = {'defaultvalue', 'validationrule', 'filter', 'orderby', 'rowsource', 'recordsource', 'controlsource', 'caption'}
 CALL = re.compile(r'(?<![\w.!\]])([A-Za-z_]\w*\$?)\s*\(')
 
 
@@ -76,6 +76,7 @@ def definitions(text):
 
 
 def strip_literals(expr):
+    expr = re.sub(r'\\\d{3}', ' ', expr)                  # \015\012 and the like: line ends in a saved SQL text
     expr = re.sub(r'"(?:[^"]|"")*"', ' ', expr)          # string literals
     expr = re.sub(r'\[[^\]]*\]', ' ', expr)               # [bracketed names]
     expr = re.sub(r'#[^#]*#', ' ', expr)                  # #dates#
@@ -94,6 +95,33 @@ def calls(expr):
             continue
         out.add(m.group(1))
     return out
+
+
+HEXBLOB = re.compile(r'^\s*(\w+)\s*=\s*Begin\s*$')
+HEXLINE = re.compile(r'^\s*0x([0-9a-fA-F]+)')
+UTF16_RUN = re.compile(rb'(?:[\x20-\x7e]\x00){4,}')
+
+
+def blob_texts(text):
+    """(key, text) for the UTF-16 text runs inside the hex blobs of a form/report.
+    A conditional format keeps its expression there, not in a readable property."""
+    lines = text.replace('\r\n', '\n').split('\n')
+    i = 0
+    while i < len(lines):
+        m = HEXBLOB.match(lines[i])
+        if not m:
+            i += 1
+            continue
+        data = b''
+        j = i + 1
+        while j < len(lines) and not re.match(r'^\s*End\s*$', lines[j]):
+            h = HEXLINE.match(lines[j])
+            if h and len(h.group(1)) % 2 == 0:
+                data += bytes.fromhex(h.group(1))
+            j += 1
+        for run in UTF16_RUN.findall(data):
+            yield m.group(1), run.decode('utf-16-le')
+        i = j + 1
 
 
 def property_values(text):
@@ -140,9 +168,13 @@ def report(root):
             codefile = p.with_suffix('.cls')
             if codefile.exists():
                 own = definitions(read(codefile))
-            for key, val in property_values(read(p)):
-                if key.lower() == 'rowsource' and not re.match(r'\s*(=|select|transform|insert|update|delete)', val, re.I):
-                    continue          # a saved query or a value list, not an expression
+            body = read(p)
+            for key, val in blob_texts(body):
+                for name in calls(val):
+                    note(name, f'{folder}/{p.name}', own)
+            for key, val in property_values(body):
+                if key.lower() in ('rowsource', 'recordsource') and not re.match(r'\s*(=|select|transform|insert|update|delete)', val, re.I):
+                    continue          # a saved query, a table or a value list, not an expression
                 if val.startswith('=') or key.lower() in EXPR_KEYS - {'caption'}:
                     for name in calls(val):
                         note(name, f'{folder}/{p.name}', own)

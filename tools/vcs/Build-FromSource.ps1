@@ -136,7 +136,7 @@ $job = Start-Job -ArgumentList $db, $src, $addin, $TimeoutSec -ScriptBlock {
             }
         }
         $l = Get-ChildItem $logs -Filter 'Build_*.log' -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-        if ($l) { $out += "--- build log: $($l.FullName)"; $out += (Select-String -Path $l.FullName -Pattern 'ERROR|Error \d+|CRITICAL|warning\(s\)|Done\.' | ForEach-Object { $_.Line }) }
+        if ($l) { $out += "--- build log: $($l.FullName)"; $out += (Select-String -Path $l.FullName -CaseSensitive -Pattern '^ERROR|^Error \d+:|CRITICAL|warning\(s\)|Done\.' | ForEach-Object { $_.Line }) }
     } catch { $out += 'ERROR: ' + $_.Exception.Message }
     finally { if ($acc) { try { $acc.CloseCurrentDatabase() } catch {}; try { $acc.Quit(2) } catch {} } }
     $out
