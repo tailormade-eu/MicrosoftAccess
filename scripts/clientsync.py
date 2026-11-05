@@ -28,6 +28,7 @@ Situations (a module of the client folder whose name starts with om):
   LOCAL ONLY         not in the library: put it in the library, or rename it with the client prefix
 """
 import pathlib
+import re
 import shutil
 import sys
 
@@ -114,15 +115,32 @@ def classify(client_path, lib_path):
     return 'CHANGED LOCALLY', f'stamp says sha={own[1]}, text hashes to {csha}; ' + detail, (only_client, only_lib)
 
 
+def class_attributes(text):
+    """The Attribute lines of a module (VB_PredeclaredId, VB_Exposed ...) except the name. They change how a class
+    behaves (a predeclared class has a default instance), but the code comparison does not look at them."""
+    attrs = {}
+    for line in text.replace('\r\n', '\n').split('\n'):
+        m = re.match(r'^Attribute\s+(VB_\w+)\s*=\s*(.*?)\s*$', line)
+        if m and m.group(1).lower() != 'vb_name':
+            attrs[m.group(1)] = m.group(2).lower()
+    return attrs
+
+
 def report(folder):
     lib = lib_modules()
     groups = {}
     seen = set()
+    attr_diffs = []
     for p in client_modules(folder):
         key = p.stem.lower()
         seen.add(key)
         kind, detail, _ = classify(p, lib.get(key))
         groups.setdefault(kind, []).append((p.stem, detail))
+        if key in lib and p.suffix.lower() == '.cls':
+            a, b = class_attributes(libstamp.read(p)), class_attributes(libstamp.read(lib[key]))
+            if a != b:
+                diff = ', '.join(f'{k}: client {a.get(k, "-")} / library {b.get(k, "-")}' for k in sorted(set(a) | set(b)) if a.get(k) != b.get(k))
+                attr_diffs.append((p.stem, diff))
     order = ['CHANGED LOCALLY', 'NO STAMP, DIFFERS', 'CLIENT BEHIND', 'LOCAL ONLY', 'IDENTICAL, NO STAMP', 'FORMATTING ONLY', 'IDENTICAL']
     attention = 0
     for kind in order:
@@ -136,6 +154,11 @@ def report(folder):
             attention += len(items)
             for name, detail in items:
                 print(f'   {name}' + (f'  - {detail}' if detail else ''))
+    if attr_diffs:
+        attention += len(attr_diffs)
+        print(f'CLASS ATTRIBUTES DIFFER ({len(attr_diffs)})  - the code may be the same, the class does not behave the same')
+        for name, diff in attr_diffs:
+            print(f'   {name}  - {diff}')
     missing = sorted(lib[k].stem for k in lib if k not in seen)
     print(f'\nlibrary modules the client does not have: {len(missing)}' + (' (not an issue: a client takes what it uses)' if missing else ''))
     print(f'needs attention: {attention}')

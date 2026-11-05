@@ -58,6 +58,21 @@ class ClientSyncTests(unittest.TestCase):
         self.assertNotEqual(no_stamp, self.text)
         self.assertEqual(kind_for(no_stamp), 'IDENTICAL, NO STAMP')
 
+    def test_class_attribute_difference_is_reported_although_the_code_is_equal(self):
+        import contextlib
+        import io
+        src = LIB['omTimeRange']
+        text = libstamp.read(src)
+        self.assertIn('Attribute VB_PredeclaredId = False', text)
+        with tempfile.TemporaryDirectory() as d:
+            (pathlib.Path(d) / 'omTimeRange.cls').write_bytes(text.replace('VB_PredeclaredId = False', 'VB_PredeclaredId = True').encode('utf-8'))
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                code = clientsync.report(d)
+        self.assertEqual(code, 1)
+        self.assertIn('CLASS ATTRIBUTES DIFFER', buf.getvalue())
+        self.assertIn('VB_PredeclaredId: client true / library false', buf.getvalue())
+
     def test_a_real_code_change_is_not_formatting(self):
         changed = self.text + '\nPublic Sub ExtraProcedure()\nEnd Sub\n'
         self.assertNotIn(kind_for(changed), ('IDENTICAL', 'FORMATTING ONLY'))
