@@ -55,6 +55,19 @@ Principles (decisions of the owner):
    `uses` of the module (the compile in step 5 names what is missing; for example `omDateFunctions` needs `omTimeRange`).
 5. Build and compile the client project from source, in a copy, as described in [BUILD-AND-TEST.md](BUILD-AND-TEST.md)
    (sections 2, 3 and 3c). A compile error after a refresh is a finding to look at, not noise.
+6. **Check what the compiler cannot see.** A green compile does not look inside field expressions, queries and macros:
+
+   ```
+   python -I scripts/expressionrefs.py report <client source>
+   ```
+
+   It lists the functions that forms, reports, queries and macros call by name and that no module defines (`MISSING`), or
+   defines in a way an expression cannot call (`PRIVATE`, `SUB`, `CLASS`). Run it on the project before the refresh and after:
+   anything new in the second list is something the refresh removed. Findings that were already in the first list are the
+   client's own and are not caused by the refresh (still worth telling the owner). Case in point: a refresh replaced a module
+   that held `RoundHalfUp`; two invoice reports called it in their field expressions; the compile stayed green, this check
+   reports it (`Roundhalfup  - 8 uses in 2 objects`). The built-in function list in the script is not complete: a real Access
+   function that shows as MISSING gets added to `BUILTINS`. Tested in `scripts/test_expressionrefs.py`.
 
 ## During the work
 
