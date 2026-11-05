@@ -372,6 +372,9 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `WriteToLog(Optional diffOnly As String = "y", Optional updateCurrentDate As Boolean = True, Optional Description As String = "") As String` — Write entry to log
 - `StopLogging()` — Terminate logging system
 
+## omMathFunctions.bas
+- `RoundHalfUp(ByVal value As Double, ByVal decimals As Integer) As Double` — Round half away from zero with a floating point correction (1.005 gives 1.01); usable in form and report expressions
+
 ## omMSAccessFunctions.bas
 - `FormExists(formName As String) As Boolean` — Check if form exists
 - `ReportExists(ReportName As String) As Boolean` — Check if report exists
@@ -679,5 +682,6 @@ Coverage: 79/79 bestanden verwerkt (51 .bas + 28 .cls). Vier bestanden bevatten 
 
 ## Not part of the library (no om prefix, do not copy into customer databases)
 - `tstSQLFunctions.bas` — Tests of omSQLFunctions: `?tstSQLFunctions.RunAll` gives "OK (n tests)" or the failures
+- `tstMathFunctions.bas` — Tests of omMathFunctions: `?tstMathFunctions.RunAll` gives "OK (n tests)" or the failures
 - `tstTesseractOCR.bas` — Tests of omTesseractOCR (needs Tesseract and tests/ocr-sample.png): `?tstTesseractOCR.RunAll` gives "OK (n tests)", "FAILED: ..." or "SKIPPED: ..."
 - `exCountry.cls` — Example class that loads one row of a table Countries with a parameter query (copy and adapt)

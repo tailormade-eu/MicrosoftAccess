@@ -39,6 +39,7 @@ omLibraryFunctions;2026-10-10;fd435743
 omLibraryStamp;2026-10-10;fbb7efab
 omLogging;2026-10-10;f43e937b
 omLoggingFunctions;2026-10-10;ab3961d6
+omMathFunctions;2026-11-05;d29d1614
 omMSAccessFunctions;2026-10-10;402639fe
 omObjectFunctions;2026-10-10;10932fe2
 omOutlook;2026-10-10;a08d9a05
