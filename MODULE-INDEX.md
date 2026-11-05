@@ -234,7 +234,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `AutoFitRows(sh As Excel.Worksheet)` — Auto-fit row heights
 - `GetMaxRow(sh As Excel.Worksheet)` — Get last row with data
 - `GetMaxColumn(sh As Excel.Worksheet)` — Get last column with data
-- `ConvertToImage(sh As Excel.Worksheet, columnIndex As Long, findString As String, replaceString As String)` — Convert cell range to image
+- `ConvertToImage(sh As Excel.Worksheet, columnIndex As Long, findString As String, replaceString As String, Optional setLowerCase As Boolean = True)` — Convert cell range to image (the text is lower-cased first unless setLowerCase is False)
 - `SetRowHeight(sh As Excel.Worksheet, startRow As Long, endRow As Long, height As Double)` — Set row height
 - `SetRowWidth(sh As Excel.Worksheet, startColumn As Long, endColumn As Long, width As Double)` — Set column width
 - `UpdateFontOnSelection(sh As Excel.Worksheet, bold As Boolean)` — Update font bold on selection
@@ -683,6 +683,7 @@ Coverage: 79/79 bestanden verwerkt (51 .bas + 28 .cls). Vier bestanden bevatten 
 ## Not part of the library (no om prefix, do not copy into customer databases)
 - `tstSQLFunctions.bas` — Tests of omSQLFunctions: `?tstSQLFunctions.RunAll` gives "OK (n tests)" or the failures
 - `tstDateFunctions.bas` — Tests of omDateFunctions.GetTimeStamp: `?tstDateFunctions.RunAll` gives "OK (n tests)" or the failures
+- `tstExcelFunctions.bas` — Tests of omExcelFunctions.ConvertToImage (needs Excel): `?tstExcelFunctions.RunAll` gives "OK (n tests)" or the failures
 - `tstMathFunctions.bas` — Tests of omMathFunctions: `?tstMathFunctions.RunAll` gives "OK (n tests)" or the failures
 - `tstTesseractOCR.bas` — Tests of omTesseractOCR (needs Tesseract and tests/ocr-sample.png): `?tstTesseractOCR.RunAll` gives "OK (n tests)", "FAILED: ..." or "SKIPPED: ..."
 - `exCountry.cls` — Example class that loads one row of a table Countries with a parameter query (copy and adapt)

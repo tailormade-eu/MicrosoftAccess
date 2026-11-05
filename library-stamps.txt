@@ -19,7 +19,7 @@ omDefaults;2026-10-10;f6a71559
 omDevelopmentFunctions;2026-10-10;984ff6b4
 omExcel;2026-10-10;d5d158ea
 omExcelEngine;2026-10-10;96be6635
-omExcelFunctions;2026-10-10;5f76d3bb
+omExcelFunctions;2026-11-05;a71bdf3d
 omExportFunctions;2026-10-10;54933c61
 omFileFunctions;2026-10-30;90bcd275
 omFormFunctions;2026-10-30;285ccd7c

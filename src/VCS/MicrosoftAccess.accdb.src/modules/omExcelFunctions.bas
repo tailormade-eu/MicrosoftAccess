@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omExcelFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=5f76d3bb
+'@lib 2026-11-05 sha=a71bdf3d
 
 Public Function ReplaceFirst(sh As Excel.Worksheet, findValue As String, replaceValue As String)
 Dim rng As Excel.range
@@ -247,7 +247,10 @@ Public Function GetMaxColumn(sh As Excel.Worksheet)
     GetMaxColumn = sh.Application.ActiveCell.Column
 End Function
 
-Public Sub ConvertToImage(sh As Excel.Worksheet, columnIndex As Long, findString As String, replaceString As String)
+' Turns the text in each cell of a column (from row 2 down) into =Image("<url>"): findString is replaced by replaceString.
+' setLowerCase (default True, as in the client versions this library came from): the cell text is lower-cased first, so findString
+' must then be written in lower case too. Pass False to keep the case of file names (a web server can be case sensitive).
+Public Sub ConvertToImage(sh As Excel.Worksheet, columnIndex As Long, findString As String, replaceString As String, Optional setLowerCase As Boolean = True)
 Dim rowMax As Long
 Dim currentRow As Long
 Dim Value As String
@@ -260,7 +263,7 @@ Dim currentRange As Excel.range
     While currentRow <= rowMax
         sh.Cells(currentRow, columnIndex).Select
         Value = sh.Application.ActiveCell.Value
-        sh.Application.ActiveCell.FormulaR1C1 = "=Image(" & Chr(34) & Replace(Value, findString, replaceString) & Chr(34) & ")"
+        sh.Application.ActiveCell.FormulaR1C1 = "=Image(" & Chr(34) & Replace(IIf(setLowerCase, LCase(Value), Value), findString, replaceString) & Chr(34) & ")"
         currentRow = currentRow + 1
     Wend
 
