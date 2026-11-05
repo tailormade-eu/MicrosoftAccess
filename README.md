@@ -1,6 +1,6 @@
 # MicrosoftAccess
 
-This MicrosoftAccess Library is under version control with the [MS Access VCS Add-in](https://github.com/joyfullservice/msaccess-vcs-addin). The source files live in `src/VCS/MicrosoftAccess.accdb.src`. How the library is built from source, compiled and tested (and how to do the same for a client database) is in [docs/BUILD-AND-TEST.md](docs/BUILD-AND-TEST.md).
+This MicrosoftAccess Library is under version control with the [MS Access VCS Add-in](https://github.com/joyfullservice/msaccess-vcs-addin). The source files live in `src/VCS/MicrosoftAccess.accdb.src`. How the library is built from source, compiled and tested (and how to do the same for a client database) is in [docs/BUILD-AND-TEST.md](docs/BUILD-AND-TEST.md). How to keep a client project in step with the library (drift report, copy, the working method) is in [docs/CLIENT-SYNC.md](docs/CLIENT-SYNC.md).
 
 ## Overview
 
