@@ -10,8 +10,15 @@ copy     puts the library version of the named modules (file names without exten
 The hash is the one of scripts/libstamp.py (same normalize), so a module that is only formatted differently,
 or has another case of identifiers, counts as identical. See docs/CLIENT-SYNC.md for the working method.
 
+Two comparisons. The stamp hash of libstamp.py is exact about the text (apart from case and trailing spaces) and must stay as it
+is: omLibraryStamp.bas calculates the same hash inside Access. This script therefore compares the CODE a second time, with a
+looser form (code_form): outside string literals the case is ignored and runs of spaces and tabs count as one, indentation and
+blank lines are ignored; inside string literals nothing is touched, so "A" and "a" still differ.
+
 Situations (a module of the client folder whose name starts with om):
   IDENTICAL          same text as the library (after normalizing): nothing to do
+  FORMATTING ONLY    same code, but another case of identifiers, other spaces/indentation or other blank lines.
+                     No real difference; `copy` realigns it so the hash matches again
   CLIENT BEHIND      the client copy is untouched (it still matches its own stamp) and the library has moved on: update it
   CHANGED LOCALLY    the client copy no longer matches its own stamp, and differs from the library: someone edited it
                      in the client project. Judge the change: take it into the library, or discard it
@@ -35,8 +42,46 @@ def client_modules(folder):
                   if p.suffix.lower() in ('.bas', '.cls') and p.name.lower().startswith('om'))
 
 
+def code_form(text):
+    """Looser than libstamp.normalize: the code without its formatting (see the module docstring)."""
+    lines = text.replace('\r\n', '\n').replace('\r', '\n').split('\n')
+    out = []
+    for line in libstamp.strip_class_header(lines):
+        if line.startswith('Attribute ') or line.lstrip(' ').startswith(libstamp.STAMP_PREFIX):
+            continue
+        res = []
+        in_str = False
+        i = 0
+        while i < len(line):
+            ch = line[i]
+            if in_str:
+                res.append(ch)
+                if ch == '"':
+                    if i + 1 < len(line) and line[i + 1] == '"':
+                        res.append('"')
+                        i += 1
+                    else:
+                        in_str = False
+            elif ch == '"':
+                in_str = True
+                res.append(ch)
+            elif ch == "'":
+                res.append(' '.join(line[i:].lower().split()))   # a comment: case and spaces do not matter
+                break
+            elif ch in ' \t':
+                if res and res[-1] != ' ':
+                    res.append(' ')
+            else:
+                res.append(ch.lower())
+            i += 1
+        s = ''.join(res).strip()
+        if s:
+            out.append(s)
+    return '\n'.join(out)
+
+
 def line_set(text):
-    return set(libstamp.normalize(text).split('\n'))
+    return set(code_form(text).split('\n'))
 
 
 def classify(client_path, lib_path):
@@ -46,14 +91,16 @@ def classify(client_path, lib_path):
         return 'LOCAL ONLY', 'not in the library', None
     ltext = libstamp.read(lib_path)
     lsha = libstamp.sha8(ltext)
-    if csha == lsha:
-        return 'IDENTICAL', '', None
+    if code_form(ctext) == code_form(ltext):
+        if csha == lsha:
+            return 'IDENTICAL', '', None
+        return 'FORMATTING ONLY', 'same code; case, spaces or blank lines differ', None
     own = libstamp.current_stamp(ctext)
     only_client = len(line_set(ctext) - line_set(ltext))
     only_lib = len(line_set(ltext) - line_set(ctext))
     detail = f'{only_client} lines only in the client, {only_lib} only in the library'
     if only_client == 0 and only_lib == 0:
-        detail = 'only blank lines or the order of lines differ'
+        detail = 'the same lines in another order or number of times'
     if own is None:
         return 'NO STAMP, DIFFERS', detail, (only_client, only_lib)
     if own[1] == csha:
@@ -70,14 +117,14 @@ def report(folder):
         seen.add(key)
         kind, detail, _ = classify(p, lib.get(key))
         groups.setdefault(kind, []).append((p.stem, detail))
-    order = ['CHANGED LOCALLY', 'NO STAMP, DIFFERS', 'CLIENT BEHIND', 'LOCAL ONLY', 'IDENTICAL']
+    order = ['CHANGED LOCALLY', 'NO STAMP, DIFFERS', 'CLIENT BEHIND', 'LOCAL ONLY', 'FORMATTING ONLY', 'IDENTICAL']
     attention = 0
     for kind in order:
         items = groups.get(kind, [])
         if not items:
             continue
         print(f'{kind} ({len(items)})')
-        if kind == 'IDENTICAL':
+        if kind in ('IDENTICAL', 'FORMATTING ONLY'):
             print('   ' + ', '.join(n for n, _ in items))
         else:
             attention += len(items)

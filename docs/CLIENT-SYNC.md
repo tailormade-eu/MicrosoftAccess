@@ -28,12 +28,17 @@ Principles (decisions of the owner):
    python -I scripts/clientsync.py report <client source>/modules
    ```
 
-   It reads the stamps and hashes of [libstamp.py](../scripts/libstamp.py) (README, *Module stamps*), so formatting and the case
-   of identifiers do not count as a difference. One section per situation, nothing is changed:
+   It uses the stamps and hashes of [libstamp.py](../scripts/libstamp.py) (README, *Module stamps*) and, on top of that, a
+   looser comparison of the code itself: outside string literals the case is ignored, runs of spaces and tabs count as one,
+   indentation and blank lines are ignored. Inside a string literal nothing is touched, so `"A"` and `"a"` still differ. The
+   stamp hash itself stays strict about spaces and blank lines, because `omLibraryStamp.bas` must calculate the same hash inside
+   Access; that is why formatting-only copies are reported separately and not as a difference. One section per situation,
+   nothing is changed:
 
    | Section | Meaning | What you do |
    |---|---|---|
    | IDENTICAL | same as the library | nothing |
+   | FORMATTING ONLY | same code, other case of identifiers, other spaces or indentation, other blank lines | nothing, or `copy` to make the hash match again |
    | CLIENT BEHIND | untouched client copy, the library has moved on | update it (`copy`) |
    | CHANGED LOCALLY | the client copy no longer matches its own stamp | read the change: take it into the library, or discard it |
    | NO STAMP, DIFFERS | an old or foreign copy without a stamp | judge it like CHANGED LOCALLY; the counts show how far it is |
@@ -73,3 +78,5 @@ Principles (decisions of the owner):
   (what it does, why, default, who reads it, when it goes away).
 - It compares `om*` modules only. Forms, reports, queries and tables of the client are the client's own.
 - A matching hash means the text is the same, not that the module works in that client: compile and, where it matters, run.
+
+The comparison is tested in `scripts/test_clientsync.py` (`python -I scripts/test_clientsync.py`).
