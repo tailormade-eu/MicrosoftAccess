@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omControlFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=93b29458
+'@lib 2026-11-06 sha=b57f3b1b
 
 Private Type RECT
     Left As Long
@@ -37,16 +37,31 @@ Public Sub IfNullOrEmpty(ctrl As Control, Optional UseDefaultValue As Boolean = 
     End If
 End Sub
 
+' Gives an empty control its default value. Only Null counts as empty: a zero-length string and spaces are values and stay as
+' they are (as Nz(ctrl, DefaultValue) always did).
 Public Sub SetDefaultValue(ctrl As Control)
-Dim vDate As Variant
-
-    If omStringFunctions.NotIsNullOrEmpty(ctrl) Then
+    If omStringFunctions.NotIsNull(ctrl) Then
         Exit Sub
     End If
-
-    vDate = Replace(Replace(Nz(ctrl.defaultValue, ""), Chr(34), ""), "#", "")
-    ctrl = IIf(IsDate(vDate), vDate, ctrl.defaultValue)
+    ctrl = ResolveDefaultValue(ctrl.Value, ctrl.defaultValue)
 End Sub
+
+' The value a control gets: its current value when that is not Null, else the default value. A default that is a date
+' (the DefaultValue property gives it as text, with # or quotes around it) is returned as a date.
+Public Function ResolveDefaultValue(currentValue As Variant, defaultValue As Variant) As Variant
+Dim vDate As Variant
+
+    If omStringFunctions.NotIsNull(currentValue) Then
+        ResolveDefaultValue = currentValue
+        Exit Function
+    End If
+    vDate = Replace(Replace(Nz(defaultValue, ""), Chr(34), ""), "#", "")
+    If IsDate(vDate) Then
+        ResolveDefaultValue = CDate(vDate)
+    Else
+        ResolveDefaultValue = defaultValue
+    End If
+End Function
 
 
 ' Measures the work area of the Access window (where forms open), in twips.

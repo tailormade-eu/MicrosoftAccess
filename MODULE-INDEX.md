@@ -79,7 +79,8 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 
 ## omControlFunctions.bas
 - `IfNullOrEmpty(ctrl As Control, Optional UseDefaultValue As Boolean)` — Restore null/empty control to default or previous value
-- `SetDefaultValue(ctrl As Control)` — Set control value from defaultValue property
+- `SetDefaultValue(ctrl As Control)` — Gives a control its defaultValue when it is Null; only Null counts as empty (an empty string or spaces stay as they are)
+- `ResolveDefaultValue(currentValue As Variant, defaultValue As Variant) As Variant` — The value a control gets: the current value when it is not Null, else the default; a date default (with # or quotes) comes back as a date
 - `IsFormOpen(formName As String) As Boolean` — Check if form is currently open
 - `GetOpenForm(formName As String) As Form` — Get reference to open form, returns Nothing if not open
 - `NotInList(ctrl As Control, objectName As String, idFieldName As String, valueFieldName As String, NewData As String, Optional OpenEdit As Boolean, Optional ParentFieldName As String, Optional ParentData) As Integer` — Handle NotInList event to add new record
@@ -602,6 +603,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `IsNullOrEmptyOrZero(Value As Variant) As Boolean` — Tests if value is null, empty, or zero
 - `NotIsNullOrEmptyOrZero(Value As Variant) As Boolean` — Tests if value has non-zero content
 - `NotIsNullOrEmpty(Value As Variant) As Boolean` — Tests if value is not null/empty
+- `NotIsNull(Value As Variant) As Boolean` — True when the value is not Null (an empty string or spaces are values)
 - `ParseValue(arguments As Variant, valueName As String, Optional assignChar, Optional splitchar, Optional notFoundValue As Variant) As Variant` — Extracts key=value from delimited string
 - `StringSplit(Value As String, splitchar As String, Optional removeEmptyValues As Boolean) As String()` — Splits string into array
 - `StringSplitGetByIndex(Value As String, splitchar As String, index As Long) As Variant` — Returns split element by index

@@ -10,7 +10,7 @@ omCollectionFunctions;2026-10-10;c3424d4c
 omCommandBarFunctions;2026-10-10;c652d140
 omConnectionString;2026-10-10;52ea821a
 omControl;2026-10-10;21b9968f
-omControlFunctions;2026-10-10;93b29458
+omControlFunctions;2026-11-06;b57f3b1b
 omDAOFunctions;2026-10-10;0464061d
 omDatabaseFunctions;2026-10-10;61e240e6
 omDateFunctions;2026-11-05;350bf88c
@@ -64,7 +64,7 @@ omSQLObject;2026-10-10;30a48cc2
 omSQLServerFunctions;2026-10-10;5c8873cb
 omSSMAAConnector;2026-11-06;b59f627b
 omStartup;2026-10-10;b79bf44a
-omStringFunctions;2026-10-10;0247d091
+omStringFunctions;2026-11-06;82fcf095
 omStringTagFunctions;2026-10-10;525afe1c
 omSystemProcessFunctions;2026-10-10;e8078cc4
 omTableConnector;2026-11-06;a9f328a7

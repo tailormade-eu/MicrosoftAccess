@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omStringFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=0247d091
+'@lib 2026-11-06 sha=82fcf095
 
 Public Enum StringPaddingMode
     PadLeft = 1
@@ -23,6 +23,11 @@ End Function
 
 Public Function IsNullOrEmpty(Value As Variant) As Boolean
     IsNullOrEmpty = (Len(CleanString(Value)) = 0)
+End Function
+
+' True when the value is not Null. Only Null counts: an empty string or spaces are values (IsNullOrEmpty counts those as empty).
+Public Function NotIsNull(Value As Variant) As Boolean
+    NotIsNull = Not IsNull(Value)
 End Function
 
 Public Function IsNullOrEmptyOrZero(Value As Variant) As Boolean
