@@ -137,7 +137,7 @@ its data, or a database built from the source starts with an empty table and the
   list next to its source) copies the rows of those tables from a COPY of the production file into the built database: the
   tables that are kept out of git (the login table) and the working data. Only the columns that exist in both tables are copied
   (the others are listed by name), no value is printed, it stops with an error when a table is missing or the row counts differ.
-  Measured on a client: 4 tables, 1.237 rows, the row counts and a checksum of every column matched the production file.
+  Measured on a client: 4 tables, 1.237 rows, the row counts matched and so did the sum of the value lengths of the copied columns (a weak check: it does not compare the values one by one).
   Note: a table whose structure is newer in the source than in production (new columns) gets those columns empty; check that the
   code that reads them can handle that before the built database is used.
 - A build made from a working folder that still holds an ignored data file (`tables/<name>.xml` on disk, not in git) is not a
