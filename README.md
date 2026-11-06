@@ -46,7 +46,7 @@ Call LinkUsingSSMA()
 - `databases/` – `MicrosoftAccess.accdb` is a build of the source (all 88 modules including tests and examples, built without a theme file; the source is the truth), next to two example databases (`JsonConverterExample.accdb`, `omDragAndDrop.accdb`)
 - `tests/` – Sample files that the `tst*` modules need (for example `ocr-sample.png` for `tstTesseractOCR`)
 - `scripts/` – `libstamp.py` (module stamps), `clientsync.py` (drift report and copy for client projects, see [docs/CLIENT-SYNC.md](docs/CLIENT-SYNC.md)), `expressionrefs.py` (functions that expressions call but no module defines) and their tests `test_*.py`
-- `tools/vcs/` – `Build-FromSource.ps1`, `Compile-InVbe.ps1`, `Export-DatabaseText.ps1`, `Hold-Database.ps1`, `New-StandInTables.ps1`, `Shrink-FormText.ps1`; `tools/test/` – `Test-AccessTemplate.ps1`, `Test-ExcelTemplate.ps1` (all described in [docs/BUILD-AND-TEST.md](docs/BUILD-AND-TEST.md))
+- `tools/vcs/` – `Build-FromSource.ps1`, `Compile-InVbe.ps1`, `Export-DatabaseText.ps1`, `Hold-Database.ps1`, `List-LocalTables.ps1`, `New-StandInTables.ps1`, `Shrink-FormText.ps1`; `tools/test/` – `Test-AccessTemplate.ps1`, `Test-ExcelTemplate.ps1` (all described in [docs/BUILD-AND-TEST.md](docs/BUILD-AND-TEST.md))
 
 ## Module stamps
 

@@ -117,6 +117,24 @@ changed (`git diff` of the client copy against the library file): a value that i
 `ClientSettings_LoadOverride`, and only then is the module replaced. Without this step the refresh silently resets the value
 (that is the regression that led to this section: a client got another login screen after a refresh).
 
+## Local tables with configuration or data: always export them with their data
+
+A database built from source gets its objects back, but a local table only gets its rows back when the export options export
+the data of that table (`TablesToExportData` in `vcs-options.json`). A local table that holds configuration or data of its
+own (translations, field lists, defaults, the connection table of the linking code) must therefore always be exported with
+its data, or a database built from the source starts with an empty table and the app does not work.
+
+- Check it for a client: `tools/vcs/List-LocalTables.ps1 -Database <copy of the production file> -SourceFolder <client source>`.
+  Per local table: rows, whether its data is exported, whether a column looks like a password. `LOOK` = has rows and is not
+  exported: decide per table (configuration or data: add it to the export; a working copy such as the `T_` tables of
+  `omTableConnector`: leave it out).
+- **Exception: a table with a login or other secret** (a column such as `SQLPassword`) does NOT go into git, not even in a
+  private repo (credentials policy). Put the table in `.gitignore` (`tables/<name>*.xml`), keep its structure in the repo, and
+  keep its data in the production file or in a secret store. A database built from the source then has this table empty: fill
+  it from the production file (or from the secret store) before the app is used.
+- Never replace the production file by a database built from source. Merge the changed objects into a copy of the production
+  file (or use the built database as a test file and copy the local table data from the production file into it).
+
 ## During the work
 
 - Edit an `om*` module in the library repo, not in the client copy. If you did edit it in the client (quicker, or you were
