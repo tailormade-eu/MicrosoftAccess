@@ -68,7 +68,7 @@ out afterwards (`enabled after: False`) and no position is printed. This is the 
 
 **3b. With the MCP tool** - for a database without a startup form:
 
-1. keep the database open in a hidden Access: `Start-Process pwsh -ArgumentList '-NoProfile','-File',toolscs\Hold-Database.ps1,'-Database',<db> -WindowStyle Hidden` and wait 30 s
+1. keep the database open in a hidden Access: `Start-Process pwsh -ArgumentList '-NoProfile','-File',tools\vcs\Hold-Database.ps1,'-Database',<db> -WindowStyle Hidden` and wait 30 s
 2. call the MCP tool `vcs_compile_vba(<db>)` (msaccess-vcs-mcp). It returns `success` true/false, no line number
 3. `New-Item <folder>\stop.flag` to let the script close Access
 

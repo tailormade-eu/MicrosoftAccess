@@ -5,6 +5,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omADODBFunctions.bas
 - `ADODBCreateCopyRecord(rsSrc As ADODB.Recordset, rsDst As ADODB.Recordset, Optional PrimaryKeyName As String, Optional LinkName As String, Optional LinkId As Long, Optional ignoreFields As String) As Long` — Create copy of record from source to destination recordset
 - `ADODBCopyRecord(rsSrc As ADODB.Recordset, rsDst As ADODB.Recordset, Optional PrimaryKeyName As String, Optional LinkName As String, Optional LinkId As Long, Optional ignoreFields As String)` — Copy field values between recordsets, excluding specified fields
+- `SetRecordsetNothing(ByRef rs As ADODB.Recordset)` — Close the recordset when open and set the variable to Nothing; safe when it is already Nothing
 
 ## omAPI32FileFunctions.bas
 - `GetShortFileName(sFileName As String) As String` — Get 8.3 DOS-compatible filename
@@ -15,7 +16,6 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omAPIClipboard.bas
 - `ClipBoard_SetText(strCopyString As String) As Boolean` — Copy text string to system clipboard
 - `ClipBoard_GetText() As String` — Retrieve text from system clipboard
-- `CopyOlePiccy(Piccy As Object)` — Copy OLE object to clipboard
 
 ## omAPISpecialFolders.bas
 - `SpecialFolder(ByVal SFConst As SpecialFolderConst) As String` — Get path to Windows special folder by constant
@@ -72,6 +72,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `GetConnectionString(databaseName As String, serverName As String, ODBCConnection As Boolean, Optional ConnectionType, Optional DSN, Optional Login, Optional Password, Optional GroupName, Optional portNr, Optional encryptType) As String` — Build connection string for database with specified parameters
 - `GetCurrentConnectionStringForType(ODBCConnection As Boolean, Optional ConnectionType, Optional encryptType) As String` — Build connection string for current connection type
 - `GetEncryptString(encrypType As EncryptTypes) As String` — Get encryption clause for connection string
+- `GetEncryptStringForDriver(ByVal driverName As String, ByVal encryptType As EncryptTypes) As String` — Get encryption clause for a specific driver
 
 ## omControl.cls
 - `Load(ctrl As Object, Optional autoRename As Boolean)` — Load control metadata and optionally rename control using conventions
@@ -83,6 +84,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `GetOpenForm(formName As String) As Form` — Get reference to open form, returns Nothing if not open
 - `NotInList(ctrl As Control, objectName As String, idFieldName As String, valueFieldName As String, NewData As String, Optional OpenEdit As Boolean, Optional ParentFieldName As String, Optional ParentData) As Integer` — Handle NotInList event to add new record
 - `Edit(ctrl As Control, objectName As String, Optional idFieldName As String)` — Open edit form for control's linked record
+- `GetWorkArea(ByRef widthTwips As Long, ByRef heightTwips As Long) As Boolean` — Measure the work area of the Access window in twips; False = measurement failed
 
 ## omDAOFunctions.bas
 - `SetQueryDefProperty(queryName As String, propertyName As String, Value As String, Optional propertyType As dao.DataTypeEnum)` — Create or update custom property on QueryDef
@@ -146,11 +148,13 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `GetQuarter(dt As Date, Optional FirstDayOfWeek, Optional FirstWeekOfYear) As Long` — Get quarter number
 - `GetWeekNumber(dt As Date, Optional FirstDayOfWeek, Optional FirstWeekOfYear) As Long` — Get week number
 - `GetWeekDay(dt As Date, Optional FirstDayOfWeek, Optional FirstWeekOfYear) As Long` — Get day of week
+- `CreateCalendar()` — Create the Calendar table (one row per day) when missing; check an existing one
 - `PopulateCalendar()` — Populate calendar table
 - `DaysBetween(StartDate As Date, EndDate As Date) As Long` — Count days between dates
 - `EOMonth(dt As Date) As Date` — Get last day of month
 - `CalculatePayDate(dt As Date, Days As Integer, EndOfMonth As Boolean, ExtraDays As Integer) As Date` — Calculate payment date with offset
 - `YearsBetween(StartDate As Date, EndDate As Date) As Long` — Number of whole years between two dates
+- `GetFiscalYear(ByVal d As Date, Optional ByVal startMonth As Integer = 1, Optional ByVal offset As Integer = 0) As Integer` — Fiscal year of a date for a given start month
 
 ## omDefaultFunctions.bas
 - `GetDefault(Name As String) As Variant` — Retrieve default value by name
@@ -163,6 +167,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omDefaults.cls
 - `Load(defaultName As String) As Variant` — Load default value from storage
 - `Save(defaultName As String, Value As Variant)` — Save default value to storage
+- `Mode` (get/let) As DefaultModes — storage mode: LocalMode (omSysDefaults) or serverMode (omDefaults)
 
 ## omDevelopmentFunctions.bas
 - `ExportQueries()` — Export all queries to file
@@ -270,6 +275,13 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `PrintFile(filename As String)` — Print file using default application
 - `WriteStringToFile(filename As String, s As String, Optional unicode As Boolean = False)` — Write string to file
 - `CopyToLocalTemp(filename As String) As String` — Copy a file to the temp folder and return the path of the copy ("" when a locked copy is in the way)
+- `MoveFile(source As String, destination As String) As Boolean` — Move a file, replacing an existing one; False when the source does not exist
+- `ClearFolder(folderPath As String, Optional force As Boolean = True)` — Delete the files in a folder (not the folder itself or its subfolders)
+- `GetTempFilenameInTempPath() As String` — New unique file name in the Windows temp folder
+- `GetTempPathInTempPath(Optional autoCreate As Boolean = True) As String` — New unique folder path in the temp folder, created by default
+- `CopyFileToFolder(source As String, path As String, Optional overWriteFiles As Boolean = False) As String` — Copy a file into a folder and return the new path
+- `ExecuteShell(filename As String, Optional workingDir As String = "", Optional winState As WindowState = wsNormal, Optional wait As Boolean = True)` — Start an application, optionally wait for it
+- `ExecuteShellExitCode(filename As String, Optional args As String = "", Optional winState As WindowState = wsHide) As Long` — Start an exe with arguments, wait and return the exit code (-1 = could not start)
 
 ## omFormFunctions.bas
 - `UpdateEnableByTag(Form As Form, tag As String, state As Boolean, Optional delimiter = ",")` — Enable/disable controls by tag
@@ -284,6 +296,8 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `UpdateModifyTrackingDao(rs As DAO.Recordset, Optional isDelete As Boolean)` — Fill create/modify (or delete) date and user fields of a recordset that is being edited
 - `UpdateModifyTrackingADodb(rs As ADODB.Recordset, Optional isDelete As Boolean)` — Same for an ADODB recordset
 - `UpdateLockedWithoutTag(Form As Form, state As Boolean)` — Lock or unlock every control that has no tag
+- `UpdateLockedByTag(Form As Form, Tag As String, state As Boolean, Optional delimiter = ",")` — Lock or unlock controls by tag
+- `UpdateBackColorByTag(Form As Form, Tag As String, trueColor As Long, falseColor As Long, state As Boolean, Optional delimiter = ",")` — Set back colour of controls by tag depending on state
 
 ## omFTP.bas
 - `UploadFile(ftpAddress As String, Login As String, Password As String, filename As String, Optional ftpPath As String = "/") As String` — Upload file to FTP server
@@ -303,6 +317,12 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omHashAlgorithmsFunctions.bas
 - `MD5(sIn As String, Optional bB64 As Boolean) As String` — Module-level wrapper around omHashAlgorithms, also SHA1, SHA256, SHA384, SHA512
 - `ConvToBase64String(vIn As Variant) As Variant` — Bytes to base64 string
+
+## omHelpFileFunctions.bas
+- `HELP_TABLE` — Constant: the name of the help text table this module creates and maintains (omHelpFile)
+- `EnsureHelpFileTable()` — Create the table omHelpFile (Id, Name, Memo) when missing
+- `GetHelpFileId(objectName As String) As Long` — Id of the help text of a form or report; the row is added when missing
+- `OpenHelp(obj As Object) As Boolean` — Open the help text of a form or report in the form omHelpFile_Edit; True when opened
 
 ## omHTMLExport.bas
 - `OutputHTMLRaw(sql As String, title As String, filename As String)` — Write the result of a SELECT as an HTML table to a UTF-8 file (values are HTML-encoded)
@@ -438,6 +458,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omRecordsetFunctions.bas
 - `CopyRecord(rsSrc As ADODB.Recordset, rsDst As ADODB.Recordset, Optional PrimaryKeyName As String = "", Optional LinkName As String = "", Optional LinkId As Long = 0) As Long` — Copy field values from source to destination recordset
 - `GetList(SQL As String, Optional ColumnDelimiter As String = ", ", Optional RowDelimiter As String = vbCrLf) As String` — Return combined string from query with configurable delimiters
+- `CopyFields(sourceRecord As Variant, destinationRecord As Variant, Optional ignoreFields As String = "")` — Copy same-named field values between two open recordsets without calling Update
 
 ## omReferenceFunctions.bas
 - `ListReferences()` — List all application references in the Immediate window
@@ -451,6 +472,8 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omReportFunctions.bas
 - `ExportToPDF(ReportName As String, filename As String, Optional whereCondition As String, Optional windowMode As AcWindowMode = acWindowNormal, Optional outputQuality As AcExportQuality = acExportQualityPrint)` — Export report to PDF file with optional filtering and quality settings
 - `UpdateVisibleByTag(Report As Report, tag As String, state As Boolean)` — Set control visibility based on tag value
+- `MeasureReportOpenTime(ReportName As String, Optional whereCondition As String = "") As Double` — Seconds a report needs to open in print preview (hidden, closed afterwards)
+- `SetPaperSize(ReportName As String, paperSize As String, Optional bottomMargin As Long = 0, Optional leftMargin As Long = 0, Optional rightMargin As Long = 0, Optional topMargin As Long = 0)` — Set paper (by printer paper name) and margins of a report and save it
 
 ## omResult.cls
 - `Ok(Optional reason As String)` — Mark result as successful
@@ -491,6 +514,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `ConnectionString` (get/let) — current connection string; setting opens a new connection
 
 ## omSQLConnectorFunctions.bas
+- `SetSQLConnectorConnectionString(tableName As String, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional)` — Set global SQL connector connection string from table configuration
 - `ConnectorTest(Optional linkedTableName As String, Optional ConnectionType As ConnectionTypes, Optional encryptType As EncryptTypes, Optional explicitConnectionString As String) As String` — Test gSQLConnector with a statement that changes nothing (SELECT 1); "" = works, otherwise the error text
 
 ## omSQLFunctions.bas
@@ -523,6 +547,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `GetPrimaryKeyScript(tableName As String) As String` — Generate SQL Server primary key constraint DDL from Access table definition
 - `TableCreateDDL(TableDef As dao.TableDef) As String` — Generate SQL Server CREATE TABLE DDL from Access table definition
 - `ExecuteScript()` — Execute SQL Server DDL alteration script
+- `ExportAllTableCreateDDL()` — Write CREATE TABLE DDL of all Access tables to a file
 
 ## omSSMAAConnector.bas
 - `LocalCon() As ADODB.connection` — Return current Access database connection
@@ -540,12 +565,25 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `PassthroughQueriesUpdateDescriptionWithGroup()` — Update pass-through query descriptions with group information
 - `LinkDeleteTables(Optional Group As String = "", Optional AttachOnly As Boolean = False)` — Delete linked tables for a group
 - `LinkDeletePTs()` — Delete all pass-through queries
-- `SetSQLConnectorConnectionString(tableName As String, Optional encryptType)` — Set global SQL connector connection string from table configuration
 - `DeleteSSMAABackupTables()` — Delete SSMA backup table copies
 - `UpdateSSMAAGroups()` — Update SSMA group configuration
 - `IsConnectingPossible(tableName As String, Optional connectionTimout As Long = 5, Optional encryptType) As Boolean` — Test connection to SQL Server without raising error
 - `DeleteSSMAATables(Optional Group As String = "")` — Delete SSMA configuration records for a group
 - `LinkMSAccess(Optional linkLocal As Boolean = False)` — Link local Access tables or database
+- `UpdateSSMAConnectionString(Optional Group As String = "", Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional)` — Update stored connection strings of the SSMA tables for a group
+- `AttachTable(ConnectionString As String, SourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False, Optional primaryKey As String = "")` — Link one SQL Server table through a connection string
+- `GetGroupByProperty(Optional tableName As String = "", Optional databaseName As String = "", Optional serverName As String = "", Optional dsnName As String) As String` — Find the SSMAA group of a table by its properties
+- `IsOdbcDriverInstalled(ByVal driverName As String) As Boolean` — Check if an ODBC driver is installed
+- `GetOdbcDriverMajor(ByVal driverName As String) As Long` — Major version number of an ODBC driver
+- `GetConnectionStringPart(ByVal connectionString As String, ByVal partName As String) As String` — Value of one part of a connection string
+- `GetDriverFromConnectionString(ByVal connectionString As String) As String` — Driver name in a connection string
+- `EncryptTextForType(ByVal encryptType As EncryptTypes) As String` — Encryption clause for an encryption type
+- `EncryptTextForDriver(ByVal driverName As String, ByVal encryptType As EncryptTypes) As String` — Encryption clause for a driver and encryption type
+- `DriverSupportsEncrypt(ByVal driverName As String, ByVal encryptType As EncryptTypes) As Boolean` — Check if a driver supports the requested encryption
+- `ProbeSqlDriver(ByVal driverName As String, ByVal serverName As String, ByVal databaseName As String, ByVal userId As String, ByVal password As String, ByVal port As String, ByVal encryptType As EncryptTypes) As Long` — Test a driver with a probe connection; result tells whether the driver itself failed
+- `GetAutoDriver(ByVal serverName As String, ByVal databaseName As String, ByVal userId As String, ByVal password As String, ByVal port As String, ByVal encryptType As EncryptTypes) As String` — Pick the newest installed SQL Server driver that works for the requested encryption
+- `EnsureSSMAASchema(Optional ByVal force As Boolean = False)` — Create SSMAA_ODBC_Tables and SSMAA_ConnectionTypes when missing, complete old ones
+- `ResetAutoDriver()` — Forget the automatic driver choice and all cached connection strings
 
 ## omStartup.bas
 - `LinkAccessDatabase() As Variant` — Link the back-end Access tables
@@ -590,6 +628,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `ByteArrayToHexString(ba() As Byte) As String` — Converts byte array to hex string
 - `ByteArrayToString(ba() As Byte) As String` — The bytes as one big-endian number, as text (exact up to 12 bytes)
 - `CheckIllegalCharInString(strCheck As String) As String` — Checks for illegal characters in string
+- `Proper(var As Variant) As Variant` — Converts text to proper case
 
 ## omStringTagFunctions.bas
 - `GetOpenTagPosition(ByVal startPos As Long, ByVal text As String) As Long` — Finds position of next opening tag
@@ -598,7 +637,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `GetTags(ByVal text As String) As tag()` — Extracts all tags from text into array
 
 ## omSystemProcessFunctions.bas
-*(geen Public Sub/Function/Property gevonden)*
+- `IsProcessRunning(strProcess As String, Optional strServer As String = "127.0.0.1") As Boolean` — Check if a process with this name is running
 
 ## omTableConnector.cls
 - `Connect(ConnectionType As omTableConnectionType)` — Establishes table connections based on connection type
@@ -609,6 +648,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `GenerateSelect(tableName As String, Optional includeTableName As Boolean, Optional excludeFields As String) As String` — Generates SELECT statement for table
 - `GenerateInsert(tableName As String, Optional idFieldName As String, Optional excludeFields As String, Optional excludeValuesPart As Boolean) As String` — Generates INSERT statement for table
 - `GenerateUpdate(tableName As String, Optional idFieldName As String, Optional excludeFields As String) As String` — Generates UPDATE statement for table
+- `AttachedTable(ConnectionString As String, SourceTable As String, DestinationTable As String)` — Link a table through a connection string
 
 ## omTesseractOCR.bas
 - `FindTesseractExe() As String` — Full path of tesseract.exe, or "" when not installed
@@ -671,14 +711,32 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `GetPaperList()` — Show that list in a message box
 - `GetPaperSize(paperName As String) As Long` — Paper number of a paper name on the default printer (-1 = not found)
 
+## omWordEngine.cls
+- `Merge(Template As String, SaveAs As String, RecordSource As String, Optional show As Boolean = False)` — Merge a record source into a Word template and save the result
+- `MergeFromCurrentRecord(wd As Word.Document, rs As ADODB.Recordset, Optional delimiters As String = "<<,>>")` — Merge current recordset row into document
+- `MergeFromRecordset(wd As Word.Document, rs As ADODB.Recordset, keyField As String, valueField As String, Optional delimiters As String = "<<,>>")` — Merge key/value rows of a recordset into document
+- `FillTable(doc As Word.Document, rs As ADODB.Recordset)` — Fill a document table with recordset rows
+- `SetVisible(wa As Word.Application, visible As Boolean)` — Show/hide Word application
+- `Find(wd As Word.Document, text As String) As Boolean` — Check if text occurs in document
+- `FindReplaceAll(wd As Word.Document, findtext As String, replaceText As String)` — Replace all occurrences of text
+- `GetTextRanges(wd As Word.Document, findtext As String) As Object()` — Get ranges of all occurrences of text
+- `FindReplaceAnywhere(wd As Word.Document, findtext As String, replaceText As String)` — Replace text in all stories of the document
+- `SearchInStory(ByVal rngStory As Word.range, ByVal strSearch As String) As Boolean` — Search text in a story range
+- `SearchAndReplaceInStory(ByVal rngStory As Word.range, ByVal strSearch As String, ByVal strReplace As String)` — Replace text in a story range
+- `ToggleBold(wd As Word.Document)` — Toggle bold at the cursor
+- `TypeNewLine(wd As Word.Document)` — Type a line break
+- `TypeParagraph(wd As Word.Document)` — Type a paragraph break
+- `TypeText(wd As Word.Document, text As Variant)` — Type text at the cursor
+- `ToggleUnderline(wd As Word.Document)` — Toggle underline at the cursor
+
 ## omZipFunctions.bas
 - `ZipFolder(ByVal folderName As String, Optional filenameZip As String) As String` — Creates ZIP file from folder
 - `UnzipToFolder(ByVal zipFileName As String, Optional fileNameFolder As String) As String` — Extracts ZIP file to folder
+- `NewZip(sPath)` — Create an empty ZIP file
 
 ---
 
-Coverage: 79/79 bestanden verwerkt (51 .bas + 28 .cls). Vier bestanden bevatten geen Public members (`omGlobalDeclarations.bas`, `omKernalAPIFunctions.bas`, `omKeyObject.cls`, `omKeyValue.cls`, `omSystemProcessFunctions.bas`) — expliciet zo gemarkeerd i.p.v. overgeslagen.
-</content>
+Coverage: 82/82 bestanden verwerkt (58 .bas + 24 .cls). Vier bestanden bevatten geen Public Sub/Function/Property (`omGlobalDeclarations.bas`, `omKernalAPIFunctions.bas`, `omKeyObject.cls`, `omKeyValue.cls`) — expliciet zo gemarkeerd i.p.v. overgeslagen.
 
 ## Not part of the library (no om prefix, do not copy into customer databases)
 - `tstSQLFunctions.bas` — Tests of omSQLFunctions: `?tstSQLFunctions.RunAll` gives "OK (n tests)" or the failures

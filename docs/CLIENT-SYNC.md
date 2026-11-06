@@ -44,6 +44,9 @@ Principles (decisions of the owner):
    | CHANGED LOCALLY | the client copy no longer matches its own stamp | read the change: take it into the library, or discard it |
    | NO STAMP, DIFFERS | an old or foreign copy without a stamp | judge it like CHANGED LOCALLY; the counts show how far it is |
    | LOCAL ONLY | not in the library | put it in the library, or rename it with the client prefix |
+   | CLASS ATTRIBUTES DIFFER | the class attributes (`VB_PredeclaredId` and the like) differ while the code is the same | `copy`, then check how the class is used |
+
+   The last line of the report counts the library modules the client does not have; that is not an issue (a client takes what it uses).
 
 3. Decide per module, then update the ones you chose:
 
@@ -51,7 +54,7 @@ Principles (decisions of the owner):
    python -I scripts/clientsync.py copy <client source>/modules omDateFunctions omFileFunctions
    ```
 
-   `copy` touches only the names you give. Class modules and standard modules are copied as they are (the same file format).
+   `copy` touches only the names you give, but it copies every name that exists in the library: also a module the client does not have yet (no warning), and it overwrites a client copy that is CHANGED LOCALLY. Take such a change into the library first, and give only names that the report showed. A name that is not in the library gives "not in the library" and exit code 1. Class modules and standard modules are copied as they are (the same file format).
 4. A module that the library now lacks something for, or needs a table, form or class the client does not have: follow the
    `uses` of the module (the compile in step 5 names what is missing; for example `omDateFunctions` needs `omTimeRange`).
 5. Build and compile the client project from source, in a copy, as described in [BUILD-AND-TEST.md](BUILD-AND-TEST.md)

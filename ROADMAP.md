@@ -7,8 +7,8 @@ Besluit Raoul 2026-10-10: deze lijst woont hier, niet in CM of Customers.
 
 | Punt | Wat | Opmerking |
 |---|---|---|
-| Excel-bibliotheek aanvullen | README is er; nog niet in een klantwerkmap geprobeerd. `omHashAlgorithms` voor Excel (zonder `Option Compare Database`) | een klantwerkmap als eerste proef, na akkoord |
-| Wachtwoord in oude code | Staat in de git-historie van de oude `omSQLDataAdapter` van een klantproject | Roteren; niet kopiëren (details in de vault) |
+| Push naar GitHub | De lokale commits (de historie is herschreven: namen, wachtwoordregels en oude databaseversies eruit) staan nog niet op GitHub; vermoedelijk force-push nodig | Alleen op woord van Raoul |
+| Excel-bibliotheek aanvullen | 8 modules gebouwd en getest in een verborgen Excel; open: een proef in een klantwerkmap en `omHashAlgorithms` voor Excel (zonder `Option Compare Database`) | een klantwerkmap als eerste proef, na akkoord |
 | Optimalisatie-audit | `omOutlook` Sender-voorwaarde (omgekeerd?), PK-substring in `TableCreateDDL`, `VBAFindReplace` en `omMSAccessFunctions` DMax-lus | Elk met test; `omOutlook` kan alleen met Outlook |
 | Kandidaten pc-zoektocht | 19 Access- en 5 Excel/Outlook-kandidaten beoordelen | Klantprojecten waar we niet aan raken alleen lezen |
 | Klantcode (klant A) | `omFile`/`omFolder` vervangen door `DeleteFile`/`RenameFile`/`ReadFilesIntoTable`/`SetFilesSelected`; `hbPrinterFunctions` op `omPrinterFunctions`; `hbReportColors` in de `.mdb` bouwen | Raakt de klantrepo: eerst met Raoul |

@@ -12,10 +12,13 @@ A collection of reusable VBA modules and utilities for Microsoft Access projects
 - String and array utility functions
 - Support for ADODB and DAO operations
 - Tools for importing/exporting Access objects
+- Rounding (`omMathFunctions.RoundHalfUp`), time ranges (`omTimeRange`), export (`omExportFunctions`), printers (`omPrinterFunctions`, owns the table `omPrinters`), zip (`omZipFunctions`), file lists (`omFileFunctions.ReadFilesIntoTable`, owns the table `omFiles`)
+- Module stamps and a check inside Access (`omLibraryStamp`), so a client database can see which library modules are out of date
+- Keeping client projects in step with the library: a drift report and copy (`scripts/clientsync.py`), a check for functions that only expressions, queries or macros call (`scripts/expressionrefs.py`), building from source and compiling without opening the app (`tools/vcs/`)
 
 ## Installation
 
-1. Build `MicrosoftAccess.accdb` from `src/VCS/MicrosoftAccess.accdb.src` with the MS Access VCS Add-in, or take the individual `.bas`/`.cls` files from the `modules` folder.
+1. Build `MicrosoftAccess.accdb` from `src/VCS/MicrosoftAccess.accdb.src` with the MS Access VCS Add-in or with `.\tools\vcs\Build-FromSource.ps1 -SourceFolder src\VCS\MicrosoftAccess.accdb.src -DatabaseName MicrosoftAccess.accdb` (see [docs/BUILD-AND-TEST.md](docs/BUILD-AND-TEST.md) section 2), or take the individual `.bas`/`.cls` files from the `modules` folder.
 2. Import the modules you need into your Microsoft Access project via the VBA editor.
 
 ## Usage
@@ -39,9 +42,10 @@ Call LinkUsingSSMA()
 - `omSSMAAConnector.bas` – Main module for table linking and connection management
 - `omStringFunctions.bas` – String utility functions
 - `omBankAccountFunctions.bas` – IBAN validation and formatting utilities
-- `databases/` – Example databases
+- `databases/` – `MicrosoftAccess.accdb` is a build of the source (all 88 modules including tests and examples, built without a theme file; the source is the truth), next to two example databases (`JsonConverterExample.accdb`, `omDragAndDrop.accdb`)
 - `tests/` – Sample files that the `tst*` modules need (for example `ocr-sample.png` for `tstTesseractOCR`)
-- `scripts/` – `libstamp.py`, the tool that writes the module stamps
+- `scripts/` – `libstamp.py` (module stamps), `clientsync.py` (drift report and copy for client projects, see [docs/CLIENT-SYNC.md](docs/CLIENT-SYNC.md)), `expressionrefs.py` (functions that expressions call but no module defines) and their tests `test_*.py`
+- `tools/vcs/` – `Build-FromSource.ps1`, `Compile-InVbe.ps1`, `Export-DatabaseText.ps1`, `Hold-Database.ps1`, `New-StandInTables.ps1`, `Shrink-FormText.ps1`; `tools/test/` – `Test-AccessTemplate.ps1`, `Test-ExcelTemplate.ps1` (all described in [docs/BUILD-AND-TEST.md](docs/BUILD-AND-TEST.md))
 
 ## Module stamps
 
@@ -66,7 +70,7 @@ Option Explicit
   modules `omHashAlgorithms`, `omHashAlgorithmsFunctions`) and run:
 
   ```vba
-  Debug.Print omLibraryStamp.LibraryCheck("D:\path	o\library-stamps.txt")
+  Debug.Print omLibraryStamp.LibraryCheck("D:\path\to\library-stamps.txt")
   ```
 
   It prints one line per module that needs attention: `NO STAMP`, `CHANGED LOCALLY` (the text no

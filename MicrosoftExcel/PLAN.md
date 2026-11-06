@@ -2,7 +2,7 @@
 
 Besluit Raoul 2026-10-10: eigen map naast `MicrosoftAccess`, omdat `Option Compare Database` in Excel niet geldig is.
 Bron: de 8 algemene `om*`-modules uit twee klantwerkmappen.
-Dit is een plan; er staat nog geen module in deze map.
+Status 2026-11-06: uitgevoerd. De 8 modules staan in `src/modules` en `libstamp.py` kent het argument `excel`. Dit document is historiek; de tests staan in `tools/test/Test-ExcelTemplate.ps1`.
 
 ## Indeling
 
