@@ -14,8 +14,10 @@
     Check     what to decide: LOOK  = has rows, not exported (config/data? then add it to the export; a working copy: ignore)
                               EMPTY = no rows, nothing to export
                               OK    = exported, or has no rows
+                              WORK  = prefix T_ or XD_: a working copy that the app fills itself (omTableConnector). Not exported
+                                      on purpose. Check once per client that the code really fills it (a Form_Open that deletes
+                                      and inserts, or a *_Build query), then leave it alone
                               SECRET= has a secret column: never export the data to git
-  Tables with the prefix T_ or XD_ are normally working copies (omTableConnector); they are listed, not judged.
 
 .EXAMPLE
   .\List-LocalTables.ps1 -Database C:\temp\copy.mdb -SourceFolder D:\repos\App\App.mdb
@@ -43,7 +45,8 @@ try {
         $cols = ($t.Fields | ForEach-Object { $_.Name }) -join ','
         $secret = $cols -match '(?i)pass|pwd|secret|token'
         $isExported = $exported.ContainsKey($t.Name)
-        $check = if ($secret -and $n -gt 0) { 'SECRET' } elseif ($n -le 0) { 'EMPTY' } elseif ($isExported) { 'OK' } else { 'LOOK' }
+        $isWork = $t.Name -match '^(T|XD)_'
+        $check = if ($secret -and $n -gt 0) { 'SECRET' } elseif ($n -le 0) { 'EMPTY' } elseif ($isExported) { 'OK' } elseif ($isWork) { 'WORK' } else { 'LOOK' }
         [pscustomobject]@{ Table = $t.Name; Rows = $n; Exported = $(if ($isExported) { 'yes' } else { '-' }); 'Secret?' = $(if ($secret) { 'yes' } else { '' }); Check = $check }
     }
 } finally { $db.Close() }
