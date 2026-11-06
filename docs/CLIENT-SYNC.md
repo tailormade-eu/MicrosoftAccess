@@ -132,8 +132,18 @@ its data, or a database built from the source starts with an empty table and the
   private repo (credentials policy). Put the table in `.gitignore` (`tables/<name>*.xml`), keep its structure in the repo, and
   keep its data in the production file or in a secret store. A database built from the source then has this table empty: fill
   it from the production file (or from the secret store) before the app is used.
+- **A build from source then needs one more step: put the table data back.** `tools/vcs/Restore-LocalTables.ps1 -BuiltDatabase
+  <built> -ProductionFile <production file> -Tables <names>` (or `-TablesFile`, one name per line, so a client repo can keep the
+  list next to its source) copies the rows of those tables from a COPY of the production file into the built database: the
+  tables that are kept out of git (the login table) and the working data. Only the columns that exist in both tables are copied
+  (the others are listed by name), no value is printed, it stops with an error when a table is missing or the row counts differ.
+  Measured on a client: 4 tables, 1.237 rows, the row counts and a checksum of every column matched the production file.
+  Note: a table whose structure is newer in the source than in production (new columns) gets those columns empty; check that the
+  code that reads them can handle that before the built database is used.
+- A build made from a working folder that still holds an ignored data file (`tables/<name>.xml` on disk, not in git) is not a
+  test of a clean clone: it restores that table from the file. Test from a fresh clone, or delete the ignored files first.
 - Never replace the production file by a database built from source. Merge the changed objects into a copy of the production
-  file (or use the built database as a test file and copy the local table data from the production file into it).
+  file, or use the built database (after `Restore-LocalTables.ps1`) as a test file.
 
 ## During the work
 
