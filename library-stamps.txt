@@ -14,7 +14,7 @@ omControlFunctions;2026-10-10;93b29458
 omDAOFunctions;2026-10-10;0464061d
 omDatabaseFunctions;2026-10-10;61e240e6
 omDateFunctions;2026-11-05;350bf88c
-omDefaultFunctions;2026-10-10;cb0aa517
+omDefaultFunctions;2026-11-06;a54558f0
 omDefaults;2026-11-06;5603a312
 omDevelopmentFunctions;2026-10-10;984ff6b4
 omExcel;2026-10-10;d5d158ea
@@ -24,7 +24,7 @@ omExportFunctions;2026-10-10;54933c61
 omFileFunctions;2026-10-30;90bcd275
 omFormFunctions;2026-10-30;285ccd7c
 omFTP;2026-10-10;9a875f19
-omGlobalDeclarations;2026-10-10;83869ce9
+omGlobalDeclarations;2026-11-06;b722bc0b
 omGuidFunctions;2026-10-10;b3d5c755
 omHashAlgorithms;2026-10-10;14dfec6b
 omHashAlgorithmsFunctions;2026-10-10;392fa529
@@ -52,7 +52,7 @@ omRecordsetFunctions;2026-10-30;f4ef88a7
 omReferenceFunctions;2026-10-10;5adc5c3e
 omReportFunctions;2026-10-30;30e3c539
 omResult;2026-10-10;1df6e90d
-omSeqFunctions;2026-10-10;49cd18b6
+omSeqFunctions;2026-11-06;ee90848e
 omSeqItem;2026-10-10;47848f0d
 omSFTP;2026-10-10;d67279c5
 omSourceObject;2026-10-10;bc20693f
@@ -62,7 +62,7 @@ omSQLConnectorFunctions;2026-11-05;77e83819
 omSQLFunctions;2026-10-10;85c05af6
 omSQLObject;2026-10-10;30a48cc2
 omSQLServerFunctions;2026-10-10;5c8873cb
-omSSMAAConnector;2026-11-05;db5d7c95
+omSSMAAConnector;2026-11-06;b59f627b
 omStartup;2026-10-10;b79bf44a
 omStringFunctions;2026-10-10;0247d091
 omStringTagFunctions;2026-10-10;525afe1c
@@ -72,9 +72,9 @@ omTableFunctions;2026-10-10;4d40f855
 omTesseractOCR;2026-10-10;19c837a0
 omTimeRange;2026-10-10;f6b9ca1e
 omTranslationEngine;2026-10-10;3e02d4df
-omTranslationEngineFunctions;2026-10-10;c33fb324
+omTranslationEngineFunctions;2026-11-06;1cd8532a
 omUser;2026-10-10;88d2a61a
-omUserFunctions;2026-10-10;b83355c5
+omUserFunctions;2026-11-06;9b273945
 omUserRole;2026-10-10;436890ff
 omVATFunctions;2026-10-10;9a830f31
 omWinSpoolFunctions;2026-10-10;1b9b4863

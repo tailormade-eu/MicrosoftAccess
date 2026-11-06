@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omSSMAAConnector"
 Option Compare Database
 Option Explicit
-'@lib 2026-11-05 sha=db5d7c95
+'@lib 2026-11-06 sha=b59f627b
 Global cSQLNCLIVersion As Integer
 Global cSQLNCLIFound As Boolean
 Global cSQLODBCVersion As Integer
@@ -635,6 +635,7 @@ Dim filename As String
     End If
     filename = filename & "_Data"
     gSystemDefaults.Mode = LocalMode
+    omGlobalDeclarations.EnsureClientSettings
     gSystemDefaults.Development = gDevelopmentMode
     If linkLocal Then
         dataPath = CurrentProject.path

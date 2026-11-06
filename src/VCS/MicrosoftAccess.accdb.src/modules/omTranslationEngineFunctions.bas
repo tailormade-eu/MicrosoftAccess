@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omTranslationEngineFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=c33fb324
+'@lib 2026-11-06 sha=1cd8532a
 
 Global omTE As New omTranslationEngine
 
@@ -11,7 +11,8 @@ Global omTE As New omTranslationEngine
 Public CurrentLanguageId As Long
 
 Public Function GetCurrentLanguage() As Long
-    GetCurrentLanguage = IIf(CurrentLanguageId > 0, CurrentLanguageId, 1)
+    omGlobalDeclarations.EnsureClientSettings
+    GetCurrentLanguage =IIf(CurrentLanguageId > 0, CurrentLanguageId, 1)
 End Function
 
 Public Sub UpdateTranslations()

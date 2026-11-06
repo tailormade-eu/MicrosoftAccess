@@ -303,7 +303,13 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `UploadFile(ftpAddress As String, Login As String, Password As String, filename As String, Optional ftpPath As String = "/") As String` — Upload file to FTP server
 
 ## omGlobalDeclarations.bas
-*(geen Public Sub/Function/Property — bevat enkel globale declaraties/constanten)*
+- `gDevelopmentMode As Boolean` — setting of the client (standard False); not a Const: a client sets it in `ClientSettings_LoadOverride`
+- `ClientSettingsError As String` — text of the last error that `Application.Run` gave back for the override, "" when none
+- `EnsureClientSettings()` — loads the settings when they are not loaded (yet, or not anymore after a reset); every module that reads a setting calls it first
+- `ClientSettings_Load(Optional quiet As Boolean)` — standard values first, then the optional `ClientSettings_LoadOverride` of the client
+- `ClientSettingsReset()` — forgets what was loaded, as a reset of the VBA project does; the next `EnsureClientSettings` loads again
+- `RunClientOverride(procName As String, Optional quiet As Boolean) As Boolean` — runs a procedure of the client by name; False when it does not exist (error 2517), other errors from `Application.Run` are kept and shown
+- `gDictionary` — shared `Scripting.Dictionary`
 
 ## omGuidFunctions.bas
 - `CreateGuid() As String` — Generate GUID
@@ -689,7 +695,9 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 - `LoginWithWindowsUser(Optional addWindowsLogon As Boolean)` — Logs in with Windows username
 - `UseWindowsUser()` — Sets current user to Windows username
 - `UserLock()` — Opens UserLock form if exists
-- `AuthenticateUser()` — Authenticates user via configured method (Windows or form)
+- `UseWindowsAuthentication As Boolean`, `UseLoginForm As Boolean` — login method of the client, set exactly one in `ClientSettings_LoadOverride`; no standard (both False = not set)
+- `LoginMethodIsSet() As Boolean` — True when exactly one of the two is set
+- `AuthenticateUser()` — Authenticates user via the configured method (Windows or form); says so when no method is set
 - `RecordsetUpdateCreateTracking(rs As ADODB.Recordset, Optional UpdateModify)` — Updates recordset with creation audit tracking
 - `RecordsetUpdateModifyTracking(rs As ADODB.Recordset)` — Updates recordset with modification audit tracking
 - `GetUserId() As Long` — Returns current user ID
@@ -736,7 +744,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 
 ---
 
-Coverage: 82/82 bestanden verwerkt (58 .bas + 24 .cls). Vier bestanden bevatten geen Public Sub/Function/Property (`omGlobalDeclarations.bas`, `omKernalAPIFunctions.bas`, `omKeyObject.cls`, `omKeyValue.cls`) — expliciet zo gemarkeerd i.p.v. overgeslagen.
+Coverage: 82/82 bestanden verwerkt (58 .bas + 24 .cls). Drie bestanden bevatten geen Public Sub/Function/Property (`omKernalAPIFunctions.bas`, `omKeyObject.cls`, `omKeyValue.cls`) — expliciet zo gemarkeerd i.p.v. overgeslagen.
 
 ## Not part of the library (no om prefix, do not copy into customer databases)
 - `tstSQLFunctions.bas` — Tests of omSQLFunctions: `?tstSQLFunctions.RunAll` gives "OK (n tests)" or the failures

@@ -1,11 +1,20 @@
 ﻿Attribute VB_Name = "omUserFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=b83355c5
+'@lib 2026-11-06 sha=9b273945
 
 Public gUser As New omUser
-Public Const UseWindowsAuthentication As Boolean = False
-Public Const UseLoginForm As Boolean = True
+' How the user logs in. The client sets exactly one of the two to True in ClientSettings_LoadOverride (see
+' omGlobalDeclarations). There is no standard: both False means "not set", and AuthenticateUser then says so
+' instead of silently choosing a login screen.
+Public UseWindowsAuthentication As Boolean
+Public UseLoginForm As Boolean
+
+' True when exactly one of the two login methods is set.
+Public Function LoginMethodIsSet() As Boolean
+    omGlobalDeclarations.EnsureClientSettings
+    LoginMethodIsSet = (UseWindowsAuthentication <> UseLoginForm)
+End Function
 
 Public Function GetWindowsUserName() As String
     GetWindowsUserName = Environ$("UserName")
@@ -32,8 +41,8 @@ Public Sub AuthenticateUser()
     If gUser.LoggedIn Then
         Exit Sub
     End If
-    If UseWindowsAuthentication = UseLoginForm Then
-        MsgBox "Set the correct variable for Login method in omUserFunctions.", vbExclamation
+    If Not LoginMethodIsSet Then
+        MsgBox "Set UseWindowsAuthentication or UseLoginForm (exactly one) in ClientSettings_LoadOverride.", vbExclamation
         Exit Sub
     End If
     If UseWindowsAuthentication Then

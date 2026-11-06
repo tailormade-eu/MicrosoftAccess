@@ -41,7 +41,7 @@ Principles (decisions of the owner):
    | IDENTICAL, NO STAMP | same code, but the client copy has no stamp line | `copy` it: with the stamp a later library change shows as CLIENT BEHIND, without it only as NO STAMP, DIFFERS |
    | FORMATTING ONLY | same code, other case of identifiers, other spaces or indentation, other blank lines | nothing, or `copy` to make the hash match again |
    | CLIENT BEHIND | untouched client copy, the library has moved on | update it (`copy`) |
-   | CHANGED LOCALLY | the client copy no longer matches its own stamp | read the change: take it into the library, or discard it |
+   | CHANGED LOCALLY | the client copy no longer matches its own stamp | read the change. **A client may have changed a parameter in the om* module (a Const, a True/False, a server name, a default): that is a setting of the client and moves to its `ClientSettings_LoadOverride`, see "Settings of a client" below, before you `copy`.** Other changes: take them into the library, or discard them |
    | NO STAMP, DIFFERS | an old or foreign copy without a stamp | judge it like CHANGED LOCALLY; the counts show how far it is |
    | LOCAL ONLY | not in the library | put it in the library, or rename it with the client prefix |
    | CLASS ATTRIBUTES DIFFER | the class attributes (`VB_PredeclaredId` and the like) differ while the code is the same | `copy`, then check how the class is used |
@@ -83,6 +83,39 @@ files), built from source as `.mdb` and compiled. The build had no errors; the c
 (`Compile-InVbe.ps1 -AddReference '{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}'`) the whole project compiled. So the whole library
 fits in that client; a client takes the references of `src/VCS/MicrosoftAccess.accdb.src/vbe-references.json` with it.
 Compiling is not running: the modules were not run in that copy, and the built file is 37 MB (with the stand-in tables; a build without the 43 modules was not measured).
+
+## Settings of a client: never in an om* module
+
+A value that one client sets and another does not (which login, development mode, a language, the address of a Seq server)
+does not belong in a library module that is copied: the next copy overwrites it, and the client then runs with another value
+(this happened once: a refresh of `omUserFunctions` replaced the Windows login of a client by the login form). The way it works:
+
+- The library holds the standard value of every setting in `omGlobalDeclarations.ClientSettings_Load`.
+- A client changes a value in its own `Public Sub ClientSettings_LoadOverride()` (a standard module of the client, no
+  arguments, plain assignments only). The library finds it by name with `Application.Run`; a client without the
+  procedure just gets the standard values (error 2517 is the only error that is ignored).
+- Every module that reads a setting calls `omGlobalDeclarations.EnsureClientSettings` first. After a reset of the VBA project
+  (an unhandled error, `End`) the variables are empty again; the next call loads them again, from the same two places.
+- The login has no standard: `UseWindowsAuthentication` and `UseLoginForm` are both False until the client sets exactly one,
+  and `AuthenticateUser` says so instead of choosing a login screen.
+- An error that is raised inside the override is not given back to the library: Access shows its own run-time error
+  dialog (measured). Keep the override to plain assignments.
+
+Example (a client with a Windows login, in the client's own `StartupFunctions.bas`):
+
+```vba
+Public Sub ClientSettings_LoadOverride()
+    omUserFunctions.UseWindowsAuthentication = True
+    omUserFunctions.UseLoginForm = False
+End Sub
+```
+
+Tested in `tstClientSettings` (in Access) and `scripts/test_library_rules.py` (no True/False `Const` in an om* module).
+A client may have overwritten a parameter in its own copy of an om* module (the old `Const UseWindowsAuthentication` / `UseLoginForm`
+in `omUserFunctions` were exactly that). The report then says CHANGED LOCALLY. Before every `copy` or `all` look at what the client
+changed (`git diff` of the client copy against the library file): a value that is the client's own goes into its
+`ClientSettings_LoadOverride`, and only then is the module replaced. Without this step the refresh silently resets the value
+(that is the regression that led to this section: a client got another login screen after a refresh).
 
 ## During the work
 

@@ -14,6 +14,7 @@ A collection of reusable VBA modules and utilities for Microsoft Access projects
 - Tools for importing/exporting Access objects
 - Rounding (`omMathFunctions.RoundHalfUp`), time ranges (`omTimeRange`), export (`omExportFunctions`), printers (`omPrinterFunctions`, owns the table `omPrinters`), zip (`omZipFunctions`), file lists (`omFileFunctions.ReadFilesIntoTable`, owns the table `omFiles`)
 - Module stamps and a check inside Access (`omLibraryStamp`), so a client database can see which library modules are out of date
+- Settings of a client (login method, development mode, language, Seq address) are never changed inside an `om*` module: the library holds the standard value in `omGlobalDeclarations.ClientSettings_Load`, a client changes it in its own `ClientSettings_LoadOverride`. A client that changed a parameter in its copy of a library module moves it there before the module is refreshed (see docs/CLIENT-SYNC.md)
 - Keeping client projects in step with the library: a drift report and copy (`scripts/clientsync.py`), a check for functions that only expressions, queries or macros call (`scripts/expressionrefs.py`), building from source and compiling without opening the app (`tools/vcs/`)
 
 ## Installation

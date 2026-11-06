@@ -1,12 +1,10 @@
 ﻿Attribute VB_Name = "omSeqFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=49cd18b6
+'@lib 2026-11-06 sha=ee90848e
 
-Private Const DEFAULT_SEQ_URL As String = "http://seq.domainmmvii.local:5341/"
-
-' Address of the Seq server (with the trailing slash). Empty = the default above.
-' Set it once at startup:  omSeqFunctions.SeqServerUrl = "http://myserver:5341/"
+' Address of the Seq server (with the trailing slash). Empty = no Seq server: nothing is sent and OpenSeq does nothing.
+' Set it in ClientSettings_LoadOverride (see omGlobalDeclarations):  omSeqFunctions.SeqServerUrl = "http://myserver:5341/"
 Public SeqServerUrl As String
 
 Public Enum omSeqItemLevel
@@ -17,7 +15,8 @@ Public Enum omSeqItemLevel
 End Enum
 
 Private Function seqUrl() As String
-    seqUrl = IIf(Len(SeqServerUrl) > 0, SeqServerUrl, DEFAULT_SEQ_URL)
+    omGlobalDeclarations.EnsureClientSettings
+    seqUrl = SeqServerUrl
 End Function
 
 Public Function omSeqItemLevelToString(Value As omSeqItemLevel) As String
@@ -43,6 +42,7 @@ Dim result As String
             .Step = "self test"
         End With
     End If
+    If Len(seqUrl) = 0 Then Exit Sub       ' no Seq server set
     result = HttpPostText(seqUrl & "api/events/raw?clef", seqItem.ToJson())
     seqItem.Step = ""
     seqItem.Level = DebugSeqLevel
@@ -64,6 +64,7 @@ Dim xml As Object
 End Function
 
 Public Sub OpenSeq(Optional filter As String = "")
+    If Len(seqUrl) = 0 Then Exit Sub       ' no Seq server set
     omFileFunctions.OpenUrl seqUrl & IIf(NotIsNullOrEmpty(filter), "#/events?filter=" & filter, "")
 End Sub
 

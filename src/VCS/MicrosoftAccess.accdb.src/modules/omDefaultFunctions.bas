@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omDefaultFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=cb0aa517
+'@lib 2026-11-06 sha=a54558f0
 
 Public gSystemDefaults As New omDefaults
 Public gDefaults As New omDefaults
@@ -31,6 +31,7 @@ Public Sub Initialize(Optional Reset As Boolean = False)
     If omObjectFunctions.IsNothing(gDefaults) Or Reset Or Not gDefaults.Initialized Then
         gDefaults.Mode = serverMode
     End If
+    omGlobalDeclarations.EnsureClientSettings
     gSystemDefaults.Development = gDevelopmentMode
     gDefaults.Development = gDevelopmentMode
 End Sub
