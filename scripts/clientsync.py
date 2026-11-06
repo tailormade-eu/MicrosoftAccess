@@ -2,10 +2,16 @@
 
     python -I scripts/clientsync.py report <client modules folder>
     python -I scripts/clientsync.py copy   <client modules folder> <module> [<module> ...]
+    python -I scripts/clientsync.py add    <client modules folder> <module> [<module> ...]
+    python -I scripts/clientsync.py all    <client modules folder>
 
 report   one section per situation, nothing is changed. Exit code 1 when anything needs attention.
-copy     puts the library version of the named modules (file names without extension) in the client folder.
-         Only the names you give are touched; run `report` first and decide per module.
+copy     puts the library version of the named modules (file names without extension) in the client folder, but only for
+         modules the client already has (exit code 1 and a message for the others). Only the names you give are touched;
+         run `report` first and decide per module. It warns when the client copy was CHANGED LOCALLY or NO STAMP, DIFFERS.
+add      the same for modules the client does not have yet (refuses a module the client already has).
+all      the whole library in the client: adds what is missing, refreshes what differs. A client copy that holds a change
+         nobody judged yet (CHANGED LOCALLY, NO STAMP, DIFFERS) is skipped and listed (exit code 1); LOCAL ONLY modules stay.
 
 The hash is the one of scripts/libstamp.py (same normalize), so a module that is only formatted differently,
 or has another case of identifiers, counts as identical. See docs/CLIENT-SYNC.md for the working method.
@@ -165,19 +171,67 @@ def report(folder):
     return 1 if attention else 0
 
 
-def copy(folder, names):
+UNJUDGED = ('CHANGED LOCALLY', 'NO STAMP, DIFFERS')   # the client copy holds a change nobody has looked at yet
+
+
+def copy(folder, names, mode='copy'):
+    """mode 'copy': only modules the client already has. mode 'add': only modules the client does not have yet."""
     lib = lib_modules()
+    have = {p.stem.lower(): p for p in client_modules(folder)}
     code = 0
     for name in names:
-        src = lib.get(name.lower())
+        key = name.lower()
+        src = lib.get(key)
         if src is None:
             print(f'{name}: not in the library')
             code = 1
             continue
-        dst = pathlib.Path(folder) / src.name
-        shutil.copyfile(src, dst)
+        existing = have.get(key)
+        if mode == 'copy' and existing is None:
+            print(f'{name}: the client does not have it; use `add` to put a new module in')
+            code = 1
+            continue
+        if mode == 'add' and existing is not None:
+            print(f'{name}: the client already has it; use `copy` to refresh it')
+            code = 1
+            continue
+        if existing is not None:
+            kind = classify(existing, src)[0]
+            if kind in UNJUDGED:
+                print(f'{name}: WARNING the client copy was {kind}; that change is now overwritten')
+        shutil.copyfile(src, pathlib.Path(folder) / src.name)
         print(f'{name}: copied {src.name}')
     return code
+
+
+def all_modules(folder):
+    """Put the whole library in the client: adds what is missing, refreshes what differs. A client copy that holds a change
+    nobody has judged yet (CHANGED LOCALLY, NO STAMP, DIFFERS) is skipped and listed; LOCAL ONLY modules are not touched."""
+    lib = lib_modules()
+    have = {p.stem.lower(): p for p in client_modules(folder)}
+    added, refreshed, same, skipped = [], [], [], []
+    for key, src in sorted(lib.items()):
+        existing = have.get(key)
+        if existing is None:
+            shutil.copyfile(src, pathlib.Path(folder) / src.name)
+            added.append(src.stem)
+            continue
+        kind = classify(existing, src)[0]
+        if kind == 'IDENTICAL':
+            same.append(src.stem)
+        elif kind in UNJUDGED:
+            skipped.append((src.stem, kind))
+        else:
+            shutil.copyfile(src, pathlib.Path(folder) / src.name)
+            refreshed.append(src.stem)
+    print(f'added {len(added)}, refreshed {len(refreshed)}, already identical {len(same)}, skipped {len(skipped)}')
+    if added:
+        print('  added: ' + ', '.join(added))
+    if refreshed:
+        print('  refreshed: ' + ', '.join(refreshed))
+    for name, kind in skipped:
+        print(f'  SKIPPED {name} ({kind}): judge the change first, then `copy {name}`')
+    return 1 if skipped else 0
 
 
 def main(argv):
@@ -185,6 +239,10 @@ def main(argv):
         return report(argv[2])
     if len(argv) >= 4 and argv[1] == 'copy':
         return copy(argv[2], argv[3:])
+    if len(argv) >= 4 and argv[1] == 'add':
+        return copy(argv[2], argv[3:], mode='add')
+    if len(argv) == 3 and argv[1] == 'all':
+        return all_modules(argv[2])
     print(__doc__)
     return 2
 

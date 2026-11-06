@@ -73,6 +73,61 @@ class ClientSyncTests(unittest.TestCase):
         self.assertIn('CLASS ATTRIBUTES DIFFER', buf.getvalue())
         self.assertIn('VB_PredeclaredId: client true / library false', buf.getvalue())
 
+    def _run(self, fn, *args, **kw):
+        import contextlib
+        import io
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            code = fn(*args, **kw)
+        return code, buf.getvalue()
+
+    def test_copy_refuses_a_module_the_client_does_not_have(self):
+        with tempfile.TemporaryDirectory() as d:
+            code, out = self._run(clientsync.copy, d, [NAME])
+            self.assertEqual(code, 1)
+            self.assertIn('does not have it', out)
+            self.assertFalse((pathlib.Path(d) / LIB[NAME].name).exists())
+
+    def test_add_puts_a_missing_module_in_and_refuses_an_existing_one(self):
+        with tempfile.TemporaryDirectory() as d:
+            code, _ = self._run(clientsync.copy, d, [NAME], mode='add')
+            self.assertEqual(code, 0)
+            self.assertTrue((pathlib.Path(d) / LIB[NAME].name).exists())
+            code, out = self._run(clientsync.copy, d, [NAME], mode='add')
+            self.assertEqual(code, 1)
+            self.assertIn('already has it', out)
+
+    def test_copy_warns_when_it_overwrites_a_local_change(self):
+        with tempfile.TemporaryDirectory() as d:
+            dst = pathlib.Path(d) / LIB[NAME].name
+            dst.write_bytes((self.text + '\nPublic Sub LocalOnlyChange()\nEnd Sub\n').encode('utf-8'))
+            code, out = self._run(clientsync.copy, d, [NAME])
+            self.assertEqual(code, 0)
+            self.assertIn('CHANGED LOCALLY', out)
+            self.assertEqual(clientsync.classify(dst, LIB[NAME])[0], 'IDENTICAL')
+
+    def test_all_adds_missing_and_skips_a_local_change(self):
+        with tempfile.TemporaryDirectory() as d:
+            dst = pathlib.Path(d) / LIB[NAME].name
+            dst.write_bytes((self.text + '\nPublic Sub LocalOnlyChange()\nEnd Sub\n').encode('utf-8'))
+            before = dst.read_bytes()
+            code, out = self._run(clientsync.all_modules, d)
+            self.assertEqual(code, 1)
+            self.assertIn('SKIPPED ' + NAME, out)
+            self.assertEqual(dst.read_bytes(), before)          # the unjudged change is still there
+            others = [n for n in LIB if n != NAME]
+            self.assertTrue(all((pathlib.Path(d) / LIB[n].name).exists() for n in others))
+            code, out = self._run(clientsync.all_modules, d)    # a second run changes nothing more
+            self.assertIn('added 0, refreshed 0', out)
+
+    def test_all_in_a_complete_client_changes_nothing(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._run(clientsync.all_modules, d)
+            code, out = self._run(clientsync.all_modules, d)
+            self.assertEqual(code, 0)
+            self.assertIn('added 0, refreshed 0', out)
+            self.assertIn('skipped 0', out)
+
     def test_a_real_code_change_is_not_formatting(self):
         changed = self.text + '\nPublic Sub ExtraProcedure()\nEnd Sub\n'
         self.assertNotIn(kind_for(changed), ('IDENTICAL', 'FORMATTING ONLY'))

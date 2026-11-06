@@ -54,7 +54,9 @@ Principles (decisions of the owner):
    python -I scripts/clientsync.py copy <client source>/modules omDateFunctions omFileFunctions
    ```
 
-   `copy` touches only the names you give, but it copies every name that exists in the library: also a module the client does not have yet (no warning), and it overwrites a client copy that is CHANGED LOCALLY. Take such a change into the library first, and give only names that the report showed. A name that is not in the library gives "not in the library" and exit code 1. Class modules and standard modules are copied as they are (the same file format).
+   `copy` touches only the names you give, and only modules the client already has (for another name it says so and exits with 1; `add` puts a new module in and refuses one that exists). It warns when it overwrites a client copy that was CHANGED LOCALLY or NO STAMP, DIFFERS: take such a change into the library first. A name that is not in the library gives "not in the library" and exit code 1.
+
+   To keep a client on the whole library use `python -I scripts/clientsync.py all <client source>/modules`: it adds what is missing and refreshes what differs, skips and lists every client copy that holds an unjudged change (exit code 1), and leaves LOCAL ONLY modules alone. Run `report` first; run steps 5 and 6 after it. Class modules and standard modules are copied as they are (the same file format).
 4. A module that the library now lacks something for, or needs a table, form or class the client does not have: follow the
    `uses` of the module (the compile in step 5 names what is missing; for example `omDateFunctions` needs `omTimeRange`).
 5. Build and compile the client project from source, in a copy, as described in [BUILD-AND-TEST.md](BUILD-AND-TEST.md)
