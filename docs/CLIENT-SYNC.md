@@ -73,6 +73,15 @@ Principles (decisions of the owner):
    reports it (`Roundhalfup  - 8 uses in 2 objects`). The built-in function list in the script is not complete: a real Access
    function that shows as MISSING gets added to `BUILTINS`. Tested in `scripts/test_expressionrefs.py`.
 
+## Measured: the whole library in one client
+
+On 2026-11-06 all 43 library modules that a client project did not have were copied into a copy of its source (131 module
+files), built from source as `.mdb` and compiled. The build had no errors; the compile stopped once, in `omTesseractOCR`
+(`IWshRuntimeLibrary.WshShell`: the *Windows Script Host Object Model* reference was missing). With that one reference added
+(`Compile-InVbe.ps1 -AddReference '{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}'`) the whole project compiled. So the whole library
+fits in that client; a client takes the references of `src/VCS/MicrosoftAccess.accdb.src/vbe-references.json` with it.
+Compiling is not running: the modules were not run in that copy, and the built file is 37 MB (with the stand-in tables; a build without the 43 modules was not measured).
+
 ## During the work
 
 - Edit an `om*` module in the library repo, not in the client copy. If you did edit it in the client (quicker, or you were

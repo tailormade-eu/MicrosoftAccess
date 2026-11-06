@@ -12,18 +12,22 @@
                                            no error: the Compile item is greyed out after a successful compile
   On a timeout it lists the windows of the test Access (a modal window is the usual cause).
 
+  -AddReference <guid>[,<guid>...] adds those references to the copy before the compile (for example the Windows Script Host
+  library {F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}), so you can see which modules need which reference without a new build.
+
 .EXAMPLE
-  .\Compile-InVbe.ps1 -Database C:	emp\copy.mdb
+  .\Compile-InVbe.ps1 -Database C:\temp\copy.mdb
+  .\Compile-InVbe.ps1 -Database C:\temp\copy.mdb -AddReference '{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}'
 #>
-param([Parameter(Mandatory)][string]$Database)
+param([Parameter(Mandatory)][string]$Database, [string[]]$AddReference = @())
 Add-Type -AssemblyName UIAutomationClient, UIAutomationTypes
 $dbe = New-Object -ComObject DAO.DBEngine.120
 $d0 = $dbe.OpenDatabase($Database)
 try { $d0.Properties.Item('AllowBypassKey').Value = $true } catch { $d0.Properties.Append($d0.CreateProperty('AllowBypassKey', 1, $true)) }
 $d0.Close()
 $before = @(Get-Process MSACCESS -ErrorAction SilentlyContinue).Id
-$job = Start-Job -ArgumentList $Database -ScriptBlock {
-    param($db)
+$job = Start-Job -ArgumentList $Database, $AddReference -ScriptBlock {
+    param($db, $refs)
     $out = @(); $acc = $null
     try {
         $acc = New-Object -ComObject Access.Application
@@ -31,6 +35,9 @@ $job = Start-Job -ArgumentList $Database -ScriptBlock {
         Add-Type -TypeDefinition 'using System.Runtime.InteropServices; public class KB { [DllImport("user32.dll")] public static extern void keybd_event(byte b, byte s, uint f, int e); }'
         [KB]::keybd_event(0x10, 0, 0, 0)
         try { $acc.OpenCurrentDatabase($db) } finally { [KB]::keybd_event(0x10, 0, 2, 0) }
+        foreach ($g in $refs) {
+            try { $null = $acc.References.AddFromGuid($g, 0, 0); $out += "reference added: $g" } catch { $out += "reference NOT added: $g ($($_.Exception.Message))" }
+        }
         $acc.VBE.MainWindow.Visible = $true
         $ctl = $acc.VBE.CommandBars.FindControl(1, 578)
         $out += 'compile control enabled: ' + $ctl.Enabled

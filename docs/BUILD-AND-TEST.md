@@ -61,7 +61,7 @@ ends clean in 13 s, without the theme.
 
 A database that builds is not a database that compiles. Two ways, on a **copy**:
 
-**3a. In the VBE, with the error position** - [`tools/vcs/Compile-InVbe.ps1`](../tools/vcs/Compile-InVbe.ps1) `-Database <copy>`.
+**3a. In the VBE, with the error position** - [`tools/vcs/Compile-InVbe.ps1`](../tools/vcs/Compile-InVbe.ps1) `-Database <copy>` (with `-AddReference <guid>` it first adds references to the copy, to see which module needs which reference without a new build).
 It opens the copy hidden with Shift held (the startup form, for example a login, does not run), runs *Debug > Compile*, presses
 OK on the error box and prints `ERRORPOS module=... line=...` with the lines around it. No error: the Compile menu item is greyed
 out afterwards (`enabled after: False`) and no position is printed. This is the method to use for a client database.
