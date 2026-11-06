@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omLibraryFunctions"
 Option Compare Database
 Option Explicit
-'@lib 2026-11-05 sha=6d13c6cd
+'@lib 2026-11-06 sha=36d252ce
 
 Private Function InternalGetTimeStamp(Optional prefix As String = "_") As String
     InternalGetTimeStamp = prefix & format(Now, "yyyymmdd_hhnnss")
@@ -130,21 +130,17 @@ Dim dString As String
 End Sub
 
 Public Sub LoadFromText(objectType As AcObjectType, objectName As String, filename As String)
-    'Application.LoadFromText AcObjectType.acModule, "omLibraryFunctions", "\\server\share"
     Application.LoadFromText objectType, objectName, filename
 End Sub
 Public Sub LoadAsAXL(objectType As AcObjectType, objectName As String, filename As String)
-    'Application.LoadFromText AcObjectType.acModule, "omLibraryFunctions", "\\server\share"
     MsgBox "Does not exist in version 2007"
     'Application.LoadAsAXL objectType, objectName, fileName
 End Sub
 
 Public Sub SaveAsText(objectType As AcObjectType, objectName As String, filename As String)
-    'Application.SaveAsText  AcObjectType.acModule, "omLibraryFunctions", "\\server\share"
     Application.SaveAsText objectType, objectName, filename
 End Sub
 Public Sub SaveAsAXL(objectType As AcObjectType, objectName As String, filename As String)
-    'Application.SaveAsText  AcObjectType.acModule, "omLibraryFunctions", "\\server\share"
     MsgBox "Does not exist in version 2007"
     'Application.SaveAsAXL objectType, objectName, fileName
 End Sub

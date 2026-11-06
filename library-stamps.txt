@@ -2,7 +2,7 @@ omADODBFunctions;2026-10-10;878adaa6
 omAPI32FileFunctions;2026-10-10;9f705da6
 omAPIClipboard;2026-10-10;e3a76075
 omAPISpecialFolders;2026-10-10;d461cf8e
-omAppSettings;2026-10-10;ee274e02
+omAppSettings;2026-11-06;a73f45d3
 omArrayFunctions;2026-10-10;b9e75acc
 omBankAccountFunctions;2026-10-10;907e2efe
 omByteArrayFunctions;2026-10-10;cede54c9
@@ -15,7 +15,7 @@ omDAOFunctions;2026-10-10;0464061d
 omDatabaseFunctions;2026-10-10;61e240e6
 omDateFunctions;2026-11-05;350bf88c
 omDefaultFunctions;2026-10-10;cb0aa517
-omDefaults;2026-10-10;f6a71559
+omDefaults;2026-11-06;5603a312
 omDevelopmentFunctions;2026-10-10;984ff6b4
 omExcel;2026-10-10;d5d158ea
 omExcelEngine;2026-10-10;96be6635
@@ -35,14 +35,14 @@ omJsonConverter;2026-10-10;28c545e7
 omKernalAPIFunctions;2026-10-10;2df70616
 omKeyObject;2026-10-10;bac7552d
 omKeyValue;2026-10-10;131f8a9c
-omLibraryFunctions;2026-11-05;6d13c6cd
+omLibraryFunctions;2026-11-06;36d252ce
 omLibraryStamp;2026-10-10;fbb7efab
 omLogging;2026-10-10;f43e937b
 omLoggingFunctions;2026-10-10;ab3961d6
 omMathFunctions;2026-11-05;d29d1614
 omMSAccessFunctions;2026-10-10;402639fe
 omObjectFunctions;2026-10-10;10932fe2
-omOutlook;2026-10-10;a08d9a05
+omOutlook;2026-11-06;0c671bb4
 omPDFFunctions;2026-10-10;2e5c2282
 omPictureFunctions;2026-10-10;7008312a
 omPrinterFunctions;2026-10-10;00b32d3e
@@ -67,7 +67,7 @@ omStartup;2026-10-10;b79bf44a
 omStringFunctions;2026-10-10;0247d091
 omStringTagFunctions;2026-10-10;525afe1c
 omSystemProcessFunctions;2026-10-10;e8078cc4
-omTableConnector;2026-10-10;3a1e991d
+omTableConnector;2026-11-06;a9f328a7
 omTableFunctions;2026-10-10;4d40f855
 omTesseractOCR;2026-10-10;19c837a0
 omTimeRange;2026-10-10;f6b9ca1e

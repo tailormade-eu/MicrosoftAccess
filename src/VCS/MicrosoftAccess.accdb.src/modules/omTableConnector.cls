@@ -9,9 +9,8 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=3a1e991d
+'@lib 2026-11-06 sha=a9f328a7
 ' Code written by Raoul Jacobs
-' E. author@example.com
 ' Date Craeted : 200703
 '
 ' this class will handle linking tables to the access program

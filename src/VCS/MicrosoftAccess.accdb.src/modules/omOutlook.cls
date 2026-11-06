@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
-'@lib 2026-10-10 sha=a08d9a05
+'@lib 2026-11-06 sha=0c671bb4
 
 ' http://www.slipstick.com/exchange/sending-email-from-a-secondary-exchange-mailbox/
 
@@ -162,7 +162,6 @@ Dim bodyEnd As Long
                 .attachments.Add filename
             Else
                 MsgBox filename & " is missing.", vbCritical
-                'gOpmaatMessaging.Save "user@example.com", "user@example.com", "File does not exist and did not get attached: " & filename, bodyFilenameMissing, olImportanceHigh
             End If
         Next i
 Mail_NoAttachments:
