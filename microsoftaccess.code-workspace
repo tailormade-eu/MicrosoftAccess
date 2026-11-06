@@ -10,7 +10,7 @@
                 "id": "mssql_host",
                 "type": "promptString",
                 "description": "Enter the MSSQL host",
-				"default": "198.18.0.5"
+				"default": "localhost"
 
             },
             {
