@@ -559,7 +559,7 @@ Index van alle modules in de library — automatisch gegenereerd op basis van Pu
 ## omSSMAAConnector.bas
 - `LocalCon() As ADODB.connection` — Return current Access database connection
 - `ServerCon(Optional ConnectionType = SQLNCLI, Optional ODBCConnection As Boolean = False, Optional encryptType = EncryptOptional) As String` — Get or create SQL Server connection string
-- `LinkUsingSSMA(Optional Group As String = "", Optional ConnectionType = SQLNCLI, Optional SavePassword As Boolean = False, Optional alwaysUpdate As Boolean = False, Optional encryptType = EncryptOptional) As Boolean` — Link SQL Server tables using SSMA configuration
+- `LinkUsingSSMA(Optional Group As String = "", Optional ConnectionType = SQLNCLI, Optional SavePassword As Boolean = False, Optional alwaysUpdate As Boolean = True, Optional encryptType = EncryptOptional) As Boolean` — Link SQL Server tables using SSMA configuration; every call makes the links of the group again (alwaysUpdate = True), so a changed driver or Encrypt text always takes effect
 - `LinkTableViewUsingSSMA(existingTableName As String, toLinkName As String, Optional ConnectionType, Optional encryptType)` — Link specific SQL Server table or view
 - `CreateTable()` — Create SSMAA_ODBC_Tables configuration table
 - `PopulateTable()` — Populate SSMAA configuration table from existing SQL Server tables

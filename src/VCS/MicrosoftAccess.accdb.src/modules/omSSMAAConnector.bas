@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omSSMAAConnector"
 Option Compare Database
 Option Explicit
-'@lib 2026-11-06 sha=b59f627b
+'@lib 2026-11-19 sha=fc836332
 Global cSQLNCLIVersion As Integer
 Global cSQLNCLIFound As Boolean
 Global cSQLODBCVersion As Integer
@@ -80,7 +80,7 @@ Public Function ServerCon(Optional ConnectionType As ConnectionTypes = Connectio
 End Function
 
 
-Public Function LinkUsingSSMA(Optional Group As String = "", Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional SavePassword As Boolean = False, Optional alwaysUpdate As Boolean = False, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional) As Boolean
+Public Function LinkUsingSSMA(Optional Group As String = "", Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional SavePassword As Boolean = False, Optional alwaysUpdate As Boolean = True, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional) As Boolean
 Dim rs As New ADODB.Recordset
 Dim rsODBC As New ADODB.Recordset
 Dim strSQLTable As String
