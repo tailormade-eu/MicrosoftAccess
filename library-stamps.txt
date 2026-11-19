@@ -62,7 +62,7 @@ omSQLConnectorFunctions;2026-11-05;77e83819
 omSQLFunctions;2026-10-10;85c05af6
 omSQLObject;2026-10-10;30a48cc2
 omSQLServerFunctions;2026-10-10;5c8873cb
-omSSMAAConnector;2026-11-19;fc836332
+omSSMAAConnector;2026-11-19;19586e25
 omStartup;2026-10-10;b79bf44a
 omStringFunctions;2026-11-06;82fcf095
 omStringTagFunctions;2026-10-10;525afe1c

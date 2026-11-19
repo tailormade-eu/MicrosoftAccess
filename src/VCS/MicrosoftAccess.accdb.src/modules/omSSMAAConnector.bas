@@ -1,7 +1,7 @@
 ﻿Attribute VB_Name = "omSSMAAConnector"
 Option Compare Database
 Option Explicit
-'@lib 2026-11-19 sha=fc836332
+'@lib 2026-11-19 sha=19586e25
 Global cSQLNCLIVersion As Integer
 Global cSQLNCLIFound As Boolean
 Global cSQLODBCVersion As Integer
@@ -80,7 +80,7 @@ Public Function ServerCon(Optional ConnectionType As ConnectionTypes = Connectio
 End Function
 
 
-Public Function LinkUsingSSMA(Optional Group As String = "", Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional SavePassword As Boolean = False, Optional alwaysUpdate As Boolean = True, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional) As Boolean
+Public Function LinkUsingSSMA(Optional Group As String = "", Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional SavePassword As Boolean = False, Optional alwaysUpdate As Boolean = False, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional) As Boolean
 Dim rs As New ADODB.Recordset
 Dim rsODBC As New ADODB.Recordset
 Dim strSQLTable As String
@@ -105,6 +105,14 @@ Dim resetAttach As Boolean
     UpdateSSMAAGroups
 
     If alwaysUpdate Then
+        If ConnectionType = ConnectionTypes.SQLAuto Then
+            ' The links are deleted and made again below. With the server out of reach (no VPN, no network) the file would be left
+            ' without its tables, so check first and keep the links as they are.
+            If Not GroupServersReachable(Group, encryptType) Then
+                Debug.Print Now; " LinkUsingSSMA: server not reachable, the existing links are left as they are"
+                GoTo Opruimen
+            End If
+        End If
         'DeleteLinkTables Group
         LinkDeleteTables Group
     Else
@@ -169,6 +177,7 @@ Dim resetAttach As Boolean
     Set rsODBC = Nothing
     Set rs = Nothing
     Debug.Print Now; " LinkUsingSSMA: "; lngAantal; " tabellen gekoppeld in "; Format(Timer - sngStart, "0.0"); " s"
+    LinkUsingSSMA = True    ' False when the links were left as they were (server not reachable) or an error was raised
 Opruimen:
     Set mDbKoppelen = Nothing
     If Err.Number <> 0 Then Err.Raise Err.Number, Err.Source, Err.Description
@@ -183,8 +192,23 @@ End Sub
 Sub UpdateSSMAConnectionString(Optional Group As String = "", Optional ConnectionType As ConnectionTypes = ConnectionTypes.SQLNCLI, Optional encryptType As EncryptTypes = EncryptTypes.EncryptOptional)
 Dim rs As New ADODB.Recordset
 Dim cmd As New ADODB.Command
+Dim cmdMark As New ADODB.Command
 
     Set omCSLastUsed = New omConnectionString
+    ' A row whose connection string changes (another Encrypt text, driver, password, ...) gets Attach = True: LinkUsingSSMA then makes
+    ' that link again. Without this a link that was made with the old string stays as it is, for example unencrypted after Encrypt
+    ' was switched on. An empty stored string (a table that is new or just got the column) counts as changed: one relink.
+    cmdMark.commandText = "UPDATE SSMAA_ODBC_Tables SET Attach=True WHERE nz([Groups],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=? AND nz(ConnectionString,'')<>?"
+    cmdMark.ActiveConnection = LocalCon
+    cmdMark.Parameters.Append cmdMark.CreateParameter("m1", adLongVarWChar, adParamInput, 256)
+    cmdMark.Parameters.Append cmdMark.CreateParameter("m2", adLongVarWChar, adParamInput, 256)
+    cmdMark.Parameters.Append cmdMark.CreateParameter("m3", adLongVarWChar, adParamInput, 256)
+    cmdMark.Parameters.Append cmdMark.CreateParameter("m4", adLongVarWChar, adParamInput, 256)
+    cmdMark.Parameters.Append cmdMark.CreateParameter("m5", adLongVarWChar, adParamInput, 256)
+    cmdMark.Parameters.Append cmdMark.CreateParameter("m6", adLongVarWChar, adParamInput, 256)
+    cmdMark.Parameters.Append cmdMark.CreateParameter("m7", adLongVarWChar, adParamInput, 256)
+    cmdMark.Parameters.Append cmdMark.CreateParameter("m8", adLongVarWChar, adParamInput, 256)
+    cmdMark.Parameters.Append cmdMark.CreateParameter("m9", adVarWChar, adParamInput, 512)
     cmd.commandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Groups],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
     'cmd.commandText = "UPDATE SSMAA_ODBC_Tables SET ConnectionString=? WHERE nz([Group],'')=? AND nz(DSN,'')=? AND nz(SQLServer,'')=? AND nz(SQLServerPort,'')=? AND nz(SQLDatabase,'')=? AND nz(ConnectionTypeId,'')=? AND nz(SQLLogin,'')=? AND nz(SQLPassword,'')=?"
     cmd.ActiveConnection = LocalCon
@@ -212,12 +236,23 @@ Dim cmd As New ADODB.Command
         cmd.Parameters(6) = Nz(rs("ConnectionTypeId"), "")
         cmd.Parameters(7) = Nz(rs("SQLLogin"), "")
         cmd.Parameters(8) = Nz(rs("SQLPassword"), "")
+        cmdMark.Parameters(0) = cmd.Parameters(1)
+        cmdMark.Parameters(1) = cmd.Parameters(2)
+        cmdMark.Parameters(2) = cmd.Parameters(3)
+        cmdMark.Parameters(3) = cmd.Parameters(4)
+        cmdMark.Parameters(4) = cmd.Parameters(5)
+        cmdMark.Parameters(5) = cmd.Parameters(6)
+        cmdMark.Parameters(6) = cmd.Parameters(7)
+        cmdMark.Parameters(7) = cmd.Parameters(8)
+        cmdMark.Parameters(8) = cmd.Parameters(0)
+        cmdMark.Execute
         cmd.Execute
         rs.MoveNext
     Wend
     rs.Close
     Set rs = Nothing
     Set cmd = Nothing
+    Set cmdMark = Nothing
 End Sub
 
 'Sub AttachedTable(ConnectionString As String, sourceTable As String, DestinationTable As String, Optional SavePassword As Boolean = False)
@@ -912,6 +947,30 @@ Public Function GetAutoDriver(ByVal serverName As String, ByVal databaseName As 
     Loop
     m_AutoDrivers(key) = chosen    ' "" = nothing installed can do the requested encryption
     GetAutoDriver = chosen
+End Function
+
+Public Function GroupServersReachable(ByVal Group As String, ByVal encryptType As EncryptTypes) As Boolean
+    ' True when a real connection works to every SQL Server of the group: the driver GetAutoDriver picks, the login of the row and the
+    ' requested encryption. LinkUsingSSMA asks this before it deletes the links, because links that are deleted and cannot be made
+    ' again leave the file without its tables. A row with a DSN is not checked (it is not a connection with a SQL Server driver).
+    Dim rs As New ADODB.Recordset
+    Dim driverName As String
+
+    GroupServersReachable = True
+    rs.Open "SELECT DISTINCT DSN, SQLServer, SQLServerPort, SQLDatabase, SQLLogin, SQLPassword FROM SSMAA_ODBC_Tables" & IIf(Group <> "", " WHERE [Groups] like " & Chr(34) & "%," & Group & ",%" & Chr(34), ""), LocalCon, adOpenForwardOnly, adLockReadOnly
+    Do While Not rs.EOF
+        If Len(Nz(rs("DSN"), "")) = 0 Then
+            driverName = GetAutoDriver(Nz(rs("SQLServer"), ""), Nz(rs("SQLDatabase"), ""), Nz(rs("SQLLogin"), ""), Nz(rs("SQLPassword"), ""), Nz(rs("SQLServerPort"), ""), encryptType)
+            If Len(driverName) = 0 Then
+                GroupServersReachable = False
+            ElseIf ProbeSqlDriver(driverName, Nz(rs("SQLServer"), ""), Nz(rs("SQLDatabase"), ""), Nz(rs("SQLLogin"), ""), Nz(rs("SQLPassword"), ""), Nz(rs("SQLServerPort"), ""), encryptType) <> ProbeOk Then
+                GroupServersReachable = False
+            End If
+        End If
+        If Not GroupServersReachable Then Exit Do
+        rs.MoveNext
+    Loop
+    rs.Close
 End Function
 ' ==== END auto driver functions ====
 
